@@ -1,0 +1,8 @@
+.devbox
+.gitignore
+.teller.yml
+devbox.*
+gcloud
+install.sh
+.git
+/mnt/c/Users/fodur/.ssh
