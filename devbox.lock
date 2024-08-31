@@ -1,6 +1,70 @@
 {
   "lockfile_version": "1",
   "packages": {
+    "ansible@latest": {
+      "last_modified": "2024-08-27T08:49:48Z",
+      "resolved": "github:NixOS/nixpkgs/a6292e34000dc93d43bccf78338770c1c5ec8a99#ansible",
+      "source": "devbox-search",
+      "version": "2.17.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4lxqwy54l7l8f3d1z2jmv4z2g9sp8h4n-python3.12-ansible-core-2.17.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/ah13f1c7kr4iqgq49j4h2ymrhnvrb32p-python3.12-ansible-core-2.17.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/4lxqwy54l7l8f3d1z2jmv4z2g9sp8h4n-python3.12-ansible-core-2.17.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jpba5bw0wj7dgai70z1cwcnb9bmgz0df-python3.12-ansible-core-2.17.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/2sqlhlwiljbvpfhip9y67pp8i5zzjga0-python3.12-ansible-core-2.17.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/jpba5bw0wj7dgai70z1cwcnb9bmgz0df-python3.12-ansible-core-2.17.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ym7s3i3gpkhsq16ksxh6jg65qgm9l3lh-python3.12-ansible-core-2.17.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/cj3wzdvfd0kws9lmdgvks93h164a1v5f-python3.12-ansible-core-2.17.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/ym7s3i3gpkhsq16ksxh6jg65qgm9l3lh-python3.12-ansible-core-2.17.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8yghpdrq5iah8jwqr30q2mfhi157gm06-python3.12-ansible-core-2.17.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/mvpplxp3b0xlcdwjpyjg6vf6hybamdqd-python3.12-ansible-core-2.17.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/8yghpdrq5iah8jwqr30q2mfhi157gm06-python3.12-ansible-core-2.17.3"
+        }
+      }
+    },
     "gcc": {
       "resolved": "github:NixOS/nixpkgs/75a52265bda7fd25e06e3a67dee3f0354e73243c#gcc",
       "source": "nixpkg"
@@ -702,6 +766,54 @@
             }
           ],
           "store_path": "/nix/store/cpfzq372gajzfrahrawc0w955zn17js3-teller-2.0.7"
+        }
+      }
+    },
+    "terraform@latest": {
+      "last_modified": "2024-08-27T08:49:48Z",
+      "resolved": "github:NixOS/nixpkgs/a6292e34000dc93d43bccf78338770c1c5ec8a99#terraform",
+      "source": "devbox-search",
+      "version": "1.9.5",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pwpky48msircqq1xrp2gh21l75rbkji5-terraform-1.9.5",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pwpky48msircqq1xrp2gh21l75rbkji5-terraform-1.9.5"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vwvycnxxs7h4rsicadyzhsm0m4s5dpw2-terraform-1.9.5",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/vwvycnxxs7h4rsicadyzhsm0m4s5dpw2-terraform-1.9.5"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/83x8l75dwmkql0xg3933s9baa1kb753n-terraform-1.9.5",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/83x8l75dwmkql0xg3933s9baa1kb753n-terraform-1.9.5"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9y4yk0mi2i1mn3m0nzqxkb4xdmdaqzfi-terraform-1.9.5",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9y4yk0mi2i1mn3m0nzqxkb4xdmdaqzfi-terraform-1.9.5"
         }
       }
     },

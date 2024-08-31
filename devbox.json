@@ -16,7 +16,9 @@
     "go@1.23.0",
     "gcc",
     "libcap",
-    "tealdeer@1.6.1"
+    "tealdeer@1.6.1",
+    "ansible@latest",
+    "terraform@latest"
   ],
   "env": {
     "GOPATH": "$PWD",
