@@ -7,6 +7,8 @@ sudo apt install xclip xsel
 # GENERAL SYSTEM CONFIGS
 
 # Add git configs
+
+git config --global init.defaultBranch main
 git config --global user.email "fodurrr@gmail.com"
 git config --global user.name "Peter Fodor"
 ###########################################################

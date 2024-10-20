@@ -19,7 +19,9 @@
     "tealdeer@1.6.1",
     "ansible@2.17.3",
     "terraform@1.9.5",
-    "nodejs@22.8.0"
+    "nodejs@22.8.0",
+    "pnpm@9.9.0",
+    "elixir@latest"
   ],
   "env": {
     "GOPATH": "$PWD",
