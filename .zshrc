@@ -170,6 +170,10 @@ alias pbpaste='xclip -selection clipboard -o'
 alias vim='nvim'
 
 alias cat='bat --paging never --theme DarkNeon --style plain'
+# Check if batcat exists, otherwise use bat
+if command -v batcat &> /dev/null; then
+    alias bat='batcat'
+fi
 alias fzfp='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
 
 alias ls='eza --icons --git'
