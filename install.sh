@@ -13,6 +13,9 @@ git config --global user.email "fodurrr@gmail.com"
 git config --global user.name "Peter Fodor"
 ###########################################################
 
+# Install zsh
+sudo apt install zsh
+
 # Install wezterm terminal emulator
 # curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
 # echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
@@ -41,9 +44,6 @@ curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/lates
 tar xf lazygit.tar.gz lazygit
 sudo install lazygit /usr/local/bin
 sudo rm -rf lazygit.tar.gz
-
-# Install zsh
-sudo apt install zsh
 
 # https://starship.rs/guide/#%F0%9F%9A%80-installation
 sudo curl -sS https://starship.rs/install.sh | sh
@@ -79,11 +79,10 @@ ln -s /usr/bin/batcat ~/.local/bin/bat
 curl -fsSL https://get.jetify.com/devbox | bash
 
 # https://cli.github.com/
-(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-&& sudo mkdir -p -m 755 /etc/apt/keyrings \
-&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-&& sudo apt update \
-&& sudo apt install gh -y
-
+(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) &&
+    sudo mkdir -p -m 755 /etc/apt/keyrings &&
+    wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null &&
+    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg &&
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
+    sudo apt update &&
+    sudo apt install gh -y

@@ -1,38 +1,25 @@
 {
-  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.11.0/.schema/devbox.schema.json",
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
   "packages": [
     "gum@0.14.3",
-    "teller@2.0.7",
     "stow@2.4.0",
     "gh@2.54.0",
     "jq@1.7.1",
     "yq-go@4.44.2",
-    "k9s@0.32.5",
-    "kubectl@1.30.2",
-    "kubectx@0.9.5",
-    "kubernetes-helm@3.15.3",
     "hcloud@1.46.0",
-    "zellij@0.40.1",
-    "go@1.23.0",
     "gcc",
     "libcap",
     "tealdeer@1.6.1",
-    "ansible@2.17.3",
-    "terraform@1.9.5",
-    "nodejs@22.8.0",
-    "pnpm@9.9.0",
-    "elixir@latest"
-  ],
+    "mise@2025.2.7"
+   ],
   "env": {
-    "GOPATH": "$PWD",
-    "PATH":   "$PATH:$PWD/bin"
+     "PATH":   "$PATH:$PWD/bin"
   },
   "shell": {
     "init_hook": [
       "autoload -Uz compinit",
-      "compinit",
-      "source <(kubectl completion zsh)"
-    ],
+      "compinit"
+     ],
     "scripts": {}
   }
 }
