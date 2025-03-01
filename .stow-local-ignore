@@ -2,5 +2,6 @@
 .teller.yml
 gcloud
 install.sh
+sync.sh
 .git
 /mnt/c/Users/fodur/.ssh
