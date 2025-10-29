@@ -1,9 +1,9 @@
 providers:
-  dotenv_1:
-    kind: dotenv
-    maps:
-    - id: ''
-      path: /home/fodurrr/dotfiles/.config/fabric/.env
+#  dotenv_1:
+#    kind: dotenv
+#    maps:
+#    - id: ''
+#      path: /home/fodurrr/dotfiles/.config/fabric/.env
 #  hashicorp_1:
 #    kind: hashicorp
 #    maps:

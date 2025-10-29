@@ -37,8 +37,7 @@ dotfiles/
 │   │   ├── neovim.sh                # Neovim from GitHub
 │   │   ├── git-config.sh            # Git + GitHub CLI
 │   │   ├── lazygit.sh               # LazyGit
-│   │   ├── devbox.sh                # Devbox
-│   │   └── fabric.sh                # Fabric AI tool
+│   │   └── devbox.sh                # Devbox
 │   └── profiles/                     # Installation profiles (3 files)
 │       ├── quick.sh                 # Minimal setup (~5 min)
 │       ├── full.sh                  # Complete setup (~15 min)
@@ -48,7 +47,6 @@ dotfiles/
 ├── install.sh                        # Main interactive installer
 ├── setup.sh                          # One-command setup orchestrator
 ├── sync.sh                           # Dotfile sync script
-├── .config/fabric/.env.example       # Fabric API key template
 └── [existing configs...]
 ```
 
@@ -99,7 +97,6 @@ All components follow this pattern:
 5. **git-config.sh** - Git configuration and GitHub CLI
 6. **lazygit.sh** - LazyGit from GitHub releases
 7. **devbox.sh** - Jetify Devbox installation
-8. **fabric.sh** - Fabric AI tool via go install
 
 ### 3. Installation Profiles (`scripts/profiles/`)
 
@@ -110,7 +107,7 @@ All components follow this pattern:
 
 #### full.sh
 - Target: Complete environment (~15 min)
-- Installs: Everything + Neovim + Devbox + Fabric + LazyGit
+- Installs: Everything + Neovim + Devbox + LazyGit
 - Perfect for: Primary development machines
 
 #### custom.sh
@@ -147,9 +144,8 @@ All components follow this pattern:
 5. ✅ Fixed devbox.json paths for portability
 
 ### Added
-1. ✅ `.config/fabric/.env.example` - API key template
-2. ✅ Comprehensive `.gitignore` with comments
-3. ✅ Portable configuration (works on any username)
+1. ✅ Comprehensive `.gitignore` with comments
+2. ✅ Portable configuration (works on any username)
 
 ## 📚 Documentation
 

@@ -59,9 +59,8 @@ Current packages in devbox:
 ### Important Directories
 
 - `.config/nvim/` - LazyVim configuration (Neovim)
-- `.config/fabric/` - Fabric AI tool configs (includes `.env` with API keys)
 - `.config/starship.toml` - Starship prompt config
-- `bin/` - Contains compiled Go binaries (`fabric`, `yt`)
+- `bin/` - Contains compiled Go binaries (`yt`)
 - `tooling_docs/` - Documentation for advanced workflows
 - `.devbox-flakes/` - Local Nix flakes referenced by `devbox.json` (likely in `~/.devbox-flakes/`)
 
@@ -161,15 +160,6 @@ LazyVim is an opinionated Neovim distribution with:
 - Lazy.nvim plugin manager
 - Pre-configured LSP, treesitter, telescope, etc.
 - Configurations in `lua/` directory
-
-## Fabric AI Tool
-
-Fabric is installed as a Go binary in `bin/fabric`. Configuration lives in `.config/fabric/`:
-- `.env` - API keys and settings
-- `patterns/` - AI prompt patterns
-- `custompatterns/` - User-defined patterns
-
-Setup: `fabric --setup` (requires Go installation first via `go install github.com/danielmiessler/fabric@latest`)
 
 ## Git Configuration
 

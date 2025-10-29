@@ -302,9 +302,6 @@ is_component_installed() {
         zoxide)
             command_exists zoxide
             ;;
-        fabric)
-            command_exists fabric || [[ -f "$HOME/go/bin/fabric" ]]
-            ;;
         stow)
             command_exists stow
             ;;

@@ -46,7 +46,6 @@ cd ~/dotfiles
 - **Devbox** - Nix-based development environment manager
 - **Git** - Configured with GitHub CLI integration
 - **LazyGit** - Beautiful terminal UI for git
-- **Fabric** - AI-powered text processing tool
 
 ### Languages & Runtimes (via Devbox)
 - Node.js 24.x + pnpm
@@ -72,7 +71,7 @@ Complete development environment.
 ./install.sh --full
 ```
 
-**Includes:** Everything + Neovim, Devbox, Fabric, LazyGit
+**Includes:** Everything + Neovim, Devbox, LazyGit
 
 ### Custom Profile
 Choose exactly what you want.
@@ -138,7 +137,6 @@ Once installed, you'll have access to:
 dotfiles/
 ├── .config/              # Application configurations
 │   ├── nvim/            # Neovim (LazyVim)
-│   ├── fabric/          # Fabric AI tool
 │   └── starship.toml    # Starship prompt config
 ├── scripts/
 │   ├── lib/             # Shared library functions
@@ -224,7 +222,6 @@ Built with and inspired by:
 - [LazyVim](https://www.lazyvim.org/) - Neovim distribution
 - [Devbox](https://www.jetify.com/devbox) - Development environment manager
 - [GNU Stow](https://www.gnu.org/software/stow/) - Symlink manager
-- [Fabric](https://github.com/danielmiessler/fabric) - AI text processing
 
 ---
 

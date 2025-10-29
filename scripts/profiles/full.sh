@@ -6,7 +6,6 @@
 # - Everything from Quick profile
 # - Neovim + LazyVim
 # - Devbox
-# - Fabric AI tool
 # - LazyGit
 #
 # Estimated time: 10-15 minutes
@@ -28,7 +27,6 @@ install_full_profile() {
     log_info "  • Everything from Quick profile"
     log_info "  • Neovim + LazyVim configuration"
     log_info "  • Devbox for package management"
-    log_info "  • Fabric AI tool"
     log_info "  • LazyGit"
     echo
     log_info "Estimated time: 10-15 minutes"
@@ -55,9 +53,6 @@ install_full_profile() {
     # Devbox
     bash "$COMPONENTS_DIR/devbox.sh" || die "Failed to install Devbox"
 
-    # Fabric
-    bash "$COMPONENTS_DIR/fabric.sh" || die "Failed to install Fabric"
-
     # Install stow if not already installed
     if ! command_exists stow; then
         log_step "Installing GNU Stow..."
@@ -73,8 +68,7 @@ install_full_profile() {
     log_info "  1. Run './sync.sh' to symlink your dotfiles"
     log_info "  2. Log out and log back in (or run 'exec zsh')"
     log_info "  3. cd to dotfiles directory and run 'devbox shell'"
-    log_info "  4. Configure Fabric API keys in .config/fabric/.env"
-    log_info "  5. Run 'gh auth login' to authenticate with GitHub"
+    log_info "  4. Run 'gh auth login' to authenticate with GitHub"
 }
 
 # Main execution

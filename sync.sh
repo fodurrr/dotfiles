@@ -109,7 +109,6 @@ backup_conflicting_files() {
         ".wezterm.lua"
         ".config/nvim"
         ".config/starship.toml"
-        ".config/fabric"
     )
 
     for file in "${dotfiles[@]}"; do

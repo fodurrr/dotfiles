@@ -56,7 +56,6 @@ Complete development environment with all tools.
 **Includes:** Everything in Quick, plus:
 - Neovim + LazyVim configuration
 - Devbox for package management
-- Fabric AI tool
 - LazyGit
 
 **Perfect for:** Primary development machines, complete setups
@@ -132,21 +131,7 @@ exec zsh
 # Option 3: Log out and log back in (recommended)
 ```
 
-### 3. Configure API Keys (if using Fabric)
-
-```bash
-# Copy the example file
-cp ~/.config/fabric/.env.example ~/.config/fabric/.env
-
-# Edit and add your API keys
-nano ~/.config/fabric/.env
-```
-
-Get API keys:
-- OpenAI: https://platform.openai.com/api-keys
-- Anthropic: https://console.anthropic.com/
-
-### 4. Authenticate with GitHub
+### 3. Authenticate with GitHub
 
 ```bash
 gh auth login
@@ -154,7 +139,7 @@ gh auth login
 
 Follow the prompts to authenticate the GitHub CLI.
 
-### 5. Enter Devbox Environment (if installed)
+### 4. Enter Devbox Environment (if installed)
 
 ```bash
 cd ~/dotfiles
@@ -202,7 +187,6 @@ All devbox-managed tools will be available inside the shell.
   - hcloud, tealdeer
   - nodejs, pnpm
   - Elixir + Erlang (via custom flakes)
-- **Fabric**: AI tool for text processing
 
 ---
 
@@ -315,9 +299,6 @@ You can also install individual components directly:
 
 # Devbox only
 ./scripts/components/devbox.sh
-
-# Fabric only
-./scripts/components/fabric.sh
 ```
 
 All component scripts are idempotent and can be run multiple times safely.
@@ -356,7 +337,6 @@ sudo dnf remove package-name
 - **Starship Documentation**: https://starship.rs/
 - **Zinit Documentation**: https://github.com/zdharma-continuum/zinit
 - **Devbox Documentation**: https://www.jetify.com/devbox/docs/
-- **Fabric Documentation**: https://github.com/danielmiessler/fabric
 
 ---
 

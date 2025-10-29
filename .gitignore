@@ -1,6 +1,3 @@
-# Fabric AI Tool secrets
-/.config/fabric/.env
-
 # Kubernetes
 /kubeconfig.yaml
 
@@ -18,7 +15,6 @@
 /.bin
 
 # Compiled binaries (install via go install instead)
-/bin/fabric
 /bin/yt
 
 # LazyGit binary (install via system package manager)
