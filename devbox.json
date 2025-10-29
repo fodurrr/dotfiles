@@ -1,25 +1,30 @@
 {
-  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
-  "packages": [
-    "gum@0.14.3",
-    "stow@2.4.0",
-    "gh@2.54.0",
-    "jq@1.7.1",
-    "yq-go@4.44.2",
-    "hcloud@1.46.0",
-    "gcc",
-    "libcap",
-    "tealdeer@1.6.1",
-    "mise@2025.2.7"
-   ],
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
+  "packages": {
+    "gum": "0.17.0",
+    "stow": "2.4.1",
+    "gh": "2.81.0",
+    "jq": "1.8.1",
+    "yq-go": "4.48.1",
+    "hcloud": "1.54.0",
+    "libcap": "2.76",
+    "tealdeer": "1.8.0",
+    "nodejs": "24.10.0",
+    "pnpm": "10.18.2",
+    "path:$HOME/.devbox-flakes/elixir#elixir": "",
+    "path:$HOME/.devbox-flakes/elixir#erlang": "",
+    "gcc": "15.2.0"
+  },
   "env": {
-     "PATH":   "$PATH:$PWD/bin"
+    "PATH": "$PATH:$PWD/bin"
   },
   "shell": {
     "init_hook": [
       "autoload -Uz compinit",
-      "compinit"
-     ],
+      "compinit",
+      "echo 'Elixir version:'",
+      "elixir --version"
+    ],
     "scripts": {}
   }
 }

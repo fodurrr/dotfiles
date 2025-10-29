@@ -1,6 +1,13 @@
+# Set custom timeouts for Claude Code bash commands
+export BASH_DEFAULT_TIMEOUT_MS=600000
+export BASH_MAX_TIMEOUT_MS=6000000
+
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:/opt/nvim-linux64/bin"
+
+# opencode
+export PATH=$HOME/.opencode/bin:$PATH
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -8,7 +15,7 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 setopt HIST_IGNORE_ALL_DUPS
 
 # Devbox
-DEVBOX_NO_PROMPT=true
+# DEVBOX_NO_PROMPT=true
 
 # # Completions
 # source <(devbox completion zsh)
@@ -144,7 +151,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu yes select
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+# zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 zstyle ':completion:*:*:docker:*' option-stacking yes
 zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
@@ -158,10 +165,10 @@ zstyle ':completion:*:*:docker-*:*' option-stacking yes
 # zstyle ':completion:*' menu yes select
 
 # Zoxide
-eval "$(zoxide init --cmd cd zsh)"
+# eval "$(zoxide init --cmd cd zsh)"
 
 eval "$(~/.local/bin/mise activate zsh)"
-eval "$(devbox global shellenv)"
+# eval "$(devbox global shellenv)"
 
 # Aliases
 alias pbcopy='xclip -selection clipboard'
@@ -558,3 +565,13 @@ function serve() {
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+
