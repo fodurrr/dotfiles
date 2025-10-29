@@ -72,38 +72,37 @@ EOF
 
 # Interactive profile selection
 select_profile() {
-    cat << 'EOF'
-
-════════════════════════════════════════════════════════
-           Dotfiles Installation
-════════════════════════════════════════════════════════
-
-Choose an installation profile:
-
-  1) QUICK (~5 min)
-     • System base packages
-     • Zsh + Starship + Zinit
-     • Modern CLI tools (eza, fzf, bat, zoxide)
-     • Git + GitHub CLI
-
-  2) FULL (~15 min)
-     • Everything from Quick
-     • Neovim + LazyVim
-     • Devbox (Nix-based dev environment)
-     • Elixir 1.19.1 + Erlang OTP 28
-     • LazyGit
-
-  3) CUSTOM
-     • Interactive component selection
-     • Choose exactly what you want
-
-════════════════════════════════════════════════════════
-
-EOF
+    printf "\n" >&2
+    printf "════════════════════════════════════════════════════════\n" >&2
+    printf "           Dotfiles Installation\n" >&2
+    printf "════════════════════════════════════════════════════════\n" >&2
+    printf "\n" >&2
+    printf "Choose an installation profile:\n" >&2
+    printf "\n" >&2
+    printf "  1) QUICK (~5 min)\n" >&2
+    printf "     • System base packages\n" >&2
+    printf "     • Zsh + Starship + Zinit\n" >&2
+    printf "     • Modern CLI tools (eza, fzf, bat, zoxide)\n" >&2
+    printf "     • Git + GitHub CLI\n" >&2
+    printf "\n" >&2
+    printf "  2) FULL (~15 min)\n" >&2
+    printf "     • Everything from Quick\n" >&2
+    printf "     • Neovim + LazyVim\n" >&2
+    printf "     • Devbox (Nix-based dev environment)\n" >&2
+    printf "     • Elixir 1.19.1 + Erlang OTP 28\n" >&2
+    printf "     • LazyGit\n" >&2
+    printf "\n" >&2
+    printf "  3) CUSTOM\n" >&2
+    printf "     • Interactive component selection\n" >&2
+    printf "     • Choose exactly what you want\n" >&2
+    printf "\n" >&2
+    printf "════════════════════════════════════════════════════════\n" >&2
+    printf "\n" >&2
 
     local choice
     while true; do
-        read -rp "Enter your choice (1-3): " choice
+        printf "Enter your choice (1-3): " >&2
+        read -r choice
         case "$choice" in
             1)
                 echo "quick"
@@ -118,7 +117,7 @@ EOF
                 return
                 ;;
             *)
-                log_error "Invalid choice. Please enter 1, 2, or 3."
+                printf "✗ Invalid choice. Please enter 1, 2, or 3.\n" >&2
                 ;;
         esac
     done
