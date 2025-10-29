@@ -1,8 +1,34 @@
+# Fabric AI Tool secrets
 /.config/fabric/.env
+
+# Kubernetes
 /kubeconfig.yaml
+
+# Temporary files
 /something.png
 /dotfiles
+
+# Go module cache (should not be in repo)
 /pkg
+
+# Devbox runtime
 /.devbox
-/pkg
+
+# Binary directories
 /.bin
+
+# Compiled binaries (install via go install instead)
+/bin/fabric
+/bin/yt
+
+# LazyGit binary (install via system package manager)
+/lazygit
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
