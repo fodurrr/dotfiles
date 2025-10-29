@@ -45,10 +45,9 @@ dotfiles/
 │       └── custom.sh                # Interactive selection
 ├── docs/
 │   └── INSTALLATION.md               # Comprehensive install guide
-├── install-new.sh                    # Main interactive installer
+├── install.sh                        # Main interactive installer
 ├── setup.sh                          # One-command setup orchestrator
-├── sync-new.sh                       # Improved sync with --backup
-├── README-new.md                     # Updated README
+├── sync.sh                           # Dotfile sync script
 ├── .config/fabric/.env.example       # Fabric API key template
 └── [existing configs...]
 ```
@@ -121,26 +120,22 @@ All components follow this pattern:
 
 ### 4. Main Installation Scripts
 
-#### install-new.sh (280 lines)
+#### install.sh
 - Interactive profile selection
-- Gum-based UI with fallbacks
-- Command-line flags (--profile, --yes, --no-sync)
+- Command-line flags (--quick, --full, --custom)
 - Pre-flight checks
 - Comprehensive error handling
 - Beautiful completion summary
 
-#### setup.sh (101 lines)
+#### setup.sh
 - One-command setup from curl
 - Auto-clones dotfiles repo
 - Runs installer with arguments
 - Perfect for fresh machine setup
 
-#### sync-new.sh (250 lines)
+#### sync.sh
 - GNU Stow-based syncing
-- Dry-run mode (--dry-run)
-- Automatic backup (--backup)
-- Conflict detection and resolution
-- Silent mode (--yes)
+- Simple and reliable dotfile synchronization
 
 ## 🔧 Configuration Improvements
 
@@ -158,7 +153,7 @@ All components follow this pattern:
 
 ## 📚 Documentation
 
-### docs/INSTALLATION.md (420 lines)
+### docs/INSTALLATION.md
 - Quick start guide
 - All three profile options explained
 - Command-line reference
@@ -168,7 +163,7 @@ All components follow this pattern:
 - System requirements
 - Uninstallation guide
 
-### README-new.md (270 lines)
+### README.md
 - Modern design with emojis
 - Feature highlights
 - Quick start section
@@ -215,28 +210,22 @@ git clone https://github.com/fodurrr/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
 # Interactive
-./install-new.sh
+./install.sh
 
 # Quick profile
-./install-new.sh --profile quick
+./install.sh --quick
 
-# Full profile, no prompts
-./install-new.sh --profile full --yes
+# Full profile
+./install.sh --full
 
 # Custom selection
-./install-new.sh --profile custom
+./install.sh --custom
 ```
 
 ### Syncing Dotfiles
 ```bash
-# Preview changes
-./sync-new.sh --dry-run
-
-# Sync with automatic backup
-./sync-new.sh --backup
-
-# Silent sync
-./sync-new.sh --yes
+# Sync dotfiles with GNU Stow
+./sync.sh
 ```
 
 ### Individual Components
@@ -266,12 +255,12 @@ cd ~/dotfiles
 
 3. **Run new installer**
    ```bash
-   ./install-new.sh --profile full
+   ./install.sh --full
    ```
 
 4. **Sync dotfiles**
    ```bash
-   ./sync-new.sh --backup
+   ./sync.sh
    ```
 
 5. **Reload shell**
@@ -296,9 +285,8 @@ Before merging to main, test:
 - [ ] Fresh Fedora 39 VM - Full profile
 - [ ] Custom profile with various combinations
 - [ ] Idempotency (run installer twice)
-- [ ] sync-new.sh with conflicts
-- [ ] sync-new.sh --backup
-- [ ] sync-new.sh --dry-run
+- [ ] sync.sh with conflicts
+- [ ] sync.sh functionality
 - [ ] Individual component scripts
 - [ ] setup.sh from curl
 

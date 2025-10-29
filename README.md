@@ -25,7 +25,7 @@ curl -fsSL https://raw.githubusercontent.com/fodurrr/dotfiles/main/setup.sh | ba
 ```bash
 git clone https://github.com/fodurrr/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./install-new.sh
+./install.sh
 ```
 
 ## 📋 What's Included
@@ -60,7 +60,7 @@ cd ~/dotfiles
 Essential tools for basic shell work.
 
 ```bash
-./install-new.sh --profile quick
+./install.sh --quick
 ```
 
 **Includes:** Zsh, Starship, CLI tools, Git, Stow
@@ -69,7 +69,7 @@ Essential tools for basic shell work.
 Complete development environment.
 
 ```bash
-./install-new.sh --profile full
+./install.sh --full
 ```
 
 **Includes:** Everything + Neovim, Devbox, Fabric, LazyGit
@@ -78,7 +78,7 @@ Complete development environment.
 Choose exactly what you want.
 
 ```bash
-./install-new.sh --profile custom
+./install.sh --custom
 ```
 
 **Interactive selection** of components with gum UI.
@@ -93,14 +93,12 @@ Choose exactly what you want.
 
 ```bash
 # Installation
-./install-new.sh                 # Interactive install
-./install-new.sh --profile quick # Quick profile
-./install-new.sh --profile full  # Full profile
+./install.sh         # Interactive install
+./install.sh --quick # Quick profile
+./install.sh --full  # Full profile
 
 # Syncing dotfiles
-./sync-new.sh                    # Sync with GNU Stow
-./sync-new.sh --dry-run          # Preview changes
-./sync-new.sh --backup           # Backup conflicting files
+./sync.sh            # Sync with GNU Stow
 
 # Devbox environment
 cd ~/dotfiles && devbox shell    # Enter dev environment
@@ -147,9 +145,9 @@ dotfiles/
 │   ├── components/      # Modular installation scripts
 │   └── profiles/        # Installation profiles
 ├── docs/                # Documentation
-├── install-new.sh       # Main installer
+├── install.sh           # Main installer
 ├── setup.sh             # One-command setup script
-├── sync-new.sh          # Dotfile sync script
+├── sync.sh              # Dotfile sync script
 ├── devbox.json          # Devbox configuration
 └── .zshrc               # Zsh configuration
 ```
