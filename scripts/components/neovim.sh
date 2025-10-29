@@ -24,6 +24,14 @@ install_neovim() {
         local current_version
         current_version=$(nvim --version | head -n1)
         log_info "Current version: $current_version"
+
+        # Ensure symlink exists even if nvim is already installed
+        if [[ ! -L "/usr/local/bin/nvim" ]]; then
+            log_step "Creating missing symlink in /usr/local/bin..."
+            sudo ln -sf "$NVIM_INSTALL_DIR/bin/nvim" /usr/local/bin/nvim
+            log_success "Symlink created"
+        fi
+
         return 0
     fi
 
