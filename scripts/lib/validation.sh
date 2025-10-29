@@ -305,6 +305,12 @@ is_component_installed() {
         stow)
             command_exists stow
             ;;
+        elixir)
+            command_exists elixir
+            ;;
+        erlang|erl)
+            command_exists erl
+            ;;
         *)
             command_exists "$component"
             ;;

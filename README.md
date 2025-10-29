@@ -49,7 +49,7 @@ cd ~/dotfiles
 
 ### Languages & Runtimes (via Devbox)
 - Node.js 24.x + pnpm
-- Elixir 1.19.1 + Erlang
+- **Elixir 1.19.1 + Erlang OTP 28** (via Nix flakes, optional)
 - Go toolchain
 - And more via devbox.json
 
@@ -71,7 +71,7 @@ Complete development environment.
 ./install.sh --full
 ```
 
-**Includes:** Everything + Neovim, Devbox, LazyGit
+**Includes:** Everything + Neovim, Devbox, Elixir/Erlang, LazyGit
 
 ### Custom Profile
 Choose exactly what you want.
@@ -142,6 +142,8 @@ dotfiles/
 │   ├── lib/             # Shared library functions
 │   ├── components/      # Modular installation scripts
 │   └── profiles/        # Installation profiles
+├── flakes/              # Nix flakes for custom packages
+│   └── elixir/          # Elixir 1.19.1 + Erlang OTP 28
 ├── docs/                # Documentation
 ├── install.sh           # Main installer
 ├── setup.sh             # One-command setup script

@@ -56,6 +56,7 @@ Complete development environment with all tools.
 **Includes:** Everything in Quick, plus:
 - Neovim + LazyVim configuration
 - Devbox for package management
+- Elixir 1.19.1 + Erlang OTP 28 (via Nix flakes)
 - LazyGit
 
 **Perfect for:** Primary development machines, complete setups
@@ -186,7 +187,7 @@ All devbox-managed tools will be available inside the shell.
   - gum, stow, gh, jq, yq-go
   - hcloud, tealdeer
   - nodejs, pnpm
-  - Elixir + Erlang (via custom flakes)
+- **Elixir 1.19.1 + Erlang OTP 28**: Via Nix flakes (optional component)
 
 ---
 
@@ -299,6 +300,9 @@ You can also install individual components directly:
 
 # Devbox only
 ./scripts/components/devbox.sh
+
+# Elixir & Erlang only (requires Devbox)
+./scripts/components/elixir-erlang.sh
 ```
 
 All component scripts are idempotent and can be run multiple times safely.

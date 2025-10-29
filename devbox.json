@@ -11,8 +11,8 @@
     "tealdeer": "1.8.0",
     "nodejs": "24.10.0",
     "pnpm": "10.18.2",
-    "path:$HOME/.devbox-flakes/elixir#elixir": "",
-    "path:$HOME/.devbox-flakes/elixir#erlang": "",
+    "path:/home/fodurrr/.devbox-flakes/elixir#elixir": "",
+    "path:/home/fodurrr/.devbox-flakes/elixir#erlang": "",
     "gcc": "15.2.0"
   },
   "env": {

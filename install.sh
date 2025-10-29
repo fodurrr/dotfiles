@@ -52,8 +52,8 @@ PROFILES:
         • Everything from quick profile
         • Neovim with LazyVim
         • Devbox (Nix-based dev environment)
+        • Elixir 1.19.1 + Erlang OTP 28 (via Nix flakes)
         • Lazygit
-        • Fabric AI tool
         Time: ~15-20 minutes
 
     custom:
@@ -72,14 +72,34 @@ EOF
 
 # Interactive profile selection
 select_profile() {
-    print_header "Dotfiles Installation"
+    cat << 'EOF'
 
-    echo "Choose an installation profile:"
-    echo
-    echo "  1) quick   - Essential tools only (3-5 min)"
-    echo "  2) full    - Everything (15-20 min)"
-    echo "  3) custom  - Choose components interactively"
-    echo
+════════════════════════════════════════════════════════
+           Dotfiles Installation
+════════════════════════════════════════════════════════
+
+Choose an installation profile:
+
+  1) QUICK (~5 min)
+     • System base packages
+     • Zsh + Starship + Zinit
+     • Modern CLI tools (eza, fzf, bat, zoxide)
+     • Git + GitHub CLI
+
+  2) FULL (~15 min)
+     • Everything from Quick
+     • Neovim + LazyVim
+     • Devbox (Nix-based dev environment)
+     • Elixir 1.19.1 + Erlang OTP 28
+     • LazyGit
+
+  3) CUSTOM
+     • Interactive component selection
+     • Choose exactly what you want
+
+════════════════════════════════════════════════════════
+
+EOF
 
     local choice
     while true; do

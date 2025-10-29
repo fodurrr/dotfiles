@@ -24,6 +24,7 @@ declare -A COMPONENTS=(
     ["neovim"]="Neovim + LazyVim"
     ["lazygit"]="LazyGit"
     ["devbox"]="Devbox"
+    ["elixir-erlang"]="Elixir 1.19.1 + Erlang OTP 28 (requires Devbox)"
 )
 
 # Required components (always installed)
@@ -35,7 +36,7 @@ select_components_with_gum() {
 
     # Create options for gum
     local options=()
-    for component in shell cli-tools git-config neovim lazygit devbox; do
+    for component in shell cli-tools git-config neovim lazygit devbox elixir-erlang; do
         options+=("${COMPONENTS[$component]}")
     done
 
@@ -47,7 +48,7 @@ select_components_with_gum() {
     local -a selected_components=()
     selected_components+=("${REQUIRED_COMPONENTS[@]}")
 
-    for component in shell cli-tools git-config neovim lazygit devbox; do
+    for component in shell cli-tools git-config neovim lazygit devbox elixir-erlang; do
         if echo "$selected" | grep -q "${COMPONENTS[$component]}"; then
             selected_components+=("$component")
         fi
@@ -65,7 +66,7 @@ select_components_fallback() {
     local -a selected_components=()
     selected_components+=("${REQUIRED_COMPONENTS[@]}")
 
-    for component in shell cli-tools git-config neovim lazygit devbox; do
+    for component in shell cli-tools git-config neovim lazygit devbox elixir-erlang; do
         if ask_yes_no "Install ${COMPONENTS[$component]}?" "y"; then
             selected_components+=("$component")
         fi

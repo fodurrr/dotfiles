@@ -37,11 +37,15 @@ dotfiles/
 │   │   ├── neovim.sh                # Neovim from GitHub
 │   │   ├── git-config.sh            # Git + GitHub CLI
 │   │   ├── lazygit.sh               # LazyGit
-│   │   └── devbox.sh                # Devbox
+│   │   ├── devbox.sh                # Devbox
+│   │   └── elixir-erlang.sh         # Elixir + Erlang via Nix flakes
 │   └── profiles/                     # Installation profiles (3 files)
 │       ├── quick.sh                 # Minimal setup (~5 min)
 │       ├── full.sh                  # Complete setup (~15 min)
 │       └── custom.sh                # Interactive selection
+├── flakes/                           # Nix flakes for custom packages
+│   └── elixir/
+│       └── flake.nix                # Elixir 1.19.1 + Erlang OTP 28
 ├── docs/
 │   └── INSTALLATION.md               # Comprehensive install guide
 ├── install.sh                        # Main interactive installer
@@ -97,6 +101,7 @@ All components follow this pattern:
 5. **git-config.sh** - Git configuration and GitHub CLI
 6. **lazygit.sh** - LazyGit from GitHub releases
 7. **devbox.sh** - Jetify Devbox installation
+8. **elixir-erlang.sh** - Elixir 1.19.1 + Erlang OTP 28 via Nix flakes
 
 ### 3. Installation Profiles (`scripts/profiles/`)
 
@@ -107,7 +112,7 @@ All components follow this pattern:
 
 #### full.sh
 - Target: Complete environment (~15 min)
-- Installs: Everything + Neovim + Devbox + LazyGit
+- Installs: Everything + Neovim + Devbox + Elixir/Erlang + LazyGit
 - Perfect for: Primary development machines
 
 #### custom.sh

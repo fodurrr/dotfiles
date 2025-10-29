@@ -52,7 +52,7 @@ This is a personal dotfiles repository for configuring a Linux development envir
 
 Current packages in devbox:
 - `gum`, `stow`, `gh`, `jq`, `yq-go`, `hcloud`, `tealdeer`, `nodejs`, `pnpm`
-- Elixir & Erlang via custom local flakes (see Nix Flakes section below)
+- Elixir 1.19.1 & Erlang OTP 28 via Nix flakes (see `flakes/elixir/` directory)
 
 **Shell**: Zsh with Zinit plugin manager, Starship prompt
 
@@ -61,8 +61,9 @@ Current packages in devbox:
 - `.config/nvim/` - LazyVim configuration (Neovim)
 - `.config/starship.toml` - Starship prompt config
 - `bin/` - Contains compiled Go binaries (`yt`)
+- `flakes/elixir/` - Nix flake for Elixir 1.19.1 + Erlang OTP 28
 - `tooling_docs/` - Documentation for advanced workflows
-- `.devbox-flakes/` - Local Nix flakes referenced by `devbox.json` (likely in `~/.devbox-flakes/`)
+- `~/.devbox-flakes/` - User's local copy of flakes (created during installation)
 
 ## Common Commands
 
@@ -109,16 +110,22 @@ nvim        # Neovim with LazyVim config
 
 ## Advanced: Nix Flakes for Custom Packages
 
-When you need packages not in Devbox's curated index (e.g., bleeding-edge versions):
+The repository includes Nix flakes for custom package versions:
 
-1. Create local flake in `~/.devbox-flakes/<package-name>/flake.nix`
-2. Reference it in `devbox.json` with absolute path:
+**Elixir/Erlang Flake** (`flakes/elixir/flake.nix`):
+- Provides Elixir 1.19.1 and Erlang OTP 28
+- Uses nixpkgs-unstable for bleeding-edge versions
+- Automatically installed by the `elixir-erlang` component
+- Copied to `~/.devbox-flakes/elixir/` during installation
+
+To create your own flakes:
+1. Add flake to `flakes/<package-name>/flake.nix` in the repo
+2. Create component script to copy it to `~/.devbox-flakes/`
+3. Reference in `devbox.json`:
    ```json
-   "path:/home/username/.devbox-flakes/elixir#elixir": ""
+   "path:/home/username/.devbox-flakes/<package>#<output>": ""
    ```
-3. See `tooling_docs/installing_unstable_nix_package.md` for detailed guide
-
-Current example: Elixir 1.19.1 installed via local flake at `~/.devbox-flakes/elixir/`
+4. See `tooling_docs/installing_unstable_nix_package.md` for detailed guide
 
 ## Shell Customization
 

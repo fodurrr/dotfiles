@@ -6,6 +6,7 @@
 # - Everything from Quick profile
 # - Neovim + LazyVim
 # - Devbox
+# - Elixir + Erlang (via Nix flakes)
 # - LazyGit
 #
 # Estimated time: 10-15 minutes
@@ -27,6 +28,7 @@ install_full_profile() {
     log_info "  • Everything from Quick profile"
     log_info "  • Neovim + LazyVim configuration"
     log_info "  • Devbox for package management"
+    log_info "  • Elixir 1.19.1 + Erlang OTP 28 (via Nix flakes)"
     log_info "  • LazyGit"
     echo
     log_info "Estimated time: 10-15 minutes"
@@ -52,6 +54,9 @@ install_full_profile() {
 
     # Devbox
     bash "$COMPONENTS_DIR/devbox.sh" || die "Failed to install Devbox"
+
+    # Elixir & Erlang (requires Devbox)
+    bash "$COMPONENTS_DIR/elixir-erlang.sh" || die "Failed to install Elixir/Erlang"
 
     # Install stow if not already installed
     if ! command_exists stow; then
