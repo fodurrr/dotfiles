@@ -101,7 +101,7 @@ configure_default_shell() {
 
 # Main execution
 main() {
-    print_header "Installing Shell Environment"
+    gum_header "Installing Shell Environment"
 
     ensure_not_root
     ensure_sudo

@@ -31,89 +31,74 @@ declare -A COMPONENTS=(
 REQUIRED_COMPONENTS=("system-base")
 
 select_components_with_gum() {
-    if has_gum; then
-        gum style --foreground 212 --margin "1 0" --bold "Select components to install"
-        gum style --foreground 246 --margin "0 2" --italic "Use Space to select, Enter to confirm"
-        echo
-    else
-        log_step "Select components to install..."
-        echo
-    fi
+    # Create display options for gum choose
+    local -a display_options=()
+    local -a component_keys=(shell cli-tools git-config neovim lazygit devbox elixir-erlang)
 
-    # Create options for gum
-    local options=()
-    for component in shell cli-tools git-config neovim lazygit devbox elixir-erlang; do
-        options+=("${COMPONENTS[$component]}")
+    for key in "${component_keys[@]}"; do
+        display_options+=("${COMPONENTS[$key]}")
     done
 
-    # Use gum to select
+    # Use gum choose with display names as arguments (not piped)
     local selected
-    selected=$(printf '%s\n' "${options[@]}" | gum choose --no-limit --header "Components:" --cursor-prefix "[ ] " --selected-prefix "[✓] " --height 12) || true
+    selected=$(gum choose \
+        --no-limit \
+        --header "Select components to install (Space to select, Enter to confirm):" \
+        --cursor-prefix "[ ] " \
+        --selected-prefix "[✓] " \
+        --height 12 \
+        "${display_options[@]}") || true
 
-    # Convert selections back to component names
-    local -a selected_components=()
-    selected_components+=("${REQUIRED_COMPONENTS[@]}")
+    # Build array starting with required components
+    local -a selected_components=("${REQUIRED_COMPONENTS[@]}")
 
-    for component in shell cli-tools git-config neovim lazygit devbox elixir-erlang; do
-        if echo "$selected" | grep -q "${COMPONENTS[$component]}"; then
-            selected_components+=("$component")
-        fi
-    done
-
-    echo "${selected_components[@]}"
-}
-
-select_components_fallback() {
-    log_step "Select components to install..."
-    echo
-    log_info "Required: ${COMPONENTS[system-base]}"
-    echo
-
-    local -a selected_components=()
-    selected_components+=("${REQUIRED_COMPONENTS[@]}")
-
-    for component in shell cli-tools git-config neovim lazygit devbox elixir-erlang; do
-        if ask_yes_no "Install ${COMPONENTS[$component]}?" "y"; then
-            selected_components+=("$component")
-        fi
-    done
-
-    echo "${selected_components[@]}"
-}
-
-select_components() {
-    if has_gum; then
-        select_components_with_gum
-    else
-        select_components_fallback
+    # Convert selected display names back to component keys
+    if [[ -n "$selected" ]]; then
+        while IFS= read -r display_name; do
+            if [[ -n "$display_name" ]]; then
+                # Find the key for this display name
+                for key in "${component_keys[@]}"; do
+                    if [[ "${COMPONENTS[$key]}" == "$display_name" ]]; then
+                        selected_components+=("$key")
+                        break
+                    fi
+                done
+            fi
+        done <<< "$selected"
     fi
+
+    # Return the space-separated list
+    echo "${selected_components[@]}"
 }
+
 
 install_custom_profile() {
     gum_header "Custom Profile Installation"
 
     # Select components
     local selected_components
-    read -ra selected_components <<< "$(select_components)"
+    read -ra selected_components <<< "$(select_components_with_gum)"
+
+    # Debug output
+    log_info "DEBUG: Number of selected components: ${#selected_components[@]}"
+    log_info "DEBUG: Components array: [${selected_components[*]}]"
 
     if [[ ${#selected_components[@]} -eq 0 ]]; then
         die "No components selected"
     fi
 
     echo
-    if has_gum; then
-        gum style --foreground 212 --margin "1 0" --bold "Selected components:"
-        for component in "${selected_components[@]}"; do
+    # Show installation details
+    gum style --foreground 212 --margin "1 0" --bold "Selected components:"
+    for component in "${selected_components[@]}"; do
+        log_info "DEBUG: Processing component: [$component]"
+        if [[ -n "${COMPONENTS[$component]:-}" ]]; then
             gum style --foreground 246 --margin "0 2" "• ${COMPONENTS[$component]}"
-        done
-        echo
-    else
-        log_info "Selected components:"
-        for component in "${selected_components[@]}"; do
-            log_info "  • ${COMPONENTS[$component]}"
-        done
-        echo
-    fi
+        else
+            log_error "DEBUG: No display name found for component: [$component]"
+        fi
+    done
+    echo
 
     if ! is_ci; then
         if ! gum_confirm "Proceed with installation?" "y"; then
@@ -126,33 +111,56 @@ install_custom_profile() {
     local installed=0
     local failed=0
 
+    log_info "DEBUG: About to install ${#selected_components[@]} components"
+
     for component in "${selected_components[@]}"; do
+        log_info "DEBUG: Loop iteration - component=[$component]"
         echo
-        gum_section "${COMPONENTS[$component]}"
+        gum_section "Installing: ${COMPONENTS[$component]}"
+
+        if [[ ! -f "$COMPONENTS_DIR/$component.sh" ]]; then
+            log_error "Component script not found: $COMPONENTS_DIR/$component.sh"
+            ((failed++))
+            continue
+        fi
+
+        log_info "DEBUG: Executing: bash $COMPONENTS_DIR/$component.sh"
         if bash "$COMPONENTS_DIR/$component.sh"; then
+            log_success "${COMPONENTS[$component]} installed successfully"
             ((installed++))
         else
-            log_error "Failed to install $component"
+            local exit_code=$?
+            log_error "Failed to install ${COMPONENTS[$component]} (exit code: $exit_code)"
             ((failed++))
         fi
+        log_info "DEBUG: After component - installed=$installed, failed=$failed"
     done
 
+    log_info "DEBUG: Loop complete - installed=$installed, failed=$failed"
+
     # Install stow if needed and not already installed
+    log_info "DEBUG: Checking for stow..."
     if ! command_exists stow; then
+        log_info "DEBUG: stow not found, installing..."
         gum_section "GNU Stow"
         source "$SCRIPT_DIR/../lib/package-manager.sh"
         pm_install_if_missing stow
+    else
+        log_info "DEBUG: stow already installed"
     fi
 
+    log_info "DEBUG: About to show completion header"
     echo
     gum_header "Custom Profile Installation Complete!"
     echo
 
+    log_info "DEBUG: Showing results"
     log_success "Installed $installed component(s)"
     if [[ $failed -gt 0 ]]; then
         log_warning "Failed to install $failed component(s)"
     fi
 
+    log_info "DEBUG: Showing next steps"
     echo
     log_info "Next steps:"
     log_info "  1. Run './sync.sh' to symlink your dotfiles"
@@ -160,6 +168,8 @@ install_custom_profile() {
     if [[ " ${selected_components[*]} " =~ " devbox " ]]; then
         log_info "  3. cd to dotfiles directory and run 'devbox shell'"
     fi
+
+    log_info "DEBUG: install_custom_profile function ending"
 }
 
 # Main execution

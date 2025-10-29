@@ -24,7 +24,7 @@ COMPONENTS_DIR="$SCRIPT_DIR/../components"
 install_full_profile() {
     gum_header "Full Profile Installation"
 
-    if has_gum; then
+    # Show installation details
         gum style --foreground 212 --margin "1 0" --bold "This profile includes:"
         gum style --foreground 246 --margin "0 2" \
             "• Everything from Quick profile" \
@@ -35,17 +35,6 @@ install_full_profile() {
         echo
         gum style --italic --foreground 208 "⏱️  Estimated time: 10-15 minutes"
         echo
-    else
-        log_info "This profile includes:"
-        log_info "  • Everything from Quick profile"
-        log_info "  • Neovim + LazyVim configuration"
-        log_info "  • Devbox for package management"
-        log_info "  • Elixir 1.19.1 + Erlang OTP 28 (via Nix flakes)"
-        log_info "  • LazyGit"
-        echo
-        log_info "Estimated time: 10-15 minutes"
-        echo
-    fi
 
     # System base
     gum_section "System Base Packages"

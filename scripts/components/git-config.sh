@@ -18,7 +18,7 @@ source "$SCRIPT_DIR/../lib/package-manager.sh"
 source "$SCRIPT_DIR/../lib/validation.sh"
 
 configure_git() {
-    print_header "Configuring Git"
+    gum_header "Configuring Git"
 
     # Set default branch to main
     if [[ $(git config --global init.defaultBranch 2>/dev/null || echo "") != "main" ]]; then

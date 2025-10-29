@@ -20,7 +20,7 @@ install_devbox() {
         return 0
     fi
 
-    print_header "Installing Devbox"
+    gum_header "Installing Devbox"
 
     log_step "Downloading Devbox installer..."
 

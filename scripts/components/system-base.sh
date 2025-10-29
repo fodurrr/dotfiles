@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/../lib/package-manager.sh"
 source "$SCRIPT_DIR/../lib/validation.sh"
 
 install_system_base() {
-    print_header "Installing Base System Packages"
+    gum_header "Installing Base System Packages"
 
     local os
     os=$(detect_os)

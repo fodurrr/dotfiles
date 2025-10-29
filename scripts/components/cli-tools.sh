@@ -144,7 +144,7 @@ install_zoxide() {
 
 # Main execution
 main() {
-    print_header "Installing Modern CLI Tools"
+    gum_header "Installing Modern CLI Tools"
 
     ensure_not_root
     ensure_sudo

@@ -20,7 +20,7 @@ install_lazygit() {
         return 0
     fi
 
-    print_header "Installing LazyGit"
+    gum_header "Installing LazyGit"
 
     log_step "Fetching latest LazyGit release..."
 

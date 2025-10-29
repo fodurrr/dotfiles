@@ -16,42 +16,25 @@ if [[ -n "${COMMON_SH_LOADED:-}" ]]; then
 fi
 readonly COMMON_SH_LOADED=1
 
-# Color codes for output
-readonly COLOR_RESET='\033[0m'
-readonly COLOR_RED='\033[0;31m'
-readonly COLOR_GREEN='\033[0;32m'
-readonly COLOR_YELLOW='\033[0;33m'
-readonly COLOR_BLUE='\033[0;34m'
-readonly COLOR_MAGENTA='\033[0;35m'
-readonly COLOR_CYAN='\033[0;36m'
-readonly COLOR_BOLD='\033[1m'
-
-# Icons for better UX
-readonly ICON_SUCCESS="✓"
-readonly ICON_ERROR="✗"
-readonly ICON_INFO="ℹ"
-readonly ICON_WARNING="⚠"
-readonly ICON_ARROW="→"
-
-# Logging functions
+# Logging functions - all use gum (guaranteed to be installed)
 log_info() {
-    echo -e "${COLOR_BLUE}${ICON_INFO}${COLOR_RESET} $*"
+    gum style --foreground 12 "ℹ $*"
 }
 
 log_success() {
-    echo -e "${COLOR_GREEN}${ICON_SUCCESS}${COLOR_RESET} $*"
+    gum style --foreground 2 "✓ $*"
 }
 
 log_warning() {
-    echo -e "${COLOR_YELLOW}${ICON_WARNING}${COLOR_RESET} $*"
+    gum style --foreground 3 "⚠ $*"
 }
 
 log_error() {
-    echo -e "${COLOR_RED}${ICON_ERROR}${COLOR_RESET} $*" >&2
+    gum style --foreground 1 "✗ $*" >&2
 }
 
 log_step() {
-    echo -e "${COLOR_CYAN}${ICON_ARROW}${COLOR_RESET} ${COLOR_BOLD}$*${COLOR_RESET}"
+    gum style --foreground 14 --bold "→ $*"
 }
 
 # Die function for fatal errors
@@ -251,22 +234,6 @@ get_dotfiles_root() {
     cd "$script_dir/../.." && pwd
 }
 
-# Print a separator line
-print_separator() {
-    local char="${1:-─}"
-    local width="${2:-60}"
-    printf "%${width}s\n" | tr ' ' "$char"
-}
-
-# Print a section header
-print_header() {
-    local title="$1"
-    echo
-    print_separator "═"
-    echo -e "${COLOR_BOLD}${COLOR_CYAN}${title}${COLOR_RESET}"
-    print_separator "═"
-    echo
-}
 
 # Download file with curl or wget
 download_file() {
@@ -309,18 +276,13 @@ version_ge() {
 # Gum UI Functions
 # ============================================================================
 
-# Check if gum is available
-has_gum() {
-    command_exists gum
-}
-
-# Ensure gum is installed (with fallback)
+# Ensure gum is installed system-wide (called at script start)
 ensure_gum() {
-    if has_gum; then
+    if command_exists gum; then
         return 0
     fi
 
-    log_step "Installing Gum for enhanced UI..."
+    echo "→ Installing Gum for beautiful UI..."
 
     local os
     os=$(detect_os)
@@ -350,152 +312,83 @@ gpgkey=https://repo.charm.sh/yum/gpg.key' | sudo tee /etc/yum.repos.d/charm.repo
             sudo yum install -y -q gum
             ;;
         *)
-            log_warning "Gum installation not supported on $os, falling back to basic UI"
+            echo "✗ Gum installation not supported on $os"
             return 1
             ;;
     esac
 
-    if has_gum; then
-        log_success "Gum installed successfully"
+    if command_exists gum; then
+        gum style --foreground 2 "✓ Gum installed successfully"
         return 0
     else
-        log_warning "Gum installation failed, falling back to basic UI"
+        echo "✗ Gum installation failed"
         return 1
     fi
 }
 
-# Styled header with gum (with fallback)
+# Styled header with gum
 gum_header() {
     local title="$1"
     local width="${2:-60}"
-
-    if has_gum; then
-        gum style \
-            --border double \
-            --align center \
-            --width "$width" \
-            --margin "1 2" \
-            --padding "1 2" \
-            --bold \
-            "$title"
-    else
-        # Fallback to basic header
-        print_header "$title"
-    fi
+    gum style \
+        --border double \
+        --align center \
+        --width "$width" \
+        --margin "1 2" \
+        --padding "1 2" \
+        --bold \
+        "$title"
 }
 
 # Styled section header (smaller than main header)
 gum_section() {
     local title="$1"
-
-    if has_gum; then
-        gum style \
-            --border rounded \
-            --border-foreground 212 \
-            --padding "0 1" \
-            --margin "1 0" \
-            --bold \
-            "$title"
-    else
-        echo
-        echo -e "${COLOR_BOLD}${COLOR_CYAN}▸ ${title}${COLOR_RESET}"
-        echo
-    fi
+    gum style \
+        --border rounded \
+        --border-foreground 212 \
+        --padding "0 1" \
+        --margin "1 0" \
+        --bold \
+        "$title"
 }
 
-# Spinner wrapper for long operations (with fallback)
+# Spinner wrapper for long operations
 gum_spin() {
     local title="$1"
     shift
     local cmd="$*"
-
-    if has_gum; then
-        gum spin --spinner dot --title "$title" -- bash -c "$cmd"
-    else
-        log_step "$title"
-        bash -c "$cmd"
-    fi
+    gum spin --spinner dot --title "$title" -- bash -c "$cmd"
 }
 
-# Confirmation prompt (with fallback)
+# Confirmation prompt
 gum_confirm() {
     local prompt="$1"
     local default="${2:-y}"
 
-    if has_gum; then
-        if [[ "$default" == "y" ]]; then
-            gum confirm "$prompt" --default=true
-        else
-            gum confirm "$prompt" --default=false
-        fi
+    if [[ "$default" == "y" ]]; then
+        gum confirm "$prompt" --default=true
     else
-        ask_yes_no "$prompt" "$default"
+        gum confirm "$prompt" --default=false
     fi
 }
 
-# Menu selection (with fallback)
+# Menu selection
 gum_choose() {
     local header="$1"
     shift
     local options=("$@")
-
-    if has_gum; then
-        gum choose --header "$header" --cursor "> " "${options[@]}"
-    else
-        # Fallback to basic select
-        echo "$header" >&2
-        select opt in "${options[@]}"; do
-            if [[ -n "$opt" ]]; then
-                echo "$opt"
-                return 0
-            fi
-        done
-    fi
+    gum choose --header "$header" --cursor "> " "${options[@]}"
 }
 
-# Input prompt (with fallback)
+# Input prompt
 gum_input() {
     local prompt="$1"
     local placeholder="${2:-}"
 
-    if has_gum; then
-        if [[ -n "$placeholder" ]]; then
-            gum input --prompt "$prompt " --placeholder "$placeholder"
-        else
-            gum input --prompt "$prompt "
-        fi
+    if [[ -n "$placeholder" ]]; then
+        gum input --prompt "$prompt " --placeholder "$placeholder"
     else
-        read -rp "$prompt " input
-        echo "$input"
-    fi
-}
-
-# Log message with gum styling (with fallback)
-gum_log() {
-    local level="$1"
-    shift
-    local message="$*"
-
-    if has_gum; then
-        gum log --level "$level" "$message"
-    else
-        case "$level" in
-            error)
-                log_error "$message"
-                ;;
-            warn)
-                log_warning "$message"
-                ;;
-            info)
-                log_info "$message"
-                ;;
-            debug)
-                log_info "$message"
-                ;;
-            *)
-                echo "$message"
-                ;;
-        esac
+        gum input --prompt "$prompt "
     fi
 }
 
@@ -507,7 +400,6 @@ export -f check_internet ensure_internet
 export -f get_available_space_mb ensure_disk_space
 export -f backup_file backup_directory ask_yes_no is_ci
 export -f get_script_dir get_dotfiles_root
-export -f print_separator print_header
 export -f download_file extract_version version_ge
-export -f has_gum ensure_gum gum_header gum_section gum_spin
-export -f gum_confirm gum_choose gum_input gum_log
+export -f ensure_gum gum_header gum_section gum_spin
+export -f gum_confirm gum_choose gum_input

@@ -1,7 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
   "packages": {
-    "gum": "0.17.0",
     "stow": "2.4.1",
     "gh": "2.81.0",
     "jq": "1.8.1",

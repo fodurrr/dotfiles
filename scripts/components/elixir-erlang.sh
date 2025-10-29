@@ -31,7 +31,7 @@ install_elixir_erlang() {
         return 0
     fi
 
-    print_header "Installing Elixir & Erlang via Nix Flakes"
+    gum_header "Installing Elixir & Erlang via Nix Flakes"
 
     # Verify devbox is installed
     if ! command_exists devbox; then
@@ -86,7 +86,7 @@ install_elixir_erlang() {
 
     log_success "Elixir and Erlang configured in devbox"
 
-    print_header "Elixir & Erlang Installation Complete!"
+    gum_header "Elixir & Erlang Installation Complete!"
 
     log_success "Elixir 1.19.1 and Erlang OTP 28 are now available via Devbox"
     echo

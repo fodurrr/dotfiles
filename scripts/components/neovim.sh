@@ -35,7 +35,7 @@ install_neovim() {
         return 0
     fi
 
-    print_header "Installing Neovim"
+    gum_header "Installing Neovim"
 
     log_step "Downloading latest Neovim release..."
 

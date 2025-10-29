@@ -72,90 +72,34 @@ EOF
 
 # Interactive profile selection
 select_profile() {
-    # Show header
-    if has_gum; then
-        gum_header "Dotfiles Installation"
-        echo
-    else
-        printf "\n" >&2
-        printf "════════════════════════════════════════════════════════\n" >&2
-        printf "           Dotfiles Installation\n" >&2
-        printf "════════════════════════════════════════════════════════\n" >&2
-        printf "\n" >&2
-    fi
+    # Show beautiful header (redirect to stderr so it doesn't pollute the returned value)
+    gum_header "Dotfiles Installation" >&2
+    echo >&2
 
-    # Use gum for selection if available
-    if has_gum; then
-        local choice
-        choice=$(gum choose \
-            --header "Choose your installation profile:" \
-            --cursor "> " \
-            --height 15 \
-            "QUICK (~5 min) - System base, Zsh, CLI tools, Git" \
-            "FULL (~15 min) - Everything including Neovim, Devbox, Elixir/Erlang" \
-            "CUSTOM - Interactive component selection")
+    # Use gum for selection
+    local choice
+    choice=$(gum choose \
+        --header "Choose your installation profile:" \
+        --cursor "> " \
+        --height 15 \
+        "QUICK (~5 min) - System base, Zsh, CLI tools, Git" \
+        "FULL (~15 min) - Everything including Neovim, Devbox, Elixir/Erlang" \
+        "CUSTOM - Interactive component selection")
 
-        case "$choice" in
-            QUICK*)
-                echo "quick"
-                ;;
-            FULL*)
-                echo "full"
-                ;;
-            CUSTOM*)
-                echo "custom"
-                ;;
-            *)
-                die "No profile selected"
-                ;;
-        esac
-    else
-        # Fallback to basic text menu
-        printf "Choose an installation profile:\n" >&2
-        printf "\n" >&2
-        printf "  1) QUICK (~5 min)\n" >&2
-        printf "     • System base packages\n" >&2
-        printf "     • Zsh + Starship + Zinit\n" >&2
-        printf "     • Modern CLI tools (eza, fzf, bat, zoxide)\n" >&2
-        printf "     • Git + GitHub CLI\n" >&2
-        printf "\n" >&2
-        printf "  2) FULL (~15 min)\n" >&2
-        printf "     • Everything from Quick\n" >&2
-        printf "     • Neovim + LazyVim\n" >&2
-        printf "     • Devbox (Nix-based dev environment)\n" >&2
-        printf "     • Elixir 1.19.1 + Erlang OTP 28\n" >&2
-        printf "     • LazyGit\n" >&2
-        printf "\n" >&2
-        printf "  3) CUSTOM\n" >&2
-        printf "     • Interactive component selection\n" >&2
-        printf "     • Choose exactly what you want\n" >&2
-        printf "\n" >&2
-        printf "════════════════════════════════════════════════════════\n" >&2
-        printf "\n" >&2
-
-        local choice
-        while true; do
-            printf "Enter your choice (1-3): " >&2
-            read -r choice
-            case "$choice" in
-                1)
-                    echo "quick"
-                    return
-                    ;;
-                2)
-                    echo "full"
-                    return
-                    ;;
-                3)
-                    echo "custom"
-                    return
-                    ;;
-                *)
-                    printf "✗ Invalid choice. Please enter 1, 2, or 3.\n" >&2
-                    ;;
-            esac
-        done
-    fi
+    case "$choice" in
+        QUICK*)
+            echo "quick"
+            ;;
+        FULL*)
+            echo "full"
+            ;;
+        CUSTOM*)
+            echo "custom"
+            ;;
+        *)
+            die "No profile selected"
+            ;;
+    esac
 }
 
 # Run the selected profile
@@ -178,8 +122,8 @@ run_profile() {
 main() {
     local profile=""
 
-    # Install Gum early for enhanced UI (non-fatal if it fails)
-    ensure_gum || log_warning "Continuing with basic UI"
+    # Install Gum FIRST - required for beautiful UI
+    ensure_gum || die "Failed to install Gum. Cannot continue."
 
     # Parse arguments
     if [[ $# -eq 0 ]]; then

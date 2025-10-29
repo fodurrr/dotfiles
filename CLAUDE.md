@@ -51,8 +51,10 @@ This is a personal dotfiles repository for configuring a Linux development envir
 **Devbox (Nix)**: Primary tool manager defined in `devbox.json`. Tools are only available inside `devbox shell`.
 
 Current packages in devbox:
-- `gum`, `stow`, `gh`, `jq`, `yq-go`, `hcloud`, `tealdeer`, `nodejs`, `pnpm`
+- `stow`, `gh`, `jq`, `yq-go`, `hcloud`, `tealdeer`, `nodejs`, `pnpm`
 - Elixir 1.19.1 & Erlang OTP 28 via Nix flakes (see `flakes/elixir/` directory)
+
+**Note**: `gum` is installed system-wide (not in devbox) to ensure installation scripts work correctly outside devbox shell.
 
 **Shell**: Zsh with Zinit plugin manager, Starship prompt
 
