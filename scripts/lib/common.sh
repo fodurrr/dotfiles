@@ -10,6 +10,12 @@
 
 set -euo pipefail
 
+# Source guard - prevent multiple sourcing
+if [[ -n "${COMMON_SH_LOADED:-}" ]]; then
+    return 0
+fi
+readonly COMMON_SH_LOADED=1
+
 # Color codes for output
 readonly COLOR_RESET='\033[0m'
 readonly COLOR_RED='\033[0;31m'

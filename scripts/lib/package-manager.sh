@@ -7,6 +7,12 @@
 
 set -euo pipefail
 
+# Source guard - prevent multiple sourcing
+if [[ -n "${PACKAGE_MANAGER_SH_LOADED:-}" ]]; then
+    return 0
+fi
+readonly PACKAGE_MANAGER_SH_LOADED=1
+
 # Source common functions
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/lib/common.sh
