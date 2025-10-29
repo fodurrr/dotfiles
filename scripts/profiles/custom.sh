@@ -31,8 +31,14 @@ declare -A COMPONENTS=(
 REQUIRED_COMPONENTS=("system-base")
 
 select_components_with_gum() {
-    log_step "Select components to install..."
-    echo
+    if has_gum; then
+        gum style --foreground 212 --margin "1 0" --bold "Select components to install"
+        gum style --foreground 246 --margin "0 2" --italic "Use Space to select, Enter to confirm"
+        echo
+    else
+        log_step "Select components to install..."
+        echo
+    fi
 
     # Create options for gum
     local options=()
@@ -42,7 +48,7 @@ select_components_with_gum() {
 
     # Use gum to select
     local selected
-    selected=$(printf '%s\n' "${options[@]}" | gum choose --no-limit --header "Select components to install (Space to select, Enter to confirm):") || true
+    selected=$(printf '%s\n' "${options[@]}" | gum choose --no-limit --header "Components:" --cursor-prefix "[ ] " --selected-prefix "[✓] " --height 12) || true
 
     # Convert selections back to component names
     local -a selected_components=()
@@ -76,7 +82,7 @@ select_components_fallback() {
 }
 
 select_components() {
-    if command_exists gum; then
+    if has_gum; then
         select_components_with_gum
     else
         select_components_fallback
@@ -84,7 +90,7 @@ select_components() {
 }
 
 install_custom_profile() {
-    print_header "Custom Profile Installation"
+    gum_header "Custom Profile Installation"
 
     # Select components
     local selected_components
@@ -95,14 +101,22 @@ install_custom_profile() {
     fi
 
     echo
-    log_info "Selected components:"
-    for component in "${selected_components[@]}"; do
-        log_info "  • ${COMPONENTS[$component]}"
-    done
-    echo
+    if has_gum; then
+        gum style --foreground 212 --margin "1 0" --bold "Selected components:"
+        for component in "${selected_components[@]}"; do
+            gum style --foreground 246 --margin "0 2" "• ${COMPONENTS[$component]}"
+        done
+        echo
+    else
+        log_info "Selected components:"
+        for component in "${selected_components[@]}"; do
+            log_info "  • ${COMPONENTS[$component]}"
+        done
+        echo
+    fi
 
     if ! is_ci; then
-        if ! ask_yes_no "Proceed with installation?" "y"; then
+        if ! gum_confirm "Proceed with installation?" "y"; then
             log_info "Installation cancelled"
             exit 0
         fi
@@ -114,6 +128,7 @@ install_custom_profile() {
 
     for component in "${selected_components[@]}"; do
         echo
+        gum_section "${COMPONENTS[$component]}"
         if bash "$COMPONENTS_DIR/$component.sh"; then
             ((installed++))
         else
@@ -124,12 +139,14 @@ install_custom_profile() {
 
     # Install stow if needed and not already installed
     if ! command_exists stow; then
-        log_step "Installing GNU Stow..."
+        gum_section "GNU Stow"
         source "$SCRIPT_DIR/../lib/package-manager.sh"
         pm_install_if_missing stow
     fi
 
-    print_header "Custom Profile Installation Complete!"
+    echo
+    gum_header "Custom Profile Installation Complete!"
+    echo
 
     log_success "Installed $installed component(s)"
     if [[ $failed -gt 0 ]]; then

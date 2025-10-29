@@ -72,55 +72,90 @@ EOF
 
 # Interactive profile selection
 select_profile() {
-    printf "\n" >&2
-    printf "════════════════════════════════════════════════════════\n" >&2
-    printf "           Dotfiles Installation\n" >&2
-    printf "════════════════════════════════════════════════════════\n" >&2
-    printf "\n" >&2
-    printf "Choose an installation profile:\n" >&2
-    printf "\n" >&2
-    printf "  1) QUICK (~5 min)\n" >&2
-    printf "     • System base packages\n" >&2
-    printf "     • Zsh + Starship + Zinit\n" >&2
-    printf "     • Modern CLI tools (eza, fzf, bat, zoxide)\n" >&2
-    printf "     • Git + GitHub CLI\n" >&2
-    printf "\n" >&2
-    printf "  2) FULL (~15 min)\n" >&2
-    printf "     • Everything from Quick\n" >&2
-    printf "     • Neovim + LazyVim\n" >&2
-    printf "     • Devbox (Nix-based dev environment)\n" >&2
-    printf "     • Elixir 1.19.1 + Erlang OTP 28\n" >&2
-    printf "     • LazyGit\n" >&2
-    printf "\n" >&2
-    printf "  3) CUSTOM\n" >&2
-    printf "     • Interactive component selection\n" >&2
-    printf "     • Choose exactly what you want\n" >&2
-    printf "\n" >&2
-    printf "════════════════════════════════════════════════════════\n" >&2
-    printf "\n" >&2
+    # Show header
+    if has_gum; then
+        gum_header "Dotfiles Installation"
+        echo
+    else
+        printf "\n" >&2
+        printf "════════════════════════════════════════════════════════\n" >&2
+        printf "           Dotfiles Installation\n" >&2
+        printf "════════════════════════════════════════════════════════\n" >&2
+        printf "\n" >&2
+    fi
 
-    local choice
-    while true; do
-        printf "Enter your choice (1-3): " >&2
-        read -r choice
+    # Use gum for selection if available
+    if has_gum; then
+        local choice
+        choice=$(gum choose \
+            --header "Choose your installation profile:" \
+            --cursor "> " \
+            --height 15 \
+            "QUICK (~5 min) - System base, Zsh, CLI tools, Git" \
+            "FULL (~15 min) - Everything including Neovim, Devbox, Elixir/Erlang" \
+            "CUSTOM - Interactive component selection")
+
         case "$choice" in
-            1)
+            QUICK*)
                 echo "quick"
-                return
                 ;;
-            2)
+            FULL*)
                 echo "full"
-                return
                 ;;
-            3)
+            CUSTOM*)
                 echo "custom"
-                return
                 ;;
             *)
-                printf "✗ Invalid choice. Please enter 1, 2, or 3.\n" >&2
+                die "No profile selected"
                 ;;
         esac
-    done
+    else
+        # Fallback to basic text menu
+        printf "Choose an installation profile:\n" >&2
+        printf "\n" >&2
+        printf "  1) QUICK (~5 min)\n" >&2
+        printf "     • System base packages\n" >&2
+        printf "     • Zsh + Starship + Zinit\n" >&2
+        printf "     • Modern CLI tools (eza, fzf, bat, zoxide)\n" >&2
+        printf "     • Git + GitHub CLI\n" >&2
+        printf "\n" >&2
+        printf "  2) FULL (~15 min)\n" >&2
+        printf "     • Everything from Quick\n" >&2
+        printf "     • Neovim + LazyVim\n" >&2
+        printf "     • Devbox (Nix-based dev environment)\n" >&2
+        printf "     • Elixir 1.19.1 + Erlang OTP 28\n" >&2
+        printf "     • LazyGit\n" >&2
+        printf "\n" >&2
+        printf "  3) CUSTOM\n" >&2
+        printf "     • Interactive component selection\n" >&2
+        printf "     • Choose exactly what you want\n" >&2
+        printf "\n" >&2
+        printf "════════════════════════════════════════════════════════\n" >&2
+        printf "\n" >&2
+
+        local choice
+        while true; do
+            printf "Enter your choice (1-3): " >&2
+            read -r choice
+            case "$choice" in
+                1)
+                    echo "quick"
+                    return
+                    ;;
+                2)
+                    echo "full"
+                    return
+                    ;;
+                3)
+                    echo "custom"
+                    return
+                    ;;
+                *)
+                    printf "✗ Invalid choice. Please enter 1, 2, or 3.\n" >&2
+                    ;;
+            esac
+        done
+    fi
 }
 
 # Run the selected profile
@@ -142,6 +177,9 @@ run_profile() {
 # Main function
 main() {
     local profile=""
+
+    # Install Gum early for enhanced UI (non-fatal if it fails)
+    ensure_gum || log_warning "Continuing with basic UI"
 
     # Parse arguments
     if [[ $# -eq 0 ]]; then
@@ -180,7 +218,7 @@ main() {
     run_profile "$profile"
 
     echo
-    print_header "Installation Complete!"
+    gum_header "Installation Complete!"
     echo
     log_success "Profile '$profile' has been installed successfully"
     echo

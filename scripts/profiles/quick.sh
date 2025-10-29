@@ -22,38 +22,57 @@ source "$SCRIPT_DIR/../lib/common.sh"
 COMPONENTS_DIR="$SCRIPT_DIR/../components"
 
 install_quick_profile() {
-    print_header "Quick Profile Installation"
+    gum_header "Quick Profile Installation"
 
-    log_info "This profile includes:"
-    log_info "  • System base packages"
-    log_info "  • Zsh + Starship + Zinit"
-    log_info "  • Modern CLI tools"
-    log_info "  • Git configuration"
-    log_info "  • GNU Stow"
-    echo
-    log_info "Estimated time: 3-5 minutes"
-    echo
+    if has_gum; then
+        gum style --foreground 212 --margin "1 0" --bold "This profile includes:"
+        gum style --foreground 246 --margin "0 2" \
+            "• System base packages" \
+            "• Zsh + Starship + Zinit" \
+            "• Modern CLI tools" \
+            "• Git configuration" \
+            "• GNU Stow"
+        echo
+        gum style --italic --foreground 208 "⏱️  Estimated time: 3-5 minutes"
+        echo
+    else
+        log_info "This profile includes:"
+        log_info "  • System base packages"
+        log_info "  • Zsh + Starship + Zinit"
+        log_info "  • Modern CLI tools"
+        log_info "  • Git configuration"
+        log_info "  • GNU Stow"
+        echo
+        log_info "Estimated time: 3-5 minutes"
+        echo
+    fi
 
     # System base
+    gum_section "System Base Packages"
     bash "$COMPONENTS_DIR/system-base.sh" || die "Failed to install system base"
 
     # Shell environment
+    gum_section "Shell Environment"
     bash "$COMPONENTS_DIR/shell.sh" || die "Failed to install shell"
 
     # CLI tools
+    gum_section "CLI Tools"
     bash "$COMPONENTS_DIR/cli-tools.sh" || die "Failed to install CLI tools"
 
     # Git configuration
+    gum_section "Git Configuration"
     bash "$COMPONENTS_DIR/git-config.sh" || die "Failed to configure git"
 
     # Install stow if not already installed
     if ! command_exists stow; then
-        log_step "Installing GNU Stow..."
+        gum_section "GNU Stow"
         source "$SCRIPT_DIR/../lib/package-manager.sh"
         pm_install_if_missing stow
     fi
 
-    print_header "Quick Profile Installation Complete!"
+    echo
+    gum_header "Quick Profile Installation Complete!"
+    echo
 
     log_success "All components installed successfully"
     echo

@@ -305,6 +305,200 @@ version_ge() {
     fi
 }
 
+# ============================================================================
+# Gum UI Functions
+# ============================================================================
+
+# Check if gum is available
+has_gum() {
+    command_exists gum
+}
+
+# Ensure gum is installed (with fallback)
+ensure_gum() {
+    if has_gum; then
+        return 0
+    fi
+
+    log_step "Installing Gum for enhanced UI..."
+
+    local os
+    os=$(detect_os)
+
+    case "$os" in
+        ubuntu|debian)
+            # Use official Charm repository
+            if ! command_exists curl; then
+                sudo apt-get update -qq
+                sudo apt-get install -y -qq curl
+            fi
+
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+            echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq gum
+            ;;
+        fedora)
+            # Use official Charm repository
+            echo '[charm]
+name=Charm
+baseurl=https://repo.charm.sh/yum/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.charm.sh/yum/gpg.key' | sudo tee /etc/yum.repos.d/charm.repo
+            sudo yum install -y -q gum
+            ;;
+        *)
+            log_warning "Gum installation not supported on $os, falling back to basic UI"
+            return 1
+            ;;
+    esac
+
+    if has_gum; then
+        log_success "Gum installed successfully"
+        return 0
+    else
+        log_warning "Gum installation failed, falling back to basic UI"
+        return 1
+    fi
+}
+
+# Styled header with gum (with fallback)
+gum_header() {
+    local title="$1"
+    local width="${2:-60}"
+
+    if has_gum; then
+        gum style \
+            --border double \
+            --align center \
+            --width "$width" \
+            --margin "1 2" \
+            --padding "1 2" \
+            --bold \
+            "$title"
+    else
+        # Fallback to basic header
+        print_header "$title"
+    fi
+}
+
+# Styled section header (smaller than main header)
+gum_section() {
+    local title="$1"
+
+    if has_gum; then
+        gum style \
+            --border rounded \
+            --border-foreground 212 \
+            --padding "0 1" \
+            --margin "1 0" \
+            --bold \
+            "$title"
+    else
+        echo
+        echo -e "${COLOR_BOLD}${COLOR_CYAN}▸ ${title}${COLOR_RESET}"
+        echo
+    fi
+}
+
+# Spinner wrapper for long operations (with fallback)
+gum_spin() {
+    local title="$1"
+    shift
+    local cmd="$*"
+
+    if has_gum; then
+        gum spin --spinner dot --title "$title" -- bash -c "$cmd"
+    else
+        log_step "$title"
+        bash -c "$cmd"
+    fi
+}
+
+# Confirmation prompt (with fallback)
+gum_confirm() {
+    local prompt="$1"
+    local default="${2:-y}"
+
+    if has_gum; then
+        if [[ "$default" == "y" ]]; then
+            gum confirm "$prompt" --default=true
+        else
+            gum confirm "$prompt" --default=false
+        fi
+    else
+        ask_yes_no "$prompt" "$default"
+    fi
+}
+
+# Menu selection (with fallback)
+gum_choose() {
+    local header="$1"
+    shift
+    local options=("$@")
+
+    if has_gum; then
+        gum choose --header "$header" --cursor "> " "${options[@]}"
+    else
+        # Fallback to basic select
+        echo "$header" >&2
+        select opt in "${options[@]}"; do
+            if [[ -n "$opt" ]]; then
+                echo "$opt"
+                return 0
+            fi
+        done
+    fi
+}
+
+# Input prompt (with fallback)
+gum_input() {
+    local prompt="$1"
+    local placeholder="${2:-}"
+
+    if has_gum; then
+        if [[ -n "$placeholder" ]]; then
+            gum input --prompt "$prompt " --placeholder "$placeholder"
+        else
+            gum input --prompt "$prompt "
+        fi
+    else
+        read -rp "$prompt " input
+        echo "$input"
+    fi
+}
+
+# Log message with gum styling (with fallback)
+gum_log() {
+    local level="$1"
+    shift
+    local message="$*"
+
+    if has_gum; then
+        gum log --level "$level" "$message"
+    else
+        case "$level" in
+            error)
+                log_error "$message"
+                ;;
+            warn)
+                log_warning "$message"
+                ;;
+            info)
+                log_info "$message"
+                ;;
+            debug)
+                log_info "$message"
+                ;;
+            *)
+                echo "$message"
+                ;;
+        esac
+    fi
+}
+
 # Export functions for use in other scripts
 export -f log_info log_success log_warning log_error log_step
 export -f die command_exists is_root ensure_not_root ensure_sudo
@@ -315,3 +509,5 @@ export -f backup_file backup_directory ask_yes_no is_ci
 export -f get_script_dir get_dotfiles_root
 export -f print_separator print_header
 export -f download_file extract_version version_ge
+export -f has_gum ensure_gum gum_header gum_section gum_spin
+export -f gum_confirm gum_choose gum_input gum_log
