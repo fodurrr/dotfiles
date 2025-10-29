@@ -23,7 +23,7 @@ git clone https://github.com/fodurrr/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
 # Run the installer
-./install-new.sh
+./install.sh
 ```
 
 ---
@@ -46,7 +46,7 @@ Essential tools for basic shell work.
 **Perfect for:** Lightweight setups, servers, minimal installations
 
 ```bash
-./install-new.sh --profile quick
+./install.sh --quick
 ```
 
 ### 💎 Full Profile (~15 minutes)
@@ -62,7 +62,7 @@ Complete development environment with all tools.
 **Perfect for:** Primary development machines, complete setups
 
 ```bash
-./install-new.sh --profile full
+./install.sh --full
 ```
 
 ### 🎯 Custom Profile
@@ -75,7 +75,7 @@ Interactively choose which components to install.
 - Uses gum for nice TUI (falls back to prompts)
 
 ```bash
-./install-new.sh --profile custom
+./install.sh --custom
 ```
 
 ---
@@ -83,29 +83,29 @@ Interactively choose which components to install.
 ## Command-Line Options
 
 ```bash
-./install-new.sh [OPTIONS]
+./install.sh [OPTIONS]
 
 OPTIONS:
-    --profile PROFILE    Installation profile (quick/full/custom)
-    --yes, -y            Skip all confirmations
-    --no-sync            Skip running sync.sh after installation
-    --help, -h           Show help message
+    --quick             Quick installation (essential tools only, 3-5 min)
+    --full              Full installation (everything, 15-20 min)
+    --custom            Custom installation (choose components)
+    --help, -h          Show help message
 ```
 
 ### Examples
 
 ```bash
 # Interactive mode (default)
-./install-new.sh
+./install.sh
 
-# Quick install without prompts
-./install-new.sh --profile quick --yes
+# Quick installation
+./install.sh --quick
 
-# Full install with prompts
-./install-new.sh --profile full
+# Full installation
+./install.sh --full
 
-# Custom selection
-./install-new.sh --profile custom
+# Custom component selection
+./install.sh --custom
 ```
 
 ---
@@ -115,17 +115,10 @@ OPTIONS:
 ### 1. Sync Dotfiles
 
 ```bash
-./sync-new.sh
+./sync.sh
 ```
 
-This creates symlinks from the repository to your `$HOME` directory.
-
-**Options:**
-```bash
-./sync-new.sh --dry-run    # Preview changes
-./sync-new.sh --backup     # Backup conflicting files
-./sync-new.sh --yes        # Skip confirmations
-```
+This creates symlinks from the repository to your `$HOME` directory using GNU Stow.
 
 ### 2. Reload Shell
 
@@ -240,18 +233,23 @@ All devbox-managed tools will be available inside the shell.
 
 ```bash
 # Don't do this:
-sudo ./install-new.sh  # ❌
+sudo ./install.sh  # ❌
 
 # Do this:
-./install-new.sh       # ✅
+./install.sh       # ✅
 ```
 
 ### Sync Fails with "Conflicting Files"
 
-**Solution:** Use the `--backup` flag to automatically backup conflicting files.
+**Solution:** Manually backup conflicting files before running sync.
 
 ```bash
-./sync-new.sh --backup
+# Backup existing configs
+mv ~/.zshrc ~/.zshrc.backup
+mv ~/.config/starship.toml ~/.config/starship.toml.backup
+
+# Then run sync
+./sync.sh
 ```
 
 ### Zsh Doesn't Load After Installation

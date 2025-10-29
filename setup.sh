@@ -78,12 +78,12 @@ clone_dotfiles() {
 run_installer() {
     cd "$DOTFILES_DIR"
 
-    if [[ ! -f "install-new.sh" ]]; then
-        die "install-new.sh not found in $DOTFILES_DIR"
+    if [[ ! -f "install.sh" ]]; then
+        die "install.sh not found in $DOTFILES_DIR"
     fi
 
     log_info "Running installer..."
-    bash install-new.sh "$@"
+    bash install.sh "$@"
 }
 
 # Main execution
