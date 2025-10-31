@@ -137,54 +137,6 @@
       "last_modified": "2025-10-27T19:50:41Z",
       "resolved": "github:NixOS/nixpkgs/1666250dbe4141e4ca8aaf89b40a3a51c2e36144?lastModified=1761594641&narHash=sha256-sImk6SJQASDLQo8l%2B0zWWaBgg7TueLS6lTvdH5pBZpo%3D"
     },
-    "gum@0.17.0": {
-      "last_modified": "2025-10-07T08:41:47Z",
-      "resolved": "github:NixOS/nixpkgs/bce5fe2bb998488d8e7e7856315f90496723793c#gum",
-      "source": "devbox-search",
-      "version": "0.17.0",
-      "systems": {
-        "aarch64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/qg77457254d234pgjpgicgj8zq3kv9wc-gum-0.17.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/qg77457254d234pgjpgicgj8zq3kv9wc-gum-0.17.0"
-        },
-        "aarch64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/l4dl9dcnfn57rpbhyyqnkm69q1pxah5w-gum-0.17.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/l4dl9dcnfn57rpbhyyqnkm69q1pxah5w-gum-0.17.0"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/vzdbx8cgarb3k8l6in6xxh14vyblqa07-gum-0.17.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/vzdbx8cgarb3k8l6in6xxh14vyblqa07-gum-0.17.0"
-        },
-        "x86_64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/xrp3rs1p0r7qd5q0ii2zn895f24q7s4m-gum-0.17.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/xrp3rs1p0r7qd5q0ii2zn895f24q7s4m-gum-0.17.0"
-        }
-      }
-    },
     "hcloud@1.54.0": {
       "last_modified": "2025-10-08T01:30:28Z",
       "resolved": "github:NixOS/nixpkgs/8b5c9dd8856f0c0cf46cc91f2c21c106a9d42e25#hcloud",

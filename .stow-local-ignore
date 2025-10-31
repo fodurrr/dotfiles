@@ -2,6 +2,15 @@
 .teller.yml
 gcloud
 install.sh
+setup.sh
 sync.sh
 .git
 /mnt/c/Users/fodur/.ssh
+.mcp.json
+CLAUDE.md
+DEV_PREFERENCES.md
+./.claude
+/tooling_docs
+README.md
+erl_crash.dump
+lazygit
