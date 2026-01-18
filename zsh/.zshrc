@@ -5,9 +5,17 @@
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
-# Editor Defaults
-export EDITOR='nvim'
-export VISUAL='nvim'
+# Editor Defaults (fallback chain: Zed → VSCode → nvim → vim)
+if command -v zed &>/dev/null; then
+    export EDITOR='zed --wait'
+elif command -v code &>/dev/null; then
+    export EDITOR='code --wait'
+elif command -v nvim &>/dev/null; then
+    export EDITOR='nvim'
+else
+    export EDITOR='vim'
+fi
+export VISUAL="$EDITOR"
 export TERMINAL='ghostty'
 
 # History Settings
@@ -27,25 +35,25 @@ setopt pushd_ignore_dups
 # =============================================================================
 # 2. Initialize Mise (The Version Manager)
 # =============================================================================
-eval "$(mise activate zsh)"
+command -v mise &>/dev/null && eval "$(mise activate zsh)"
 
 # =============================================================================
 # 3. Sheldon Plugin Manager
 # =============================================================================
 # Loads all plugins defined in ~/.config/sheldon/plugins.toml
-eval "$(sheldon source)"
+command -v sheldon &>/dev/null && eval "$(sheldon source)"
 
 # =============================================================================
 # 4. Tool Initializations
 # =============================================================================
 # Starship Prompt
-eval "$(starship init zsh)"
+command -v starship &>/dev/null && eval "$(starship init zsh)"
 
 # Direnv (Environment manager)
-eval "$(direnv hook zsh)"
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
 
 # FZF (Fuzzy Finder) Configuration
-source <(fzf --zsh)
+command -v fzf &>/dev/null && source <(fzf --zsh)
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
@@ -74,7 +82,7 @@ alias gp='git push'
 alias gpl='git pull'
 alias gl='git log --oneline --graph --decorate'
 alias gco='git checkout'
-alias lg='lazygit'
+# alias lg='lazygit'  # Uncomment when lazygit is installed via mise
 
 # Other aliases
 alias iplocal="ipconfig getifaddr en0"

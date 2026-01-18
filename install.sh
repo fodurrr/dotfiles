@@ -62,14 +62,26 @@ stow_enforce() {
 if ! command -v brew &> /dev/null; then
     echo "🍺 Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Setup Homebrew environment (works on both Apple Silicon and Intel Macs)
+if [ -f "/opt/homebrew/bin/brew" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -f "/usr/local/bin/brew" ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+else
+    echo "❌ Error: Homebrew not found after installation"
+    exit 1
 fi
 
 # =============================================================================
 # 2. Install Apps (Includes Sheldon via Brewfile)
 # =============================================================================
 echo "📦 Installing Apps..."
-brew bundle --file=~/dotfiles/Brewfile
+if ! brew bundle --file=~/dotfiles/Brewfile; then
+    echo "❌ Error: brew bundle failed"
+    exit 1
+fi
 
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 STRICT MODE: Cleaning up unlisted apps..."
@@ -101,7 +113,10 @@ done
 # 4. Final Setup
 # =============================================================================
 echo "🛠️ Installing Runtimes..."
-mise install
+if ! mise install; then
+    echo "❌ Error: mise install failed"
+    exit 1
+fi
 
 echo "✅ Done! Reloading..."
 echo "Press [ENTER] to reload the shell..."

@@ -1,6 +1,7 @@
 [user]
     name = Peter Fodor
     email = fodurrr@gmail.com
+    signingkey = ~/.ssh/id_ed25519.pub
 
 [core]
     editor = nvim
@@ -14,6 +15,8 @@
 [pull]
     # Keep history linear and clean
     rebase = true
+    # Prevent accidental merge commits - only fast-forward
+    ff = only
 
 [push]
     # Automatically set upstream branch on push (Huge time saver!)
@@ -39,3 +42,17 @@
     last = log -1 HEAD
     # Pretty log graph
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+[commit]
+    # Sign commits using SSH key (more modern than GPG)
+    gpgSign = true
+
+[gpg]
+    # Use SSH for signing instead of GPG
+    format = ssh
+
+[gpg "ssh"]
+    # Use 1Password or ssh-agent for SSH key signing
+    # Uncomment ONE of the following based on your setup:
+    # For 1Password: program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+    # For macOS ssh-agent: allowedSignersFile = ~/.ssh/allowed_signers
