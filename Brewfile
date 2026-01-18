@@ -1,7 +1,7 @@
 # --- Core ---
 brew "mise" # Install Mise for Version Management, DO NOT REMOVE as it is needed later in the installation process
 brew "stow" # DO NOT REMOVE as it is needed later in the installation process
-
+brew "sheldon" # DO NOT REMOVE this is the zsh plugin manager
 # --- Essentials ---
 brew "mas"
 brew "sevenzip"

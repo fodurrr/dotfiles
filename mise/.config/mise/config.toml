@@ -56,6 +56,14 @@ yq = "4.50"      # Lightweight YAML processor
 # zoxide = "0.9" # Smart cd that learns your habits
 # fd = "10.3" # Fast, user-friendly find alternative
 # =====================================================
+# AI coding tools
+# =====================================================
+claude ="latest"
+gemini-cli = "latest"
+codex = "latest"
+opencode = "latest"
+
+# =====================================================
 # Extras
 # =====================================================
 direnv = "2.37" # Directory-based environment variables

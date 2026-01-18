@@ -19,21 +19,42 @@ setopt HIST_FIND_NO_DUPS
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
 
-# Standard Zsh Options
-setopt autocd
-setopt auto_pushd
-setopt pushd_ignore_dups
+# Standard Zsh Options (Since zoxide is gone, these are important for 'cd')
+setopt autocd              # Change directory just by typing its name
+setopt auto_pushd          # Keep directory history
+setopt pushd_ignore_dups   # Don't duplicate history
 
 # =============================================================================
-# 2. Initialize Mise (The Version Manager)
+# 2. Initialize Mise (The Tool Manager)
 # =============================================================================
+# This must run EARLY so that 'starship', 'fzf', etc. are found
 eval "$(mise activate zsh)"
 
 # =============================================================================
-# 3. Sheldon Plugin Manager
+# 3. Shell Plugins (Zinit)
 # =============================================================================
-# Loads all plugins defined in ~/.config/sheldon/plugins.toml
-eval "$(sheldon source)"
+# Define where Zinit lives
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Just source it (It was installed by install.sh)
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
+zinit light Aloxaf/fzf-tab
+zinit light jeffreytse/zsh-vi-mode
+
+# Snippets (OMZ)
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::docker
+zinit snippet OMZP::command-not-found
+
+# Load completions
+autoload -Uz compinit && compinit
+zinit cdreplay -q
 
 # =============================================================================
 # 4. Tool Initializations
@@ -76,12 +97,12 @@ alias gl='git log --oneline --graph --decorate'
 alias gco='git checkout'
 alias lg='lazygit'
 
-# Other aliases
+# Networking
 alias iplocal="ipconfig getifaddr en0"
 alias ipexternal="curl -s ifconfig.me"
 
+# Misc
 alias zconfig="zed ~/.zshrc"
 alias reload="source ~/.zshrc"
-
 alias ..="cd .."
 alias ...="cd ../.."

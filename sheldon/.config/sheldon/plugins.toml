@@ -1,0 +1,58 @@
+# ~/.config/sheldon/plugins.toml
+shell = "zsh"
+
+# =============================================================================
+# 1. Completions (Must run first)
+# =============================================================================
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+apply = ["fpath"] # Adds to path, doesn't source yet
+
+# =============================================================================
+# 2. Initialization (Inline)
+# =============================================================================
+# We run compinit here so it sees the completions added above
+[plugins.compinit]
+inline = 'autoload -Uz compinit && compinit'
+
+# =============================================================================
+# 3. Core Functionality (OMZ Snippets)
+# =============================================================================
+# Sheldon intelligently clones the OMZ repo once and reuses it for these 4 plugins.
+
+[plugins.omz-git]
+github = "ohmyzsh/ohmyzsh"
+dir = "plugins/git"
+
+[plugins.omz-sudo]
+github = "ohmyzsh/ohmyzsh"
+dir = "plugins/sudo"
+
+[plugins.omz-docker]
+github = "ohmyzsh/ohmyzsh"
+dir = "plugins/docker"
+
+[plugins.omz-command-not-found]
+github = "ohmyzsh/ohmyzsh"
+dir = "plugins/command-not-found"
+
+# =============================================================================
+# 4. Interactive Plugins
+# =============================================================================
+
+[plugins.fzf-tab]
+github = "Aloxaf/fzf-tab"
+# Must be loaded after compinit
+
+[plugins.zsh-vi-mode]
+github = "jeffreytse/zsh-vi-mode"
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+use = ["{{ name }}.zsh"]
+
+# =============================================================================
+# 5. Syntax Highlighting (MUST BE LAST)
+# =============================================================================
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
