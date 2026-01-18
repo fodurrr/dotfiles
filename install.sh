@@ -39,16 +39,22 @@ stow_enforce() {
 
         # Check for Conflict
         if [ -e "$target_path" ]; then
+            # Skip if target is a file-level symlink
             if [ -L "$target_path" ]; then
-                continue # It's a link, we are good.
-            else
-                # 🛑 REAL FILE FOUND in HOME.
-                echo "      ⚠️  Conflict: Real file found at ~/$relative_path"
-                echo "      🛡️  Backing it up to ~/$relative_path.bak"
-
-                # Backup: Rename the file in place
-                mv -v "$target_path" "${target_path}.bak"
+                continue
             fi
+
+            # Skip if resolved path is inside dotfiles (stow tree folding)
+            # This happens when stow created a directory-level symlink
+            resolved_path="$(cd "$(dirname "$target_path")" 2>/dev/null && pwd -P)/$(basename "$target_path")"
+            if [[ "$resolved_path" == "$PWD"/* ]]; then
+                continue  # Already linked via parent directory symlink
+            fi
+
+            # 🛑 REAL FILE FOUND in HOME - back it up
+            echo "      ⚠️  Conflict: Real file found at ~/$relative_path"
+            echo "      🛡️  Backing it up to ~/$relative_path.bak"
+            mv -v "$target_path" "${target_path}.bak"
         fi
     done
 
