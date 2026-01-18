@@ -7,11 +7,11 @@ This setup uses **Homebrew** for system packages, **Mise** for dev tools (Node, 
 ## 🚀 Features
 
 * **Package Management:** `Brewfile` tracks all system apps (GUI & CLI), ensuring a one-command setup.
-* **Runtime Versioning:** `mise` (formerly rtx) manages language runtimes (Node, Python, Go, Rust) without shims, keeping the `PATH` clean.
+* **Runtime Versioning:** `mise` (formerly rtx) manages language runtimes (Node, Python, Erlang/Elixir, Rust) and CLI tools without shims, keeping the `PATH` clean.
 * **Modular Configs:** Uses `stow` to manage dotfiles. Each tool (`zsh`, `git`, `starship`) is its own package, preventing a cluttered home directory.
 * **Safe Deployment:** The installer acts as an **Enforcer**—it automatically detects existing local config files and backs them up before linking, ensuring no data is lost.
 * **Fast Shell:** Optimized `.zshrc` using **Sheldon** for plugins and **Starship** for a blazing fast prompt.
-* **Modern CLI Tools:** Replaces legacy tools with modern Rust-based alternatives:
+* **Modern CLI Tools:** Replaces legacy tools with modern Rust-based alternatives (installed via Mise):
     * `ls` → `eza` (Icons, Git status)
     * `cat` → `bat` (Syntax highlighting)
     * `grep` → `ripgrep` (Faster search)
@@ -60,7 +60,7 @@ cd ~/dotfiles
 2. Installs **Apps & Tools** (includes `mise` CLI, Ghostty, Zed).
 3. Installs **Sheldon** plugin manager.
 4. **Stows** config files (links configs; **auto-backs up** any conflicting real files).
-5. **Downloads Runtimes** (runs `mise install` to get Node, Python, Go based on the config).
+5. **Downloads Runtimes & Tools** (runs `mise install` to get languages and CLI tools based on the config).
 6. Reloads the shell.
 
 ### 🛠️ 2. Maintenance (Installing Tools)
@@ -171,14 +171,19 @@ To remove any Homebrew apps *not* listed in your `Brewfile` (keeping your machin
 
 Defined in `config.toml`. It installs tools into `~/.local/share/mise`.
 
-* **Node:** LTS
+**Languages:**
+* **Node:** LTS + bun, pnpm package managers
 * **Python:** 3.14 (Pinned)
 * **Rust:** Stable
+* **Erlang/Elixir:** 28.3 / 1.19.5-otp-28
+
+**CLI Tools (via Mise, not Homebrew):**
+* eza, bat, ripgrep, fzf, jq, yq, direnv, gh
 
 ## 📝 Notes
 
 * **Why Stow?** Allows deep symlinking (like `~/.config/mise/config.toml`) while keeping the repo root clean.
-* **Why Mise?** Replaces `nvm`, `pyenv`, and `rustup` with a single, faster tool.
+* **Why Mise?** Replaces `nvm`, `pyenv`, `rustup`, and per-tool Homebrew installs with a single, faster tool. CLI tools like `eza`, `bat`, and `ripgrep` are also managed by Mise for consistent versioning.
 
 ## 📄 License
 
