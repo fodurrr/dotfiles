@@ -33,17 +33,18 @@ disabled = true
 ignore_branches = ['master', 'main']
 
 [git_status]
-conflicted = '🏳'
-ahead = '🏎💨'
-behind = '😰'
-diverged = '😵'
+# Using nerd font symbols for better terminal compatibility
+conflicted = '[󰅚](red)'
+ahead = '[⇡](green)'
+behind = '[⇣](yellow)'
+diverged = '[⇕](red)'
 up_to_date = ''
-untracked = '🤷'
-stashed = ''
-modified = '📝'
-staged = '[++\($count\)](green)'
-renamed = '👅'
-deleted = '🗑'
+untracked = '[?](blue)'
+stashed = '[󰆓](cyan)'
+modified = '[!](yellow)'
+staged = '[+\($count\)](green)'
+renamed = '[»](purple)'
+deleted = '[✘](red)'
 disabled = false
 
 [golang]
@@ -61,11 +62,11 @@ format = 'via [$symbol$state](bold purple) '
 disabled = false
 
 [battery]
-full_symbol = "• "
-charging_symbol = "⇡ "
-discharging_symbol = "⇣ "
-unknown_symbol = "❓ "
-empty_symbol = "❗ "
+full_symbol = "󰁹 "
+charging_symbol = "󰂄 "
+discharging_symbol = "󰂃 "
+unknown_symbol = "󰂑 "
+empty_symbol = "󰂎 "
 
 [erlang]
 symbol = "ⓔ "
@@ -74,7 +75,7 @@ symbol = "ⓔ "
 symbol = "[⬢](bold green) "
 
 [pulumi]
-symbol = "🧊 "
+symbol = "󰰐 "
 
 [typst]
 symbol = "t "
