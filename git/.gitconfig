@@ -1,0 +1,41 @@
+[user]
+    name = Peter Fodor
+    email = fodurrr@gmail.com
+
+[core]
+    editor = nvim
+    excludesfile = ~/.gitignore_global
+    # Fix filename casing issues on macOS
+    ignorecase = false
+
+[init]
+    defaultBranch = main
+
+[pull]
+    # Keep history linear and clean
+    rebase = true
+
+[push]
+    # Automatically set upstream branch on push (Huge time saver!)
+    autoSetupRemote = true
+
+[credential]
+    # Use macOS Keychain to store passwords/tokens
+    helper = osxkeychain
+
+[rerere]
+    # "Reuse Recorded Resolution" - Remembers how you fixed a merge conflict
+    # so you don't have to fix the same one twice.
+    enabled = true
+
+[alias]
+    # Common shortcuts
+    # s = status
+    # co = checkout
+    # br = branch
+    # ci = commit
+    st = status
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    # Pretty log graph
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
