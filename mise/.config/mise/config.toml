@@ -58,10 +58,7 @@ yq = "4.50"      # Lightweight YAML processor
 # =====================================================
 # AI coding tools
 # =====================================================
-claude ="latest"
-gemini-cli = "latest"
-codex = "latest"
-opencode = "latest"
+÷
 
 # =====================================================
 # Extras

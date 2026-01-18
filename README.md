@@ -10,13 +10,11 @@ This setup uses **Homebrew** for system packages, **Mise** for dev tools (Node, 
 * **Runtime Versioning:** `mise` (formerly rtx) manages language runtimes (Node, Python, Go, Rust) without shims, keeping the `PATH` clean.
 * **Modular Configs:** Uses `stow` to manage dotfiles. Each tool (`zsh`, `git`, `starship`) is its own package, preventing a cluttered home directory.
 * **Safe Deployment:** The installer acts as an **Enforcer**—it automatically detects existing local config files and backs them up before linking, ensuring no data is lost.
-* **Fast Shell:** Optimized `.zshrc` using **Zinit** (turbo mode) for plugins and **Starship** for a blazing fast prompt.
+* **Fast Shell:** Optimized `.zshrc` using **Sheldon** for plugins and **Starship** for a blazing fast prompt.
 * **Modern CLI Tools:** Replaces legacy tools with modern Rust-based alternatives:
     * `ls` → `eza` (Icons, Git status)
     * `cat` → `bat` (Syntax highlighting)
     * `grep` → `ripgrep` (Faster search)
-    * `cd` → `zoxide` (Smart jumping)
-    * `vim` → `neovim` (Editor of choice)
 
 ## 📂 Structure
 
@@ -33,6 +31,10 @@ The project is organized into "packages" for `stow`. The install script loops th
 │   └── .config/
 │       └── mise/
 │           └── config.toml # Runtime versions (Node lts, Python 3.14, etc.)
+├── sheldon/
+│   └── .config/
+│       └── sheldon/
+│           └── plugins.toml # Zsh plugin manager config
 ├── starship/
 │   └── .config/
 │       └── starship.toml # High-performance shell prompt config
@@ -47,7 +49,7 @@ The project is organized into "packages" for `stow`. The install script loops th
 Clone this repo to your home directory:
 
 ```bash
-git clone [https://github.com/fodurrr/dotfiles.git](https://github.com/fodurrr/dotfiles.git) ~/dotfiles
+git clone https://github.com/fodurrr/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
@@ -56,7 +58,7 @@ cd ~/dotfiles
 
 1. Installs **Homebrew** (if missing).
 2. Installs **Apps & Tools** (includes `mise` CLI, Ghostty, Zed).
-3. Installs **Zinit** plugin manager.
+3. Installs **Sheldon** plugin manager.
 4. **Stows** config files (links configs; **auto-backs up** any conflicting real files).
 5. **Downloads Runtimes** (runs `mise install` to get Node, Python, Go based on the config).
 6. Reloads the shell.
@@ -140,7 +142,7 @@ The `install.sh` script enforces the repo's state without destroying data.
 
 * **Scenario B: Conflict (Existing Local File)**
 * It sees a real file exists (e.g., `~/.zshrc`).
-* It **moves** the real file to a backup: `.zshrc.backup.<timestamp>`.
+* It **moves** the real file to a backup: `.zshrc.bak`.
 * It creates the symlink to the repo version.
 * ✅ Result: Repo config wins, local data is preserved.
 
@@ -162,7 +164,7 @@ To remove any Homebrew apps *not* listed in your `Brewfile` (keeping your machin
 
 ### Zsh (Shell)
 
-* **Plugin Manager:** Zinit (loads plugins like autosuggestions and syntax highlighting).
+* **Plugin Manager:** Sheldon (loads plugins like autosuggestions and syntax highlighting).
 * **Prompt:** Starship (shows Git branch, package version, execution time).
 
 ### Mise (Tool Manager)
@@ -172,7 +174,6 @@ Defined in `config.toml`. It installs tools into `~/.local/share/mise`.
 * **Node:** LTS
 * **Python:** 3.14 (Pinned)
 * **Rust:** Stable
-* **Go:** Latest
 
 ## 📝 Notes
 
