@@ -35,25 +35,25 @@ setopt pushd_ignore_dups
 # =============================================================================
 # 2. Initialize Mise (The Version Manager)
 # =============================================================================
-command -v mise &>/dev/null && eval "$(mise activate zsh)"
+command -v mise &>/dev/null && eval "$(mise activate zsh)" || echo "⚠️  mise not found" >&2
 
 # =============================================================================
 # 3. Sheldon Plugin Manager
 # =============================================================================
 # Loads all plugins defined in ~/.config/sheldon/plugins.toml
-command -v sheldon &>/dev/null && eval "$(sheldon source)"
+command -v sheldon &>/dev/null && eval "$(sheldon source)" || echo "⚠️  sheldon not found" >&2
 
 # =============================================================================
 # 4. Tool Initializations
 # =============================================================================
 # Starship Prompt
-command -v starship &>/dev/null && eval "$(starship init zsh)"
+command -v starship &>/dev/null && eval "$(starship init zsh)" || echo "⚠️  starship not found" >&2
 
 # Direnv (Environment manager)
-command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)" || echo "⚠️  direnv not found" >&2
 
 # FZF (Fuzzy Finder) Configuration
-command -v fzf &>/dev/null && source <(fzf --zsh)
+command -v fzf &>/dev/null && source <(fzf --zsh) || echo "⚠️  fzf not found" >&2
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \

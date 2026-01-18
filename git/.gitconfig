@@ -52,7 +52,7 @@
     format = ssh
 
 [gpg "ssh"]
-    # Use 1Password or ssh-agent for SSH key signing
-    # Uncomment ONE of the following based on your setup:
+    # Default ssh-agent works automatically if your signing key is loaded.
+    # Optional: Uncomment ONE of the following for enhanced setups:
     # For 1Password: program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-    # For macOS ssh-agent: allowedSignersFile = ~/.ssh/allowed_signers
+    # For macOS ssh-agent verification: allowedSignersFile = ~/.ssh/allowed_signers
