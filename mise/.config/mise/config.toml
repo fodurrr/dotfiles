@@ -38,7 +38,7 @@ starship = "latest" # Fast, customizable prompt with smart defaults
 # =====================================================
 # Editors
 # =====================================================
-# neovim = "latest" # Hyperextensible vim-based editor
+neovim = "latest" # Hyperextensible vim-based editor
 
 # =====================================================
 # Node Package Managers

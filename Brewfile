@@ -29,6 +29,12 @@ cask "firefox"
 cask "google-chrome"
 cask "microsoft-edge"
 
+# --- Password Managers ---
+cask "bitwarden"
+
+# --- Virtualization ---
+cask "orbstack"
+
 # --- Fonts ---
 cask "font-jetbrains-mono-nerd-font"
 
