@@ -1,3 +1,11 @@
+# =============================================================================
+# Layer 3: Mise - Runtimes and CLI Tools
+# =============================================================================
+# This file defines language runtimes, package managers, and CLI tools.
+# GUI apps are managed by Homebrew (Layer 1).
+# AI coding CLIs with curl installers are in scripts/curl-installs.sh (Layer 5).
+# =============================================================================
+
 [tools]
 # =====================================================
 # Programming Languages
@@ -5,7 +13,8 @@
 # Erlang & Elixir:
 erlang = "28.3"          # Will get latest 28.3.x
 elixir = "1.19.5-otp-28" # We pin OTP version for compatibility
-# Rust: "stable" ensures you are always on the official stable channel.
+# Rust: stable channel is sufficient for most use cases.
+# Mise handles all version management - no need for rustup complexity.
 rust = "stable"
 # Node: "lts" automatically grabs the active LTS version
 node = "lts"
@@ -14,36 +23,43 @@ node = "lts"
 # Python: "3.14" will automatically grab 3.14.0, 3.14.1, etc. as they release.
 # You can use "latest", but pinning Major.Minor is safer for projects.
 python = "3.14"
+
 # =====================================================
 # Prompts
 # =====================================================
 starship = "latest" # Fast, customizable prompt with smart defaults
+
 # =====================================================
 # Terminals / Multiplexers
 # =====================================================
-# tmux = "latest" # Industry-standard terminal multiplexer
+# tmux = "latest"   # Industry-standard terminal multiplexer
 # zellij = "latest" # Modern Rust-based terminal multiplexer
+
 # =====================================================
 # Editors
 # =====================================================
 # neovim = "latest" # Hyperextensible vim-based editor
+
 # =====================================================
 # Node Package Managers
 # =====================================================
 bun = "1.3"    # All-in-one JS runtime and package manager
 pnpm = "10.28" # Fast, disk-efficient package manager
 # yarn = "4.12" # Alternative package manager by Facebook
+
 # =====================================================
 # Containers
 # =====================================================
 # podman = "latest" # Daemonless container runtime
+
 # =====================================================
 # Git Tools
 # =====================================================
 gh = "latest" # GitHub CLI for PRs, issues, etc.
 # lazygit = "0.58" # Terminal UI for git commands
-# delta = "0.18" # Beautiful syntax-highlighted diffs
-# gitui = "0.28" # Fast terminal UI for git
+# delta = "0.18"   # Beautiful syntax-highlighted diffs
+# gitui = "0.28"   # Fast terminal UI for git
+
 # =====================================================
 # CLI Tools
 # =====================================================
@@ -51,23 +67,25 @@ eza = "latest"     # Modern ls with icons and git info
 bat = "latest"     # Cat with syntax highlighting
 ripgrep = "latest" # Fast recursive grep replacement
 fzf = "latest"     # General-purpose fuzzy finder
-jq = "latest"       # Lightweight JSON processor
+jq = "latest"      # Lightweight JSON processor
 yq = "latest"      # Lightweight YAML processor
-yazi = "latest"  # Modern blazing fast file manager with icons and git info
+yazi = "latest"    # Modern blazing fast file manager with icons and git info
 # zoxide = "latest" # Smart cd that learns your habits
-# fd = "latest" # Fast, user-friendly find alternative
+# fd = "latest"     # Fast, user-friendly find alternative
+
 # =====================================================
-# AI coding tools
+# AI Coding Tools (CLI only - no curl installer available)
 # =====================================================
-# claude ="latest"
-# gemini-cli = "latest"
-# codex = "latest"
-# opencode = "latest"
+# These AI tools don't have official curl installers, so we use Mise.
+# Tools WITH curl installers (claude-code, opencode) are in Layer 5.
+codex = "latest"      # OpenAI Codex CLI
+gemini-cli = "latest" # Google Gemini CLI (no official desktop app yet)
 
 # =====================================================
 # Extras
 # =====================================================
 direnv = "latest" # Directory-based environment variables
+
 [settings]
 # informational, error, warn, debug
 log_level = "info"
