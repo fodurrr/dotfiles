@@ -1,190 +1,266 @@
-# 🛠️ My Mac Dotfiles
+# Dotfiles
 
-A modern, declarative, and reproducible development environment configuration for macOS (Apple Silicon).
+A modern, declarative, and reproducible development environment for macOS (Apple Silicon).
 
-This setup uses **Homebrew** for system packages, **Mise** for dev tools (Node, Python, Go, Rust), and **GNU Stow** to manage configuration files modularly.
-
-## 🚀 Features
-
-* **Package Management:** `Brewfile` tracks all system apps (GUI & CLI), ensuring a one-command setup.
-* **Runtime Versioning:** `mise` (formerly rtx) manages language runtimes (Node, Python, Erlang/Elixir, Rust) and CLI tools without shims, keeping the `PATH` clean.
-* **Modular Configs:** Uses `stow` to manage dotfiles. Each tool (`zsh`, `git`, `starship`) is its own package, preventing a cluttered home directory.
-* **Safe Deployment:** The installer acts as an **Enforcer**—it automatically detects existing local config files and backs them up before linking, ensuring no data is lost.
-* **Fast Shell:** Optimized `.zshrc` using **Sheldon** for plugins and **Starship** for a blazing fast prompt.
-* **Modern CLI Tools:** Replaces legacy tools with modern Rust-based alternatives (installed via Mise):
-    * `ls` → `eza` (Icons, Git status)
-    * `cat` → `bat` (Syntax highlighting)
-    * `grep` → `ripgrep` (Faster search)
-
-## 📂 Structure
-
-The project is organized into "packages" for `stow`. The install script loops through these folders and symlinks them to your home directory (`~`).
-
-```text
-~/dotfiles
-├── Brewfile             # List of all Homebrew apps (GUI & CLI)
-├── install.sh           # Main setup script (Idempotent & Safe)
-├── git/
-│   ├── .gitconfig       # User info, aliases, and safest defaults
-│   └── .gitignore_global # Global ignores (.DS_Store, .env, etc.)
-├── mise/
-│   └── .config/
-│       └── mise/
-│           └── config.toml # Runtime versions (Node lts, Python 3.14, etc.)
-├── sheldon/
-│   └── .config/
-│       └── sheldon/
-│           └── plugins.toml # Zsh plugin manager config
-├── starship/
-│   └── .config/
-│       └── starship.toml # High-performance shell prompt config
-└── zsh/
-    └── .zshrc           # Optimized shell config (Plugins, Aliases)
-```
-
-## 📦 Installation
-
-### 1. Fresh Install
-
-Clone this repo to your home directory:
+## Quick Start
 
 ```bash
+# Clone and install
 git clone https://github.com/fodurrr/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
 
-**What the script does:**
+That's it. The script handles everything.
 
-1. Installs **Homebrew** (if missing).
-2. Installs **Apps & Tools** (includes `mise` CLI, Ghostty, Zed).
-3. Installs **Sheldon** plugin manager.
-4. **Stows** config files (links configs; **auto-backs up** any conflicting real files).
-5. **Downloads Runtimes & Tools** (runs `mise install` to get languages and CLI tools based on the config).
-6. Reloads the shell.
+---
 
-### 🛠️ 2. Maintenance (Installing Tools)
+## The 5-Layer Model
 
-Since this setup is declarative, you don't install tools manually. You add them to the config files and run the install script.
+This setup uses a layered approach to balance **stability**, **portability**, and **freshness**:
 
-#### System Apps & CLI Tools (Homebrew)
+```
+Layer 0: Manual Bootstrap (one-time)
+       ↓
+Layer 1: Homebrew ─────── System tools + GUI apps
+       ↓
+Layer 2: Stow ─────────── Config deployment (symlinks)
+       ↓
+Layer 3: Mise ─────────── Language runtimes + CLI tools
+       ↓
+Layer 4: Mac App Store ── Optional (Xcode, etc.)
+       ↓
+Layer 5: Curl Scripts ─── Bleeding-edge AI coding tools
+       ↓
+Shell Reload
+```
 
-**File:** `~/dotfiles/Brewfile`
+### Why This Architecture?
 
-* **Search:** `brew search <name>`
-* **Add:**
+| Layer | Purpose | Updates | Best For |
+|-------|---------|---------|----------|
+| Homebrew | System integration | Weekly | GUI apps, system tools |
+| Mise | Version management | On-demand | Runtimes, CLI tools |
+| Curl | Bleeding edge | Auto-update | AI tools (Claude, OpenCode) |
 
+---
+
+## What Gets Installed
+
+### Layer 1: Homebrew (`Brewfile`)
+
+**System Tools:**
+- `mise` - Version manager for everything else
+- `stow` - Symlink manager
+- `sheldon` - Zsh plugin manager
+- `mas` - Mac App Store CLI
+
+**GUI Applications:**
+- Terminals: Ghostty, Warp
+- Editors: Zed, VS Code
+- Browsers: Firefox, Chrome, Edge
+- AI Desktop: Claude, ChatGPT, Codex, OpenCode
+- Utils: Raycast, Obsidian, Discord, Spotify
+
+### Layer 3: Mise (`mise/.config/mise/config.toml`)
+
+**Languages:**
+- Node.js (LTS)
+- Python 3.14
+- Rust (stable)
+- Erlang/Elixir
+
+**Package Managers:**
+- Bun, pnpm
+
+**CLI Tools:**
+- `eza` - Modern `ls` with icons
+- `bat` - `cat` with syntax highlighting
+- `ripgrep` - Fast grep
+- `fzf` - Fuzzy finder
+- `jq`, `yq` - JSON/YAML processors
+- `gh` - GitHub CLI
+- `starship` - Shell prompt
+- `direnv` - Directory environments
+- `yazi` - File manager
+
+**AI CLIs (no curl installer):**
+- `codex` - OpenAI Codex CLI
+- `gemini-cli` - Google Gemini CLI
+
+### Layer 5: Curl Scripts (`scripts/curl-installs.sh`)
+
+**AI CLIs (auto-updating):**
+- `claude` - Claude Code CLI (Anthropic)
+- `opencode` - OpenCode CLI (Anomaly)
+
+---
+
+## Directory Structure
+
+```
+~/dotfiles/
+├── Brewfile                     # Layer 1: Homebrew packages
+├── install.sh                   # Main installation script
+├── scripts/
+│   └── curl-installs.sh         # Layer 5: AI tool installers
+├── git/                         # → ~/.gitconfig, ~/.gitignore_global
+├── zsh/                         # → ~/.zshrc
+├── mise/                        # → ~/.config/mise/config.toml
+├── sheldon/                     # → ~/.config/sheldon/plugins.toml
+├── starship/                    # → ~/.config/starship.toml
+├── ghostty/                     # → ~/.config/ghostty/config
+├── yazi/                        # → ~/.config/yazi/
+├── README.md
+└── CLAUDE.md                    # AI assistant instructions
+```
+
+---
+
+## Common Commands
+
+```bash
+# Full installation (all layers)
+./install.sh
+
+# Strict mode (removes unlisted packages)
+./install.sh --clean
+
+# Update AI tools only (Layer 5)
+bash scripts/curl-installs.sh
+
+# Update runtimes only (Layer 3)
+mise install
+
+# Stow a single package (Layer 2)
+cd ~/dotfiles && stow <package>
+
+# Reload shell
+source ~/.zshrc
+```
+
+---
+
+## Adding New Tools
+
+### Decision Flowchart
+
+```
+Is it a GUI app?
+├─ Yes → App Store exclusive? → mas (Layer 4)
+│                            → Brewfile cask (Layer 1)
+└─ No (CLI)
+     ├─ AI tool with curl installer? → scripts/curl-installs.sh (Layer 5)
+     ├─ Language runtime? → mise config (Layer 3)
+     ├─ Mise can install it? → mise config (Layer 3)
+     └─ Otherwise → Brewfile brew (Layer 1)
+```
+
+### Examples
+
+**Add a GUI app:**
 ```ruby
-brew "ripgrep"        # For CLI tools
-cask "google-chrome"  # For GUI Applications
+# Brewfile
+cask "figma"
 ```
-#### Language Runtimes (Mise)
 
-**File:** `~/dotfiles/mise/.config/mise/config.toml`
-
-* **Search:** `mise ls-remote <tool>`
-* **Add:**
-
+**Add a CLI tool:**
 ```toml
-[tools]
-node = "lts"
-python = "3.14"
+# mise/.config/mise/config.toml
+lazygit = "latest"
 ```
 
-**Apply Changes:**
-
+**Add an AI tool with curl installer:**
 ```bash
-~/dotfiles/install.sh
+# scripts/curl-installs.sh
+install_new_ai_tool() {
+    curl -fsSL https://example.com/install.sh | bash
+}
 ```
 
-### ⚙️ 3. Managing Configurations (Source of Truth)
-
-We follow a **"Source of Truth"** philosophy. The `~/dotfiles` repo is the master controller. If a tool creates a local config file, we must "capture" it into the repo.
-
-#### How to "Capture" a New Config
-
-When you install a new tool (e.g., `ghostty`) and configure it locally, follow this workflow:
-
-1. **Create the folder structure** inside dotfiles:
-
+**Add a new config to manage:**
 ```bash
-mkdir -p ~/dotfiles/ghostty/.config/ghostty
+mkdir -p ~/dotfiles/newtool/.config/newtool
+mv ~/.config/newtool/config ~/dotfiles/newtool/.config/newtool/
+cd ~/dotfiles && stow newtool
 ```
 
-2. **Move the real config** into the repo (this removes the local file):
+---
 
+## The Enforcer Pattern
+
+The installer automatically handles conflicts:
+
+| Scenario | Action | Result |
+|----------|--------|--------|
+| Target empty | Create symlink | Tool uses repo config |
+| Target is symlink | Skip | Already managed |
+| Target is real file | Backup to `.bak`, then symlink | Repo wins, data preserved |
+
+This ensures the repository is always the source of truth without data loss.
+
+---
+
+## Shell Configuration
+
+`.zshrc` loads in this order:
+
+1. **PATH** - Homebrew, local bin
+2. **Mise** - Activates version manager
+3. **Sheldon** - Loads zsh plugins
+4. **Tools** - Starship prompt, direnv, fzf
+5. **Aliases** - Modern CLI replacements
+
+### Key Aliases
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `ls` | `eza --icons --git` | Modern ls |
+| `cat` | `bat --style=plain` | Syntax highlighting |
+| `tree` | `eza --tree --icons` | Directory tree |
+| `la` | `eza --long --all --header --icons --git` | Detailed list |
+
+---
+
+## Git Configuration
+
+- **Auto Remote:** `git push` sets upstream automatically
+- **Rebase:** Pulls default to rebase (linear history)
+- **Signing:** Commits signed with SSH key
+- **Global Ignore:** `.DS_Store`, `.env`, `.vscode`, `.idea`
+
+---
+
+## Troubleshooting
+
+### mise install fails
 ```bash
-mv ~/.config/ghostty/config.toml ~/dotfiles/ghostty/.config/ghostty/
+# Check if config is stowed
+ls -la ~/.config/mise/config.toml
+# Should show symlink to ~/dotfiles/mise/...
 ```
 
-3. **Link it back** (test immediately):
-
+### Tool not found after install
 ```bash
-cd ~/dotfiles
-stow ghostty
+# Reload shell
+source ~/.zshrc
+# Or restart terminal
 ```
 
-4. **Commit changes:**
+### Homebrew package conflicts
 ```bash
-git add ghostty
-git commit -m "Add ghostty config"
-```
-
-#### How the Installer Works ("The Enforcer")
-
-The `install.sh` script enforces the repo's state without destroying data.
-
-* **Scenario A: Fresh Install**
-* It sees the target path is empty.
-* It creates the symlink.
-* ✅ Result: Tool uses repo config.
-
-
-* **Scenario B: Conflict (Existing Local File)**
-* It sees a real file exists (e.g., `~/.zshrc`).
-* It **moves** the real file to a backup: `.zshrc.bak`.
-* It creates the symlink to the repo version.
-* ✅ Result: Repo config wins, local data is preserved.
-
-### 4. Strict Cleanup Mode
-
-To remove any Homebrew apps *not* listed in your `Brewfile` (keeping your machine strictly defined):
-
-```bash
+# Run with cleanup
 ./install.sh --clean
 ```
 
-## 🛠️ Key Configurations
+### Backup files everywhere
+```bash
+# Find all backups
+find ~ -name "*.bak" -type f 2>/dev/null
+```
 
-### Git
+---
 
-* **Auto Remote:** `git push` automatically sets upstream.
-* **Rebase:** Pulls default to rebase (linear history).
-* **Global Ignore:** Ignores `.DS_Store`, `.vscode`, `.idea`, and `.env` files globally.
-
-### Zsh (Shell)
-
-* **Plugin Manager:** Sheldon (loads plugins like autosuggestions and syntax highlighting).
-* **Prompt:** Starship (shows Git branch, package version, execution time).
-
-### Mise (Tool Manager)
-
-Defined in `config.toml`. It installs tools into `~/.local/share/mise`.
-
-**Languages:**
-* **Node:** LTS + bun, pnpm package managers
-* **Python:** 3.14 (Pinned)
-* **Rust:** Stable
-* **Erlang/Elixir:** 28.3 / 1.19.5-otp-28
-
-**CLI Tools (via Mise, not Homebrew):**
-* eza, bat, ripgrep, fzf, jq, yq, direnv, gh
-
-## 📝 Notes
-
-* **Why Stow?** Allows deep symlinking (like `~/.config/mise/config.toml`) while keeping the repo root clean.
-* **Why Mise?** Replaces `nvm`, `pyenv`, `rustup`, and per-tool Homebrew installs with a single, faster tool. CLI tools like `eza`, `bat`, and `ripgrep` are also managed by Mise for consistent versioning.
-
-## 📄 License
+## License
 
 MIT

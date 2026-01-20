@@ -2,6 +2,17 @@
 set -e
 
 # =============================================================================
+# Dotfiles Installation Script
+# =============================================================================
+# This script orchestrates the 5-layer installation model:
+#   Layer 1: Homebrew (system tools + GUI apps)
+#   Layer 2: Stow (config deployment via symlinks)
+#   Layer 3: Mise (language runtimes + CLI tools)
+#   Layer 4: Mac App Store (optional, manual)
+#   Layer 5: Curl scripts (bleeding-edge AI coding tools)
+# =============================================================================
+
+# =============================================================================
 # 0. Global Configuration
 # =============================================================================
 IGNORE_LIST=(
@@ -11,8 +22,10 @@ IGNORE_LIST=(
     "install.sh"
     "Brewfile"
     "README.md"
+    "CLAUDE.md"
     "LICENSE"
     ".gitignore"
+    "scripts"  # Layer 5 scripts - not a stow package
 )
 
 # =============================================================================
@@ -63,8 +76,13 @@ stow_enforce() {
 }
 
 # =============================================================================
-# 1. Install Homebrew
+# Layer 1: Homebrew (System Infrastructure + GUI Apps)
 # =============================================================================
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Layer 1: Homebrew"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 if ! command -v brew &> /dev/null; then
     echo "🍺 Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -80,25 +98,25 @@ else
     exit 1
 fi
 
-# =============================================================================
-# 2. Install Apps (Includes Sheldon via Brewfile)
-# =============================================================================
-echo "📦 Installing Apps..."
+echo "📦 Installing Homebrew packages..."
 if ! brew bundle --file=~/dotfiles/Brewfile; then
     echo "❌ Error: brew bundle failed"
     exit 1
 fi
 
 if [[ "$1" == "--clean" ]]; then
-    echo "🧹 STRICT MODE: Cleaning up unlisted apps..."
+    echo "🧹 STRICT MODE: Cleaning up unlisted Homebrew packages..."
     brew bundle cleanup --force --file=~/dotfiles/Brewfile
-    echo "🧹 Pruning old Mise runtimes..."
-    mise prune -y
 fi
 
 # =============================================================================
-# 3. Smart Stow Loop (Source of Truth Mode)
+# Layer 2: Stow (Config Deployment)
 # =============================================================================
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Layer 2: Stow"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 echo "🔗 Stowing dotfiles..."
 cd ~/dotfiles
 
@@ -111,20 +129,52 @@ for folder in */; do
         continue
     fi
 
-    echo "   → Checking: $package_name"
+    echo "   → Stowing: $package_name"
     stow_enforce "$package_name"
 done
 
 # =============================================================================
-# 4. Final Setup
+# Layer 3: Mise (Runtimes + CLI Tools)
 # =============================================================================
-echo "🛠️ Installing Runtimes..."
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Layer 3: Mise"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+echo "🛠️  Installing runtimes and CLI tools..."
 if ! mise install; then
     echo "❌ Error: mise install failed"
     exit 1
 fi
 
-echo "✅ Done! Reloading..."
+if [[ "$1" == "--clean" ]]; then
+    echo "🧹 STRICT MODE: Pruning old Mise runtimes..."
+    mise prune -y
+fi
+
+# =============================================================================
+# Layer 5: Curl Scripts (AI Coding Tools)
+# =============================================================================
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Layer 5: AI Coding Tools"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+echo "🤖 Installing AI coding tools (bleeding edge)..."
+if [ -f ~/dotfiles/scripts/curl-installs.sh ]; then
+    bash ~/dotfiles/scripts/curl-installs.sh
+else
+    echo "   ⚠️  scripts/curl-installs.sh not found, skipping Layer 5"
+fi
+
+# =============================================================================
+# Done
+# =============================================================================
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  ✅ Installation Complete!"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 echo "Press [ENTER] to reload the shell..."
 read
 exec zsh -l
