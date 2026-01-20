@@ -68,7 +68,7 @@ alias l='eza --icons --git'
 alias la='eza --long --all --header --icons --git'
 alias lt='eza --icons --git --tree --level=2'
 alias lta='eza --all --icons --git --tree --level=2'
-alias tree='eza --tree --icons'  # Replaces brew tree
+alias tree='eza --tree --icons --level=3'  # Replaces brew tree
 
 # Cat (using bat)
 alias cat='bat --style=plain'
