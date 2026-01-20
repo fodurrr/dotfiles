@@ -159,3 +159,17 @@ cd ~/dotfiles && stow <tool>
 | Codex | `cask "codex"` | `codex` | GUI: Layer 1, CLI: Layer 3 |
 | OpenCode | `cask "opencode-desktop"` | `opencode` | GUI: Layer 1, CLI: Layer 5 |
 | Gemini | - | `gemini` | Layer 3 (no official desktop) |
+
+## Conductor Workspace Workflow
+
+When working in a Conductor workspace (separate git worktree), changes are isolated from the main dotfiles directory.
+
+**IMPORTANT: After every commit and push, always remind the user:**
+
+> To get this into your main environment, in your main dotfiles repo run:
+> ```bash
+> git fetch origin
+> git merge origin/<branch-name>
+> source ~/.zshrc  # if zsh changes were made
+> ```
+> Or create a PR at: `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`
