@@ -22,9 +22,15 @@ cask "firefox"
 cask "google-chrome"
 cask "microsoft-edge"
 
-# --- Tools ---
-cask "raycast"
+# --- Fonts ---
 cask "font-jetbrains-mono-nerd-font"
+
+# --- GUI APPS ---
+cask "raycast"
 cask "obsidian"
 cask "wispr-flow"
 cask "discord"
+cask "spotify"
+cask "vlc"
+cask "chatgpt"
+cask "claude-code"

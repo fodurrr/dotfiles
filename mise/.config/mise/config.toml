@@ -17,16 +17,16 @@ python = "3.14"
 # =====================================================
 # Prompts
 # =====================================================
-starship = "1.24" # Fast, customizable prompt with smart defaults
+starship = "latest" # Fast, customizable prompt with smart defaults
 # =====================================================
 # Terminals / Multiplexers
 # =====================================================
-# tmux = "3.6a" # Industry-standard terminal multiplexer
-# zellij = "0.43" # Modern Rust-based terminal multiplexer
+# tmux = "latest" # Industry-standard terminal multiplexer
+# zellij = "latest" # Modern Rust-based terminal multiplexer
 # =====================================================
 # Editors
 # =====================================================
-# neovim = "0.11" # Hyperextensible vim-based editor
+# neovim = "latest" # Hyperextensible vim-based editor
 # =====================================================
 # Node Package Managers
 # =====================================================
@@ -36,25 +36,26 @@ pnpm = "10.28" # Fast, disk-efficient package manager
 # =====================================================
 # Containers
 # =====================================================
-# podman = "5.7" # Daemonless container runtime
+# podman = "latest" # Daemonless container runtime
 # =====================================================
 # Git Tools
 # =====================================================
-gh = "2.85" # GitHub CLI for PRs, issues, etc.
+gh = "latest" # GitHub CLI for PRs, issues, etc.
 # lazygit = "0.58" # Terminal UI for git commands
 # delta = "0.18" # Beautiful syntax-highlighted diffs
 # gitui = "0.28" # Fast terminal UI for git
 # =====================================================
 # CLI Tools
 # =====================================================
-eza = "0.23"     # Modern ls with icons and git info
-bat = "0.26"     # Cat with syntax highlighting
-ripgrep = "15.1" # Fast recursive grep replacement
-fzf = "0.67"     # General-purpose fuzzy finder
-jq = "1.8"       # Lightweight JSON processor
-yq = "4.50"      # Lightweight YAML processor
-# zoxide = "0.9" # Smart cd that learns your habits
-# fd = "10.3" # Fast, user-friendly find alternative
+eza = "latest"     # Modern ls with icons and git info
+bat = "latest"     # Cat with syntax highlighting
+ripgrep = "latest" # Fast recursive grep replacement
+fzf = "latest"     # General-purpose fuzzy finder
+jq = "latest"       # Lightweight JSON processor
+yq = "latest"      # Lightweight YAML processor
+yazi = "latest"  # Modern blazing fast file manager with icons and git info
+# zoxide = "latest" # Smart cd that learns your habits
+# fd = "latest" # Fast, user-friendly find alternative
 # =====================================================
 # AI coding tools
 # =====================================================
@@ -66,7 +67,7 @@ yq = "4.50"      # Lightweight YAML processor
 # =====================================================
 # Extras
 # =====================================================
-direnv = "2.37" # Directory-based environment variables
+direnv = "latest" # Directory-based environment variables
 [settings]
 # informational, error, warn, debug
 log_level = "info"

@@ -1,6 +1,6 @@
 # --- Appearance ---
 font-family = "JetBrains Mono"
-font-size = 13
+font-size = 16
 
 # Padding
 window-padding-x = 12
