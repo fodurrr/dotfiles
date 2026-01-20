@@ -16,25 +16,13 @@ apply = ["fpath"] # Adds to path, doesn't source yet
 inline = 'autoload -Uz compinit && compinit'
 
 # =============================================================================
-# 3. Core Functionality (OMZ Snippets)
+# 3. OMZ Snippets
 # =============================================================================
-# Sheldon intelligently clones the OMZ repo once and reuses it for these 4 plugins.
-
-[plugins.omz-git]
-github = "ohmyzsh/ohmyzsh"
-dir = "plugins/git"
+# omz-sudo: Press ESC ESC to prefix last command with sudo
 
 [plugins.omz-sudo]
 github = "ohmyzsh/ohmyzsh"
 dir = "plugins/sudo"
-
-[plugins.omz-docker]
-github = "ohmyzsh/ohmyzsh"
-dir = "plugins/docker"
-
-[plugins.omz-command-not-found]
-github = "ohmyzsh/ohmyzsh"
-dir = "plugins/command-not-found"
 
 # =============================================================================
 # 4. Interactive Plugins
@@ -43,9 +31,6 @@ dir = "plugins/command-not-found"
 [plugins.fzf-tab]
 github = "Aloxaf/fzf-tab"
 # Must be loaded after compinit
-
-[plugins.zsh-vi-mode]
-github = "jeffreytse/zsh-vi-mode"
 
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
