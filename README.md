@@ -2,6 +2,29 @@
 
 A modern, declarative, and reproducible development environment for macOS (Apple Silicon).
 
+## Testing in a Virtual Machine (Safety First)
+
+Before running these dotfiles on your main machine, test them safely in a macOS VM using UTM.
+
+**Why test in a VM?**
+- Zero risk to your real system
+- Easy to roll back after testing
+- Verify installation works end-to-end
+- Catch issues before they affect your workflow
+
+**Quick workflow:**
+1. Create a macOS VM in UTM (auto-download IPSW or manual IPSW)
+2. Install Xcode Command Line Tools (for Git)
+3. Create a restore point (duplicate the VM or use disposable mode)
+4. Configure SSH keys for GitHub access
+5. Clone: `git clone git@github.com:username/dotfiles.git ~/dotfiles`
+6. Run: `./install.sh`
+7. Verify everything works, then apply to your real machine
+
+For complete setup instructions including UTM/IPSW prep, snapshots, and troubleshooting, see **[docs/vm-testing.md](docs/vm-testing.md)**.
+
+---
+
 ## Quick Start
 
 ```bash
