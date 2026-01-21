@@ -34,6 +34,7 @@ cask "bitwarden"
 
 # --- Virtualization ---
 cask "orbstack"
+cask "utm"
 
 # --- Fonts ---
 cask "font-jetbrains-mono-nerd-font"
