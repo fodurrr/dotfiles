@@ -1,5 +1,23 @@
+# macOS
 .DS_Store
 **/.DS_Store
+
+# Vim/Neovim
 *.swp
+*.swo
 *~
+
+# Editors (safety net - also in global gitignore)
+.vscode/
+.zed/
+.idea/
+*.iml
+
+# Environment
 .env
+
+# Claude Code local settings (keep .claude/settings.json for project config)
+.claude/settings.local.json
+
+# Conductor workspace
+.context/
