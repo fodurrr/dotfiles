@@ -45,6 +45,7 @@ Boot the VM and walk through the standard macOS setup steps. Once you reach the 
 - Shared folders:
   - macOS 13+ guests can use VirtioFS for fast sharing.
   - macOS 12 guests should use network sharing from the host.
+  - **UTM needs Full Disk Access** on the host to share protected directories like `~/.ssh`.
 - Keep a clean baseline VM. You can duplicate the VM or use disposable mode (details below).
 
 ---
@@ -65,205 +66,92 @@ git --version
 
 ---
 
-## Step 2: Create a Restore Point (Snapshot Equivalent)
+## Step 2: Share Host SSH Keys with VM
 
-UTM does not provide snapshot management in the UI. Use one of these safe rollback patterns instead:
+Instead of copying SSH keys into the VM, share them from your host via UTM's shared folder feature. This keeps keys in one place and makes them automatically available to disposable VMs.
 
-**Option A: Duplicate the VM (baseline clone)**
-1. Shut down the VM
-2. In UTM, right-click the VM and choose **Create a copy of the virtual machine with all its data**
-3. Rename the copy to something like `macOS-baseline`
-4. Use a separate copy for testing and keep the baseline untouched
+> **Don't have SSH keys configured?** See [SSH & GitHub Setup Guide](ssh-github-setup.md) first.
 
-**Option B: Disposable mode (throwaway runs)**
-- From the UTM VM list, choose **Run in disposable mode**
-- Changes are discarded when the VM is closed
+### 1. Configure UTM Shared Folder (on Host Mac)
+
+UTM runs on your host Mac. You'll configure it to share your SSH keys with the VM.
+
+1. **Grant UTM Full Disk Access** (required to share `.ssh`):
+   - System Settings → Privacy & Security → Full Disk Access
+   - Enable **UTM**
+2. Shut down the VM
+3. **On your host Mac**, open UTM
+4. Select the VM and click **Edit**
+5. Go to **Sharing**
+6. Click **Add** and select your **host's** `.ssh` directory (e.g., `/Users/yourname/.ssh`)
+7. Enable **Read Only** to prevent the VM from modifying your keys
+8. Click **Save** and start the VM
+
+The VM will now have read-only access to your SSH keys at `/Volumes/My Shared Files/.ssh/`.
+
+### 2. Verify the Share in VM
+
+UTM mounts the shared `.ssh` folder at `/Volumes/My Shared Files/.ssh/` for macOS guests. Verify access:
+
+```bash
+ls -la "/Volumes/My Shared Files/.ssh"
+```
+
+You should see your host's SSH keys (`id_ed25519`, `id_ed25519.pub`, `config`). Use `-la` to show hidden files (dotfiles).
+
+> **Note:** If `/Volumes/My Shared Files/` is empty or doesn't appear:
+> - Verify UTM has **Full Disk Access** on your host Mac (System Settings → Privacy & Security)
+> - Check that the share is enabled in UTM settings and click **Save**
+> - Restart the VM after making changes
 
 ---
 
-## Step 3: Generate SSH Key on Host Mac
+## Step 3: Link VM to Host Keys
 
-If you already have SSH keys configured for GitHub, skip to [Step 6](#step-6-transfer-keys-to-vm).
+Configure the VM to use SSH keys from the shared folder. Choose one of these approaches:
 
-### 1. Generate an ED25519 Key
+### Option A: Symlink the Entire .ssh Directory (Recommended)
 
-Open Terminal and run:
-
-```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
-
-When prompted:
-- Press **Enter** to accept the default file location (`~/.ssh/id_ed25519`)
-- Enter a passphrase (recommended) or press **Enter** for no passphrase
-
-### 2. Start the SSH Agent
+This is the simplest approach for a clean VM:
 
 ```bash
-eval "$(ssh-agent -s)"
+# Remove any existing .ssh directory
+rm -rf ~/.ssh
+
+# Create symlink to host's .ssh (the shared folder IS your .ssh contents)
+ln -s "/Volumes/My Shared Files/.ssh" ~/.ssh
 ```
 
-You should see output like `Agent pid 12345`.
-
-### 3. Add Your Key to the Agent
-
-```bash
-ssh-add ~/.ssh/id_ed25519
-```
-
-### 4. Configure SSH for GitHub
-
-Create or edit `~/.ssh/config`:
-
-```bash
-nano ~/.ssh/config
-```
-
-Add the following:
-
-```
-Host github.com
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/id_ed25519
-  AddKeysToAgent yes
-  UseKeychain yes
-```
-
-Save and exit (`Ctrl+X`, then `Y`, then `Enter`).
-
----
-
-## Step 4: Add Public Key to GitHub
-
-### 1. Copy Your Public Key
-
-```bash
-pbcopy < ~/.ssh/id_ed25519.pub
-```
-
-This copies the public key to your clipboard.
-
-### 2. Add Key to GitHub
-
-1. Go to GitHub.com and open **Settings**
-2. Click **SSH and GPG keys**
-3. Click **New SSH key**
-4. Give it a title (for example, "MacBook Pro")
-5. **Key type: Authentication Key**
-6. Paste your key in the "Key" field
-7. Click **Add SSH key**
-
-> Important: Authentication vs Signing Keys
->
-> - Authentication Key: Required for `git clone`, `git push`, `git pull`
-> - Signing Key: Used for signing commits (optional)
->
-> If you add your key only as a Signing Key, SSH connections will fail with "Permission denied".
-
----
-
-## Step 5: Test SSH Connection on Host
-
-Run:
-
-```bash
-ssh -T git@github.com
-```
-
-### Expected Success Message
-
-```
-Hi username! You've successfully authenticated, but GitHub does not provide shell access.
-```
-
-### Troubleshooting
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `Permission denied (publickey)` | Key not added as Authentication Key | Add key in GitHub Settings as **Authentication Key** |
-| `Could not open a connection to your authentication agent` | SSH agent not running | Run `eval "$(ssh-agent -s)"` then `ssh-add ~/.ssh/id_ed25519` |
-| `Host key verification failed` | GitHub's host key not in known_hosts | Run `ssh-keyscan github.com >> ~/.ssh/known_hosts` |
-
----
-
-## Step 6: Transfer Keys to VM
-
-### Option A: Using UTM Shared Folder (Recommended)
-
-1. In UTM, configure a shared folder between host and VM
-2. Copy the SSH files to the shared folder:
-
-```bash
-# On host Mac
-cp ~/.ssh/id_ed25519 /path/to/shared/folder/
-cp ~/.ssh/id_ed25519.pub /path/to/shared/folder/
-cp ~/.ssh/config /path/to/shared/folder/
-```
-
-3. On the VM, move files to the correct location (see Step 7)
-
-### Option B: Manual Copy-Paste via Terminal
-
-1. On the host, display the private key:
-
-```bash
-cat ~/.ssh/id_ed25519
-```
-
-2. Select and copy the entire output (including `-----BEGIN` and `-----END` lines)
-
-3. On the VM, create the file:
-
-```bash
-mkdir -p ~/.ssh
-nano ~/.ssh/id_ed25519
-```
-
-4. Paste the contents, save and exit
-
-5. Repeat for the public key (`id_ed25519.pub`) and config file
-
----
-
-## Step 7: Configure and Test on VM
-
-### 1. Create the .ssh Directory (if needed)
-
-```bash
-mkdir -p ~/.ssh
-```
-
-### 2. Set Correct Permissions
-
-SSH will refuse to use keys with incorrect permissions:
-
-```bash
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/id_ed25519
-chmod 644 ~/.ssh/id_ed25519.pub
-chmod 600 ~/.ssh/config
-```
-
-### 3. Verify Key Files Exist
+Verify the symlink:
 
 ```bash
 ls -la ~/.ssh/
 ```
 
-You should see:
-- `id_ed25519` (private key)
-- `id_ed25519.pub` (public key)
-- `config`
+### Option B: SSH Config with Shared Path
 
-### 4. Start SSH Agent and Add Key
+If you need VM-specific SSH settings, create a local config that points to shared keys:
 
 ```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+cat > ~/.ssh/config << 'EOF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile "/Volumes/My Shared Files/.ssh/id_ed25519"
+  AddKeysToAgent yes
+EOF
+
+chmod 600 ~/.ssh/config
 ```
 
-### 5. Test SSH Connection to GitHub
+### Permissions Note
+
+When using symlinks (Option A), SSH reads permissions from the host's files. If your host's `~/.ssh/` has correct permissions (700 for directory, 600 for private key), no additional chmod is needed in the VM.
+
+### Test SSH Connection
 
 ```bash
 ssh -T git@github.com
@@ -271,13 +159,38 @@ ssh -T git@github.com
 
 You should see: `Hi username! You've successfully authenticated...`
 
-### 6. Clone and Test the Dotfiles
+---
+
+## Step 4: Create a Restore Point (Snapshot Equivalent)
+
+UTM does not provide snapshot management in the UI. Use one of these safe rollback patterns instead:
+
+**Option A: Clone the VM (baseline clone)**
+1. Shut down the baseline VM (e.g., `macOS-baseline`)
+2. In UTM, right-click the VM and choose **Clone**
+3. Name the clone for its purpose (e.g., `macOS-dotfiles-testing`)
+4. Test on the clone and keep the baseline untouched
+
+**Option B: Disposable mode (throwaway runs)**
+- From the UTM VM list, choose **Run in disposable mode**
+- Changes are discarded when the VM is closed
+
+---
+
+## Step 5: Clone and Test the Dotfiles
 
 ```bash
 git clone git@github.com:username/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
+
+Verify everything works:
+- Shell loads correctly
+- Tools and aliases are available
+- Configs are applied
+
+If something breaks, restore from your baseline VM and retry.
 
 ---
 
@@ -294,13 +207,8 @@ git@github.com:username/repo.git
 | Command | Purpose |
 |---------|---------|
 | `xcode-select --install` | Install Xcode Command Line Tools |
-| `ssh-keygen -t ed25519 -C "email"` | Generate new SSH key |
-| `eval "$(ssh-agent -s)"` | Start SSH agent |
-| `ssh-add ~/.ssh/id_ed25519` | Add key to agent |
-| `ssh-add -l` | List keys in agent |
 | `ssh -T git@github.com` | Test GitHub connection |
-| `pbcopy < ~/.ssh/id_ed25519.pub` | Copy public key to clipboard |
-| `chmod 600 ~/.ssh/id_ed25519` | Fix private key permissions |
+| `ls -la "/Volumes/My Shared Files/.ssh"` | Verify shared folder in VM |
 
 ### Converting HTTPS to SSH Remote
 
@@ -316,8 +224,9 @@ git remote set-url origin git@github.com:username/repo.git
 
 1. Create a clean macOS VM in UTM (auto-download IPSW or manual IPSW)
 2. Complete macOS setup and install Xcode Command Line Tools
-3. Create a restore point (duplicate the VM or use disposable mode)
-4. Set up SSH keys and verify GitHub access
-5. Clone the dotfiles and run `./install.sh`
-6. Verify everything works (shell, tools, configs)
-7. If something breaks, restore from your baseline and retry
+3. Configure SSH sharing from host (see [SSH & GitHub Setup Guide](ssh-github-setup.md) if needed)
+4. Link VM to host keys and verify SSH connection
+5. Create restore point (duplicate VM or use disposable mode)
+6. Clone the dotfiles and run `./install.sh`
+7. Verify everything works (shell, tools, configs)
+8. If something breaks, restore from your baseline and retry
