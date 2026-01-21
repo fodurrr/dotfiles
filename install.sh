@@ -118,6 +118,7 @@ else
 fi
 
 echo "📦 Installing Homebrew packages..."
+echo -e "\033[33m   ⏳ Be patient. Initial installation can take several minutes.\033[0m"
 if ! brew bundle --file=~/dotfiles/Brewfile; then
     echo "❌ Error: brew bundle failed"
     exit 1
