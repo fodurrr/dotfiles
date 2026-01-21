@@ -2,6 +2,24 @@
 set -e
 
 # =============================================================================
+# Error Handler: Ensure shell reload even on failures
+# =============================================================================
+cleanup() {
+    local exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  ❌ Installation failed. Check the errors above."
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "Press [ENTER] to reload the shell anyway..."
+        read
+        exec zsh -l
+    fi
+}
+trap cleanup EXIT
+
+# =============================================================================
 # Dotfiles Installation Script
 # =============================================================================
 # This script orchestrates the 5-layer installation model:
@@ -85,6 +103,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 if ! command -v brew &> /dev/null; then
     echo "🍺 Installing Homebrew..."
+    echo -e "\033[33m   ⏳ Be patient. Initial installation can take several minutes.\033[0m"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
@@ -162,7 +181,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 echo "🤖 Installing AI coding tools (bleeding edge)..."
 if [ -f ~/dotfiles/scripts/curl-installs.sh ]; then
-    bash ~/dotfiles/scripts/curl-installs.sh
+    bash ~/dotfiles/scripts/curl-installs.sh || echo -e "\033[33m   ⚠️  Some AI tools failed to install (non-fatal)\033[0m"
 else
     echo "   ⚠️  scripts/curl-installs.sh not found, skipping Layer 5"
 fi
