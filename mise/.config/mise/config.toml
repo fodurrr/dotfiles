@@ -32,7 +32,7 @@ starship = "latest" # Fast, customizable prompt with smart defaults
 # =====================================================
 # Terminals / Multiplexers
 # =====================================================
-# tmux = "latest"   # Industry-standard terminal multiplexer
+tmux = "latest"   # Industry-standard terminal multiplexer
 # zellij = "latest" # Modern Rust-based terminal multiplexer
 
 # =====================================================

@@ -6,6 +6,9 @@
 # AI coding CLIs with curl installers are in scripts/curl-installs.sh (Layer 5).
 # =============================================================================
 
+# --- Taps ---
+tap "nikitabobko/tap"  # For Aerospace window manager
+
 # --- Core (DO NOT REMOVE - required for installation) ---
 brew "mise"     # Version manager for runtimes and CLI tools
 brew "stow"     # Symlink manager for config deployment
@@ -53,3 +56,10 @@ cask "wispr-flow"
 cask "discord"
 cask "spotify"
 cask "vlc"
+
+# --- Window Management ---
+cask "nikitabobko/tap/aerospace"  # i3-like tiling window manager
+
+# --- Display Control ---
+cask "monitorcontrol"  # DDC brightness/volume control (free, lightweight)
+# cask "betterdisplay"  # HiDPI scaling, virtual displays - enable if scaling issues arise
