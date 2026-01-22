@@ -34,7 +34,7 @@ cd ~/dotfiles
 ./install.sh
 ```
 
-The script will show an interactive menu to select which profile(s) to install.
+The script will show an interactive menu to select which profile(s) to install. The **minimal** profile is pre-selected by default.
 
 ---
 

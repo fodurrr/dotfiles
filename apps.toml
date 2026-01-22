@@ -263,7 +263,7 @@ category = "cli"
 profiles = ["developer"]
 
 [apps.ncdu]
-type = "mise"
+type = "brew"
 category = "cli"
 profiles = ["developer"]
 

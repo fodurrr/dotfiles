@@ -173,9 +173,17 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Phase 2: Profile Selection"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Get available profiles from apps.toml (using grep for portability)
+# Get available profiles from apps.toml in preferred order
 get_profiles() {
-    grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u
+    # Extract all unique profiles
+    local all_profiles=$(grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u)
+
+    # Output in preferred order: minimal, standard, developer, then others
+    for preferred in minimal standard developer; do
+        echo "$all_profiles" | grep -x "$preferred" 2>/dev/null || true
+    done
+    # Then any others not in the preferred list
+    echo "$all_profiles" | grep -vxE "minimal|standard|developer" 2>/dev/null || true
 }
 
 # Interactive profile selection
@@ -191,13 +199,14 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
     done < <(get_profiles)
 
     if command -v gum &> /dev/null; then
-        # Use gum for interactive selection
+        # Use gum for interactive selection (minimal pre-selected)
         while IFS= read -r line; do
             [[ -n "$line" ]] && SELECTED_PROFILES+=("$line")
         done < <(gum choose --no-limit \
-            --header "Which profiles do you want to install?" \
+            --header "Which profiles do you want to install? (SPACE to toggle, ENTER to confirm)" \
             --cursor-prefix "[ ] " \
             --selected-prefix "[x] " \
+            --selected="minimal" \
             "${AVAILABLE_PROFILES[@]}")
     else
         # Fallback to simple select
@@ -212,8 +221,8 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
     fi
 
     if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
-        echo "No profiles selected. Using default: standard"
-        SELECTED_PROFILES=("standard")
+        echo "No profiles selected. Using default: minimal"
+        SELECTED_PROFILES=("minimal")
     fi
 
     # Show summary
@@ -235,9 +244,9 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
     fi
 fi
 
-# Default to standard if nothing selected
+# Default to minimal if nothing selected
 if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
-    SELECTED_PROFILES=("standard")
+    SELECTED_PROFILES=("minimal")
 fi
 
 echo ""
