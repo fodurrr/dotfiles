@@ -185,11 +185,17 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
     echo "Select one or more profiles (SPACE to select, ENTER to confirm):"
     echo ""
 
-    # Get profiles and let user choose
-    mapfile -t AVAILABLE_PROFILES < <(get_profiles)
+    # Get profiles into array (compatible with bash 3.x)
+    AVAILABLE_PROFILES=()
+    while IFS= read -r line; do
+        AVAILABLE_PROFILES+=("$line")
+    done < <(get_profiles)
 
     if command -v gum &> /dev/null; then
-        mapfile -t SELECTED_PROFILES < <(gum choose --no-limit \
+        # Use gum for interactive selection
+        while IFS= read -r line; do
+            [[ -n "$line" ]] && SELECTED_PROFILES+=("$line")
+        done < <(gum choose --no-limit \
             --header "Which profiles do you want to install?" \
             --cursor-prefix "[ ] " \
             --selected-prefix "[x] " \
