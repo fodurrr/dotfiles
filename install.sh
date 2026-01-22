@@ -361,10 +361,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Layer 3: Mise"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Generate temporary mise config
-TEMP_MISE_CONFIG=$(mktemp)
-echo "[tools]" > "$TEMP_MISE_CONFIG"
-
+echo "Installing mise tools..."
 for app_key in $(get_all_apps); do
     if app_in_profile "$app_key"; then
         type=$(get_app_prop "$app_key" "type")
@@ -373,18 +370,11 @@ for app_key in $(get_all_apps); do
             [[ -z "$name" ]] && name="$app_key"
             version=$(get_app_prop "$app_key" "version")
             [[ -z "$version" ]] && version="latest"
-            echo "$name = \"$version\"" >> "$TEMP_MISE_CONFIG"
-            echo "   Adding: $name = $version"
+            echo "   Installing: $name@$version"
+            mise install "$name@$version" 2>/dev/null || echo "      Warning: failed to install $name"
         fi
     fi
 done
-
-echo ""
-echo "Installing mise tools..."
-if ! mise install --config "$TEMP_MISE_CONFIG"; then
-    echo "Warning: mise install had errors"
-fi
-rm "$TEMP_MISE_CONFIG"
 
 if [[ "$CLEAN_MODE" == true ]]; then
     echo "Pruning old mise runtimes..."
