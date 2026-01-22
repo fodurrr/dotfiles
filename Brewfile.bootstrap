@@ -1,0 +1,22 @@
+# =============================================================================
+# Brewfile.bootstrap - Infrastructure Only
+# =============================================================================
+# These packages are required for install.sh to work.
+# Installed BEFORE reading apps.toml (bootstrap phase).
+#
+# NOTE: This file contains ONLY infrastructure tools.
+# All user apps are defined in apps.toml with profile assignments.
+# =============================================================================
+
+# --- Core Infrastructure (required for installation) ---
+brew "mise"      # Version manager for runtimes and CLI tools
+brew "stow"      # Symlink manager for config deployment
+brew "sheldon"   # Zsh plugin manager
+
+# --- Config Parsing & Interactive UI ---
+brew "dasel"     # TOML/YAML/JSON parser (reads apps.toml)
+brew "gum"       # Interactive CLI menus (profile selection)
+
+# --- Utilities ---
+brew "mas"       # Mac App Store CLI (for Layer 4)
+brew "sevenzip"  # Archive tool

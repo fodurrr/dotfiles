@@ -1,0 +1,381 @@
+# =============================================================================
+# apps.toml - Centralized App Registry
+# =============================================================================
+# Every app, tool, and config is defined here with profile assignments.
+#
+# Fields:
+#   type     = "cask" | "brew" | "mise" | "curl" | "stow"
+#   name     = package name (optional, defaults to section name)
+#   tap      = homebrew tap (optional, for casks from taps)
+#   version  = version string (optional, for mise tools)
+#   category = grouping for documentation
+#   profiles = ["minimal", "standard", "developer", ...]
+#
+# To add an app to a profile: add the profile name to the profiles array
+# To create a new profile: just use a new name in any profiles array
+# =============================================================================
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TERMINALS
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.ghostty]
+type = "cask"
+category = "terminals"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.warp]
+type = "cask"
+category = "terminals"
+profiles = ["standard"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EDITORS
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.zed]
+type = "cask"
+category = "editors"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.visual-studio-code]
+type = "cask"
+category = "editors"
+profiles = ["standard", "developer"]
+
+[apps.antigravity]
+type = "cask"
+category = "editors"
+profiles = ["standard"]
+
+[apps.neovim]
+type = "mise"
+category = "editors"
+profiles = ["developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BROWSERS
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.firefox]
+type = "cask"
+category = "browsers"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.google-chrome]
+type = "cask"
+category = "browsers"
+profiles = ["standard"]
+
+[apps.microsoft-edge]
+type = "cask"
+category = "browsers"
+profiles = ["standard"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AI TOOLS
+# ─────────────────────────────────────────────────────────────────────────────
+# Standard users: Desktop GUI apps
+[apps.claude-desktop]
+type = "cask"
+name = "claude"
+category = "ai"
+profiles = ["standard"]
+
+[apps.chatgpt-desktop]
+type = "cask"
+name = "chatgpt"
+category = "ai"
+profiles = ["standard"]
+
+[apps.codex-desktop]
+type = "cask"
+name = "codex"
+category = "ai"
+profiles = ["standard"]
+
+[apps.opencode-desktop]
+type = "cask"
+category = "ai"
+profiles = ["standard"]
+
+# Developer users: CLI tools only
+[apps.claude-cli]
+type = "curl"
+category = "ai"
+profiles = ["developer"]
+
+[apps.opencode-cli]
+type = "curl"
+category = "ai"
+profiles = ["developer"]
+
+[apps.codex-cli]
+type = "mise"
+name = "codex"
+category = "ai"
+profiles = ["developer"]
+
+[apps.gemini-cli]
+type = "mise"
+category = "ai"
+profiles = ["developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WINDOW MANAGEMENT
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.aerospace]
+type = "cask"
+tap = "nikitabobko/tap"
+name = "nikitabobko/tap/aerospace"
+category = "window-management"
+profiles = ["developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRODUCTIVITY
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.raycast]
+type = "cask"
+category = "productivity"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.obsidian]
+type = "cask"
+category = "productivity"
+profiles = ["standard", "developer"]
+
+[apps.bitwarden]
+type = "cask"
+category = "productivity"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.wispr-flow]
+type = "cask"
+category = "productivity"
+profiles = ["standard"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MEDIA & COMMUNICATION
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.discord]
+type = "cask"
+category = "media"
+profiles = ["standard", "developer"]
+
+[apps.spotify]
+type = "cask"
+category = "media"
+profiles = ["standard", "developer"]
+
+[apps.vlc]
+type = "cask"
+category = "media"
+profiles = ["standard", "developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VIRTUALIZATION
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.orbstack]
+type = "cask"
+category = "virtualization"
+profiles = ["standard", "developer"]
+
+[apps.utm]
+type = "cask"
+category = "virtualization"
+profiles = ["standard", "developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DISPLAY
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.monitorcontrol]
+type = "cask"
+category = "display"
+profiles = ["standard", "developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FONTS
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.font-jetbrains-mono-nerd-font]
+type = "cask"
+category = "fonts"
+profiles = ["minimal", "standard", "developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CLI TOOLS (mise)
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.starship]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.eza]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.bat]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.ripgrep]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.fzf]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.jq]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.yq]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.gh]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.direnv]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer"]
+
+# Developer extras
+[apps.tmux]
+type = "mise"
+category = "cli"
+profiles = ["developer"]
+
+[apps.yazi]
+type = "mise"
+category = "cli"
+profiles = ["developer"]
+
+[apps.btop]
+type = "mise"
+category = "cli"
+profiles = ["developer"]
+
+[apps.ncdu]
+type = "mise"
+category = "cli"
+profiles = ["developer"]
+
+[apps.lazygit]
+type = "mise"
+category = "cli"
+profiles = ["developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUNTIMES (mise)
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.node]
+type = "mise"
+version = "lts"
+category = "runtimes"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.python]
+type = "mise"
+version = "3.14"
+category = "runtimes"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.rust]
+type = "mise"
+version = "stable"
+category = "runtimes"
+profiles = ["standard", "developer"]
+
+[apps.bun]
+type = "mise"
+version = "1.3"
+category = "runtimes"
+profiles = ["standard", "developer"]
+
+[apps.pnpm]
+type = "mise"
+version = "10.28"
+category = "runtimes"
+profiles = ["standard", "developer"]
+
+[apps.erlang]
+type = "mise"
+version = "28.3"
+category = "runtimes"
+profiles = ["developer"]
+
+[apps.elixir]
+type = "mise"
+version = "1.19.5-otp-28"
+category = "runtimes"
+profiles = ["developer"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STOW PACKAGES (configs)
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.git-config]
+type = "stow"
+package = "git"
+category = "config"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.zsh-config]
+type = "stow"
+package = "zsh"
+category = "config"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.sheldon-config]
+type = "stow"
+package = "sheldon"
+category = "config"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.starship-config]
+type = "stow"
+package = "starship"
+category = "config"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.ghostty-config]
+type = "stow"
+package = "ghostty"
+category = "config"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.mise-config]
+type = "stow"
+package = "mise"
+category = "config"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.aerospace-config]
+type = "stow"
+package = "aerospace"
+category = "config"
+profiles = ["developer"]
+
+[apps.tmux-config]
+type = "stow"
+package = "tmux"
+category = "config"
+profiles = ["developer"]
+
+[apps.nvim-config]
+type = "stow"
+package = "nvim"
+category = "config"
+profiles = ["developer"]
+
+[apps.yazi-config]
+type = "stow"
+package = "yazi"
+category = "config"
+profiles = ["developer"]
