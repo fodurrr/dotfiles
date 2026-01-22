@@ -174,9 +174,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Phase 2: Profile Selection"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Get available profiles from apps.toml
+# Get available profiles from apps.toml (using grep for portability)
 get_profiles() {
-    dasel -f "$APPS_CONFIG" -m 'apps.*.profiles.[]' 2>/dev/null | sort -u
+    grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u
 }
 
 # Interactive profile selection
@@ -251,8 +251,10 @@ echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
 # Check if app belongs to ANY selected profile
 app_in_profile() {
     local app_key="$1"
+    local profiles
+    profiles=$(cat "$APPS_CONFIG" | dasel -i toml "apps.$app_key.profiles" 2>/dev/null || echo "")
     for profile in "${SELECTED_PROFILES[@]}"; do
-        if dasel -f "$APPS_CONFIG" "apps.$app_key.profiles" 2>/dev/null | grep -q "$profile"; then
+        if echo "$profiles" | grep -q "$profile"; then
             return 0
         fi
     done
@@ -263,12 +265,15 @@ app_in_profile() {
 get_app_prop() {
     local app_key="$1"
     local prop="$2"
-    dasel -f "$APPS_CONFIG" "apps.$app_key.$prop" 2>/dev/null || echo ""
+    local result
+    result=$(cat "$APPS_CONFIG" | dasel -i toml "apps.$app_key.$prop" 2>/dev/null || echo "")
+    # Remove quotes if present
+    echo "$result" | tr -d "'"
 }
 
-# Get all app keys
+# Get all app keys (extract [apps.X] sections)
 get_all_apps() {
-    dasel -f "$APPS_CONFIG" -m 'apps.-' 2>/dev/null
+    grep -oE '^\[apps\.[^]]+\]' "$APPS_CONFIG" | sed 's/\[apps\.//;s/\]//' | sort -u
 }
 
 # =============================================================================
