@@ -4,66 +4,166 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a macOS (Apple Silicon) dotfiles repository using a **5-layer installation model**:
+This is a macOS (Apple Silicon) dotfiles repository using a **profile-based installation system** with a **two-phase architecture**.
 
-| Layer | Tool | Purpose | Config File |
-|-------|------|---------|-------------|
-| 1 | Homebrew | System tools + GUI apps | `Brewfile` |
-| 2 | Stow | Config deployment (symlinks) | Each `*/` folder |
-| 3 | Mise | Language runtimes + CLI tools | `mise/.config/mise/config.toml` |
-| 4 | mas | Mac App Store (optional) | Manual or Brewfile |
-| 5 | Curl scripts | Bleeding-edge AI coding tools | `scripts/curl-installs.sh` |
+### Two-Phase Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      PHASE 1: BOOTSTRAP                          │
+│                (Always runs, installs infrastructure)            │
+├─────────────────────────────────────────────────────────────────┤
+│  Source: Brewfile.bootstrap                                      │
+│  Installs: mise, stow, sheldon, dasel, gum, mas, sevenzip       │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                      PHASE 2: PROFILE                            │
+│              (Installs apps based on selected profiles)          │
+├─────────────────────────────────────────────────────────────────┤
+│  Source: apps.toml (centralized app registry)                    │
+│                                                                  │
+│  Layer 1: Homebrew - Casks and brews                            │
+│  Layer 2: Stow     - Config symlinks                            │
+│  Layer 3: Mise     - CLI tools and runtimes                     │
+│  Layer 5: Curl     - AI CLI installers                          │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Profiles
+
+| Profile | Target User | Key Features |
+|---------|-------------|--------------|
+| **minimal** | Fresh Mac, testing | Core essentials only |
+| **standard** | Friends/family | Full GUI experience + AI Desktop apps |
+| **developer** | Power users | Terminal-centric + AI CLI tools + Aerospace |
 
 ## Common Commands
 
 ```bash
-# Full setup (runs all 5 layers)
+# Interactive installation (profile selection menu)
 ./install.sh
 
-# Strict cleanup mode (removes unlisted packages)
-./install.sh --clean
+# Install specific profile(s)
+./install.sh --profile=developer
+./install.sh -p minimal -p standard
 
-# Update only AI coding tools (Layer 5)
+# Clean mode (removes apps not in selected profiles)
+./install.sh --profile=developer --clean
+
+# List available profiles
+./install.sh --list-profiles
+
+# Update AI tools only (Layer 5)
 bash scripts/curl-installs.sh
 
-# Update only runtimes/CLI (Layer 3)
+# Update mise tools only (Layer 3)
 mise install
 
-# Manually stow a single package (Layer 2)
-cd ~/dotfiles && stow <package-name>
+# Stow a single package (Layer 2)
+cd ~/dotfiles && stow <package>
 
-# Reload shell after zsh changes
+# Reload shell
 source ~/.zshrc
 ```
 
-## Architecture
+## Key Files
 
-### The 5-Layer Model
+| File | Purpose |
+|------|---------|
+| `apps.toml` | **Centralized app registry** - All apps with profile assignments |
+| `Brewfile.bootstrap` | Infrastructure packages only (runs before apps.toml can be read) |
+| `install.sh` | Two-phase installer with profile support and clean mode |
+| `scripts/curl-installs.sh` | Layer 5: AI CLI installers |
+
+## The Centralized Config: apps.toml
+
+All apps are defined in `apps.toml` with profile assignments:
+
+```toml
+[apps.ghostty]
+type = "cask"
+category = "terminals"
+profiles = ["minimal", "standard", "developer"]
+
+[apps.warp]
+type = "cask"
+category = "terminals"
+profiles = ["standard"]  # Only in standard profile
+
+[apps.tmux]
+type = "mise"
+category = "cli"
+profiles = ["developer"]  # Only in developer profile
+
+[apps.tmux-config]
+type = "stow"
+package = "tmux"
+category = "config"
+profiles = ["developer"]
+```
+
+### App Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `cask` | Homebrew cask (GUI app) | Ghostty, VSCode, Spotify |
+| `brew` | Homebrew formula (CLI) | Used rarely, most CLIs via mise |
+| `mise` | Mise-managed tool/runtime | starship, eza, node, python |
+| `stow` | Config symlinks | git, zsh, ghostty configs |
+| `curl` | Curl installer script | claude-cli, opencode-cli |
+
+## Adding New Tools
+
+### Decision Flowchart
 
 ```
-Layer 1: Homebrew   →  System infrastructure + GUI apps
-       ↓
-Layer 2: Stow       →  Deploy config files via symlinks
-       ↓
-Layer 3: Mise       →  Install runtimes + CLI tools (reads stowed config)
-       ↓
-Layer 4: mas        →  Mac App Store apps (optional)
-       ↓
-Layer 5: curl       →  AI coding tools (bleeding edge)
+Is it a GUI app?
+├─ Yes → Add to apps.toml with type = "cask"
+└─ No (CLI)
+     ├─ AI tool with curl installer? → type = "curl" + update scripts/curl-installs.sh
+     ├─ Language runtime/CLI tool?   → type = "mise"
+     └─ Otherwise                    → type = "brew"
 ```
 
-**Why this order?**
-- Homebrew installs `mise`, `stow`, `sheldon` (needed for later layers)
-- Stow deploys `~/.config/mise/config.toml` (needed by mise install)
-- Mise reads the config to install tools
-- Curl scripts run last (no dependencies)
+### To apps.toml
 
-### Directory Structure
+```toml
+# Add a GUI app
+[apps.figma]
+type = "cask"
+category = "design"
+profiles = ["standard", "developer"]
+
+# Add a CLI tool
+[apps.lazydocker]
+type = "mise"
+category = "cli"
+profiles = ["developer"]
+
+# Add a new config to manage
+[apps.newtool-config]
+type = "stow"
+package = "newtool"
+category = "config"
+profiles = ["developer"]
+```
+
+### Creating a Stow Package
+
+```bash
+mkdir -p ~/dotfiles/newtool/.config/newtool
+mv ~/.config/newtool/config ~/dotfiles/newtool/.config/newtool/
+cd ~/dotfiles && stow newtool
+```
+
+## Directory Structure
 
 ```
 ~/dotfiles/
-├── Brewfile                     # Layer 1: Homebrew packages
-├── install.sh                   # Main orchestrator
+├── apps.toml                    # Centralized app registry
+├── Brewfile.bootstrap           # Infrastructure packages only
+├── install.sh                   # Two-phase installer
 ├── scripts/
 │   └── curl-installs.sh         # Layer 5: AI tool installers
 ├── git/                         # Stow package → ~/.gitconfig
@@ -72,12 +172,16 @@ Layer 5: curl       →  AI coding tools (bleeding edge)
 ├── sheldon/                     # Stow package → ~/.config/sheldon/
 ├── starship/                    # Stow package → ~/.config/starship.toml
 ├── ghostty/                     # Stow package → ~/.config/ghostty/
+├── aerospace/                   # Stow package → ~/.config/aerospace/
+├── tmux/                        # Stow package → ~/.config/tmux/
+├── nvim/                        # Stow package → ~/.config/nvim/
 ├── yazi/                        # Stow package → ~/.config/yazi/
+├── docs/                        # Documentation
 ├── README.md                    # User documentation
 └── CLAUDE.md                    # This file
 ```
 
-### The Enforcer Pattern
+## The Enforcer Pattern
 
 `install.sh` uses a `stow_enforce` function that:
 1. Detects existing real files at target paths
@@ -86,60 +190,22 @@ Layer 5: curl       →  AI coding tools (bleeding edge)
 
 This ensures the repo is always the source of truth without data loss.
 
-## Adding New Tools
+## Profile Switching Modes
 
-### Decision Flowchart
-
-```
-Is it a GUI app?
-├─ Yes → App Store only? → Layer 4 (mas)
-│                       → Layer 1 (cask in Brewfile)
-└─ No (CLI)
-     ├─ AI tool with curl installer? → Layer 5 (scripts/curl-installs.sh)
-     ├─ Language runtime?            → Layer 3 (mise config)
-     ├─ Mise can install it?         → Layer 3 (mise config)
-     └─ Otherwise                    → Layer 1 (brew formula)
-```
-
-### Layer 1: Homebrew (GUI apps, system tools)
-
-```ruby
-# Add to Brewfile:
-cask "new-gui-app"    # GUI application
-brew "new-cli-tool"   # System CLI tool (if not in Mise)
-```
-
-Then run `./install.sh`
-
-### Layer 3: Mise (runtimes, CLI tools)
-
-```toml
-# Add to mise/.config/mise/config.toml:
-new-tool = "latest"   # or specific version like "1.2.3"
-```
-
-Then run `mise install`
-
-### Layer 5: Curl scripts (AI coding tools)
-
+### Merge Mode (Default)
 ```bash
-# Add function to scripts/curl-installs.sh:
-install_new_ai_tool() {
-    log_info "Installing New AI Tool..."
-    curl -fsSL https://example.com/install.sh | bash
-}
-
-# Add to main():
-install_new_ai_tool
+./install.sh --profile=developer
 ```
+- **ADDS** apps from the new profile
+- **KEEPS** all existing apps
 
-### New config to manage (Stow package)
-
+### Clean Mode (Strict)
 ```bash
-mkdir -p ~/dotfiles/<tool>/.config/<tool>
-mv ~/.config/<tool>/config ~/dotfiles/<tool>/.config/<tool>/
-cd ~/dotfiles && stow <tool>
+./install.sh --profile=developer --clean
 ```
+- **ADDS** apps from the selected profile(s)
+- **REMOVES** managed apps NOT in the selected profile(s)
+- Affects: Homebrew packages, Stow configs, Mise tools
 
 ## Shell Initialization Order
 
@@ -152,13 +218,13 @@ cd ~/dotfiles && stow <tool>
 
 ## AI Tools Reference
 
-| Tool | Desktop App | CLI | Installation Layer |
-|------|-------------|-----|-------------------|
-| Claude | `cask "claude"` | `claude` | GUI: Layer 1, CLI: Layer 5 |
-| ChatGPT | `cask "chatgpt"` | - | Layer 1 |
-| Codex | `cask "codex"` | `codex` | GUI: Layer 1, CLI: Layer 3 |
-| OpenCode | `cask "opencode-desktop"` | `opencode` | GUI: Layer 1, CLI: Layer 5 |
-| Gemini | - | `gemini` | Layer 3 (no official desktop) |
+| Tool | Standard Profile | Developer Profile |
+|------|-----------------|-------------------|
+| Claude | Desktop app (cask) | CLI only (curl) |
+| ChatGPT | Desktop app (cask) | - |
+| Codex | Desktop app (cask) | CLI only (mise) |
+| OpenCode | Desktop app (cask) | CLI only (curl) |
+| Gemini | - | CLI only (mise) |
 
 ## Conductor Workspace Workflow
 

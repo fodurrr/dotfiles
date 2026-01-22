@@ -50,7 +50,6 @@ IGNORE_LIST=(
     ".DS_Store"
     ".gitkeep"
     "install.sh"
-    "Brewfile"
     "Brewfile.bootstrap"
     "apps.toml"
     "README.md"
@@ -326,8 +325,43 @@ done
 
 if [[ "$CLEAN_MODE" == true ]]; then
     echo "Cleaning up unlisted Homebrew packages..."
-    # Note: Can't use brew bundle cleanup with apps.toml directly
-    # Would need to generate a Brewfile from apps.toml first
+
+    # Generate temporary Brewfile from apps.toml for selected profiles
+    TEMP_BREWFILE=$(mktemp)
+
+    for app_key in $(get_all_apps); do
+        if app_in_profile "$app_key"; then
+            type=$(get_app_prop "$app_key" "type")
+            name=$(get_app_prop "$app_key" "name")
+            [[ -z "$name" ]] && name="$app_key"
+            tap=$(get_app_prop "$app_key" "tap")
+
+            case "$type" in
+                cask)
+                    [[ -n "$tap" ]] && echo "tap \"$tap\"" >> "$TEMP_BREWFILE"
+                    echo "cask \"$name\"" >> "$TEMP_BREWFILE"
+                    ;;
+                brew)
+                    echo "brew \"$name\"" >> "$TEMP_BREWFILE"
+                    ;;
+            esac
+        fi
+    done
+
+    # Add bootstrap packages (always keep these)
+    cat "$DOTFILES_DIR/Brewfile.bootstrap" >> "$TEMP_BREWFILE"
+
+    # Run cleanup (removes packages not in the generated Brewfile)
+    echo "   Packages to remove:"
+    brew bundle cleanup --file="$TEMP_BREWFILE" || true
+
+    read -p "   Remove these packages? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        brew bundle cleanup --force --file="$TEMP_BREWFILE" || true
+    fi
+
+    rm "$TEMP_BREWFILE"
 fi
 
 # =============================================================================
@@ -353,6 +387,23 @@ for app_key in $(get_all_apps); do
     fi
 done
 
+if [[ "$CLEAN_MODE" == true ]]; then
+    echo "Removing stow packages not in selected profiles..."
+
+    for app_key in $(get_all_apps); do
+        type=$(get_app_prop "$app_key" "type")
+        if [[ "$type" == "stow" ]]; then
+            if ! app_in_profile "$app_key"; then
+                package=$(get_app_prop "$app_key" "package")
+                if [[ -d "$DOTFILES_DIR/$package" ]]; then
+                    echo "   Unstowing: $package"
+                    stow -D "$package" 2>/dev/null || true
+                fi
+            fi
+        fi
+    done
+fi
+
 # =============================================================================
 # Layer 3: Mise (tools from apps.toml)
 # =============================================================================
@@ -377,6 +428,33 @@ for app_key in $(get_all_apps); do
 done
 
 if [[ "$CLEAN_MODE" == true ]]; then
+    echo "Cleaning up mise tools not in selected profiles..."
+
+    # Build list of tools that SHOULD be installed
+    WANTED_TOOLS=()
+    for app_key in $(get_all_apps); do
+        if app_in_profile "$app_key"; then
+            type=$(get_app_prop "$app_key" "type")
+            if [[ "$type" == "mise" ]]; then
+                name=$(get_app_prop "$app_key" "name")
+                [[ -z "$name" ]] && name="$app_key"
+                WANTED_TOOLS+=("$name")
+            fi
+        fi
+    done
+
+    # Get currently installed tools
+    INSTALLED_TOOLS=$(mise list --current 2>/dev/null | awk '{print $1}' | sort -u)
+
+    # Remove tools not in the wanted list
+    for tool in $INSTALLED_TOOLS; do
+        if ! printf '%s\n' "${WANTED_TOOLS[@]}" | grep -qx "$tool"; then
+            echo "   Removing: $tool"
+            mise uninstall "$tool" --all 2>/dev/null || true
+        fi
+    done
+
+    # Prune old versions
     echo "Pruning old mise runtimes..."
     mise prune -y
 fi
