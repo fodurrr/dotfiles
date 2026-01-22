@@ -63,9 +63,5 @@ alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
 
-# --- Split orientation ---
-alt-v = 'split vertical'
-alt-b = 'split horizontal'
-
 # --- Float toggle ---
 alt-shift-space = 'layout floating tiling'

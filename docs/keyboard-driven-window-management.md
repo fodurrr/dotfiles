@@ -65,12 +65,12 @@ This setup uses three layers of keyboard navigation:
 
 | Shortcut | Action |
 |----------|--------|
-| `Alt + v` | Split vertical (new window below) |
-| `Alt + b` | Split horizontal (new window right) |
-| `Alt + f` | Toggle fullscreen |
-| `Alt + /` | Toggle between tile layouts |
+| `Alt + /` | Toggle layout direction (horizontal ↔ vertical) |
 | `Alt + ,` | Toggle accordion layout |
+| `Alt + f` | Toggle fullscreen |
 | `Alt + Shift + Space` | Toggle floating/tiling |
+
+> **Note:** Aerospace automatically tiles new windows. Use `Alt + /` to change the split direction of the focused container.
 
 ### Resizing
 
@@ -163,27 +163,26 @@ All tmux commands start with the prefix `Ctrl+a`.
 
 ### Workflow 2: Research + Coding
 
-1. `Alt + b` - Split desktop horizontally
-2. Open browser on right side
-3. Keep Ghostty on left
-4. `Alt + h/l` - Switch between browser and terminal
+1. Open Ghostty (takes full screen)
+2. Open browser → automatically tiles side-by-side
+3. `Alt + h/l` - Switch between browser and terminal
+4. `Alt + /` - Toggle layout direction if needed
 
 ### Workflow 3: 3-Column Layout
 
 1. Open first app (full screen)
-2. `Alt + b` - Split, open second app
-3. `Alt + b` - Split again, open third app
-4. Result: 3 equal columns
+2. Open second app → auto-tiles 50/50
+3. Open third app → auto-tiles into 3 columns
+4. Use `Alt + /` to toggle layout direction as needed
 
 ### Workflow 4: 1 + 4 Grid
 
 1. Open Ghostty (takes full screen)
-2. `Alt + b` - Split horizontal
-3. Open app 2 (now 50/50)
-4. `Alt + l` - Focus right
-5. `Alt + v` - Split vertical, open app 3
-6. Focus each right pane, `Alt + v` twice more
-7. Result: Ghostty on left, 4 apps in grid on right
+2. Open app 2 → now 50/50
+3. `Alt + l` - Focus right side
+4. Open apps 3, 4, 5 → they tile into the right section
+5. Use `Alt + /` on right section to arrange vertically
+6. Result: Ghostty on left, 4 apps in grid on right
 
 ## Quick Reference Card
 
@@ -195,7 +194,7 @@ All tmux commands start with the prefix `Ctrl+a`.
 │  Alt + hjkl    Navigate       │  Ctrl+a hjkl  Navigate    │
 │  Alt + Shift   Move window    │  Ctrl+a v/s   Split       │
 │  Alt + 1-5     Workspace      │  Ctrl+a d     Detach      │
-│  Alt + v/b     Split V/H      │  Ctrl+a x     Close pane  │
+│  Alt + /       Toggle layout  │  Ctrl+a x     Close pane  │
 │  Alt + f       Fullscreen     │  Ctrl+a r     Reload      │
 ├────────────────────────────────────────────────────────────┤
 │  NEOVIM (Editor)              │  GENERAL                  │
