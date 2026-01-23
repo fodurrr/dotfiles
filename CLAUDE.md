@@ -49,14 +49,14 @@ bash -n install.sh  # Syntax check (uses system bash 3.2)
 
 ### TOML Parsing
 
-Use **dasel** (installed in bootstrap), NOT yq. yq's TOML support is unreliable.
+Use **yq** (installed in bootstrap) with `-p toml` flag:
 
 ```bash
-# ✅ Correct - use dasel
-dasel -f apps.toml -r toml 'apps.ghostty.type'
+# Get a property
+yq -p toml -oy '.apps.ghostty.type' apps.toml
 
-# ❌ Wrong - yq TOML parsing is buggy
-yq -p toml '.apps.ghostty.type' apps.toml
+# Get array values
+yq -p toml -oy '.apps.ghostty.profiles' apps.toml
 ```
 
 ### Target Environment

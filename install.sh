@@ -337,14 +337,18 @@ done
 
 # Install casks
 echo "Installing casks..."
+echo "[DEBUG] SELECTED_PROFILES: ${SELECTED_PROFILES[*]}"
 for app_key in $(get_all_apps); do
-    if app_in_profile "$app_key"; then
-        type=$(get_app_prop "$app_key" "type")
-        if [[ "$type" == "cask" ]]; then
+    type=$(get_app_prop "$app_key" "type")
+    if [[ "$type" == "cask" ]]; then
+        echo "[DEBUG] Checking cask: $app_key"
+        if app_in_profile "$app_key"; then
             name=$(get_app_prop "$app_key" "name")
             [[ -z "$name" ]] && name="$app_key"
             echo "   Installing: $name"
-            brew install --cask "$name" 2>/dev/null || true
+            brew install --cask "$name" || echo "   WARNING: Failed to install $name"
+        else
+            echo "[DEBUG]   SKIPPED - not in profile"
         fi
     fi
 done
