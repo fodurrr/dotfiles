@@ -668,7 +668,9 @@ for app_key in $(get_all_apps); do
                         add_to_summary SKIPPED "claude-cli" "claude-cli"
                     else
                         log_success "Installing claude-cli..."
-                        if curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null; then
+                        curl -fsSL https://claude.ai/install.sh 2>/dev/null | bash 2>/dev/null || true
+                        # Verify installation succeeded by checking if binary exists
+                        if command -v claude &> /dev/null; then
                             add_to_summary INSTALLED "claude-cli" "claude-cli"
                         else
                             log_warning "Failed to install claude-cli"
@@ -680,7 +682,9 @@ for app_key in $(get_all_apps); do
                         add_to_summary SKIPPED "opencode-cli" "opencode-cli"
                     else
                         log_success "Installing opencode-cli..."
-                        if curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null; then
+                        curl -fsSL https://opencode.ai/install 2>/dev/null | bash 2>/dev/null || true
+                        # Verify installation succeeded by checking if binary exists
+                        if command -v opencode &> /dev/null; then
                             add_to_summary INSTALLED "opencode-cli" "opencode-cli"
                         else
                             log_warning "Failed to install opencode-cli"
