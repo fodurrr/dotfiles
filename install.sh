@@ -372,7 +372,14 @@ install_mise_app() {
     [[ -z "$version" ]] && version="latest"
 
     # Check if already installed with correct version
-    local installed_version=$(mise list "$name" 2>/dev/null | awk '{print $2}' | head -1)
+    # IMPORTANT: mise list shows "(missing)" for tools that are configured but not installed
+    local mise_status=$(mise list "$name" 2>/dev/null | head -1)
+    local installed_version=""
+
+    # Only consider it installed if NOT marked as (missing)
+    if [[ -n "$mise_status" ]] && [[ "$mise_status" != *"(missing)"* ]]; then
+        installed_version=$(echo "$mise_status" | awk '{print $2}')
+    fi
 
     if [[ -n "$installed_version" ]]; then
         if [[ "$version" == "latest" ]]; then
