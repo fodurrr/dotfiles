@@ -1,0 +1,68 @@
+[
+  // =============================================================================
+  // Zed Keybindings
+  // =============================================================================
+  // Designed to match tmux/Neovim muscle memory
+  // =============================================================================
+
+  // jk to escape insert mode (common vim customization)
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      "j k": "vim::NormalBefore"
+    }
+  },
+
+  // Pane navigation - matches tmux/Neovim Ctrl+hjkl
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+
+  // Split windows - match Neovim ss/sv
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "s s": "pane::SplitRight",
+      "s v": "pane::SplitDown"
+    }
+  },
+
+  // Buffer navigation with Shift+h/l
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "shift-h": "pane::ActivatePrevItem",
+      "shift-l": "pane::ActivateNextItem",
+      "shift-q": "pane::CloseActiveItem"
+    }
+  },
+
+  // Leader-style bindings (space as pseudo-leader)
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "space space": "file_finder::Toggle",
+      "space /": "search::SelectAllMatches",
+      "space e": "project_panel::ToggleFocus",
+      "space b d": "pane::CloseActiveItem"
+    }
+  },
+
+  // Project panel vim navigation
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "j": "menu::SelectNext",
+      "k": "menu::SelectPrev",
+      "l": "project_panel::Open",
+      "h": "project_panel::CollapseSelectedEntry",
+      "o": "project_panel::Open"
+    }
+  }
+]

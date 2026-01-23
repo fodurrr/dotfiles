@@ -1,27 +1,48 @@
+-- =============================================================================
+-- Colorscheme: Catppuccin Mocha
+-- =============================================================================
+-- Matches Ghostty, tmux, Zed, and other tools
+-- =============================================================================
+
 return {
   {
-    "scottmckendry/cyberdream.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
-    opts = function(_, opts)
-      opts.transparent = true
-      opts.italic_comments = true
-      opts.borderless_telescope = false
-    end,
+    opts = {
+      flavour = "mocha",
+      transparent_background = true,
+      term_colors = true,
+      styles = {
+        comments = { "italic" },
+      },
+      integrations = {
+        aerial = true,
+        cmp = true,
+        gitsigns = true,
+        harpoon = true,
+        mason = true,
+        neotree = true,
+        notify = true,
+        telescope = { enabled = true },
+        treesitter = true,
+        which_key = true,
+      },
+    },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "cyberdream",
+      colorscheme = "catppuccin",
     },
   },
 
   -- modicator (auto color line number based on vim mode)
   {
     "mawkler/modicator.nvim",
-    dependencies = "scottmckendry/cyberdream.nvim",
+    dependencies = "catppuccin/nvim",
     init = function()
-      -- These are required for Modicator to work
       vim.o.cursorline = false
       vim.o.number = true
       vim.o.termguicolors = true

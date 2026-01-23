@@ -202,6 +202,15 @@ if ! brew bundle --file="$DOTFILES_DIR/Brewfile.bootstrap"; then
     exit 1
 fi
 
+# Install TPM (Tmux Plugin Manager) if not present
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    log_info "Installing TPM (Tmux Plugin Manager)..."
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+    log_success "TPM installed. After tmux starts, press Ctrl+A then Shift+I to install plugins."
+else
+    log_info "TPM already installed"
+fi
+
 # =============================================================================
 # PHASE 2: PROFILE SELECTION
 # =============================================================================

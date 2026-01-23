@@ -77,6 +77,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 ├─────────────────────────────────────────────────────────────────┤
 │  Source: Brewfile.bootstrap                                      │
 │  Installs: mise, stow, sheldon, dasel, gum, mas, sevenzip       │
+│  Also: TPM (Tmux Plugin Manager) via git clone                  │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
@@ -234,6 +235,7 @@ cd ~/dotfiles && stow newtool
 ├── sheldon/                     # Stow package → ~/.config/sheldon/
 ├── starship/                    # Stow package → ~/.config/starship.toml
 ├── ghostty/                     # Stow package → ~/.config/ghostty/
+├── zed/                         # Stow package → ~/.config/zed/
 ├── aerospace/                   # Stow package → ~/.config/aerospace/
 ├── tmux/                        # Stow package → ~/.config/tmux/
 ├── nvim/                        # Stow package → ~/.config/nvim/
