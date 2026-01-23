@@ -360,10 +360,9 @@ install_mise_app() {
     # Skip if already processed this session (pipe delimiters prevent partial matches)
     [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
 
-    # Check for dependency
+    # Check for dependency (install silently if needed)
     local dep=$(get_app_prop "$app_key" "depends_on")
     if [[ -n "$dep" ]]; then
-        log_info "$app_key requires $dep (dependency)"
         install_mise_app "$dep"
     fi
 
