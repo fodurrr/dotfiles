@@ -1,81 +1,103 @@
+# =============================================================================
+# Starship Prompt - Minimal Style (omerxx-inspired)
+# =============================================================================
+# Left: directory + character only (clean, fast)
+# Right: git, languages, cloud (out of the way)
+# Theme: Catppuccin Mocha
+# =============================================================================
+
 "$schema" = 'https://starship.rs/config-schema.json'
 
-add_newline = true
+add_newline = false
+
+# Minimal left prompt - just where you are
+format = "$directory$character"
+
+# Everything else on the right
+right_format = "$all"
+
+# Catppuccin Mocha palette
+palette = "catppuccin_mocha"
+
+command_timeout = 1000
 
 [character]
 success_symbol = '[➜](bold green)'
-error_symbol = '[✗](bold red) '
+error_symbol = '[✗](bold red)'
 
+[directory]
+truncate_to_repo = true
+
+[git_branch]
+format = '[$symbol$branch(:$remote_branch)]($style)'
+
+[git_status]
+disabled = false
+
+# Disable noisy modules
 [package]
 disabled = true
 
-[cmd_duration]
-min_time = 5000
-format = 'underwent [$duration](bold yellow)'
-
 [aws]
-disabled = true
-
-[azure]
-format = 'on [$symbol($subscription)]($style) '
 disabled = true
 
 [gcloud]
 disabled = true
 
-[directory]
-truncate_to_repo = true
+[azure]
+disabled = true
 
 [docker_context]
 disabled = true
 
-[git_branch]
-ignore_branches = ['master', 'main']
-
-[git_status]
-# Using nerd font symbols for better terminal compatibility
-conflicted = '[󰅚](red)'
-ahead = '[⇡](green)'
-behind = '[⇣](yellow)'
-diverged = '[⇕](red)'
-up_to_date = ''
-untracked = '[?](blue)'
-stashed = '[󰆓](cyan)'
-modified = '[!](yellow)'
-staged = '[+\($count\)](green)'
-renamed = '[»](purple)'
-deleted = '[✘](red)'
-disabled = false
+[kubernetes]
+disabled = true
 
 [golang]
 disabled = true
 
-[kubernetes]
-disabled = false
+# Keep useful language indicators minimal
+[nodejs]
+format = '[$symbol]($style)'
+symbol = "⬢ "
 
-[nix_shell]
-disabled = false
-impure_msg = 'devbox'
-format = 'via [$symbol$state](bold purple) '
+[python]
+format = '[$symbol]($style)'
 
-[sudo]
-disabled = false
-
-[battery]
-full_symbol = "󰁹 "
-charging_symbol = "󰂄 "
-discharging_symbol = "󰂃 "
-unknown_symbol = "󰂑 "
-empty_symbol = "󰂎 "
+[elixir]
+format = '[$symbol]($style)'
+symbol = " "
 
 [erlang]
 symbol = "ⓔ "
 
-[nodejs]
-symbol = "[⬢](bold green) "
-
-[pulumi]
-symbol = "󰰐 "
-
-[typst]
-symbol = "t "
+# =============================================================================
+# Catppuccin Mocha Palette
+# =============================================================================
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"

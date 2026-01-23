@@ -409,6 +409,13 @@ category = "config"
 profiles = ["minimal", "standard", "developer"]
 description = "Ghostty terminal config"
 
+[apps.zed-config]
+type = "stow"
+package = "zed"
+category = "config"
+profiles = ["standard", "developer"]
+description = "Zed editor config"
+
 [apps.mise-config]
 type = "stow"
 package = "mise"

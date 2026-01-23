@@ -141,6 +141,7 @@ When switching between profiles, there are two modes:
 │     - sheldon (zsh plugin manager)                               │
 │     - dasel (TOML parser)                                        │
 │     - gum (interactive menus)                                    │
+│  3. Install TPM (Tmux Plugin Manager)                            │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
@@ -171,6 +172,7 @@ When switching between profiles, there are two modes:
 ├── sheldon/                     # Stow package → ~/.config/sheldon/
 ├── starship/                    # Stow package → ~/.config/starship.toml
 ├── ghostty/                     # Stow package → ~/.config/ghostty/
+├── zed/                         # Stow package → ~/.config/zed/
 ├── aerospace/                   # Stow package → ~/.config/aerospace/
 ├── tmux/                        # Stow package → ~/.config/tmux/
 ├── nvim/                        # Stow package → ~/.config/nvim/
@@ -358,6 +360,65 @@ The installer automatically handles conflicts:
 | Target is real file | Backup to `.bak`, then symlink | Repo wins, data preserved |
 
 This ensures the repository is always the source of truth without data loss.
+
+---
+
+## Zed Editor Configuration
+
+Zed is configured with vim mode and keybindings that match Neovim/tmux for unified muscle memory:
+
+| Key | Action |
+|-----|--------|
+| `jk` | Escape to normal mode |
+| `Ctrl+hjkl` | Navigate panes (matches tmux/Neovim) |
+| `ss` | Split vertical |
+| `sv` | Split horizontal |
+| `Shift+h/l` | Previous/next buffer |
+| `Space Space` | File finder |
+| `Space e` | Toggle project panel |
+
+Config files are in `zed/.config/zed/`:
+- `settings.json` - Vim mode, theme, fonts
+- `keymap.json` - Custom keybindings
+
+---
+
+## Catppuccin Mocha Theme
+
+All tools are configured with a consistent **Catppuccin Mocha** theme for visual harmony:
+
+| Tool | Theme Source |
+|------|--------------|
+| Ghostty | Built-in Catppuccin Mocha |
+| Neovim | catppuccin/nvim plugin |
+| Zed | Built-in Catppuccin Mocha |
+| Tmux | catppuccin/tmux plugin (via TPM) |
+| Starship | Catppuccin Mocha palette |
+| FZF | Catppuccin colors in .zshrc |
+| Yazi | catppuccin-mocha.yazi flavor |
+
+---
+
+## Tmux with TPM
+
+Tmux uses [TPM (Tmux Plugin Manager)](https://github.com/tmux-plugins/tpm) for plugins including:
+
+- **catppuccin/tmux** - Catppuccin Mocha theme
+- **tmux-resurrect** - Persist sessions across restarts
+- **tmux-continuum** - Auto-restore sessions
+- **tmux-yank** - Enhanced copy/paste
+
+**Post-install step:** After tmux starts for the first time, press `Ctrl+A` then `Shift+I` to install plugins.
+
+**Keybindings (vim-style):**
+| Key | Action |
+|-----|--------|
+| `Ctrl+A` | Prefix (instead of default `Ctrl+B`) |
+| `h/j/k/l` | Navigate panes |
+| `v` | Split vertical |
+| `s` | Split horizontal |
+| `H/J/K/L` | Resize panes |
+| `r` | Reload config |
 
 ---
 

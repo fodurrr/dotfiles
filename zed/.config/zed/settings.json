@@ -1,0 +1,46 @@
+{
+  // =============================================================================
+  // Zed Editor Settings
+  // =============================================================================
+  // Vim mode with Catppuccin Mocha theme
+  // Keybindings match tmux/Neovim for unified muscle memory
+  // =============================================================================
+
+  // Vim mode - essential
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "always",
+    "use_smartcase_find": true,
+    "enable_vim_sneak": true
+  },
+
+  // Line numbers - match Neovim
+  "relative_line_numbers": true,
+
+  // UI - clean vim experience
+  "scrollbar": { "show": "never" },
+  "cursor_blink": false,
+  "scroll_beyond_last_line": "off",
+
+  // Theme - Catppuccin Mocha (matches Ghostty, tmux, Neovim)
+  "theme": {
+    "mode": "dark",
+    "dark": "Catppuccin Mocha",
+    "light": "Catppuccin Latte"
+  },
+
+  // Font - match Ghostty
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_size": 14,
+
+  // Terminal - match shell setup
+  "terminal": {
+    "shell": { "program": "zsh" },
+    "font_family": "JetBrainsMono Nerd Font"
+  },
+
+  // Panels - right-side project panel
+  "project_panel": {
+    "dock": "right"
+  }
+}
