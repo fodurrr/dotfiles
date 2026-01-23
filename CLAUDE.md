@@ -2,9 +2,71 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨 Git Workflow Rules (MANDATORY)
+
+1. **NEVER commit, merge, or push to `main` branch** - Always work in a feature branch
+2. **After completing work**, commit AND push to GitHub so the user can test in their VM
+3. **Provide VM testing commands** after every push:
+
+```bash
+# Run these commands in your VM to test the changes:
+cd ~/dotfiles
+git fetch origin
+git merge origin/<branch-name>
+./install.sh --profile=<profile>
+```
+
+Replace `<branch-name>` with the actual branch name (e.g., `feature/profiles-system`).
+
+---
+
 ## Overview
 
 This is a macOS (Apple Silicon) dotfiles repository using a **profile-based installation system** with a **two-phase architecture**.
+
+## ⚠️ Critical Development Constraints
+
+### Bash 3.2 Compatibility (MANDATORY)
+
+**macOS ships with bash 3.2** (due to GPL v3 licensing of bash 4+). All shell scripts MUST work with bash 3.2.
+
+| ❌ Bash 4+ (DO NOT USE) | ✅ Bash 3.2 Alternative |
+|-------------------------|-------------------------|
+| `declare -A arr` (associative arrays) | Use delimited strings: `VAR="\|key1\|\|key2\|"` and `[[ "$VAR" == *"\|key\|"* ]]` |
+| `readarray` / `mapfile` | Use `while read` loops |
+| `${var,,}` (lowercase) | Use `tr '[:upper:]' '[:lower:]'` or `awk '{print tolower($0)}'` |
+| `${var^^}` (uppercase) | Use `tr '[:lower:]' '[:upper:]'` |
+| `${var:offset:length}` negative offset | Calculate positive offset first |
+| `&>` for redirect | Use `>file 2>&1` |
+| `\|&` for pipe stderr | Use `2>&1 \|` |
+| `coproc` | Not available - redesign |
+| `[[ $var =~ regex ]]` capture groups | Use `grep -oE` or `sed` instead |
+
+**Before committing any shell script changes, verify syntax:**
+```bash
+bash -n install.sh  # Syntax check (uses system bash 3.2)
+```
+
+### TOML Parsing
+
+Use **dasel** (installed in bootstrap), NOT yq. yq's TOML support is unreliable.
+
+```bash
+# ✅ Correct - use dasel
+dasel -f apps.toml -r toml 'apps.ghostty.type'
+
+# ❌ Wrong - yq TOML parsing is buggy
+yq -p toml '.apps.ghostty.type' apps.toml
+```
+
+### Target Environment
+
+Scripts must work on **any macOS system** - from fresh installs to fully configured machines:
+- Fresh install: Only system tools available, no Homebrew yet
+- Existing system: User adds an app to `apps.toml` and re-runs `install.sh`
+- Scripts must be **idempotent** (safe to run multiple times)
+
+**Testing:** Use a fresh macOS VM for clean-slate testing.
 
 ### Two-Phase Architecture
 
@@ -230,12 +292,15 @@ This ensures the repo is always the source of truth without data loss.
 
 When working in a Conductor workspace (separate git worktree), changes are isolated from the main dotfiles directory.
 
-**IMPORTANT: After every commit and push, always remind the user:**
+**IMPORTANT: After every commit, push to GitHub and provide VM testing commands** (see Git Workflow Rules at top of this file).
 
-> To get this into your main environment, in your main dotfiles repo run:
-> ```bash
-> git fetch origin
-> git merge origin/<branch-name>
-> source ~/.zshrc  # if zsh changes were made
-> ```
-> Or create a PR at: `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`
+Example reminder to give the user:
+```
+Changes pushed! To test in your VM:
+cd ~/dotfiles
+git fetch origin
+git merge origin/feature/your-branch-name
+./install.sh --profile=standard
+```
+
+For merging to main environment (not VM): `source ~/.zshrc` if zsh changes were made, or create a PR at `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`

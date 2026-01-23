@@ -286,14 +286,15 @@ get_all_apps() {
 }
 
 # Track installed apps to avoid duplicates (for dependency resolution)
-declare -A INSTALLED_APPS
+# Using string-based tracking for bash 3.2 compatibility (macOS default)
+INSTALLED_APPS=""
 
 # Install a mise app with dependency resolution
 install_mise_app() {
     local app_key="$1"
 
-    # Skip if already installed this session
-    [[ "${INSTALLED_APPS[$app_key]}" == "1" ]] && return 0
+    # Skip if already installed this session (pipe delimiters prevent partial matches)
+    [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
 
     # Check for dependency
     local dep=$(get_app_prop "$app_key" "depends_on")
@@ -303,7 +304,7 @@ install_mise_app() {
     fi
 
     # Mark as installed
-    INSTALLED_APPS[$app_key]=1
+    INSTALLED_APPS="${INSTALLED_APPS}|${app_key}|"
 
     # Install the app
     local name=$(get_app_prop "$app_key" "name")
