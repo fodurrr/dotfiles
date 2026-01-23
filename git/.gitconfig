@@ -8,6 +8,8 @@
     excludesfile = ~/.gitignore_global
     # Fix filename casing issues on macOS
     ignorecase = false
+    # Global hooks path - protects main branches from direct commits
+    hooksPath = ~/.config/git/hooks
 
 [init]
     defaultBranch = main
