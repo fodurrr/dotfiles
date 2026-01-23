@@ -598,7 +598,7 @@ for app_key in $(get_all_apps); do
             package=$(get_app_prop "$app_key" "package")
             if [[ -d "$package" ]]; then
                 log_success "Linking $package config..."
-                stow_enforce "$package"
+                stow_enforce "$package" || true
             else
                 log_warning "Stow package directory not found: $package/"
             fi
