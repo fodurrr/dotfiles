@@ -97,3 +97,27 @@ alias reload="source ~/.zshrc"
 
 alias ..="cd .."
 alias ...="cd ../.."
+
+# =============================================================================
+# 6. AI Agent Sandbox (SandVault)
+# =============================================================================
+# SandVault creates an isolated macOS user for running AI coding agents safely.
+# Install: brew install sandvault && sv build
+# The sandbox user can't access your personal files (~/, ~/.ssh, etc.)
+#
+# Usage:
+#   sandbox-claude          # Claude Code in sandbox (from current dir)
+#   sandbox-codex           # Codex CLI in sandbox
+#   sandbox-gemini          # Gemini CLI in sandbox
+#   sandbox <cmd>           # Any command in sandbox
+#
+if command -v sv &>/dev/null; then
+    alias sandbox='sv shell'
+    alias sandbox-claude='sv claude'
+    alias sandbox-codex='sv codex'
+    alias sandbox-gemini='sv gemini'
+    # Shorthand versions
+    alias svc='sv claude'
+    alias svx='sv codex'
+    alias svg='sv gemini'
+fi
