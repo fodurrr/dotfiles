@@ -169,11 +169,23 @@ category = "productivity"
 profiles = ["minimal", "standard", "developer"]
 description = "Open-source password manager"
 
+[apps.superwhisper]
+type = "cask"
+category = "productivity"
+profiles = ["standard", "developer"]
+description = "Offline AI dictation (Recommended)"
+
+[apps.aqua-voice]
+type = "cask"
+category = "productivity"
+profiles = ["standard", "developer"]
+description = "Real-time voice dictation"
+
 [apps.wispr-flow]
 type = "cask"
 category = "productivity"
-profiles = ["standard"]
-description = "AI voice assistant"
+profiles = []
+description = "AI voice assistant (alternative)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MEDIA & COMMUNICATION
