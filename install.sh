@@ -43,6 +43,32 @@ cleanup() {
 trap cleanup EXIT
 
 # =============================================================================
+# Logging Functions (colored output)
+# =============================================================================
+# Colors
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+log_info() {
+    echo -e "   ${BLUE}ℹ${NC} $1"
+}
+
+log_success() {
+    echo -e "   ${GREEN}✓${NC} $1"
+}
+
+log_warning() {
+    echo -e "   ${YELLOW}⚠${NC} $1"
+}
+
+log_error() {
+    echo -e "   ${RED}✗${NC} $1"
+}
+
+# =============================================================================
 # Global Configuration
 # =============================================================================
 IGNORE_LIST=(
@@ -299,26 +325,49 @@ INSTALLED_APPS=""
 install_mise_app() {
     local app_key="$1"
 
-    # Skip if already installed this session (pipe delimiters prevent partial matches)
+    # Skip if already processed this session (pipe delimiters prevent partial matches)
     [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
 
     # Check for dependency
     local dep=$(get_app_prop "$app_key" "depends_on")
     if [[ -n "$dep" ]]; then
-        echo "   Dependency: $app_key requires $dep"
+        log_info "$app_key requires $dep (dependency)"
         install_mise_app "$dep"
     fi
 
-    # Mark as installed
+    # Mark as processed
     INSTALLED_APPS="${INSTALLED_APPS}|${app_key}|"
 
-    # Install the app
+    # Get app details
     local name=$(get_app_prop "$app_key" "name")
     [[ -z "$name" ]] && name="$app_key"
     local version=$(get_app_prop "$app_key" "version")
     [[ -z "$version" ]] && version="latest"
-    echo "   Installing: $name@$version"
-    mise install "$name@$version" 2>/dev/null || echo "      Warning: failed to install $name"
+
+    # Check if already installed with correct version
+    local installed_version=$(mise list "$name" 2>/dev/null | awk '{print $2}' | head -1)
+
+    if [[ -n "$installed_version" ]]; then
+        if [[ "$version" == "latest" ]]; then
+            # For "latest", check if there's a newer version available
+            local latest_version=$(mise latest "$name" 2>/dev/null)
+            if [[ "$installed_version" == "$latest_version" ]]; then
+                log_info "$name@$installed_version already installed, skipping"
+                return 0
+            else
+                log_info "$name@$installed_version outdated (latest: $latest_version), upgrading..."
+            fi
+        elif [[ "$installed_version" == "$version" ]]; then
+            log_info "$name@$version already installed, skipping"
+            return 0
+        else
+            log_info "$name@$installed_version installed, but $version requested, installing..."
+        fi
+    else
+        log_success "Installing $name@$version..."
+    fi
+
+    mise install "$name@$version" 2>/dev/null || log_warning "Failed to install $name"
 }
 
 # =============================================================================
@@ -351,8 +400,20 @@ for app_key in $(get_all_apps); do
         if app_in_profile "$app_key"; then
             name=$(get_app_prop "$app_key" "name")
             [[ -z "$name" ]] && name="$app_key"
-            echo "   Installing: $name"
-            brew install --cask "$name" || echo "   WARNING: Failed to install $name"
+
+            # Check if already installed
+            if brew list --cask 2>/dev/null | grep -q "^${name}$"; then
+                # Check if outdated
+                if brew outdated --cask 2>/dev/null | grep -q "^${name}"; then
+                    log_info "$name outdated, upgrading..."
+                    brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
+                else
+                    log_info "$name already installed, skipping"
+                fi
+            else
+                log_success "Installing $name..."
+                brew install --cask "$name" || log_error "Failed to install $name"
+            fi
         else
             echo "[DEBUG]   SKIPPED - not in profile"
         fi
@@ -367,8 +428,20 @@ for app_key in $(get_all_apps); do
         if [[ "$type" == "brew" ]]; then
             name=$(get_app_prop "$app_key" "name")
             [[ -z "$name" ]] && name="$app_key"
-            echo "   Installing: $name"
-            brew install "$name" 2>/dev/null || true
+
+            # Check if already installed
+            if brew list 2>/dev/null | grep -q "^${name}$"; then
+                # Check if outdated
+                if brew outdated 2>/dev/null | grep -q "^${name}"; then
+                    log_info "$name outdated, upgrading..."
+                    brew upgrade "$name" || log_warning "Failed to upgrade $name"
+                else
+                    log_info "$name already installed, skipping"
+                fi
+            else
+                log_success "Installing $name..."
+                brew install "$name" || log_error "Failed to install $name"
+            fi
         fi
     fi
 done
@@ -430,7 +503,7 @@ for app_key in $(get_all_apps); do
         if [[ "$type" == "stow" ]]; then
             package=$(get_app_prop "$app_key" "package")
             if [[ -d "$package" ]]; then
-                echo "   Stowing: $package"
+                log_success "Linking $package config..."
                 stow_enforce "$package"
             fi
         fi
@@ -446,7 +519,7 @@ if [[ "$CLEAN_MODE" == true ]]; then
             if ! app_in_profile "$app_key"; then
                 package=$(get_app_prop "$app_key" "package")
                 if [[ -d "$DOTFILES_DIR/$package" ]]; then
-                    echo "   Unstowing: $package"
+                    log_warning "Unlinking $package config..."
                     stow -D "$package" 2>/dev/null || true
                 fi
             fi
@@ -518,16 +591,25 @@ for app_key in $(get_all_apps); do
         type=$(get_app_prop "$app_key" "type")
         if [[ "$type" == "curl" ]]; then
             CURL_TOOLS_FOUND=true
-            echo "   Installing: $app_key"
             case "$app_key" in
                 claude-cli)
-                    curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null || echo "      Warning: claude-cli install failed"
+                    if command -v claude &> /dev/null; then
+                        log_info "claude-cli already installed, skipping"
+                    else
+                        log_success "Installing claude-cli..."
+                        curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null || log_warning "Failed to install claude-cli"
+                    fi
                     ;;
                 opencode-cli)
-                    curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null || echo "      Warning: opencode-cli install failed"
+                    if command -v opencode &> /dev/null; then
+                        log_info "opencode-cli already installed, skipping"
+                    else
+                        log_success "Installing opencode-cli..."
+                        curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null || log_warning "Failed to install opencode-cli"
+                    fi
                     ;;
                 *)
-                    echo "      Unknown curl installer: $app_key"
+                    log_warning "Unknown curl installer: $app_key"
                     ;;
             esac
         fi
@@ -535,7 +617,7 @@ for app_key in $(get_all_apps); do
 done
 
 if [[ "$CURL_TOOLS_FOUND" == false ]]; then
-    echo "   No curl-based tools in selected profiles"
+    log_info "No curl-based tools in selected profiles"
 fi
 
 # =============================================================================
