@@ -279,9 +279,11 @@ get_app_prop() {
     echo "$result" | tr -d "'"
 }
 
-# Get all app keys (extract [apps.X] sections)
+# Get all app keys (extract [apps.X] sections, preserve file order for dependencies)
 get_all_apps() {
-    grep -oE '^\[apps\.[^]]+\]' "$APPS_CONFIG" | sed 's/\[apps\.//;s/\]//' | sort -u
+    # Preserve file order (important for dependencies like erlang before elixir)
+    # Each app only appears once, so no dedup needed
+    grep -oE '^\[apps\.[^]]+\]' "$APPS_CONFIG" | sed 's/\[apps\.//;s/\]//'
 }
 
 # =============================================================================
