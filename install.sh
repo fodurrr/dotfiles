@@ -391,7 +391,14 @@ install_mise_app() {
             else
                 log_info "$name@$installed_version outdated (latest: $latest_version), upgrading..."
             fi
-        elif [[ "$installed_version" == "$version" ]]; then
+        elif [[ "$version" == "lts" || "$version" == "stable" ]]; then
+            # For "lts" or "stable", if any version is installed, consider it good
+            # These are moving targets, no need to constantly reinstall
+            add_to_summary SKIPPED "$name" "$app_key"
+            return 0
+        elif [[ "$installed_version" == "$version"* ]]; then
+            # Prefix match: "3.14.2" starts with "3.14" → skip
+            # Also handles exact matches: "3.14.2" starts with "3.14.2" → skip
             add_to_summary SKIPPED "$name" "$app_key"
             return 0
         else
