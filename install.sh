@@ -24,6 +24,11 @@ INTERACTIVE=true
 DOTFILES_DIR=~/dotfiles
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 
+# Installation tracking for summary
+SUMMARY_INSTALLED=""
+SUMMARY_SKIPPED=""
+SUMMARY_REMOVED=""
+
 # =============================================================================
 # Error Handler
 # =============================================================================
@@ -129,7 +134,6 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --profile=*)
             profile_value="${1#*=}"
-            echo "[DEBUG] Raw arg: '$1' -> extracted: '$profile_value'"
             SELECTED_PROFILES+=("$profile_value")
             INTERACTIVE=false
             shift
@@ -278,10 +282,6 @@ if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
 fi
 
 echo ""
-echo "[DEBUG] Final SELECTED_PROFILES array:"
-for i in "${!SELECTED_PROFILES[@]}"; do
-    echo "[DEBUG]   [$i] = '${SELECTED_PROFILES[$i]}' (hex: $(echo -n "${SELECTED_PROFILES[$i]}" | xxd -p))"
-done
 echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
 
 # =============================================================================
@@ -352,13 +352,13 @@ install_mise_app() {
             # For "latest", check if there's a newer version available
             local latest_version=$(mise latest "$name" 2>/dev/null)
             if [[ "$installed_version" == "$latest_version" ]]; then
-                log_info "$name@$installed_version already installed, skipping"
+                SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
                 return 0
             else
                 log_info "$name@$installed_version outdated (latest: $latest_version), upgrading..."
             fi
         elif [[ "$installed_version" == "$version" ]]; then
-            log_info "$name@$version already installed, skipping"
+            SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
             return 0
         else
             log_info "$name@$installed_version installed, but $version requested, installing..."
@@ -367,7 +367,11 @@ install_mise_app() {
         log_success "Installing $name@$version..."
     fi
 
-    mise install "$name@$version" 2>/dev/null || log_warning "Failed to install $name"
+    if mise install "$name@$version" 2>/dev/null; then
+        SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+    else
+        log_warning "Failed to install $name"
+    fi
 }
 
 # =============================================================================
@@ -392,11 +396,9 @@ done
 
 # Install casks
 echo "Installing casks..."
-echo "[DEBUG] SELECTED_PROFILES: ${SELECTED_PROFILES[*]}"
 for app_key in $(get_all_apps); do
     type=$(get_app_prop "$app_key" "type")
     if [[ "$type" == "cask" ]]; then
-        echo "[DEBUG] Checking cask: $app_key"
         if app_in_profile "$app_key"; then
             name=$(get_app_prop "$app_key" "name")
             [[ -z "$name" ]] && name="$app_key"
@@ -407,15 +409,18 @@ for app_key in $(get_all_apps); do
                 if brew outdated --cask 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
                     brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
+                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
                 else
-                    log_info "$name already installed, skipping"
+                    SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
                 fi
             else
                 log_success "Installing $name..."
-                brew install --cask "$name" || log_error "Failed to install $name"
+                if brew install --cask "$name"; then
+                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+                else
+                    log_error "Failed to install $name"
+                fi
             fi
-        else
-            echo "[DEBUG]   SKIPPED - not in profile"
         fi
     fi
 done
@@ -435,12 +440,17 @@ for app_key in $(get_all_apps); do
                 if brew outdated 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
                     brew upgrade "$name" || log_warning "Failed to upgrade $name"
+                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
                 else
-                    log_info "$name already installed, skipping"
+                    SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
                 fi
             else
                 log_success "Installing $name..."
-                brew install "$name" || log_error "Failed to install $name"
+                if brew install "$name"; then
+                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+                else
+                    log_error "Failed to install $name"
+                fi
             fi
         fi
     fi
@@ -448,6 +458,9 @@ done
 
 if [[ "$CLEAN_MODE" == true ]]; then
     echo "Cleaning up unlisted Homebrew packages..."
+
+    # Cache sudo credentials for removing admin apps (Edge, etc.)
+    sudo -v
 
     # Generate temporary Brewfile from apps.toml for selected profiles
     TEMP_BREWFILE=$(mktemp)
@@ -474,14 +487,19 @@ if [[ "$CLEAN_MODE" == true ]]; then
     # Add bootstrap packages (always keep these)
     cat "$DOTFILES_DIR/Brewfile.bootstrap" >> "$TEMP_BREWFILE"
 
-    # Run cleanup (removes packages not in the generated Brewfile)
-    echo "   Packages to remove:"
-    brew bundle cleanup --file="$TEMP_BREWFILE" || true
-
-    read -p "   Remove these packages? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        brew bundle cleanup --force --file="$TEMP_BREWFILE" || true
+    # Capture packages to remove for summary
+    CLEANUP_LIST=$(brew bundle cleanup --file="$TEMP_BREWFILE" 2>/dev/null || true)
+    if [[ -n "$CLEANUP_LIST" ]]; then
+        echo "   Removing packages not in profile:"
+        # Process cleanup list (avoid subshell to preserve SUMMARY_REMOVED)
+        while IFS= read -r pkg; do
+            [[ -n "$pkg" ]] && log_warning "Removing $pkg"
+            [[ -n "$pkg" ]] && SUMMARY_REMOVED="${SUMMARY_REMOVED}${pkg}, "
+        done <<< "$CLEANUP_LIST"
+        # Force removal without prompts
+        brew bundle cleanup --force --file="$TEMP_BREWFILE" 2>/dev/null || true
+    else
+        log_info "No Homebrew packages to remove"
     fi
 
     rm "$TEMP_BREWFILE"
@@ -567,8 +585,9 @@ if [[ "$CLEAN_MODE" == true ]]; then
     # Remove tools not in the wanted list
     for tool in $INSTALLED_TOOLS; do
         if ! printf '%s\n' "${WANTED_TOOLS[@]}" | grep -qx "$tool"; then
-            echo "   Removing: $tool"
+            log_warning "Removing $tool"
             mise uninstall "$tool" --all 2>/dev/null || true
+            SUMMARY_REMOVED="${SUMMARY_REMOVED}${tool}, "
         fi
     done
 
@@ -594,18 +613,26 @@ for app_key in $(get_all_apps); do
             case "$app_key" in
                 claude-cli)
                     if command -v claude &> /dev/null; then
-                        log_info "claude-cli already installed, skipping"
+                        SUMMARY_SKIPPED="${SUMMARY_SKIPPED}claude-cli, "
                     else
                         log_success "Installing claude-cli..."
-                        curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null || log_warning "Failed to install claude-cli"
+                        if curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null; then
+                            SUMMARY_INSTALLED="${SUMMARY_INSTALLED}claude-cli, "
+                        else
+                            log_warning "Failed to install claude-cli"
+                        fi
                     fi
                     ;;
                 opencode-cli)
                     if command -v opencode &> /dev/null; then
-                        log_info "opencode-cli already installed, skipping"
+                        SUMMARY_SKIPPED="${SUMMARY_SKIPPED}opencode-cli, "
                     else
                         log_success "Installing opencode-cli..."
-                        curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null || log_warning "Failed to install opencode-cli"
+                        if curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null; then
+                            SUMMARY_INSTALLED="${SUMMARY_INSTALLED}opencode-cli, "
+                        else
+                            log_warning "Failed to install opencode-cli"
+                        fi
                     fi
                     ;;
                 *)
@@ -621,12 +648,35 @@ if [[ "$CURL_TOOLS_FOUND" == false ]]; then
 fi
 
 # =============================================================================
-# Done
+# Installation Summary
 # =============================================================================
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Installation Complete!"
+echo "  Installation Summary"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 echo "  Profiles: ${SELECTED_PROFILES[*]}"
+echo ""
+
+# Remove trailing ", " from summary strings
+SUMMARY_INSTALLED="${SUMMARY_INSTALLED%, }"
+SUMMARY_SKIPPED="${SUMMARY_SKIPPED%, }"
+SUMMARY_REMOVED="${SUMMARY_REMOVED%, }"
+
+if [[ -n "$SUMMARY_INSTALLED" ]]; then
+    echo -e "  ${GREEN}✓${NC} Installed: $SUMMARY_INSTALLED"
+fi
+if [[ -n "$SUMMARY_SKIPPED" ]]; then
+    echo -e "  ${BLUE}ℹ${NC} Skipped (already installed): $SUMMARY_SKIPPED"
+fi
+if [[ -n "$SUMMARY_REMOVED" ]]; then
+    echo -e "  ${YELLOW}⚠${NC} Removed: $SUMMARY_REMOVED"
+fi
+if [[ -z "$SUMMARY_INSTALLED" && -z "$SUMMARY_SKIPPED" && -z "$SUMMARY_REMOVED" ]]; then
+    echo "  No changes made"
+fi
+
+echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Press [ENTER] to reload the shell..."
