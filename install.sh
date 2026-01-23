@@ -401,10 +401,15 @@ install_mise_app() {
         log_success "Installing $name@$version..."
     fi
 
-    if mise install "$name@$version" 2>/dev/null; then
+    # Capture both stdout and stderr to show errors on failure
+    local install_output
+    if install_output=$(mise install "$name@$version" 2>&1); then
         add_to_summary INSTALLED "$name" "$app_key"
     else
         log_warning "Failed to install $name"
+        # Show first line of error to help debugging
+        local error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
+        [[ -n "$error_line" ]] && echo "      $error_line"
     fi
 }
 
