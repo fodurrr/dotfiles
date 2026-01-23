@@ -102,7 +102,9 @@ stow_enforce() {
 while [[ $# -gt 0 ]]; do
     case $1 in
         --profile=*)
-            SELECTED_PROFILES+=("${1#*=}")
+            profile_value="${1#*=}"
+            echo "[DEBUG] Raw arg: '$1' -> extracted: '$profile_value'"
+            SELECTED_PROFILES+=("$profile_value")
             INTERACTIVE=false
             shift
             ;;
@@ -250,6 +252,10 @@ if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
 fi
 
 echo ""
+echo "[DEBUG] Final SELECTED_PROFILES array:"
+for i in "${!SELECTED_PROFILES[@]}"; do
+    echo "[DEBUG]   [$i] = '${SELECTED_PROFILES[$i]}' (hex: $(echo -n "${SELECTED_PROFILES[$i]}" | xxd -p))"
+done
 echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
 
 # =============================================================================
