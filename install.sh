@@ -124,7 +124,12 @@ stow_enforce() {
     done
 
     # Create Links
-    stow --restow --target="$HOME" "${stow_opts[@]}" "$package" 2>/dev/null || true
+    local stow_output
+    if ! stow_output=$(stow --restow --target="$HOME" "${stow_opts[@]}" "$package" 2>&1); then
+        log_error "Failed to link $package"
+        echo "$stow_output" | head -3 | sed 's/^/      /'
+        return 1
+    fi
 }
 
 # =============================================================================
@@ -281,6 +286,28 @@ if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
     SELECTED_PROFILES=("minimal")
 fi
 
+# =============================================================================
+# Logging Setup (after interactive prompts, before installation)
+# =============================================================================
+LOG_FILE="$DOTFILES_DIR/install.log"
+
+# Initialize log file with header
+{
+    echo "================================================================================"
+    echo "Dotfiles Installation Log"
+    echo "================================================================================"
+    echo "Date:     $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "Host:     $(hostname)"
+    echo "User:     $(whoami)"
+    echo "Profiles: ${SELECTED_PROFILES[*]}"
+    echo "Clean:    $CLEAN_MODE"
+    echo "================================================================================"
+    echo ""
+} > "$LOG_FILE"
+
+# Duplicate all output to log file (append mode)
+exec > >(tee -a "$LOG_FILE") 2>&1
+
 echo ""
 echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
 
@@ -355,10 +382,9 @@ install_mise_app() {
     # Skip if already processed this session (pipe delimiters prevent partial matches)
     [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
 
-    # Check for dependency
+    # Check for dependency (install silently if needed)
     local dep=$(get_app_prop "$app_key" "depends_on")
     if [[ -n "$dep" ]]; then
-        log_info "$app_key requires $dep (dependency)"
         install_mise_app "$dep"
     fi
 
@@ -372,7 +398,14 @@ install_mise_app() {
     [[ -z "$version" ]] && version="latest"
 
     # Check if already installed with correct version
-    local installed_version=$(mise list "$name" 2>/dev/null | awk '{print $2}' | head -1)
+    # IMPORTANT: mise list shows "(missing)" for tools that are configured but not installed
+    local mise_status=$(mise list "$name" 2>/dev/null | head -1)
+    local installed_version=""
+
+    # Only consider it installed if NOT marked as (missing)
+    if [[ -n "$mise_status" ]] && [[ "$mise_status" != *"(missing)"* ]]; then
+        installed_version=$(echo "$mise_status" | awk '{print $2}')
+    fi
 
     if [[ -n "$installed_version" ]]; then
         if [[ "$version" == "latest" ]]; then
@@ -384,7 +417,14 @@ install_mise_app() {
             else
                 log_info "$name@$installed_version outdated (latest: $latest_version), upgrading..."
             fi
-        elif [[ "$installed_version" == "$version" ]]; then
+        elif [[ "$version" == "lts" || "$version" == "stable" ]]; then
+            # For "lts" or "stable", if any version is installed, consider it good
+            # These are moving targets, no need to constantly reinstall
+            add_to_summary SKIPPED "$name" "$app_key"
+            return 0
+        elif [[ "$installed_version" == "$version"* ]]; then
+            # Prefix match: "3.14.2" starts with "3.14" → skip
+            # Also handles exact matches: "3.14.2" starts with "3.14.2" → skip
             add_to_summary SKIPPED "$name" "$app_key"
             return 0
         else
@@ -394,10 +434,15 @@ install_mise_app() {
         log_success "Installing $name@$version..."
     fi
 
-    if mise install "$name@$version" 2>/dev/null; then
+    # Capture both stdout and stderr to show errors on failure
+    local install_output
+    if install_output=$(mise install "$name@$version" 2>&1); then
         add_to_summary INSTALLED "$name" "$app_key"
     else
         log_warning "Failed to install $name"
+        # Show first line of error to help debugging
+        local error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
+        [[ -n "$error_line" ]] && echo "      $error_line"
     fi
 }
 
@@ -553,7 +598,9 @@ for app_key in $(get_all_apps); do
             package=$(get_app_prop "$app_key" "package")
             if [[ -d "$package" ]]; then
                 log_success "Linking $package config..."
-                stow_enforce "$package"
+                stow_enforce "$package" || true
+            else
+                log_warning "Stow package directory not found: $package/"
             fi
         fi
     fi
@@ -649,7 +696,9 @@ for app_key in $(get_all_apps); do
                         add_to_summary SKIPPED "claude-cli" "claude-cli"
                     else
                         log_success "Installing claude-cli..."
-                        if curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null; then
+                        curl -fsSL https://claude.ai/install.sh 2>/dev/null | bash 2>/dev/null || true
+                        # Verify installation succeeded by checking if binary exists
+                        if command -v claude &> /dev/null; then
                             add_to_summary INSTALLED "claude-cli" "claude-cli"
                         else
                             log_warning "Failed to install claude-cli"
@@ -661,7 +710,9 @@ for app_key in $(get_all_apps); do
                         add_to_summary SKIPPED "opencode-cli" "opencode-cli"
                     else
                         log_success "Installing opencode-cli..."
-                        if curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null; then
+                        curl -fsSL https://opencode.ai/install 2>/dev/null | bash 2>/dev/null || true
+                        # Verify installation succeeded by checking if binary exists
+                        if command -v opencode &> /dev/null; then
                             add_to_summary INSTALLED "opencode-cli" "opencode-cli"
                         else
                             log_warning "Failed to install opencode-cli"

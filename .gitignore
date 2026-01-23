@@ -21,3 +21,6 @@
 
 # Conductor workspace
 .context/
+
+# Installation log (auto-generated)
+install.log

@@ -143,7 +143,7 @@ description = "Google Gemini AI (CLI)"
 [apps.aerospace]
 type = "cask"
 tap = "nikitabobko/tap"
-name = "nikitabobko/tap/aerospace"
+name = "aerospace"
 category = "window-management"
 profiles = ["developer"]
 description = "i3-like tiling window manager"
@@ -353,6 +353,7 @@ type = "mise"
 version = "10.28"
 category = "runtimes"
 profiles = ["standard", "developer"]
+depends_on = "node"
 description = "Fast Node package manager"
 
 [apps.erlang]
