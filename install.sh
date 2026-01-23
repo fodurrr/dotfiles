@@ -224,12 +224,12 @@ get_profiles() {
     # Extract all unique profiles
     local all_profiles=$(grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u)
 
-    # Output in preferred order: minimal, standard, developer, then others
-    for preferred in minimal standard developer; do
+    # Output in preferred order: minimal, daily, developer, hacker, server, then others
+    for preferred in minimal daily developer hacker server; do
         echo "$all_profiles" | grep -x "$preferred" 2>/dev/null || true
     done
     # Then any others not in the preferred list
-    echo "$all_profiles" | grep -vxE "minimal|standard|developer" 2>/dev/null || true
+    echo "$all_profiles" | grep -vxE "minimal|daily|developer|hacker|server" 2>/dev/null || true
 }
 
 # Interactive profile selection

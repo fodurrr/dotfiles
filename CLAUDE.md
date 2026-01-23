@@ -95,11 +95,95 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 
 ### Profiles
 
-| Profile | Target User | Key Features |
-|---------|-------------|--------------|
-| **minimal** | Fresh Mac, testing | Core essentials only |
-| **standard** | Friends/family | Full GUI experience + AI Desktop apps |
-| **developer** | Power users | Terminal-centric + AI CLI tools + Aerospace |
+| Profile | Target User | Description |
+|---------|-------------|-------------|
+| **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
+| **daily** | Regular users (spouse/family) | Browsing, media, basic productivity |
+| **developer** | GUI-centric developers | VSCode, Warp, mouse-driven workflow |
+| **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
+| **server** | SSH/remote admin | Terminal-only tools for headless servers |
+
+### App Distribution Matrix
+
+| App | minimal | daily | developer | hacker | server |
+|-----|:-------:|:-----:|:---------:|:------:|:------:|
+| **ESSENTIALS** |
+| Raycast | ✓ | ✓ | ✓ | ✓ | |
+| Bitwarden | ✓ | ✓ | ✓ | ✓ | |
+| Firefox | ✓ | ✓ | ✓ | ✓ | |
+| Ghostty | ✓ | ✓ | ✓ | ✓ | |
+| JetBrains Mono Nerd | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **BROWSERS** |
+| Chrome | ✓ | ✓ | ✓ | ✓ | |
+| Edge | | ✓ | ✓ | ✓ | |
+| **EDITORS** |
+| Zed | | | ✓ | ✓ | |
+| VSCode | | | ✓ | ✓ | |
+| Neovim | | | | ✓ | ✓ |
+| Antigravity | | | ✓ | ✓ | |
+| **TERMINALS** |
+| Warp | | | ✓ | ✓ | |
+| tmux | | | | ✓ | ✓ |
+| **DICTATION** |
+| SuperWhisper | | | ✓ | ✓ | |
+| Aqua Voice | | | ✓ | ✓ | |
+| **AI DESKTOP** |
+| Claude Desktop | | ✓ | ✓ | ✓ | |
+| ChatGPT Desktop | | ✓ | ✓ | ✓ | |
+| Codex Desktop | | | ✓ | ✓ | |
+| OpenCode Desktop | | | ✓ | ✓ | |
+| **AI CLI** |
+| claude-cli | | | | ✓ | |
+| codex-cli | | | | ✓ | |
+| opencode-cli | | | | ✓ | |
+| gemini-cli | | | | ✓ | |
+| **PRODUCTIVITY** |
+| Obsidian | | ✓ | ✓ | ✓ | |
+| **MEDIA** |
+| Spotify | | ✓ | ✓ | ✓ | |
+| VLC | | ✓ | ✓ | ✓ | |
+| Discord | | ✓ | ✓ | ✓ | |
+| **WINDOW MGMT** |
+| Aerospace | | | | ✓ | |
+| **VIRTUALIZATION** |
+| OrbStack | | | ✓ | ✓ | |
+| UTM | | | ✓ | ✓ | |
+| **DISPLAY** |
+| MonitorControl | | ✓ | ✓ | ✓ | |
+| **CLI TOOLS** |
+| starship | ✓ | ✓ | ✓ | ✓ | ✓ |
+| eza | ✓ | ✓ | ✓ | ✓ | ✓ |
+| bat | ✓ | ✓ | ✓ | ✓ | ✓ |
+| fzf | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ripgrep | | | ✓ | ✓ | ✓ |
+| jq | | | ✓ | ✓ | ✓ |
+| yq | | | ✓ | ✓ | ✓ |
+| gh | | | ✓ | ✓ | ✓ |
+| direnv | | | ✓ | ✓ | |
+| yazi | | | | ✓ | ✓ |
+| lazygit | | | | ✓ | ✓ |
+| btop | | | | ✓ | ✓ |
+| ncdu | | | | ✓ | ✓ |
+| **RUNTIMES** |
+| Node | | | ✓ | ✓ | |
+| Python | | | ✓ | ✓ | |
+| Rust | | | ✓ | ✓ | |
+| Bun | | | ✓ | ✓ | |
+| pnpm | | | ✓ | ✓ | |
+| Erlang | | | ✓ | ✓ | |
+| Elixir | | | ✓ | ✓ | |
+| **STOW CONFIGS** |
+| git-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| zsh-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| sheldon-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| starship-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ghostty-config | ✓ | ✓ | ✓ | ✓ | |
+| mise-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| zed-config | | | ✓ | ✓ | |
+| aerospace-config | | | | ✓ | |
+| tmux-config | | | | ✓ | ✓ |
+| nvim-config | | | | ✓ | ✓ |
+| yazi-config | | | | ✓ | ✓ |
 
 ## Common Commands
 
@@ -108,11 +192,11 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 ./install.sh
 
 # Install specific profile(s)
-./install.sh --profile=developer
-./install.sh -p minimal -p standard
+./install.sh --profile=hacker
+./install.sh -p minimal -p daily
 
 # Clean mode (removes apps not in selected profiles)
-./install.sh --profile=developer --clean
+./install.sh --profile=hacker --clean
 
 # List available profiles
 ./install.sh --list-profiles
@@ -147,23 +231,23 @@ All apps are defined in `apps.toml` with profile assignments:
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 
 [apps.warp]
 type = "cask"
 category = "terminals"
-profiles = ["standard"]  # Only in standard profile
+profiles = ["developer", "hacker"]  # Developer profiles only
 
 [apps.tmux]
 type = "mise"
 category = "cli"
-profiles = ["developer"]  # Only in developer profile
+profiles = ["hacker", "server"]  # Terminal-centric profiles
 
 [apps.tmux-config]
 type = "stow"
 package = "tmux"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 ```
 
 ### App Types
@@ -196,20 +280,20 @@ Is it a GUI app?
 [apps.figma]
 type = "cask"
 category = "design"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 
 # Add a CLI tool
 [apps.lazydocker]
 type = "mise"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 
 # Add a new config to manage
 [apps.newtool-config]
 type = "stow"
 package = "newtool"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 ```
 
 ### Creating a Stow Package
@@ -258,14 +342,14 @@ This ensures the repo is always the source of truth without data loss.
 
 ### Merge Mode (Default)
 ```bash
-./install.sh --profile=developer
+./install.sh --profile=hacker
 ```
 - **ADDS** apps from the new profile
 - **KEEPS** all existing apps
 
 ### Clean Mode (Strict)
 ```bash
-./install.sh --profile=developer --clean
+./install.sh --profile=hacker --clean
 ```
 - **ADDS** apps from the selected profile(s)
 - **REMOVES** managed apps NOT in the selected profile(s)
@@ -282,13 +366,13 @@ This ensures the repo is always the source of truth without data loss.
 
 ## AI Tools Reference
 
-| Tool | Standard Profile | Developer Profile |
-|------|-----------------|-------------------|
-| Claude | Desktop app (cask) | CLI only (curl) |
-| ChatGPT | Desktop app (cask) | - |
-| Codex | Desktop app (cask) | CLI only (mise) |
-| OpenCode | Desktop app (cask) | CLI only (curl) |
-| Gemini | - | CLI only (mise) |
+| Tool | daily | developer | hacker |
+|------|-------|-----------|--------|
+| Claude | Desktop (cask) | Desktop (cask) | Desktop + CLI |
+| ChatGPT | Desktop (cask) | Desktop (cask) | Desktop (cask) |
+| Codex | - | Desktop (cask) | Desktop + CLI |
+| OpenCode | - | Desktop (cask) | Desktop + CLI |
+| Gemini | - | - | CLI only (mise) |
 
 ## Conductor Workspace Workflow
 
@@ -302,7 +386,7 @@ Changes pushed! To test in your VM:
 cd ~/dotfiles
 git fetch origin
 git merge origin/feature/your-branch-name
-./install.sh --profile=standard
+./install.sh --profile=daily
 ```
 
 For merging to main environment (not VM): `source ~/.zshrc` if zsh changes were made, or create a PR at `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`
