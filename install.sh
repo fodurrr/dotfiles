@@ -124,7 +124,12 @@ stow_enforce() {
     done
 
     # Create Links
-    stow --restow --target="$HOME" "${stow_opts[@]}" "$package" 2>/dev/null || true
+    local stow_output
+    if ! stow_output=$(stow --restow --target="$HOME" "${stow_opts[@]}" "$package" 2>&1); then
+        log_error "Failed to link $package"
+        echo "$stow_output" | head -3 | sed 's/^/      /'
+        return 1
+    fi
 }
 
 # =============================================================================
@@ -573,6 +578,8 @@ for app_key in $(get_all_apps); do
             if [[ -d "$package" ]]; then
                 log_success "Linking $package config..."
                 stow_enforce "$package"
+            else
+                log_warning "Stow package directory not found: $package/"
             fi
         fi
     fi
