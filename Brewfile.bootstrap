@@ -14,7 +14,7 @@ brew "stow"      # Symlink manager for config deployment
 brew "sheldon"   # Zsh plugin manager
 
 # --- Config Parsing & Interactive UI ---
-brew "dasel"     # TOML/YAML/JSON parser (reads apps.toml)
+brew "yq"        # TOML/YAML/JSON parser (reads apps.toml)
 brew "gum"       # Interactive CLI menus (profile selection)
 
 # --- Utilities ---

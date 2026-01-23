@@ -4,12 +4,13 @@
 # Every app, tool, and config is defined here with profile assignments.
 #
 # Fields:
-#   type     = "cask" | "brew" | "mise" | "curl" | "stow"
-#   name     = package name (optional, defaults to section name)
-#   tap      = homebrew tap (optional, for casks from taps)
-#   version  = version string (optional, for mise tools)
-#   category = grouping for documentation
-#   profiles = ["minimal", "standard", "developer", ...]
+#   type       = "cask" | "brew" | "mise" | "curl" | "stow"
+#   name       = package name (optional, defaults to section name)
+#   tap        = homebrew tap (optional, for casks from taps)
+#   version    = version string (optional, for mise tools)
+#   category   = grouping for documentation
+#   profiles   = ["minimal", "standard", "developer", ...]
+#   depends_on = "app-key" (optional, install dependency first)
 #
 # To add an app to a profile: add the profile name to the profiles array
 # To create a new profile: just use a new name in any profiles array
@@ -316,6 +317,7 @@ type = "mise"
 version = "1.19.5-otp-28"
 category = "runtimes"
 profiles = ["developer"]
+depends_on = "erlang"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # STOW PACKAGES (configs)

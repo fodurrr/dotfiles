@@ -260,7 +260,7 @@ echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
 app_in_profile() {
     local app_key="$1"
     local profiles
-    profiles=$(cat "$APPS_CONFIG" | dasel -i toml "apps.$app_key.profiles" 2>/dev/null || echo "")
+    profiles=$(yq -p toml -oy ".apps.\"$app_key\".profiles" "$APPS_CONFIG" 2>/dev/null || echo "")
     for profile in "${SELECTED_PROFILES[@]}"; do
         if echo "$profiles" | grep -q "$profile"; then
             return 0
@@ -269,21 +269,49 @@ app_in_profile() {
     return 1
 }
 
-# Get app property
+# Get app property (returns empty string if property doesn't exist)
 get_app_prop() {
     local app_key="$1"
     local prop="$2"
     local result
-    result=$(cat "$APPS_CONFIG" | dasel -i toml "apps.$app_key.$prop" 2>/dev/null || echo "")
-    # Remove quotes if present
-    echo "$result" | tr -d "'"
+    result=$(yq -p toml -oy ".apps.\"$app_key\".$prop" "$APPS_CONFIG" 2>/dev/null || echo "")
+    # yq returns literal "null" for missing properties, convert to empty string
+    [[ "$result" == "null" ]] && result=""
+    echo "$result"
 }
 
-# Get all app keys (extract [apps.X] sections, preserve file order for dependencies)
+# Get all app keys (extract [apps.X] sections)
 get_all_apps() {
-    # Preserve file order (important for dependencies like erlang before elixir)
-    # Each app only appears once, so no dedup needed
     grep -oE '^\[apps\.[^]]+\]' "$APPS_CONFIG" | sed 's/\[apps\.//;s/\]//'
+}
+
+# Track installed apps to avoid duplicates (for dependency resolution)
+declare -A INSTALLED_APPS
+
+# Install a mise app with dependency resolution
+install_mise_app() {
+    local app_key="$1"
+
+    # Skip if already installed this session
+    [[ "${INSTALLED_APPS[$app_key]}" == "1" ]] && return 0
+
+    # Check for dependency
+    local dep=$(get_app_prop "$app_key" "depends_on")
+    if [[ -n "$dep" ]]; then
+        echo "   Dependency: $app_key requires $dep"
+        install_mise_app "$dep"
+    fi
+
+    # Mark as installed
+    INSTALLED_APPS[$app_key]=1
+
+    # Install the app
+    local name=$(get_app_prop "$app_key" "name")
+    [[ -z "$name" ]] && name="$app_key"
+    local version=$(get_app_prop "$app_key" "version")
+    [[ -z "$version" ]] && version="latest"
+    echo "   Installing: $name@$version"
+    mise install "$name@$version" 2>/dev/null || echo "      Warning: failed to install $name"
 }
 
 # =============================================================================
@@ -428,12 +456,7 @@ for app_key in $(get_all_apps); do
     if app_in_profile "$app_key"; then
         type=$(get_app_prop "$app_key" "type")
         if [[ "$type" == "mise" ]]; then
-            name=$(get_app_prop "$app_key" "name")
-            [[ -z "$name" ]] && name="$app_key"
-            version=$(get_app_prop "$app_key" "version")
-            [[ -z "$version" ]] && version="latest"
-            echo "   Installing: $name@$version"
-            mise install "$name@$version" 2>/dev/null || echo "      Warning: failed to install $name"
+            install_mise_app "$app_key"
         fi
     fi
 done
