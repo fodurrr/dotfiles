@@ -353,6 +353,7 @@ type = "mise"
 version = "10.28"
 category = "runtimes"
 profiles = ["standard", "developer"]
+depends_on = "node"
 description = "Fast Node package manager"
 
 [apps.erlang]
