@@ -304,3 +304,11 @@ git merge origin/feature/your-branch-name
 ```
 
 For merging to main environment (not VM): `source ~/.zshrc` if zsh changes were made, or create a PR at `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`
+
+## Asking Questions & Making Recommendations
+
+When presenting options to the user:
+- **Always include a recommendation** with "(Recommended)" suffix
+- Explain WHY it's recommended in the description
+- Put the recommended option FIRST in the list
+- Don't just present options neutrally - take a stance based on best practices

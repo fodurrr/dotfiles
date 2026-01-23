@@ -24,7 +24,7 @@ INTERACTIVE=true
 DOTFILES_DIR=~/dotfiles
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 
-# Installation tracking for summary
+# Installation tracking for summary (newline+pipe delimited: "name|description\nname|description")
 SUMMARY_INSTALLED=""
 SUMMARY_SKIPPED=""
 SUMMARY_REMOVED=""
@@ -317,6 +317,33 @@ get_all_apps() {
     grep -oE '^\[apps\.[^]]+\]' "$APPS_CONFIG" | sed 's/\[apps\.//;s/\]//'
 }
 
+# Add entry to summary list (newline+pipe delimited format)
+add_to_summary() {
+    local list_type="$1"
+    local name="$2"
+    local app_key="$3"
+
+    local desc=$(get_app_prop "$app_key" "description")
+    [[ -z "$desc" ]] && desc="-"
+
+    local record="${name}|${desc}"
+
+    case "$list_type" in
+        INSTALLED)
+            [[ -z "$SUMMARY_INSTALLED" ]] && SUMMARY_INSTALLED="$record" || SUMMARY_INSTALLED="${SUMMARY_INSTALLED}
+${record}"
+            ;;
+        SKIPPED)
+            [[ -z "$SUMMARY_SKIPPED" ]] && SUMMARY_SKIPPED="$record" || SUMMARY_SKIPPED="${SUMMARY_SKIPPED}
+${record}"
+            ;;
+        REMOVED)
+            [[ -z "$SUMMARY_REMOVED" ]] && SUMMARY_REMOVED="$record" || SUMMARY_REMOVED="${SUMMARY_REMOVED}
+${record}"
+            ;;
+    esac
+}
+
 # Track installed apps to avoid duplicates (for dependency resolution)
 # Using string-based tracking for bash 3.2 compatibility (macOS default)
 INSTALLED_APPS=""
@@ -352,13 +379,13 @@ install_mise_app() {
             # For "latest", check if there's a newer version available
             local latest_version=$(mise latest "$name" 2>/dev/null)
             if [[ "$installed_version" == "$latest_version" ]]; then
-                SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
+                add_to_summary SKIPPED "$name" "$app_key"
                 return 0
             else
                 log_info "$name@$installed_version outdated (latest: $latest_version), upgrading..."
             fi
         elif [[ "$installed_version" == "$version" ]]; then
-            SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
+            add_to_summary SKIPPED "$name" "$app_key"
             return 0
         else
             log_info "$name@$installed_version installed, but $version requested, installing..."
@@ -368,7 +395,7 @@ install_mise_app() {
     fi
 
     if mise install "$name@$version" 2>/dev/null; then
-        SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+        add_to_summary INSTALLED "$name" "$app_key"
     else
         log_warning "Failed to install $name"
     fi
@@ -409,14 +436,14 @@ for app_key in $(get_all_apps); do
                 if brew outdated --cask 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
                     brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
-                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+                    add_to_summary INSTALLED "$name" "$app_key"
                 else
-                    SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
+                    add_to_summary SKIPPED "$name" "$app_key"
                 fi
             else
                 log_success "Installing $name..."
                 if brew install --cask "$name"; then
-                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+                    add_to_summary INSTALLED "$name" "$app_key"
                 else
                     log_error "Failed to install $name"
                 fi
@@ -440,14 +467,14 @@ for app_key in $(get_all_apps); do
                 if brew outdated 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
                     brew upgrade "$name" || log_warning "Failed to upgrade $name"
-                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+                    add_to_summary INSTALLED "$name" "$app_key"
                 else
-                    SUMMARY_SKIPPED="${SUMMARY_SKIPPED}${name}, "
+                    add_to_summary SKIPPED "$name" "$app_key"
                 fi
             else
                 log_success "Installing $name..."
                 if brew install "$name"; then
-                    SUMMARY_INSTALLED="${SUMMARY_INSTALLED}${name}, "
+                    add_to_summary INSTALLED "$name" "$app_key"
                 else
                     log_error "Failed to install $name"
                 fi
@@ -493,8 +520,12 @@ if [[ "$CLEAN_MODE" == true ]]; then
         echo "   Removing packages not in profile:"
         # Process cleanup list (avoid subshell to preserve SUMMARY_REMOVED)
         while IFS= read -r pkg; do
-            [[ -n "$pkg" ]] && log_warning "Removing $pkg"
-            [[ -n "$pkg" ]] && SUMMARY_REMOVED="${SUMMARY_REMOVED}${pkg}, "
+            if [[ -n "$pkg" ]]; then
+                log_warning "Removing $pkg"
+                # For removed packages, use the package name as both name and key (no description lookup)
+                [[ -z "$SUMMARY_REMOVED" ]] && SUMMARY_REMOVED="${pkg}|-" || SUMMARY_REMOVED="${SUMMARY_REMOVED}
+${pkg}|-"
+            fi
         done <<< "$CLEANUP_LIST"
         # Force removal without prompts
         brew bundle cleanup --force --file="$TEMP_BREWFILE" 2>/dev/null || true
@@ -587,7 +618,9 @@ if [[ "$CLEAN_MODE" == true ]]; then
         if ! printf '%s\n' "${WANTED_TOOLS[@]}" | grep -qx "$tool"; then
             log_warning "Removing $tool"
             mise uninstall "$tool" --all 2>/dev/null || true
-            SUMMARY_REMOVED="${SUMMARY_REMOVED}${tool}, "
+            # For removed tools, use tool name as both name and key (no description lookup)
+            [[ -z "$SUMMARY_REMOVED" ]] && SUMMARY_REMOVED="${tool}|-" || SUMMARY_REMOVED="${SUMMARY_REMOVED}
+${tool}|-"
         fi
     done
 
@@ -613,11 +646,11 @@ for app_key in $(get_all_apps); do
             case "$app_key" in
                 claude-cli)
                     if command -v claude &> /dev/null; then
-                        SUMMARY_SKIPPED="${SUMMARY_SKIPPED}claude-cli, "
+                        add_to_summary SKIPPED "claude-cli" "claude-cli"
                     else
                         log_success "Installing claude-cli..."
                         if curl -fsSL https://claude.ai/install.sh | bash 2>/dev/null; then
-                            SUMMARY_INSTALLED="${SUMMARY_INSTALLED}claude-cli, "
+                            add_to_summary INSTALLED "claude-cli" "claude-cli"
                         else
                             log_warning "Failed to install claude-cli"
                         fi
@@ -625,11 +658,11 @@ for app_key in $(get_all_apps); do
                     ;;
                 opencode-cli)
                     if command -v opencode &> /dev/null; then
-                        SUMMARY_SKIPPED="${SUMMARY_SKIPPED}opencode-cli, "
+                        add_to_summary SKIPPED "opencode-cli" "opencode-cli"
                     else
                         log_success "Installing opencode-cli..."
                         if curl -fsSL https://opencode.ai/install.sh | bash 2>/dev/null; then
-                            SUMMARY_INSTALLED="${SUMMARY_INSTALLED}opencode-cli, "
+                            add_to_summary INSTALLED "opencode-cli" "opencode-cli"
                         else
                             log_warning "Failed to install opencode-cli"
                         fi
@@ -648,8 +681,35 @@ if [[ "$CURL_TOOLS_FOUND" == false ]]; then
 fi
 
 # =============================================================================
-# Installation Summary
+# Installation Summary (Table Display)
 # =============================================================================
+
+# Print summary table using gum
+print_summary_table() {
+    local data="$1"
+    local status_symbol="$2"
+    local status_text="$3"
+
+    [[ -z "$data" ]] && return
+
+    local csv_data=""
+    while IFS='|' read -r name desc; do
+        [[ -z "$name" ]] && continue
+        # Escape commas in description for CSV
+        desc="${desc//,/;}"
+        [[ -z "$csv_data" ]] && csv_data="${name},${status_symbol} ${status_text},${desc}" || csv_data="${csv_data}
+${name},${status_symbol} ${status_text},${desc}"
+    done <<< "$data"
+
+    echo "$csv_data" | gum table \
+        --separator="," \
+        --columns="Package,Status,Description" \
+        --widths="22,12,40" \
+        --print \
+        --border="rounded"
+    echo ""
+}
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Installation Summary"
@@ -658,20 +718,24 @@ echo ""
 echo "  Profiles: ${SELECTED_PROFILES[*]}"
 echo ""
 
-# Remove trailing ", " from summary strings
-SUMMARY_INSTALLED="${SUMMARY_INSTALLED%, }"
-SUMMARY_SKIPPED="${SUMMARY_SKIPPED%, }"
-SUMMARY_REMOVED="${SUMMARY_REMOVED%, }"
-
 if [[ -n "$SUMMARY_INSTALLED" ]]; then
-    echo -e "  ${GREEN}✓${NC} Installed: $SUMMARY_INSTALLED"
+    echo -e "  ${GREEN}Newly Installed${NC}"
+    echo ""
+    print_summary_table "$SUMMARY_INSTALLED" "✓" "New"
 fi
+
 if [[ -n "$SUMMARY_SKIPPED" ]]; then
-    echo -e "  ${BLUE}ℹ${NC} Skipped (already installed): $SUMMARY_SKIPPED"
+    echo -e "  ${BLUE}Already Installed${NC}"
+    echo ""
+    print_summary_table "$SUMMARY_SKIPPED" "ℹ" "Skipped"
 fi
+
 if [[ -n "$SUMMARY_REMOVED" ]]; then
-    echo -e "  ${YELLOW}⚠${NC} Removed: $SUMMARY_REMOVED"
+    echo -e "  ${YELLOW}Removed${NC}"
+    echo ""
+    print_summary_table "$SUMMARY_REMOVED" "⚠" "Removed"
 fi
+
 if [[ -z "$SUMMARY_INSTALLED" && -z "$SUMMARY_SKIPPED" && -z "$SUMMARY_REMOVED" ]]; then
     echo "  No changes made"
 fi

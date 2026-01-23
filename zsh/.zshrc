@@ -85,6 +85,9 @@ alias gl='git log --oneline --graph --decorate'
 alias gco='git checkout'
 # alias lg='lazygit'  # Uncomment when lazygit is installed via mise
 
+# Yazi (force command execution to avoid autocd conflict with ~/dotfiles/yazi)
+alias yazi='command yazi'
+
 # Other aliases
 alias iplocal="ipconfig getifaddr en0"
 alias ipexternal="curl -s ifconfig.me"
