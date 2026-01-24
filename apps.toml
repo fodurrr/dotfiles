@@ -267,6 +267,15 @@ profiles = ["developer", "hacker"]
 description = "Virtual machine manager"
 
 # ─────────────────────────────────────────────────────────────────────────────
+# DATABASE
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.tableplus]
+type = "cask"
+category = "database"
+profiles = ["developer", "hacker"]
+description = "Native database GUI client"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # DISPLAY
 # ─────────────────────────────────────────────────────────────────────────────
 [apps.monitorcontrol]
