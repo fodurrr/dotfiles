@@ -175,6 +175,12 @@ category = "productivity"
 profiles = ["developer", "hacker"]
 description = "Real-time voice dictation (Recommended)"
 
+[apps.keycastr]
+type = "cask"
+category = "productivity"
+profiles = ["developer", "hacker"]
+description = "Keystroke visualizer for presentations"
+
 # Alternative dictation tools - uncomment if preferred over Aqua Voice
 # [apps.superwhisper]
 # type = "cask"
