@@ -520,6 +520,32 @@ install_mise_app() {
     fi
 }
 
+# Print summary table using gum
+print_summary_table() {
+    local data="$1"
+    local status_symbol="$2"
+    local status_text="$3"
+
+    [[ -z "$data" ]] && return
+
+    local csv_data=""
+    while IFS='|' read -r name desc; do
+        [[ -z "$name" ]] && continue
+        # Escape commas in description for CSV
+        desc="${desc//,/;}"
+        [[ -z "$csv_data" ]] && csv_data="${name},${status_symbol} ${status_text},${desc}" || csv_data="${csv_data}
+${name},${status_symbol} ${status_text},${desc}"
+    done <<< "$data"
+
+    echo "$csv_data" | gum table \
+        --separator="," \
+        --columns="Package,Status,Description" \
+        --widths="22,12,40" \
+        --print \
+        --border="rounded"
+    echo ""
+}
+
 # =============================================================================
 # EXTRAS MODE: Install additional apps interactively
 # =============================================================================
@@ -920,32 +946,6 @@ fi
 # =============================================================================
 # Installation Summary (Table Display)
 # =============================================================================
-
-# Print summary table using gum
-print_summary_table() {
-    local data="$1"
-    local status_symbol="$2"
-    local status_text="$3"
-
-    [[ -z "$data" ]] && return
-
-    local csv_data=""
-    while IFS='|' read -r name desc; do
-        [[ -z "$name" ]] && continue
-        # Escape commas in description for CSV
-        desc="${desc//,/;}"
-        [[ -z "$csv_data" ]] && csv_data="${name},${status_symbol} ${status_text},${desc}" || csv_data="${csv_data}
-${name},${status_symbol} ${status_text},${desc}"
-    done <<< "$data"
-
-    echo "$csv_data" | gum table \
-        --separator="," \
-        --columns="Package,Status,Description" \
-        --widths="22,12,40" \
-        --print \
-        --border="rounded"
-    echo ""
-}
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
