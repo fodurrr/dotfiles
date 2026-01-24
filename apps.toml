@@ -195,6 +195,36 @@ description = "Keystroke visualizer for presentations"
 # description = "AI voice assistant"
 
 # ─────────────────────────────────────────────────────────────────────────────
+# CLOUD STORAGE
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.onedrive]
+type = "cask"
+category = "cloud-storage"
+profiles = ["daily", "developer", "hacker"]
+description = "Microsoft cloud storage"
+
+[apps.google-drive]
+type = "cask"
+category = "cloud-storage"
+profiles = ["daily", "developer", "hacker"]
+description = "Google cloud storage"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MICROSOFT OFFICE
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.microsoft-office]
+type = "cask"
+category = "office"
+profiles = ["daily"]
+description = "Microsoft 365 Office suite"
+
+[apps.microsoft-teams]
+type = "cask"
+category = "communication"
+profiles = ["daily"]
+description = "Team collaboration"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # MEDIA & COMMUNICATION
 # ─────────────────────────────────────────────────────────────────────────────
 [apps.discord]
@@ -214,6 +244,12 @@ type = "cask"
 category = "media"
 profiles = ["daily", "developer", "hacker"]
 description = "Universal media player"
+
+[apps.whatsapp]
+type = "cask"
+category = "communication"
+profiles = ["daily", "developer", "hacker"]
+description = "Messaging app"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # VIRTUALIZATION
@@ -238,6 +274,21 @@ type = "cask"
 category = "display"
 profiles = ["daily", "developer", "hacker"]
 description = "External display brightness"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UTILITIES
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.setapp]
+type = "cask"
+category = "utilities"
+profiles = ["daily", "developer", "hacker"]
+description = "Mac app subscription service"
+
+[apps.keymapp]
+type = "cask"
+category = "utilities"
+profiles = ["hacker"]
+description = "ZSA keyboard configuration"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FONTS
