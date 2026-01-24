@@ -1,0 +1,74 @@
+#!/bin/bash
+# =============================================================================
+# SketchyBar Configuration
+# =============================================================================
+# Catppuccin Mocha theme with Aerospace integration
+# =============================================================================
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
+
+# Load colors and icons
+source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/icons.sh"
+
+# =============================================================================
+# Bar Appearance
+# =============================================================================
+bar=(
+    height=40
+    blur_radius=30
+    position=top
+    sticky=on
+    padding_left=10
+    padding_right=10
+    color=$BAR_COLOR
+    corner_radius=9
+    y_offset=5
+    margin=10
+    shadow=on
+)
+
+sketchybar --bar "${bar[@]}"
+
+# =============================================================================
+# Default Item Settings
+# =============================================================================
+defaults=(
+    icon.font="SF Pro:Semibold:14.0"
+    icon.color=$ICON_COLOR
+    label.font="SF Pro:Semibold:13.0"
+    label.color=$TEXT_COLOR
+    background.color=$ITEM_BG_COLOR
+    background.corner_radius=5
+    background.height=24
+    padding_left=5
+    padding_right=5
+    label.padding_left=4
+    label.padding_right=4
+    icon.padding_left=4
+    icon.padding_right=4
+)
+
+sketchybar --default "${defaults[@]}"
+
+# =============================================================================
+# Left Items
+# =============================================================================
+source "$ITEM_DIR/apple.sh"
+source "$ITEM_DIR/aerospace.sh"
+
+# =============================================================================
+# Right Items
+# =============================================================================
+source "$ITEM_DIR/calendar.sh"
+
+# =============================================================================
+# Events
+# =============================================================================
+sketchybar --add event aerospace_workspace_change
+
+# =============================================================================
+# Finalize
+# =============================================================================
+sketchybar --update

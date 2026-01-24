@@ -148,6 +148,21 @@ category = "window-management"
 profiles = ["hacker"]
 description = "i3-like tiling window manager"
 
+[apps.sketchybar]
+type = "cask"
+tap = "FelixKratz/formulae"
+category = "status-bar"
+profiles = ["hacker"]
+description = "Customizable macOS status bar"
+
+[apps.sketchybar-config]
+type = "stow"
+package = "sketchybar"
+category = "config"
+profiles = ["hacker"]
+depends_on = "sketchybar"
+description = "SketchyBar configuration"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # PRODUCTIVITY
 # ─────────────────────────────────────────────────────────────────────────────
