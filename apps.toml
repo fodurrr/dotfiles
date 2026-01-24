@@ -169,24 +169,24 @@ category = "productivity"
 profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Open-source password manager"
 
-#[apps.superwhisper]
-#type = "cask"
-#category = "productivity"
-#profiles = ["developer", "hacker"]
-#description = "Offline AI dictation (Recommended)"
-
 [apps.aqua-voice]
 type = "cask"
 category = "productivity"
 profiles = ["developer", "hacker"]
-description = "Real-time voice dictation"
+description = "Real-time voice dictation (Recommended)"
 
-# Alternative dictation tool - uncomment if preferred over SuperWhisper/Aqua Voice
-[apps.wispr-flow]
-type = "cask"
-category = "productivity"
-profiles = ["developer", "hacker"]
-description = "AI voice assistant (alternative)"
+# Alternative dictation tools - uncomment if preferred over Aqua Voice
+# [apps.superwhisper]
+# type = "cask"
+# category = "productivity"
+# profiles = ["developer", "hacker"]
+# description = "Offline AI dictation"
+
+# [apps.wispr-flow]
+# type = "cask"
+# category = "productivity"
+# profiles = ["developer", "hacker"]
+# description = "AI voice assistant"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MEDIA & COMMUNICATION

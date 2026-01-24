@@ -78,8 +78,7 @@ The dotfiles support five profiles with different philosophies:
 | Raycast | ✓ | ✓ | ✓ | ✓ | | Launcher, extensions |
 | Obsidian | | ✓ | ✓ | ✓ | | Notes, knowledge base |
 | Bitwarden | ✓ | ✓ | ✓ | ✓ | | Password manager |
-| SuperWhisper | | | ✓ | ✓ | | Offline AI dictation |
-| Aqua Voice | | | ✓ | ✓ | | Real-time dictation |
+| Aqua Voice | | | ✓ | ✓ | | Real-time voice dictation |
 | **Media** |||||||
 | Spotify | | ✓ | ✓ | ✓ | | Music streaming |
 | VLC | | ✓ | ✓ | ✓ | | Media player |
