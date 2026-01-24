@@ -49,8 +49,8 @@ command -v sheldon &>/dev/null && eval "$(sheldon source)" || echo "⚠️  shel
 # Starship Prompt
 command -v starship &>/dev/null && eval "$(starship init zsh)" || echo "⚠️  starship not found" >&2
 
-# Direnv (Environment manager)
-command -v direnv &>/dev/null && eval "$(direnv hook zsh)" || echo "⚠️  direnv not found" >&2
+# Direnv (Environment manager) - silent if not installed
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
 
 # FZF (Fuzzy Finder) Configuration
 command -v fzf &>/dev/null && source <(fzf --zsh) || echo "⚠️  fzf not found" >&2
