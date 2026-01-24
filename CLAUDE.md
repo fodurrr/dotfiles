@@ -98,15 +98,15 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | Profile | Target User | Description |
 |---------|-------------|-------------|
 | **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
-| **daily** | Regular users (spouse/family) | Browsing, media, basic productivity |
+| **standard** | Regular users (spouse/family) | Browsing, media, basic productivity |
 | **developer** | GUI-centric developers | VSCode, Warp, mouse-driven workflow |
 | **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
 | **server** | SSH/remote admin | Terminal-only tools for headless servers |
 
 ### App Distribution Matrix
 
-| App | minimal | daily | developer | hacker | server |
-|-----|:-------:|:-----:|:---------:|:------:|:------:|
+| App | minimal | standard | developer | hacker | server |
+|-----|:-------:|:--------:|:---------:|:------:|:------:|
 | **ESSENTIALS** |
 | Raycast | ✓ | ✓ | ✓ | ✓ | |
 | Bitwarden | ✓ | ✓ | ✓ | ✓ | |
@@ -125,7 +125,6 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | Warp | | | ✓ | ✓ | |
 | tmux | | | | ✓ | ✓ |
 | **DICTATION** |
-| SuperWhisper | | | ✓ | ✓ | |
 | Aqua Voice | | | ✓ | ✓ | |
 | **AI DESKTOP** |
 | Claude Desktop | | ✓ | ✓ | ✓ | |
@@ -139,6 +138,15 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | gemini-cli | | | | ✓ | |
 | **PRODUCTIVITY** |
 | Obsidian | | ✓ | ✓ | ✓ | |
+| KeyCastr | | | ✓ | ✓ | |
+| **CLOUD STORAGE** |
+| OneDrive | | ✓ | ✓ | ✓ | |
+| Google Drive | | ✓ | ✓ | ✓ | |
+| **OFFICE** |
+| Microsoft Office | | ✓ | | | |
+| Microsoft Teams | | ✓ | | | |
+| **COMMUNICATION** |
+| WhatsApp | | ✓ | ✓ | ✓ | |
 | **MEDIA** |
 | Spotify | | ✓ | ✓ | ✓ | |
 | VLC | | ✓ | ✓ | ✓ | |
@@ -148,8 +156,13 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | **VIRTUALIZATION** |
 | OrbStack | | | ✓ | ✓ | |
 | UTM | | | ✓ | ✓ | |
+| **DATABASE** |
+| TablePlus | | | ✓ | ✓ | |
 | **DISPLAY** |
 | MonitorControl | | ✓ | ✓ | ✓ | |
+| **UTILITIES** |
+| Setapp | | ✓ | ✓ | ✓ | |
+| Keymapp | | | | ✓ | |
 | **CLI TOOLS** |
 | starship | ✓ | ✓ | ✓ | ✓ | ✓ |
 | eza | ✓ | ✓ | ✓ | ✓ | ✓ |
@@ -193,7 +206,11 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 
 # Install specific profile(s)
 ./install.sh --profile=hacker
-./install.sh -p minimal -p daily
+./install.sh -p minimal -p standard
+
+# Install individual apps (extras mode)
+# Select "➕ Install individual apps" from the menu, or:
+./install.sh --extras
 
 # Clean mode (removes apps not in selected profiles)
 ./install.sh --profile=hacker --clean
@@ -231,7 +248,7 @@ All apps are defined in `apps.toml` with profile assignments:
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 
 [apps.warp]
 type = "cask"
@@ -366,7 +383,7 @@ This ensures the repo is always the source of truth without data loss.
 
 ## AI Tools Reference
 
-| Tool | daily | developer | hacker |
+| Tool | standard | developer | hacker |
 |------|-------|-----------|--------|
 | Claude | Desktop (cask) | Desktop (cask) | Desktop + CLI |
 | ChatGPT | Desktop (cask) | Desktop (cask) | Desktop (cask) |
@@ -386,7 +403,7 @@ Changes pushed! To test in your VM:
 cd ~/dotfiles
 git fetch origin
 git merge origin/feature/your-branch-name
-./install.sh --profile=daily
+./install.sh --profile=standard
 ```
 
 For merging to main environment (not VM): `source ~/.zshrc` if zsh changes were made, or create a PR at `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`

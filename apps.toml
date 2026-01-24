@@ -9,7 +9,7 @@
 #   tap         = homebrew tap (optional, for casks from taps)
 #   version     = version string (optional, for mise tools)
 #   category    = grouping for documentation
-#   profiles    = ["minimal", "daily", "developer", "hacker", "server"]
+#   profiles    = ["minimal", "standard", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
 #   description = short description for summary display (<40 chars)
 #
@@ -23,7 +23,7 @@
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "GPU-accelerated terminal emulator"
 
 [apps.warp]
@@ -65,19 +65,19 @@ description = "Vim-based text editor"
 [apps.firefox]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Privacy-focused web browser"
 
 [apps.google-chrome]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Google web browser"
 
 [apps.microsoft-edge]
 type = "cask"
 category = "browsers"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Microsoft web browser"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -88,14 +88,14 @@ description = "Microsoft web browser"
 type = "cask"
 name = "claude"
 category = "ai"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Claude AI assistant (GUI)"
 
 [apps.chatgpt-desktop]
 type = "cask"
 name = "chatgpt"
 category = "ai"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "ChatGPT AI assistant (GUI)"
 
 [apps.codex-desktop]
@@ -154,19 +154,19 @@ description = "i3-like tiling window manager"
 [apps.raycast]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Spotlight replacement launcher"
 
 [apps.obsidian]
 type = "cask"
 category = "productivity"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Markdown-based knowledge base"
 
 [apps.bitwarden]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Open-source password manager"
 
 [apps.aqua-voice]
@@ -200,13 +200,13 @@ description = "Keystroke visualizer for presentations"
 [apps.onedrive]
 type = "cask"
 category = "cloud-storage"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Microsoft cloud storage"
 
 [apps.google-drive]
 type = "cask"
 category = "cloud-storage"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Google cloud storage"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -215,13 +215,13 @@ description = "Google cloud storage"
 [apps.microsoft-office]
 type = "cask"
 category = "office"
-profiles = ["daily"]
+profiles = ["standard"]
 description = "Microsoft 365 Office suite"
 
 [apps.microsoft-teams]
 type = "cask"
 category = "communication"
-profiles = ["daily"]
+profiles = ["standard"]
 description = "Team collaboration"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -230,25 +230,25 @@ description = "Team collaboration"
 [apps.discord]
 type = "cask"
 category = "media"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Voice and text chat platform"
 
 [apps.spotify]
 type = "cask"
 category = "media"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Music streaming service"
 
 [apps.vlc]
 type = "cask"
 category = "media"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Universal media player"
 
 [apps.whatsapp]
 type = "cask"
 category = "communication"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Messaging app"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -281,7 +281,7 @@ description = "Native database GUI client"
 [apps.monitorcontrol]
 type = "cask"
 category = "display"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "External display brightness"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -290,7 +290,7 @@ description = "External display brightness"
 [apps.setapp]
 type = "cask"
 category = "utilities"
-profiles = ["daily", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Mac app subscription service"
 
 [apps.keymapp]
@@ -305,7 +305,7 @@ description = "ZSA keyboard configuration"
 [apps.font-jetbrains-mono-nerd-font]
 type = "cask"
 category = "fonts"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Developer font with icons"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -314,19 +314,19 @@ description = "Developer font with icons"
 [apps.starship]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Cross-shell prompt"
 
 [apps.eza]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Modern ls replacement"
 
 [apps.bat]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Cat with syntax highlighting"
 
 [apps.ripgrep]
@@ -338,7 +338,7 @@ description = "Fast recursive grep"
 [apps.fzf]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Fuzzy finder"
 
 [apps.jq]
@@ -457,35 +457,35 @@ description = "Functional programming language"
 type = "stow"
 package = "git"
 category = "config"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Git configuration"
 
 [apps.zsh-config]
 type = "stow"
 package = "zsh"
 category = "config"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Zsh shell configuration"
 
 [apps.sheldon-config]
 type = "stow"
 package = "sheldon"
 category = "config"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Sheldon plugin config"
 
 [apps.starship-config]
 type = "stow"
 package = "starship"
 category = "config"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Starship prompt config"
 
 [apps.ghostty-config]
 type = "stow"
 package = "ghostty"
 category = "config"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Ghostty terminal config"
 
 [apps.zed-config]
@@ -499,7 +499,7 @@ description = "Zed editor config"
 type = "stow"
 package = "mise"
 category = "config"
-profiles = ["minimal", "daily", "developer", "hacker", "server"]
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
 description = "Mise version manager config"
 
 [apps.aerospace-config]

@@ -11,7 +11,7 @@ The dotfiles support five profiles with different philosophies:
 | Profile | Philosophy | Target User |
 |---------|-----------|-------------|
 | **minimal** | Bare essentials only | Fresh Mac, testing, minimal footprint |
-| **daily** | Full GUI experience | Friends/family, casual users, new Mac owners |
+| **standard** | Full GUI experience | Friends/family, casual users, new Mac owners |
 | **developer** | GUI + dev tools | Developers who prefer VSCode/Zed |
 | **hacker** | Terminal-centric workflow | Power users, keyboard-driven workflows |
 | **server** | Headless/CLI only | Remote servers, SSH environments |
@@ -23,7 +23,7 @@ The dotfiles support five profiles with different philosophies:
 │                         PROFILE COMPARISON                                   │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│  minimal       daily          developer      hacker         server          │
+│  minimal       standard          developer      hacker         server          │
 │  ────────      ─────          ─────────      ──────         ──────          │
 │  Ghostty       Ghostty        Ghostty        Ghostty        (none)          │
 │                               + Warp         + Warp                         │
@@ -56,7 +56,7 @@ The dotfiles support five profiles with different philosophies:
 
 ### GUI Applications (Homebrew Casks)
 
-| App | minimal | daily | developer | hacker | server | Notes |
+| App | minimal | standard | developer | hacker | server | Notes |
 |-----|:-------:|:-----:|:---------:|:------:|:------:|-------|
 | **Terminals** |||||||
 | Ghostty | ✓ | ✓ | ✓ | ✓ | | GPU-accelerated terminal |
@@ -95,7 +95,7 @@ The dotfiles support five profiles with different philosophies:
 
 ### CLI Tools (Mise)
 
-| Tool | minimal | daily | developer | hacker | server | Notes |
+| Tool | minimal | standard | developer | hacker | server | Notes |
 |------|:-------:|:-----:|:---------:|:------:|:------:|-------|
 | **Core CLI** |||||||
 | starship | ✓ | ✓ | ✓ | ✓ | ✓ | Cross-shell prompt |
@@ -118,7 +118,7 @@ The dotfiles support five profiles with different philosophies:
 
 ### AI CLI Tools (Hacker Profile Only)
 
-| Tool | minimal | daily | developer | hacker | server | Notes |
+| Tool | minimal | standard | developer | hacker | server | Notes |
 |------|:-------:|:-----:|:---------:|:------:|:------:|-------|
 | claude-cli | | | | ✓ | | Claude Code CLI |
 | codex-cli | | | | ✓ | | OpenAI Codex CLI |
@@ -127,7 +127,7 @@ The dotfiles support five profiles with different philosophies:
 
 ### Runtimes (Mise)
 
-| Runtime | minimal | daily | developer | hacker | server | Version |
+| Runtime | minimal | standard | developer | hacker | server | Version |
 |---------|:-------:|:-----:|:---------:|:------:|:------:|---------|
 | Node.js | | | ✓ | ✓ | | lts |
 | Python | | | ✓ | ✓ | | 3.14 |
@@ -139,7 +139,7 @@ The dotfiles support five profiles with different philosophies:
 
 ### Stow Packages (Configs)
 
-| Package | minimal | daily | developer | hacker | server | Target Path |
+| Package | minimal | standard | developer | hacker | server | Target Path |
 |---------|:-------:|:-----:|:---------:|:------:|:------:|-------------|
 | git | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.gitconfig |
 | zsh | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.zshrc |
