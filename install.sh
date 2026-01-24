@@ -318,8 +318,8 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
     fi
 fi
 
-# Default to minimal if nothing selected
-if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
+# Default to minimal if nothing selected (skip for extras mode)
+if [[ ${#SELECTED_PROFILES[@]} -eq 0 && "$EXTRAS_MODE" != true ]]; then
     SELECTED_PROFILES=("minimal")
 fi
 
@@ -345,8 +345,10 @@ LOG_FILE="$DOTFILES_DIR/install.log"
 # Duplicate all output to log file (append mode)
 exec > >(tee -a "$LOG_FILE") 2>&1
 
-echo ""
-echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
+if [[ "$EXTRAS_MODE" != true ]]; then
+    echo ""
+    echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
+fi
 
 # =============================================================================
 # Helper Functions
