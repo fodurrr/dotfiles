@@ -13,6 +13,7 @@ set -e
 #   ./install.sh -p dev -p devops         # Merge multiple profiles
 #   ./install.sh --list-profiles          # Show available profiles
 #   ./install.sh --clean                  # Strict cleanup mode
+#   ./install.sh --extras                 # Install extra apps interactively
 # =============================================================================
 
 # =============================================================================
@@ -21,6 +22,7 @@ set -e
 SELECTED_PROFILES=()
 CLEAN_MODE=false
 INTERACTIVE=true
+EXTRAS_MODE=false
 DOTFILES_DIR=~/dotfiles
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 
@@ -156,6 +158,10 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=false
             shift
             ;;
+        --extras)
+            EXTRAS_MODE=true
+            shift
+            ;;
         --list-profiles)
             # Check if yq is available (installed during bootstrap)
             if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
@@ -220,6 +226,118 @@ if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
     log_success "TPM installed. After tmux starts, press Ctrl+A then Shift+I to install plugins."
 else
     log_info "TPM already installed"
+fi
+
+# =============================================================================
+# EXTRAS MODE: Install additional apps interactively
+# =============================================================================
+if [[ "$EXTRAS_MODE" == true ]]; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  Extras Mode: Install Additional Apps"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Scanning for uninstalled apps..."
+
+    # Build list of uninstalled apps (exclude stow packages)
+    UNINSTALLED_APPS=()
+    for app_key in $(get_all_apps); do
+        type=$(get_app_prop "$app_key" "type")
+        [[ "$type" == "stow" ]] && continue  # Skip config packages
+
+        if ! is_app_installed "$app_key"; then
+            desc=$(get_app_prop "$app_key" "description")
+            category=$(get_app_prop "$app_key" "category")
+            [[ -z "$desc" ]] && desc="$app_key"
+            UNINSTALLED_APPS+=("$app_key|$desc|$category")
+        fi
+    done
+
+    if [[ ${#UNINSTALLED_APPS[@]} -eq 0 ]]; then
+        echo ""
+        log_info "All available apps are already installed!"
+        exit 0
+    fi
+
+    echo ""
+    echo "Found ${#UNINSTALLED_APPS[@]} apps available to install:"
+    echo ""
+
+    # Format for gum: "app_key - description"
+    GUM_OPTIONS=()
+    for entry in "${UNINSTALLED_APPS[@]}"; do
+        IFS='|' read -r key desc category <<< "$entry"
+        GUM_OPTIONS+=("$key - $desc")
+    done
+
+    # Multi-select with gum
+    SELECTED_EXTRAS=()
+    while IFS= read -r line; do
+        [[ -n "$line" ]] && SELECTED_EXTRAS+=("${line%% - *}")  # Extract app_key
+    done < <(gum choose --no-limit \
+        --header "Select apps to install (SPACE to toggle, ENTER to confirm):" \
+        --cursor-prefix "[ ] " \
+        --selected-prefix "[x] " \
+        "${GUM_OPTIONS[@]}")
+
+    if [[ ${#SELECTED_EXTRAS[@]} -eq 0 ]]; then
+        echo ""
+        log_info "No apps selected. Exiting."
+        exit 0
+    fi
+
+    echo ""
+    echo "Installing ${#SELECTED_EXTRAS[@]} selected app(s)..."
+    echo ""
+
+    # Install selected apps by type
+    for app_key in "${SELECTED_EXTRAS[@]}"; do
+        type=$(get_app_prop "$app_key" "type")
+        name=$(get_app_prop "$app_key" "name")
+        [[ -z "$name" ]] && name="$app_key"
+
+        case "$type" in
+            cask)
+                tap=$(get_app_prop "$app_key" "tap")
+                [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
+                log_success "Installing $name (cask)..."
+                brew install --cask "$name" && add_to_summary INSTALLED "$name" "$app_key"
+                ;;
+            brew)
+                log_success "Installing $name (brew)..."
+                brew install "$name" && add_to_summary INSTALLED "$name" "$app_key"
+                ;;
+            mise)
+                install_mise_app "$app_key"
+                ;;
+            curl)
+                case "$app_key" in
+                    claude-cli)
+                        log_success "Installing claude-cli..."
+                        curl -fsSL https://claude.ai/install.sh | bash
+                        ;;
+                    opencode-cli)
+                        log_success "Installing opencode-cli..."
+                        curl -fsSL https://opencode.ai/install | bash
+                        ;;
+                esac
+                ;;
+        esac
+    done
+
+    # Show summary and exit
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  Extras Installation Complete"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    if [[ -n "$SUMMARY_INSTALLED" ]]; then
+        echo ""
+        print_summary_table "$SUMMARY_INSTALLED" "✓" "Installed"
+    fi
+    echo ""
+    echo "Press [ENTER] to reload the shell..."
+    read
+    exec zsh -l
 fi
 
 # =============================================================================
@@ -362,6 +480,41 @@ get_app_prop() {
 # Get all app keys (extract [apps.X] sections)
 get_all_apps() {
     grep -oE '^\[apps\.[^]]+\]' "$APPS_CONFIG" | sed 's/\[apps\.//;s/\]//'
+}
+
+# Check if an app is currently installed
+is_app_installed() {
+    local app_key="$1"
+    local type=$(get_app_prop "$app_key" "type")
+    local name=$(get_app_prop "$app_key" "name")
+    [[ -z "$name" ]] && name="$app_key"
+
+    case "$type" in
+        cask)
+            brew list --cask 2>/dev/null | grep -q "^${name}$"
+            ;;
+        brew)
+            brew list 2>/dev/null | grep -q "^${name}$"
+            ;;
+        mise)
+            local status=$(mise list "$name" 2>/dev/null | head -1)
+            [[ -n "$status" ]] && [[ "$status" != *"(missing)"* ]]
+            ;;
+        curl)
+            case "$app_key" in
+                claude-cli) command -v claude &>/dev/null ;;
+                opencode-cli) command -v opencode &>/dev/null ;;
+                *) return 1 ;;
+            esac
+            ;;
+        stow)
+            # Stow packages are always "installable" - skip them in extras
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 # Add entry to summary list (newline+pipe delimited format)
