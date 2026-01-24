@@ -157,9 +157,20 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --list-profiles)
-            # Can't list profiles before bootstrap, just show message
-            echo "Run bootstrap first, then use --list-profiles"
-            echo "Or check apps.toml for available profiles"
+            # Check if yq is available (installed during bootstrap)
+            if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
+                echo "Available profiles:"
+                echo ""
+                # Extract unique profiles from apps.toml
+                grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u | while read -r profile; do
+                    # Count apps in this profile
+                    count=$(grep -c "\"$profile\"" "$APPS_CONFIG" 2>/dev/null || echo "0")
+                    printf "  %-12s (%d apps)\n" "$profile" "$count"
+                done
+            else
+                echo "Run bootstrap first (./install.sh), then use --list-profiles"
+                echo "Or check apps.toml for available profiles"
+            fi
             exit 0
             ;;
         *)
