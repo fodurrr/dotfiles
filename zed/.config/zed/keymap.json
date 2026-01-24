@@ -47,7 +47,7 @@
   {
     "context": "Editor && vim_mode == normal",
     "bindings": {
-      "shift-h": "pane::ActivatePrevItem",
+      "shift-h": "pane::ActivatePreviousItem",
       "shift-l": "pane::ActivateNextItem",
       "shift-q": "pane::CloseActiveItem"
     }
@@ -69,7 +69,7 @@
     "context": "ProjectPanel && not_editing",
     "bindings": {
       "j": "menu::SelectNext",
-      "k": "menu::SelectPrev",
+      "k": "menu::SelectPrevious",
       "l": "project_panel::Open",
       "h": "project_panel::CollapseSelectedEntry",
       "o": "project_panel::Open"
