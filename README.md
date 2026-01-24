@@ -44,11 +44,13 @@ This dotfiles repo uses a **profile-based installation system** to support diffe
 
 ### Available Profiles
 
-| Profile | Target User | Key Apps |
-|---------|-------------|----------|
-| **minimal** | Fresh Mac, testing | Ghostty, Zed, Firefox, Raycast, Bitwarden |
-| **standard** | Friends/family, casual users | All of minimal + Warp, Chrome, AI Desktop apps, Spotify |
-| **developer** | Power users, terminal-centric | Ghostty, Aerospace, tmux, neovim, AI CLI tools |
+| Profile | Target User | Description |
+|---------|-------------|-------------|
+| **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
+| **daily** | Regular users (spouse/family) | Browsing, media, basic productivity |
+| **developer** | GUI-centric developers | VSCode, Warp, mouse-driven workflow |
+| **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
+| **server** | SSH/remote admin | Terminal-only tools for headless servers |
 
 ### Usage Examples
 
@@ -57,14 +59,14 @@ This dotfiles repo uses a **profile-based installation system** to support diffe
 ./install.sh
 
 # Non-interactive: install a single profile
-./install.sh --profile=developer
+./install.sh --profile=hacker
 
 # Install multiple profiles (merged together)
-./install.sh --profile=developer --profile=standard
-./install.sh -p developer -p standard
+./install.sh --profile=developer --profile=daily
+./install.sh -p developer -p daily
 
 # Clean mode: remove apps not in selected profile(s)
-./install.sh --profile=developer --clean
+./install.sh --profile=hacker --clean
 
 # List available profiles
 ./install.sh --list-profiles
@@ -76,52 +78,52 @@ When switching between profiles, there are two modes:
 
 #### Merge Mode (Default)
 ```bash
-./install.sh --profile=developer
+./install.sh --profile=hacker
 ```
 - **ADDS** apps from the new profile
 - **KEEPS** all existing apps (even if not in the new profile)
 - Safe for experimentation
 
-**Example:** If you have `standard` installed and run this:
-- Keeps: Warp, Claude Desktop, ChatGPT Desktop (from standard)
-- Adds: Aerospace, tmux, neovim (from developer)
+**Example:** If you have `developer` installed and run this:
+- Keeps: Warp, VSCode, Zed (from developer)
+- Adds: Aerospace, tmux, neovim, AI CLI tools (from hacker)
 - Result: Everything combined
 
 #### Clean Mode (Strict)
 ```bash
-./install.sh --profile=developer --clean
+./install.sh --profile=hacker --clean
 ```
 - **ADDS** apps from the selected profile(s)
 - **REMOVES** managed apps NOT in the selected profile(s)
 - Strict enforcement of profile
 
-**Example:** If you have `standard` installed and run this:
-- Removes: Warp, Claude Desktop, ChatGPT Desktop (standard-only)
-- Adds: Aerospace, tmux, neovim (developer-only)
-- Keeps: Ghostty, Firefox, Zed (in both profiles)
+**Example:** If you have `developer` installed and run this:
+- Removes: (nothing - hacker includes all of developer)
+- Adds: Aerospace, tmux, neovim, AI CLI tools (hacker-only)
+- Keeps: Everything from developer
 
 ### Visual Comparison
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Scenario: User has "standard" installed, wants "developer"     │
+│  Scenario: User has "daily" installed, wants "hacker"           │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  Standard profile:          Developer profile:                   │
+│  Daily profile:             Hacker profile:                      │
 │  ├── Ghostty                ├── Ghostty                         │
-│  ├── Warp                   ├── Aerospace                       │
-│  ├── Claude Desktop         ├── tmux                            │
-│  ├── ChatGPT Desktop        ├── neovim                          │
-│  └── Firefox                └── Firefox                         │
+│  ├── Chrome                 ├── Chrome                          │
+│  ├── Claude Desktop         ├── Claude Desktop                  │
+│  ├── ChatGPT Desktop        ├── Aerospace                       │
+│  └── Firefox                ├── tmux, neovim                    │
+│                             └── AI CLI tools                    │
 │                                                                  │
 ├─────────────────────────────────────────────────────────────────┤
-│  MERGE: ./install.sh --profile=developer                        │
-│  Result: Ghostty, Warp, Claude, ChatGPT, Firefox,               │
-│          Aerospace, tmux, neovim (everything combined)          │
+│  MERGE: ./install.sh --profile=hacker                           │
+│  Result: Everything from daily + Aerospace, tmux, neovim,       │
+│          AI CLI tools (everything combined)                     │
 ├─────────────────────────────────────────────────────────────────┤
-│  CLEAN: ./install.sh --profile=developer --clean                │
-│  Result: Ghostty, Firefox, Aerospace, tmux, neovim              │
-│          (Warp, Claude, ChatGPT REMOVED)                        │
+│  CLEAN: ./install.sh --profile=hacker --clean                   │
+│  Result: Hacker apps only (daily-only items removed)            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -194,30 +196,30 @@ All apps are defined in a single `apps.toml` file with profile assignments:
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 
 [apps.warp]
 type = "cask"
 category = "terminals"
-profiles = ["standard"]  # Only in standard profile
+profiles = ["developer", "hacker"]  # Developer profiles only
 
 [apps.aerospace]
 type = "cask"
 tap = "nikitabobko/tap"
-name = "nikitabobko/tap/aerospace"
+name = "aerospace"
 category = "window-management"
-profiles = ["developer"]  # Only in developer profile
+profiles = ["hacker"]  # Keyboard-centric profile only
 
 [apps.tmux]
 type = "mise"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 
 [apps.tmux-config]
 type = "stow"
 package = "tmux"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 ```
 
 ### App Types
@@ -237,7 +239,7 @@ Just add your profile name to any app's `profiles` array:
 ```toml
 [apps.my-special-app]
 type = "cask"
-profiles = ["developer", "my-new-profile"]  # Creates "my-new-profile" automatically
+profiles = ["hacker", "my-new-profile"]  # Creates "my-new-profile" automatically
 ```
 
 Then run: `./install.sh --profile=my-new-profile`
@@ -246,40 +248,87 @@ Then run: `./install.sh --profile=my-new-profile`
 
 ## What Gets Installed by Profile
 
-### Minimal Profile
-Core essentials for a clean Mac setup:
+### App Distribution Matrix
 
-- **Terminals:** Ghostty
-- **Editors:** Zed
-- **Browsers:** Firefox
-- **Productivity:** Raycast, Bitwarden
-- **Fonts:** JetBrains Mono Nerd Font
-- **CLI:** starship, eza, bat, ripgrep, fzf, jq, yq, gh, direnv
-- **Runtimes:** Node.js (LTS), Python 3.14
+| App | minimal | daily | developer | hacker | server |
+|-----|:-------:|:-----:|:---------:|:------:|:------:|
+| **ESSENTIALS** |
+| Raycast | ✓ | ✓ | ✓ | ✓ | |
+| Bitwarden | ✓ | ✓ | ✓ | ✓ | |
+| Firefox | ✓ | ✓ | ✓ | ✓ | |
+| Ghostty | ✓ | ✓ | ✓ | ✓ | |
+| JetBrains Mono Nerd | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **BROWSERS** |
+| Chrome | ✓ | ✓ | ✓ | ✓ | |
+| Edge | | ✓ | ✓ | ✓ | |
+| **EDITORS** |
+| Zed | | | ✓ | ✓ | |
+| VSCode | | | ✓ | ✓ | |
+| Neovim | | | | ✓ | ✓ |
+| Antigravity | | | ✓ | ✓ | |
+| **TERMINALS** |
+| Warp | | | ✓ | ✓ | |
+| tmux | | | | ✓ | ✓ |
+| **DICTATION** |
+| SuperWhisper | | | ✓ | ✓ | |
+| Aqua Voice | | | ✓ | ✓ | |
+| **AI DESKTOP** |
+| Claude Desktop | | ✓ | ✓ | ✓ | |
+| ChatGPT Desktop | | ✓ | ✓ | ✓ | |
+| Codex Desktop | | | ✓ | ✓ | |
+| OpenCode Desktop | | | ✓ | ✓ | |
+| **AI CLI** |
+| claude-cli | | | | ✓ | |
+| codex-cli | | | | ✓ | |
+| opencode-cli | | | | ✓ | |
+| gemini-cli | | | | ✓ | |
+| **PRODUCTIVITY** |
+| Obsidian | | ✓ | ✓ | ✓ | |
+| **MEDIA** |
+| Spotify | | ✓ | ✓ | ✓ | |
+| VLC | | ✓ | ✓ | ✓ | |
+| Discord | | ✓ | ✓ | ✓ | |
+| **WINDOW MGMT** |
+| Aerospace | | | | ✓ | |
+| **VIRTUALIZATION** |
+| OrbStack | | | ✓ | ✓ | |
+| UTM | | | ✓ | ✓ | |
+| **DISPLAY** |
+| MonitorControl | | ✓ | ✓ | ✓ | |
+| **CLI TOOLS** |
+| starship | ✓ | ✓ | ✓ | ✓ | ✓ |
+| eza | ✓ | ✓ | ✓ | ✓ | ✓ |
+| bat | ✓ | ✓ | ✓ | ✓ | ✓ |
+| fzf | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ripgrep | | | ✓ | ✓ | ✓ |
+| jq | | | ✓ | ✓ | ✓ |
+| yq | | | ✓ | ✓ | ✓ |
+| gh | | | ✓ | ✓ | ✓ |
+| direnv | | | ✓ | ✓ | |
+| yazi | | | | ✓ | ✓ |
+| lazygit | | | | ✓ | ✓ |
+| btop | | | | ✓ | ✓ |
+| ncdu | | | | ✓ | ✓ |
+| **RUNTIMES** |
+| Node | | | ✓ | ✓ | |
+| Python | | | ✓ | ✓ | |
+| Rust | | | ✓ | ✓ | |
+| Bun | | | ✓ | ✓ | |
+| pnpm | | | ✓ | ✓ | |
+| Erlang | | | ✓ | ✓ | |
+| Elixir | | | ✓ | ✓ | |
 
-### Standard Profile
-Everything in minimal, plus:
+### Profile Summaries
 
-- **Terminals:** + Warp
-- **Editors:** + VSCode, Antigravity
-- **Browsers:** + Chrome, Edge
-- **AI Desktop:** Claude, ChatGPT, Codex, OpenCode
-- **Media:** Spotify, VLC, Discord
-- **Productivity:** + Obsidian, Wispr Flow
-- **Virtualization:** OrbStack, UTM
-- **Runtimes:** + Rust, Bun, pnpm
+**Minimal (~16 apps):** Bare essentials - Raycast, Bitwarden, Firefox, Chrome, Ghostty, basic CLI tools
 
-### Developer Profile
-Terminal-centric workflow:
+**Daily (~23 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, MonitorControl
 
-- **Window Management:** Aerospace (tiling WM with vim keybindings)
-- **Terminals:** Ghostty + tmux
-- **Editors:** Zed, VSCode, Neovim
-- **Browsers:** Firefox
-- **AI CLI:** claude-cli, opencode-cli, codex-cli, gemini-cli (no desktop apps)
-- **File Manager:** yazi (terminal-based)
-- **CLI Extras:** btop, ncdu, lazygit
-- **Runtimes:** + Erlang, Elixir
+**Developer (~48 apps):** GUI-centric devs - adds Warp, Zed, VSCode, dictation tools, dev AI apps, OrbStack, UTM, all runtimes
+
+**Hacker (~55 apps):** Terminal-centric - adds Aerospace, tmux, Neovim, yazi, lazygit, btop, ncdu, AI CLI tools
+
+**Server (~20 apps):** Headless/SSH - terminal tools only, no GUI apps
 
 ---
 
@@ -290,11 +339,11 @@ Terminal-centric workflow:
 ./install.sh
 
 # Install specific profile(s)
-./install.sh --profile=developer
-./install.sh -p minimal -p standard
+./install.sh --profile=hacker
+./install.sh -p minimal -p daily
 
 # Clean install (removes apps not in profile)
-./install.sh --profile=developer --clean
+./install.sh --profile=hacker --clean
 
 # List available profiles
 ./install.sh --list-profiles
@@ -323,20 +372,20 @@ source ~/.zshrc
 [apps.figma]
 type = "cask"
 category = "design"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 
 # Add a CLI tool
-[apps.lazygit]
+[apps.lazydocker]
 type = "mise"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 
 # Add a new config to manage
 [apps.newtool-config]
 type = "stow"
 package = "newtool"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 ```
 
 ### Creating a Stow Package
@@ -471,7 +520,7 @@ source ~/.zshrc
 ### Profile switching issues
 ```bash
 # Use clean mode for strict enforcement
-./install.sh --profile=developer --clean
+./install.sh --profile=hacker --clean
 ```
 
 ### Backup files everywhere

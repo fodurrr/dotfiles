@@ -157,9 +157,20 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --list-profiles)
-            # Can't list profiles before bootstrap, just show message
-            echo "Run bootstrap first, then use --list-profiles"
-            echo "Or check apps.toml for available profiles"
+            # Check if yq is available (installed during bootstrap)
+            if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
+                echo "Available profiles:"
+                echo ""
+                # Extract unique profiles from apps.toml
+                grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u | while read -r profile; do
+                    # Count apps in this profile
+                    count=$(grep -c "\"$profile\"" "$APPS_CONFIG" 2>/dev/null || echo "0")
+                    printf "  %-12s (%d apps)\n" "$profile" "$count"
+                done
+            else
+                echo "Run bootstrap first (./install.sh), then use --list-profiles"
+                echo "Or check apps.toml for available profiles"
+            fi
             exit 0
             ;;
         *)
@@ -224,12 +235,12 @@ get_profiles() {
     # Extract all unique profiles
     local all_profiles=$(grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u)
 
-    # Output in preferred order: minimal, standard, developer, then others
-    for preferred in minimal standard developer; do
+    # Output in preferred order: minimal, daily, developer, hacker, server, then others
+    for preferred in minimal daily developer hacker server; do
         echo "$all_profiles" | grep -x "$preferred" 2>/dev/null || true
     done
     # Then any others not in the preferred list
-    echo "$all_profiles" | grep -vxE "minimal|standard|developer" 2>/dev/null || true
+    echo "$all_profiles" | grep -vxE "minimal|daily|developer|hacker|server" 2>/dev/null || true
 }
 
 # Interactive profile selection

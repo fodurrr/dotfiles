@@ -23,13 +23,13 @@
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 description = "GPU-accelerated terminal emulator"
 
 [apps.warp]
 type = "cask"
 category = "terminals"
-profiles = ["standard"]
+profiles = ["developer", "hacker"]
 description = "AI-powered modern terminal"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -38,25 +38,25 @@ description = "AI-powered modern terminal"
 [apps.zed]
 type = "cask"
 category = "editors"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "High-performance code editor"
 
 [apps.visual-studio-code]
 type = "cask"
 category = "editors"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Extensible code editor"
 
 [apps.antigravity]
 type = "cask"
 category = "editors"
-profiles = ["standard"]
+profiles = ["developer", "hacker"]
 description = "Note-taking app"
 
 [apps.neovim]
 type = "mise"
 category = "editors"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Vim-based text editor"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -65,76 +65,76 @@ description = "Vim-based text editor"
 [apps.firefox]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Privacy-focused web browser"
 
 [apps.google-chrome]
 type = "cask"
 category = "browsers"
-profiles = ["standard"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Google web browser"
 
 [apps.microsoft-edge]
 type = "cask"
 category = "browsers"
-profiles = ["standard"]
+profiles = ["daily", "developer", "hacker"]
 description = "Microsoft web browser"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # AI TOOLS
 # ─────────────────────────────────────────────────────────────────────────────
-# Standard users: Desktop GUI apps
+# Daily/Developer users: Desktop GUI apps
 [apps.claude-desktop]
 type = "cask"
 name = "claude"
 category = "ai"
-profiles = ["standard"]
+profiles = ["daily", "developer", "hacker"]
 description = "Claude AI assistant (GUI)"
 
 [apps.chatgpt-desktop]
 type = "cask"
 name = "chatgpt"
 category = "ai"
-profiles = ["standard"]
+profiles = ["daily", "developer", "hacker"]
 description = "ChatGPT AI assistant (GUI)"
 
 [apps.codex-desktop]
 type = "cask"
 name = "codex"
 category = "ai"
-profiles = ["standard"]
+profiles = ["developer", "hacker"]
 description = "OpenAI Codex assistant (GUI)"
 
 [apps.opencode-desktop]
 type = "cask"
 category = "ai"
-profiles = ["standard"]
+profiles = ["developer", "hacker"]
 description = "OpenCode AI assistant (GUI)"
 
-# Developer users: CLI tools only
+# Hacker users: CLI tools only
 [apps.claude-cli]
 type = "curl"
 category = "ai"
-profiles = ["developer"]
+profiles = ["hacker"]
 description = "Claude AI assistant (CLI)"
 
 [apps.opencode-cli]
 type = "curl"
 category = "ai"
-profiles = ["developer"]
+profiles = ["hacker"]
 description = "OpenCode AI assistant (CLI)"
 
 [apps.codex-cli]
 type = "mise"
 name = "codex"
 category = "ai"
-profiles = ["developer"]
+profiles = ["hacker"]
 description = "OpenAI Codex assistant (CLI)"
 
 [apps.gemini-cli]
 type = "mise"
 category = "ai"
-profiles = ["developer"]
+profiles = ["hacker"]
 description = "Google Gemini AI (CLI)"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -145,7 +145,7 @@ type = "cask"
 tap = "nikitabobko/tap"
 name = "aerospace"
 category = "window-management"
-profiles = ["developer"]
+profiles = ["hacker"]
 description = "i3-like tiling window manager"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -154,38 +154,39 @@ description = "i3-like tiling window manager"
 [apps.raycast]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Spotlight replacement launcher"
 
 [apps.obsidian]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer"]
+profiles = ["daily", "developer", "hacker"]
 description = "Markdown-based knowledge base"
 
 [apps.bitwarden]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Open-source password manager"
 
 [apps.superwhisper]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Offline AI dictation (Recommended)"
 
 [apps.aqua-voice]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Real-time voice dictation"
 
-[apps.wispr-flow]
-type = "cask"
-category = "productivity"
-profiles = []
-description = "AI voice assistant (alternative)"
+# Alternative dictation tool - uncomment if preferred over SuperWhisper/Aqua Voice
+# [apps.wispr-flow]
+# type = "cask"
+# category = "productivity"
+# profiles = ["developer", "hacker"]
+# description = "AI voice assistant (alternative)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MEDIA & COMMUNICATION
@@ -193,19 +194,19 @@ description = "AI voice assistant (alternative)"
 [apps.discord]
 type = "cask"
 category = "media"
-profiles = ["standard", "developer"]
+profiles = ["daily", "developer", "hacker"]
 description = "Voice and text chat platform"
 
 [apps.spotify]
 type = "cask"
 category = "media"
-profiles = ["standard", "developer"]
+profiles = ["daily", "developer", "hacker"]
 description = "Music streaming service"
 
 [apps.vlc]
 type = "cask"
 category = "media"
-profiles = ["standard", "developer"]
+profiles = ["daily", "developer", "hacker"]
 description = "Universal media player"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -214,13 +215,13 @@ description = "Universal media player"
 [apps.orbstack]
 type = "cask"
 category = "virtualization"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Fast Docker & Linux VMs"
 
 [apps.utm]
 type = "cask"
 category = "virtualization"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Virtual machine manager"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -229,7 +230,7 @@ description = "Virtual machine manager"
 [apps.monitorcontrol]
 type = "cask"
 category = "display"
-profiles = ["standard", "developer"]
+profiles = ["daily", "developer", "hacker"]
 description = "External display brightness"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -238,7 +239,7 @@ description = "External display brightness"
 [apps.font-jetbrains-mono-nerd-font]
 type = "cask"
 category = "fonts"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Developer font with icons"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -247,86 +248,86 @@ description = "Developer font with icons"
 [apps.starship]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Cross-shell prompt"
 
 [apps.eza]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Modern ls replacement"
 
 [apps.bat]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Cat with syntax highlighting"
 
 [apps.ripgrep]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker", "server"]
 description = "Fast recursive grep"
 
 [apps.fzf]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Fuzzy finder"
 
 [apps.jq]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker", "server"]
 description = "JSON processor"
 
 [apps.yq]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker", "server"]
 description = "YAML/TOML processor"
 
 [apps.gh]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker", "server"]
 description = "GitHub CLI"
 
 [apps.direnv]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Directory environment loader"
 
-# Developer extras
+# Hacker/Server extras
 [apps.tmux]
 type = "mise"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Terminal multiplexer"
 
 [apps.yazi]
 type = "mise"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Terminal file manager"
 
 [apps.btop]
 type = "brew"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Resource monitor"
 
 [apps.ncdu]
 type = "brew"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Disk usage analyzer"
 
 [apps.lazygit]
 type = "mise"
 category = "cli"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Terminal Git UI"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -336,35 +337,35 @@ description = "Terminal Git UI"
 type = "mise"
 version = "lts"
 category = "runtimes"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "JavaScript runtime"
 
 [apps.python]
 type = "mise"
 version = "3.14"
 category = "runtimes"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Python runtime"
 
 [apps.rust]
 type = "mise"
 version = "stable"
 category = "runtimes"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Systems programming language"
 
 [apps.bun]
 type = "mise"
 version = "1.3"
 category = "runtimes"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Fast JavaScript runtime"
 
 [apps.pnpm]
 type = "mise"
 version = "10.28"
 category = "runtimes"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 depends_on = "node"
 description = "Fast Node package manager"
 
@@ -372,14 +373,14 @@ description = "Fast Node package manager"
 type = "mise"
 version = "28.3"
 category = "runtimes"
-profiles = ["developer"]
+profiles = ["developer", "hacker"]
 description = "Concurrent programming runtime"
 
 [apps.elixir]
 type = "mise"
 version = "1.19.5-otp-28"
 category = "runtimes"
-profiles = ["developer"]
+profiles = ["developer", "hacker"]
 depends_on = "erlang"
 description = "Functional programming language"
 
@@ -390,75 +391,75 @@ description = "Functional programming language"
 type = "stow"
 package = "git"
 category = "config"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Git configuration"
 
 [apps.zsh-config]
 type = "stow"
 package = "zsh"
 category = "config"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Zsh shell configuration"
 
 [apps.sheldon-config]
 type = "stow"
 package = "sheldon"
 category = "config"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Sheldon plugin config"
 
 [apps.starship-config]
 type = "stow"
 package = "starship"
 category = "config"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Starship prompt config"
 
 [apps.ghostty-config]
 type = "stow"
 package = "ghostty"
 category = "config"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Ghostty terminal config"
 
 [apps.zed-config]
 type = "stow"
 package = "zed"
 category = "config"
-profiles = ["standard", "developer"]
+profiles = ["developer", "hacker"]
 description = "Zed editor config"
 
 [apps.mise-config]
 type = "stow"
 package = "mise"
 category = "config"
-profiles = ["minimal", "standard", "developer"]
+profiles = ["minimal", "daily", "developer", "hacker", "server"]
 description = "Mise version manager config"
 
 [apps.aerospace-config]
 type = "stow"
 package = "aerospace"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker"]
 description = "Aerospace WM config"
 
 [apps.tmux-config]
 type = "stow"
 package = "tmux"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Tmux multiplexer config"
 
 [apps.nvim-config]
 type = "stow"
 package = "nvim"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Neovim editor config"
 
 [apps.yazi-config]
 type = "stow"
 package = "yazi"
 category = "config"
-profiles = ["developer"]
+profiles = ["hacker", "server"]
 description = "Yazi file manager config"
