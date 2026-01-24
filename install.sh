@@ -261,6 +261,9 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
         AVAILABLE_PROFILES+=("$line")
     done < <(get_profiles)
 
+    # Add extras option at the end
+    AVAILABLE_PROFILES+=("➕ Install individual apps")
+
     if command -v gum &> /dev/null; then
         # Use gum for interactive selection (minimal pre-selected)
         while IFS= read -r line; do
@@ -283,27 +286,35 @@ if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
         done
     fi
 
-    if [[ ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
+    # Check if user selected "Install individual apps"
+    if [[ " ${SELECTED_PROFILES[*]} " == *"➕ Install individual apps"* ]]; then
+        EXTRAS_MODE=true
+        SELECTED_PROFILES=()  # Clear - not installing profiles
+    fi
+
+    if [[ ${#SELECTED_PROFILES[@]} -eq 0 && "$EXTRAS_MODE" != true ]]; then
         echo "No profiles selected. Using default: minimal"
         SELECTED_PROFILES=("minimal")
     fi
 
-    # Show summary
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Installation Summary"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "Selected profiles: ${SELECTED_PROFILES[*]}"
-    echo ""
+    # Show summary (skip for extras mode)
+    if [[ "$EXTRAS_MODE" != true ]]; then
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  Installation Summary"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "Selected profiles: ${SELECTED_PROFILES[*]}"
+        echo ""
 
-    # Confirm
-    if command -v gum &> /dev/null; then
-        gum confirm "Proceed with installation?" || exit 0
-    else
-        read -p "Proceed? (y/n) " -n 1 -r
-        echo
-        [[ ! $REPLY =~ ^[Yy]$ ]] && exit 0
+        # Confirm
+        if command -v gum &> /dev/null; then
+            gum confirm "Proceed with installation?" || exit 0
+        else
+            read -p "Proceed? (y/n) " -n 1 -r
+            echo
+            [[ ! $REPLY =~ ^[Yy]$ ]] && exit 0
+        fi
     fi
 fi
 
