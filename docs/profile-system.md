@@ -8,7 +8,7 @@ This document describes the centralized app registry and 5-profile system used i
 
 The dotfiles use a **centralized app registry** (`apps.toml`) that defines ALL applications with profile assignments. This enables:
 
-1. **5 profiles** - minimal, daily, developer, hacker, server
+1. **5 profiles** - minimal, standard, developer, hacker, server
 2. **Single source of truth** - one file to manage all apps
 3. **Easy maintenance** - add/remove apps from profiles by editing arrays
 4. **Custom profiles** - create new profiles by adding names to arrays
@@ -20,7 +20,7 @@ The dotfiles use a **centralized app registry** (`apps.toml`) that defines ALL a
 | Profile | Target User | Description |
 |---------|-------------|-------------|
 | **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
-| **daily** | Regular users (spouse/family) | Browsing, media, basic productivity |
+| **standard** | Regular users (spouse/family) | Browsing, media, basic productivity |
 | **developer** | GUI-centric developers | VSCode, Zed, Warp, mouse-driven workflow |
 | **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
 | **server** | SSH/remote admin | Terminal-only tools for headless servers |
@@ -28,7 +28,7 @@ The dotfiles use a **centralized app registry** (`apps.toml`) that defines ALL a
 ### Profile Progression
 
 ```
-minimal → daily → developer → hacker
+minimal → standard → developer → hacker
                            ↘
                              server (branched for headless)
 ```
@@ -72,7 +72,7 @@ All apps are defined in `apps.toml` with profile assignments:
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 description = "GPU-accelerated terminal emulator"
 
 [apps.warp]
@@ -109,7 +109,7 @@ description = "Tmux multiplexer config"
 
 ## Profile Comparison Matrix
 
-| Category | minimal | daily | developer | hacker | server |
+| Category | minimal | standard | developer | hacker | server |
 |----------|:-------:|:-----:|:---------:|:------:|:------:|
 | **Target User** | Fresh Mac | Friends/family | Developers | Power users | Remote/SSH |
 | **Window Mgmt** | macOS | macOS | macOS | Aerospace | N/A |

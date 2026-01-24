@@ -17,9 +17,10 @@ Before running these dotfiles on your main machine, test them safely in a macOS 
 2. Install Xcode Command Line Tools (for Git)
 3. Create a restore point (duplicate the VM or use disposable mode)
 4. Configure SSH keys for GitHub access
-5. Clone: `git clone git@github.com:username/dotfiles.git ~/dotfiles`
-6. Run: `./install.sh`
-7. Verify everything works, then apply to your real machine
+5. Clone: `git clone git@github.com:fodurrr/dotfiles.git ~/dotfiles`
+6. cd ~/dotfiles
+7. Run: `./install.sh`
+8. Verify everything works, then apply to your real machine
 
 For complete setup instructions including UTM/IPSW prep, snapshots, and troubleshooting, see **[docs/vm-testing.md](docs/vm-testing.md)**.
 
@@ -47,7 +48,7 @@ This dotfiles repo uses a **profile-based installation system** to support diffe
 | Profile | Target User | Description |
 |---------|-------------|-------------|
 | **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
-| **daily** | Regular users (spouse/family) | Browsing, media, basic productivity |
+| **standard** | Regular users (spouse/family) | Browsing, media, basic productivity |
 | **developer** | GUI-centric developers | VSCode, Warp, mouse-driven workflow |
 | **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
 | **server** | SSH/remote admin | Terminal-only tools for headless servers |
@@ -62,8 +63,8 @@ This dotfiles repo uses a **profile-based installation system** to support diffe
 ./install.sh --profile=hacker
 
 # Install multiple profiles (merged together)
-./install.sh --profile=developer --profile=daily
-./install.sh -p developer -p daily
+./install.sh --profile=developer --profile=standard
+./install.sh -p developer -p standard
 
 # Clean mode: remove apps not in selected profile(s)
 ./install.sh --profile=hacker --clean
@@ -106,7 +107,7 @@ When switching between profiles, there are two modes:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Scenario: User has "daily" installed, wants "hacker"           │
+│  Scenario: User has "standard" installed, wants "hacker"           │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  Daily profile:             Hacker profile:                      │
@@ -119,11 +120,11 @@ When switching between profiles, there are two modes:
 │                                                                  │
 ├─────────────────────────────────────────────────────────────────┤
 │  MERGE: ./install.sh --profile=hacker                           │
-│  Result: Everything from daily + Aerospace, tmux, neovim,       │
+│  Result: Everything from standard + Aerospace, tmux, neovim,       │
 │          AI CLI tools (everything combined)                     │
 ├─────────────────────────────────────────────────────────────────┤
 │  CLEAN: ./install.sh --profile=hacker --clean                   │
-│  Result: Hacker apps only (daily-only items removed)            │
+│  Result: Hacker apps only (standard-only items removed)            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -196,7 +197,7 @@ All apps are defined in a single `apps.toml` file with profile assignments:
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "daily", "developer", "hacker"]
+profiles = ["minimal", "standard", "developer", "hacker"]
 
 [apps.warp]
 type = "cask"
@@ -250,8 +251,8 @@ Then run: `./install.sh --profile=my-new-profile`
 
 ### App Distribution Matrix
 
-| App | minimal | daily | developer | hacker | server |
-|-----|:-------:|:-----:|:---------:|:------:|:------:|
+| App | minimal | standard | developer | hacker | server |
+|-----|:-------:|:--------:|:---------:|:------:|:------:|
 | **ESSENTIALS** |
 | Raycast | ✓ | ✓ | ✓ | ✓ | |
 | Bitwarden | ✓ | ✓ | ✓ | ✓ | |
@@ -270,7 +271,6 @@ Then run: `./install.sh --profile=my-new-profile`
 | Warp | | | ✓ | ✓ | |
 | tmux | | | | ✓ | ✓ |
 | **DICTATION** |
-| SuperWhisper | | | ✓ | ✓ | |
 | Aqua Voice | | | ✓ | ✓ | |
 | **AI DESKTOP** |
 | Claude Desktop | | ✓ | ✓ | ✓ | |
@@ -284,6 +284,15 @@ Then run: `./install.sh --profile=my-new-profile`
 | gemini-cli | | | | ✓ | |
 | **PRODUCTIVITY** |
 | Obsidian | | ✓ | ✓ | ✓ | |
+| KeyCastr | | | ✓ | ✓ | |
+| **CLOUD STORAGE** |
+| OneDrive | | ✓ | ✓ | ✓ | |
+| Google Drive | | ✓ | ✓ | ✓ | |
+| **OFFICE** |
+| Microsoft Office | | ✓ | | | |
+| Microsoft Teams | | ✓ | | | |
+| **COMMUNICATION** |
+| WhatsApp | | ✓ | ✓ | ✓ | |
 | **MEDIA** |
 | Spotify | | ✓ | ✓ | ✓ | |
 | VLC | | ✓ | ✓ | ✓ | |
@@ -293,8 +302,13 @@ Then run: `./install.sh --profile=my-new-profile`
 | **VIRTUALIZATION** |
 | OrbStack | | | ✓ | ✓ | |
 | UTM | | | ✓ | ✓ | |
+| **DATABASE** |
+| TablePlus | | | ✓ | ✓ | |
 | **DISPLAY** |
 | MonitorControl | | ✓ | ✓ | ✓ | |
+| **UTILITIES** |
+| Setapp | | ✓ | ✓ | ✓ | |
+| Keymapp | | | | ✓ | |
 | **CLI TOOLS** |
 | starship | ✓ | ✓ | ✓ | ✓ | ✓ |
 | eza | ✓ | ✓ | ✓ | ✓ | ✓ |
@@ -322,11 +336,11 @@ Then run: `./install.sh --profile=my-new-profile`
 
 **Minimal (~16 apps):** Bare essentials - Raycast, Bitwarden, Firefox, Chrome, Ghostty, basic CLI tools
 
-**Daily (~23 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, MonitorControl
+**Standard (~32 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, MonitorControl, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Setapp
 
-**Developer (~48 apps):** GUI-centric devs - adds Warp, Zed, VSCode, dictation tools, dev AI apps, OrbStack, UTM, all runtimes
+**Developer (~52 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, TablePlus, all runtimes
 
-**Hacker (~55 apps):** Terminal-centric - adds Aerospace, tmux, Neovim, yazi, lazygit, btop, ncdu, AI CLI tools
+**Hacker (~60 apps):** Terminal-centric - adds Aerospace, tmux, Neovim, yazi, lazygit, btop, ncdu, AI CLI tools, Keymapp
 
 **Server (~20 apps):** Headless/SSH - terminal tools only, no GUI apps
 
@@ -340,7 +354,11 @@ Then run: `./install.sh --profile=my-new-profile`
 
 # Install specific profile(s)
 ./install.sh --profile=hacker
-./install.sh -p minimal -p daily
+./install.sh -p minimal -p standard
+
+# Install individual apps (extras mode)
+# Select "➕ Install individual apps" from the menu, or:
+./install.sh --extras
 
 # Clean install (removes apps not in profile)
 ./install.sh --profile=hacker --clean
