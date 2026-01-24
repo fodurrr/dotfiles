@@ -24,7 +24,17 @@
     }
   },
 
+  // Vim-sneak - jump to two-character sequence (replaces deprecated enable_vim_sneak setting)
+  {
+    "context": "vim_mode == normal || vim_mode == visual",
+    "bindings": {
+      "s": "vim::PushSneak",
+      "shift-s": "vim::PushSneakBackward"
+    }
+  },
+
   // Split windows - match Neovim ss/sv
+  // Note: Zed handles key sequences - ss/sv work alongside single s for sneak
   {
     "context": "Editor && vim_mode == normal",
     "bindings": {

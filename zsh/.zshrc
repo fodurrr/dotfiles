@@ -121,3 +121,6 @@ if command -v sv &>/dev/null; then
     alias svx='sv codex'
     alias svg='sv gemini'
 fi
+
+# opencode
+export PATH=/Users/fodurrr/.opencode/bin:$PATH

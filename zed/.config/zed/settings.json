@@ -11,22 +11,49 @@
   "vim": {
     "use_system_clipboard": "always",
     "use_smartcase_find": true,
-    "enable_vim_sneak": true
   },
 
-  // Line numbers - match Neovim
-  "relative_line_numbers": true,
+  // Line numbers - match Neovim (use string enum, not boolean)
+  "relative_line_numbers": "enabled",
 
   // UI - clean vim experience
   "scrollbar": { "show": "never" },
   "cursor_blink": false,
   "scroll_beyond_last_line": "off",
 
+  // Session - restore all windows/tabs on startup (use Cmd+Q to quit, not red X)
+  "restore_on_startup": "last_session",
+
   // Theme - Catppuccin Mocha (matches Ghostty, tmux, Neovim)
+  // Use object format for proper light/dark mode support
   "theme": {
     "mode": "dark",
     "dark": "Catppuccin Mocha",
-    "light": "Catppuccin Latte"
+    "light": "One Light",
+  },
+
+  // Auto-install required extensions on first run
+  "auto_install_extensions": {
+    "catppuccin": true,
+  },
+
+  // Vim mode indicator colors - fix visibility on Catppuccin Mocha
+  // Per-mode background + foreground from schema.rs (vim.mode.text doesn't exist)
+  "theme_overrides": {
+    "Catppuccin Mocha": {
+      "vim.normal.background": "#89b4fa",
+      "vim.normal.foreground": "#1e1e2e",
+      "vim.insert.background": "#a6e3a1",
+      "vim.insert.foreground": "#1e1e2e",
+      "vim.visual.background": "#cba6f7",
+      "vim.visual.foreground": "#1e1e2e",
+      "vim.visual_line.background": "#cba6f7",
+      "vim.visual_line.foreground": "#1e1e2e",
+      "vim.visual_block.background": "#cba6f7",
+      "vim.visual_block.foreground": "#1e1e2e",
+      "vim.replace.background": "#f38ba8",
+      "vim.replace.foreground": "#1e1e2e",
+    },
   },
 
   // Font - match Ghostty
@@ -35,12 +62,12 @@
 
   // Terminal - match shell setup
   "terminal": {
-    "shell": { "program": "zsh" },
-    "font_family": "JetBrainsMono Nerd Font"
+    "shell": "system",
+    "font_family": "JetBrainsMono Nerd Font",
   },
 
   // Panels - right-side project panel
   "project_panel": {
-    "dock": "right"
-  }
+    "dock": "left",
+  },
 }

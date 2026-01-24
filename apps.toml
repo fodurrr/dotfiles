@@ -9,7 +9,7 @@
 #   tap         = homebrew tap (optional, for casks from taps)
 #   version     = version string (optional, for mise tools)
 #   category    = grouping for documentation
-#   profiles    = ["minimal", "standard", "developer", ...]
+#   profiles    = ["minimal", "daily", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
 #   description = short description for summary display (<40 chars)
 #
@@ -169,11 +169,11 @@ category = "productivity"
 profiles = ["minimal", "daily", "developer", "hacker"]
 description = "Open-source password manager"
 
-[apps.superwhisper]
-type = "cask"
-category = "productivity"
-profiles = ["developer", "hacker"]
-description = "Offline AI dictation (Recommended)"
+#[apps.superwhisper]
+#type = "cask"
+#category = "productivity"
+#profiles = ["developer", "hacker"]
+#description = "Offline AI dictation (Recommended)"
 
 [apps.aqua-voice]
 type = "cask"
@@ -182,11 +182,11 @@ profiles = ["developer", "hacker"]
 description = "Real-time voice dictation"
 
 # Alternative dictation tool - uncomment if preferred over SuperWhisper/Aqua Voice
-# [apps.wispr-flow]
-# type = "cask"
-# category = "productivity"
-# profiles = ["developer", "hacker"]
-# description = "AI voice assistant (alternative)"
+[apps.wispr-flow]
+type = "cask"
+category = "productivity"
+profiles = ["developer", "hacker"]
+description = "AI voice assistant (alternative)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MEDIA & COMMUNICATION
