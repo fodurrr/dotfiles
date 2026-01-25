@@ -32,3 +32,6 @@ export ICON_WIFI=""
 
 # Help
 export ICON_HELP="?"
+
+# Keyboard
+export ICON_KEYBOARD="⌨"

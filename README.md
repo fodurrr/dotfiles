@@ -70,10 +70,18 @@ The cheatsheet includes: Vim modes & motions, Ghostty, Zsh, Zed, file navigation
 
 Both **developer** and **hacker** profiles include a Voyager keyboard layout viewer to quickly reference your layer mappings.
 
-| Shortcut | Action |
-|----------|--------|
-| `ctrl + alt + k` | Show all 3 layers stacked vertically |
-| `ctrl + alt + shift + k` | Cycle through layers one at a time |
+### Hacker Profile
+
+| Method | How to Use |
+|--------|------------|
+| **Keyboard** | Press `alt + ;` (all layers) or `alt + :` (cycle mode) |
+| **Mouse** | Click the keyboard icon (⌨) in SketchyBar |
+
+### Developer Profile
+
+| Method | How to Use |
+|--------|------------|
+| **Raycast** | Open Raycast and search for "Keyboard Layout" |
 
 **In cycle mode:**
 - `SPACE` or `n` - Next layer
