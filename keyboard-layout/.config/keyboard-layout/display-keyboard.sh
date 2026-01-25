@@ -46,9 +46,11 @@ if [[ "$MODE" == "cycle" ]]; then
 else
     # All mode: show all 3 layers stacked (sized to fit without scrolling)
     clear
-    chafa --center=on --size=80x16 "${CONFIG_DIR}/layer-1.png"
-    chafa --center=on --size=80x16 "${CONFIG_DIR}/layer-2.png"
-    chafa --center=on --size=80x16 "${CONFIG_DIR}/layer-3.png"
+    sleep 0.1  # Let terminal settle for proper centering
+    COLS=$(tput cols)
+    chafa --center=on --size="${COLS}x16" "${CONFIG_DIR}/layer-1.png"
+    chafa --center=on --size="${COLS}x16" "${CONFIG_DIR}/layer-2.png"
+    chafa --center=on --size="${COLS}x16" "${CONFIG_DIR}/layer-3.png"
 
     # Wait for q to quit
     while true; do
