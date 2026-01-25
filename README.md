@@ -351,6 +351,7 @@ Then run: `./install.sh --profile=my-new-profile`
 | lazygit | | | | ✓ | ✓ |
 | btop | | | | ✓ | ✓ |
 | ncdu | | | | ✓ | ✓ |
+| chafa | | | ✓ | ✓ | |
 | **RUNTIMES** |
 | Node | | | ✓ | ✓ | |
 | Python | | | ✓ | ✓ | |
@@ -373,6 +374,7 @@ Then run: `./install.sh --profile=my-new-profile`
 | nvim-config | | | | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
+| keyboard-layout-config | | | ✓ | ✓ | |
 
 ### Profile Summaries
 

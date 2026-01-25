@@ -178,6 +178,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | lazygit | | | | ✓ | ✓ |
 | btop | | | | ✓ | ✓ |
 | ncdu | | | | ✓ | ✓ |
+| chafa | | | ✓ | ✓ | |
 | **RUNTIMES** |
 | Node | | | ✓ | ✓ | |
 | Python | | | ✓ | ✓ | |
@@ -200,6 +201,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | nvim-config | | | | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
+| keyboard-layout-config | | | ✓ | ✓ | |
 
 ## Common Commands
 

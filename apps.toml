@@ -421,6 +421,12 @@ category = "cli"
 profiles = ["hacker", "server"]
 description = "Disk usage analyzer"
 
+[apps.chafa]
+type = "brew"
+category = "cli"
+profiles = ["developer", "hacker"]
+description = "Terminal image viewer"
+
 [apps.lazygit]
 type = "mise"
 category = "cli"
@@ -567,4 +573,11 @@ package = "cheatsheet"
 category = "config"
 profiles = ["developer", "hacker"]
 description = "Keyboard shortcuts cheatsheet"
+
+[apps.keyboard-layout-config]
+type = "stow"
+package = "keyboard-layout"
+category = "config"
+profiles = ["developer", "hacker"]
+description = "Voyager keyboard layout viewer"
 
