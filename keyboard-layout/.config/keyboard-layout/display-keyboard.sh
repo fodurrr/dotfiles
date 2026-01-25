@@ -46,9 +46,9 @@ if [[ "$MODE" == "cycle" ]]; then
 else
     # All mode: show all 3 layers stacked (sized to fit without scrolling)
     clear
-    chafa --size=80x12 "${CONFIG_DIR}/layer-1.png"
-    chafa --size=80x12 "${CONFIG_DIR}/layer-2.png"
-    chafa --size=80x12 "${CONFIG_DIR}/layer-3.png"
+    chafa --size=80x16 "${CONFIG_DIR}/layer-1.png"
+    chafa --size=80x16 "${CONFIG_DIR}/layer-2.png"
+    chafa --size=80x16 "${CONFIG_DIR}/layer-3.png"
 
     # Wait for q to quit
     while true; do
