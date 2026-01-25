@@ -17,3 +17,4 @@ cursor-style-blink = false
 # Behaviour
 copy-on-select = true
 scrollback-limit = 10485760
+quit-after-last-window-closed = true
