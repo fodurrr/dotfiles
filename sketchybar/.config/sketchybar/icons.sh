@@ -29,3 +29,6 @@ export ICON_CPU=""
 export ICON_MEMORY=""
 export ICON_BATTERY=""
 export ICON_WIFI=""
+
+# Help
+export ICON_HELP="?"
