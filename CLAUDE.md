@@ -178,6 +178,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | lazygit | | | | ✓ | ✓ |
 | btop | | | | ✓ | ✓ |
 | ncdu | | | | ✓ | ✓ |
+| chafa | | | ✓ | ✓ | |
 | **RUNTIMES** |
 | Node | | | ✓ | ✓ | |
 | Python | | | ✓ | ✓ | |
@@ -200,6 +201,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | nvim-config | | | | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
+| keyboard-layout-config | | | ✓ | ✓ | |
 
 ## Common Commands
 
@@ -344,6 +346,8 @@ cd ~/dotfiles && stow newtool
 ├── tmux/                        # Stow package → ~/.config/tmux/
 ├── nvim/                        # Stow package → ~/.config/nvim/
 ├── yazi/                        # Stow package → ~/.config/yazi/
+├── cheatsheet/                  # Stow package → ~/.config/cheatsheet/
+├── keyboard-layout/             # Stow package → ~/.config/keyboard-layout/
 ├── docs/                        # Documentation
 ├── README.md                    # User documentation
 └── CLAUDE.md                    # This file
