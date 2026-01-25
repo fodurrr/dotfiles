@@ -153,6 +153,7 @@ type = "brew"
 tap = "FelixKratz/formulae"
 category = "status-bar"
 profiles = ["hacker"]
+service = true
 description = "Customizable macOS status bar"
 
 [apps.sketchybar-config]

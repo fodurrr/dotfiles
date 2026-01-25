@@ -664,13 +664,23 @@ if [[ "$EXTRAS_MODE" == true ]]; then
                 tap=$(get_app_prop "$app_key" "tap")
                 [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
                 log_success "Installing $name (cask)..."
-                brew install --cask "$name" && add_to_summary INSTALLED "$name" "$app_key"
+                if brew install --cask "$name"; then
+                    add_to_summary INSTALLED "$name" "$app_key"
+                    # Start service if configured
+                    service=$(get_app_prop "$app_key" "service")
+                    [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
+                fi
                 ;;
             brew)
                 tap=$(get_app_prop "$app_key" "tap")
                 [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
                 log_success "Installing $name (brew)..."
-                brew install "$name" && add_to_summary INSTALLED "$name" "$app_key"
+                if brew install "$name"; then
+                    add_to_summary INSTALLED "$name" "$app_key"
+                    # Start service if configured
+                    service=$(get_app_prop "$app_key" "service")
+                    [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
+                fi
                 ;;
             mise)
                 install_mise_app "$app_key"
@@ -744,10 +754,16 @@ for app_key in $(get_all_apps); do
                 else
                     add_to_summary SKIPPED "$name" "$app_key"
                 fi
+                # Ensure service is running if configured
+                service=$(get_app_prop "$app_key" "service")
+                [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
             else
                 log_success "Installing $name..."
                 if brew install --cask "$name"; then
                     add_to_summary INSTALLED "$name" "$app_key"
+                    # Start service if configured
+                    service=$(get_app_prop "$app_key" "service")
+                    [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
                 else
                     log_error "Failed to install $name"
                 fi
@@ -764,6 +780,8 @@ for app_key in $(get_all_apps); do
         if [[ "$type" == "brew" ]]; then
             name=$(get_app_prop "$app_key" "name")
             [[ -z "$name" ]] && name="$app_key"
+            tap=$(get_app_prop "$app_key" "tap")
+            [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
 
             # Check if already installed
             if brew list 2>/dev/null | grep -q "^${name}$"; then
@@ -775,10 +793,16 @@ for app_key in $(get_all_apps); do
                 else
                     add_to_summary SKIPPED "$name" "$app_key"
                 fi
+                # Ensure service is running if configured
+                service=$(get_app_prop "$app_key" "service")
+                [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
             else
                 log_success "Installing $name..."
                 if brew install "$name"; then
                     add_to_summary INSTALLED "$name" "$app_key"
+                    # Start service if configured
+                    service=$(get_app_prop "$app_key" "service")
+                    [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
                 else
                     log_error "Failed to install $name"
                 fi
