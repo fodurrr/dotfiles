@@ -568,9 +568,3 @@ category = "config"
 profiles = ["developer", "hacker"]
 description = "Keyboard shortcuts cheatsheet"
 
-[apps.raycast-scripts]
-type = "stow"
-package = "raycast"
-category = "config"
-profiles = ["developer", "hacker"]
-description = "Raycast script commands"

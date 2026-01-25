@@ -87,7 +87,7 @@ The dotfiles support five profiles with different philosophies:
 | OrbStack | | | ✓ | ✓ | | Docker/Linux VMs |
 | UTM | | | ✓ | ✓ | | macOS/Windows VMs |
 | **Display** |||||||
-| MonitorControl | | ✓ | ✓ | ✓ | | DDC brightness/volume |
+| BetterDisplay | | ✓ | ✓ | ✓ | | DDC control, virtual monitors |
 | **Window Management** |||||||
 | Aerospace | | | | ✓ | | i3-like tiling WM |
 | **Fonts** |||||||
