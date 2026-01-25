@@ -421,6 +421,13 @@ category = "cli"
 profiles = ["hacker", "server"]
 description = "Disk usage analyzer"
 
+[apps.timg]
+type = "brew"
+category = "cli"
+profiles = ["developer", "hacker"]
+description = "Terminal image viewer with centering"
+
+# Note: chafa kept for compatibility, but timg is preferred for keyboard layout viewer
 [apps.chafa]
 type = "brew"
 category = "cli"
