@@ -53,6 +53,11 @@ defaults=(
 sketchybar --default "${defaults[@]}"
 
 # =============================================================================
+# Events (register BEFORE items subscribe to them)
+# =============================================================================
+sketchybar --add event aerospace_workspace_change
+
+# =============================================================================
 # Left Items
 # =============================================================================
 source "$ITEM_DIR/apple.sh"
@@ -64,11 +69,10 @@ source "$ITEM_DIR/aerospace.sh"
 source "$ITEM_DIR/calendar.sh"
 
 # =============================================================================
-# Events
-# =============================================================================
-sketchybar --add event aerospace_workspace_change
-
-# =============================================================================
 # Finalize
 # =============================================================================
 sketchybar --update
+
+# Trigger initial workspace highlight
+FOCUSED=$(aerospace list-workspaces --focused 2>/dev/null || echo "1")
+sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE="$FOCUSED"
