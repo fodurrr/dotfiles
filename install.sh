@@ -509,14 +509,8 @@ install_mise_app() {
     [[ -z "$version" ]] && version="latest"
 
     # Check if already installed with correct version
-    # IMPORTANT: mise list shows "(missing)" for tools that are configured but not installed
-    local mise_status=$(mise list "$name" 2>/dev/null | head -1)
-    local installed_version=""
-
-    # Only consider it installed if NOT marked as (missing)
-    if [[ -n "$mise_status" ]] && [[ "$mise_status" != *"(missing)"* ]]; then
-        installed_version=$(echo "$mise_status" | awk '{print $2}')
-    fi
+    # Use 'mise current' to get the active version (handles multiple installed versions correctly)
+    local installed_version=$(mise current "$name" 2>/dev/null)
 
     if [[ -n "$installed_version" ]]; then
         if [[ "$version" == "latest" ]]; then
@@ -760,14 +754,16 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Layer 1: Homebrew"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Collect and add taps
+# Collect and add taps (deduplicated)
 echo "Adding taps..."
+TAPPED_LIST="|"
 for app_key in $(get_all_apps); do
     if app_in_profile "$app_key"; then
         tap=$(get_app_prop "$app_key" "tap")
-        if [[ -n "$tap" ]]; then
+        if [[ -n "$tap" && "$TAPPED_LIST" != *"|$tap|"* ]]; then
             echo "   Tapping: $tap"
             brew tap "$tap" 2>/dev/null || true
+            TAPPED_LIST="${TAPPED_LIST}${tap}|"
         fi
     fi
 done
