@@ -360,14 +360,25 @@ Then run: `./install.sh --profile=my-new-profile`
 | Erlang | | | ✓ | ✓ | |
 | Elixir | | | ✓ | ✓ | |
 | **STOW CONFIGS** |
+| git-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| zsh-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| sheldon-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| starship-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ghostty-config | ✓ | ✓ | ✓ | ✓ | |
+| mise-config | ✓ | ✓ | ✓ | ✓ | ✓ |
+| zed-config | | | ✓ | ✓ | |
+| aerospace-config | | | | ✓ | |
+| sketchybar-config | | | | ✓ | |
+| tmux-config | | | | ✓ | ✓ |
+| nvim-config | | | | ✓ | ✓ |
+| yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
-| raycast-scripts | | | ✓ | ✓ | |
 
 ### Profile Summaries
 
 **Minimal (~16 apps):** Bare essentials - Raycast, Bitwarden, Firefox, Chrome, Ghostty, basic CLI tools
 
-**Standard (~32 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, MonitorControl, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Setapp
+**Standard (~32 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, BetterDisplay, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Setapp
 
 **Developer (~52 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, TablePlus, all runtimes
 

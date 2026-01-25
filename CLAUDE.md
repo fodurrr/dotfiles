@@ -195,11 +195,11 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | mise-config | ✓ | ✓ | ✓ | ✓ | ✓ |
 | zed-config | | | ✓ | ✓ | |
 | aerospace-config | | | | ✓ | |
+| sketchybar-config | | | | ✓ | |
 | tmux-config | | | | ✓ | ✓ |
 | nvim-config | | | | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
-| raycast-scripts | | | ✓ | ✓ | |
 
 ## Common Commands
 
