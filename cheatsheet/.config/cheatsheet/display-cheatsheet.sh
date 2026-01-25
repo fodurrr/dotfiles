@@ -3,19 +3,24 @@
 # Display Cheatsheet
 # =============================================================================
 # Displays the appropriate cheatsheet based on profile (hacker vs developer).
-# Floats, resizes, and centers window using Aerospace + Raycast.
+# Modes: default - floating, centered window
+#        tiled   - managed by Aerospace (can be tiled alongside other windows)
 # =============================================================================
 
 # Ensure Homebrew and mise tools are in PATH
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 
-# Float this window using Aerospace
-aerospace layout floating 2>/dev/null
+MODE="${1:-floating}"
 
-# Resize AND center window using Raycast (requires Raycast Pro subscription)
-# Aerospace cannot center/resize floating windows natively
-open -g 'raycast://customWindowManagementCommand?position=center&absoluteWidth=1120&absoluteHeight=1150' 2>/dev/null
-sleep 0.2
+if [[ "$MODE" != "tiled" ]]; then
+    # Float this window using Aerospace
+    aerospace layout floating 2>/dev/null
+
+    # Resize AND center window using Raycast (requires Raycast Pro subscription)
+    # Aerospace cannot center/resize floating windows natively
+    open -g 'raycast://customWindowManagementCommand?position=center&absoluteWidth=1120&absoluteHeight=1150' 2>/dev/null
+    sleep 0.2
+fi
 
 CONFIG_DIR="${HOME}/.config/cheatsheet"
 

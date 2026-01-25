@@ -82,6 +82,7 @@ alt-shift-space = 'layout floating tiling'
 
 # --- Cheatsheet (alt-? = alt-shift-slash) ---
 alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh'
+ctrl-alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh tiled'
 
 # --- Keyboard Layout Viewer (Voyager) ---
 alt-semicolon = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh'
