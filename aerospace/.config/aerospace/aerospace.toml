@@ -80,9 +80,8 @@ alt-shift-5 = 'move-node-to-workspace 5'
 # --- Float toggle ---
 alt-shift-space = 'layout floating tiling'
 
-# --- Cheatsheet (alt+? = tiled, ctrl+alt+? = centered) ---
+# --- Cheatsheet (alt+?) ---
 alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh tiled'
-ctrl-alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh'
 
 # --- Keyboard Layout Viewer (Voyager) ---
 alt-semicolon = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh'

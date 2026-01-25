@@ -2,9 +2,7 @@
 # =============================================================================
 # SketchyBar Help Icon
 # =============================================================================
-# Centered help icon - click to show keyboard shortcuts cheatsheet
-# Click: tiled window (managed by Aerospace)
-# Shift-click: floating centered window
+# Click to show keyboard shortcuts cheatsheet (tiled, managed by Aerospace)
 # =============================================================================
 
 sketchybar --add item help center \
@@ -18,4 +16,4 @@ sketchybar --add item help center \
                  background.height=24 \
                  background.padding_left=8 \
                  background.padding_right=8 \
-                 click_script="if [[ \$MODIFIER == 'shift' ]]; then ~/.config/cheatsheet/show-cheatsheet.sh; else ~/.config/cheatsheet/show-cheatsheet.sh tiled; fi"
+                 click_script="~/.config/cheatsheet/show-cheatsheet.sh tiled"
