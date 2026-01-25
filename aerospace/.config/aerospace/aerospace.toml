@@ -84,8 +84,8 @@ alt-shift-space = 'layout floating tiling'
 alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh'
 
 # --- Keyboard Layout Viewer (Voyager) ---
-ctrl-alt-k = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh'
-ctrl-alt-shift-k = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh cycle'
+alt-semicolon = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh'
+alt-shift-semicolon = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh cycle'
 
 # =============================================================================
 # Window Rules
