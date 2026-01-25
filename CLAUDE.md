@@ -158,8 +158,9 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | UTM | | | ✓ | ✓ | |
 | **DATABASE** |
 | TablePlus | | | ✓ | ✓ | |
-| **DISPLAY** |
-| MonitorControl | | ✓ | ✓ | ✓ | |
+| **DISPLAY** (choose one) |
+| BetterDisplay | | ✓ | ✓ | ✓ | |
+| ~~MonitorControl~~ | | ✓ | ✓ | ✓ | |
 | **UTILITIES** |
 | Setapp | | ✓ | ✓ | ✓ | |
 | Keymapp | | | | ✓ | |

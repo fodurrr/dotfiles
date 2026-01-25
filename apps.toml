@@ -300,12 +300,20 @@ description = "Native database GUI client"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DISPLAY
+# Note: Install only ONE of the following (BetterDisplay recommended)
 # ─────────────────────────────────────────────────────────────────────────────
-[apps.monitorcontrol]
+[apps.betterdisplay]
 type = "cask"
 category = "display"
 profiles = ["standard", "developer", "hacker"]
-description = "External display brightness"
+description = "Advanced display management with virtual monitors"
+
+# Alternative: simpler brightness control only (uncomment to use instead)
+# [apps.monitorcontrol]
+# type = "cask"
+# category = "display"
+# profiles = ["standard", "developer", "hacker"]
+# description = "External display brightness (lighter alternative to BetterDisplay)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # UTILITIES
