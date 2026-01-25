@@ -346,6 +346,8 @@ cd ~/dotfiles && stow newtool
 ├── tmux/                        # Stow package → ~/.config/tmux/
 ├── nvim/                        # Stow package → ~/.config/nvim/
 ├── yazi/                        # Stow package → ~/.config/yazi/
+├── cheatsheet/                  # Stow package → ~/.config/cheatsheet/
+├── keyboard-layout/             # Stow package → ~/.config/keyboard-layout/
 ├── docs/                        # Documentation
 ├── README.md                    # User documentation
 └── CLAUDE.md                    # This file

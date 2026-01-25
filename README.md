@@ -66,6 +66,24 @@ The cheatsheet includes: Vim modes & motions, Ghostty, Zsh, Zed, file navigation
 
 ---
 
+## Keyboard Layout Viewer (Voyager)
+
+Both **developer** and **hacker** profiles include a Voyager keyboard layout viewer to quickly reference your layer mappings.
+
+| Shortcut | Action |
+|----------|--------|
+| `ctrl + alt + k` | Show all 3 layers stacked vertically |
+| `ctrl + alt + shift + k` | Cycle through layers one at a time |
+
+**In cycle mode:**
+- `SPACE` or `n` - Next layer
+- `p` - Previous layer
+- `q` - Quit
+
+> **Note:** Layer images are stored in `~/.config/keyboard-layout/`. To update them, export new screenshots from Keymapp and replace `layer-1.png`, `layer-2.png`, `layer-3.png`.
+
+---
+
 ## Profile System
 
 This dotfiles repo uses a **profile-based installation system** to support different use cases.
@@ -207,6 +225,8 @@ When switching between profiles, there are two modes:
 ├── tmux/                        # Stow package → ~/.config/tmux/
 ├── nvim/                        # Stow package → ~/.config/nvim/
 ├── yazi/                        # Stow package → ~/.config/yazi/
+├── cheatsheet/                  # Stow package → ~/.config/cheatsheet/
+├── keyboard-layout/             # Stow package → ~/.config/keyboard-layout/
 ├── docs/                        # Documentation
 ├── README.md
 └── CLAUDE.md                    # AI assistant instructions
