@@ -8,6 +8,9 @@
 # Start AeroSpace at login
 start-at-login = true
 
+# Default to tiled layout (not accordion/fullscreen)
+default-root-container-layout = 'tiles'
+
 # Start JankyBorders for active window highlighting (yellow, more visible)
 after-startup-command = [
     'exec-and-forget borders active_color=0xfff9e2af inactive_color=0xff313244 width=6.0'
