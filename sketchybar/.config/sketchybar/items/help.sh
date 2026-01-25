@@ -16,4 +16,4 @@ sketchybar --add item help center \
                  background.height=24 \
                  background.padding_left=8 \
                  background.padding_right=8 \
-                 click_script="open -g 'raycast://script-commands/show-cheatsheet'"
+                 click_script="~/.config/cheatsheet/sketchybar-trigger.sh"
