@@ -781,8 +781,10 @@ for app_key in $(get_all_apps); do
             name=$(get_app_prop "$app_key" "name")
             [[ -z "$name" ]] && name="$app_key"
 
-            # Check if already installed
-            if brew list --cask 2>/dev/null | grep -q "^${name}$"; then
+            # Check if already installed (via Homebrew OR in /Applications)
+            app_name=$(get_cask_app_name "$name")
+            if brew list --cask 2>/dev/null | grep -q "^${name}$" || \
+               { [[ -n "$app_name" ]] && [[ -d "/Applications/$app_name" ]]; }; then
                 # Check if outdated
                 if brew outdated --cask 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
