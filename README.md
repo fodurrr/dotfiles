@@ -39,6 +39,33 @@ The script will show an interactive menu to select which profile(s) to install. 
 
 ---
 
+## Keyboard Shortcuts Cheatsheet
+
+Both **developer** and **hacker** profiles include a built-in keyboard shortcuts reference that you can open at any time.
+
+### Hacker Profile
+
+| Method | How to Use |
+|--------|------------|
+| **Keyboard** | Press `alt + ?` (alt-shift-slash) |
+| **Mouse** | Click the help icon (?) in the center of SketchyBar |
+
+The cheatsheet includes: Vim modes & motions, Aerospace, Ghostty, Yazi, Zsh, Zed, tmux, file navigation (eza), and Git aliases.
+
+### Developer Profile
+
+| Method | How to Use |
+|--------|------------|
+| **Raycast** | Open Raycast and search for "Keybinds" or "Cheatsheet" |
+
+The cheatsheet includes: Vim modes & motions, Ghostty, Zsh, Zed, file navigation (eza), and Git aliases.
+
+> **Tip:** Press `q` to close the cheatsheet window.
+
+> **Note:** The cheatsheet window centering and sizing requires **Raycast Pro** subscription. Without Pro, the window will still open but may not be properly centered.
+
+---
+
 ## Profile System
 
 This dotfiles repo uses a **profile-based installation system** to support different use cases.
@@ -331,6 +358,9 @@ Then run: `./install.sh --profile=my-new-profile`
 | pnpm | | | ✓ | ✓ | |
 | Erlang | | | ✓ | ✓ | |
 | Elixir | | | ✓ | ✓ | |
+| **STOW CONFIGS** |
+| cheatsheet-config | | | ✓ | ✓ | |
+| raycast-scripts | | | ✓ | ✓ | |
 
 ### Profile Summaries
 

@@ -197,6 +197,8 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | tmux-config | | | | ✓ | ✓ |
 | nvim-config | | | | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
+| cheatsheet-config | | | ✓ | ✓ | |
+| raycast-scripts | | | ✓ | ✓ | |
 
 ## Common Commands
 

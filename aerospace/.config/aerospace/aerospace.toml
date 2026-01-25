@@ -8,6 +8,11 @@
 # Start AeroSpace at login
 start-at-login = true
 
+# Start JankyBorders for active window highlighting (yellow, more visible)
+after-startup-command = [
+    'exec-and-forget borders active_color=0xfff9e2af inactive_color=0xff313244 width=6.0'
+]
+
 # Mouse follows focus
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
@@ -71,3 +76,11 @@ alt-shift-5 = 'move-node-to-workspace 5'
 
 # --- Float toggle ---
 alt-shift-space = 'layout floating tiling'
+
+# --- Cheatsheet (alt-? = alt-shift-slash) ---
+alt-shift-slash = 'exec-and-forget /Users/fodurrr/.config/cheatsheet/show-cheatsheet.sh'
+
+# =============================================================================
+# Window Rules
+# =============================================================================
+# (Cheatsheet window floats itself via aerospace command in display script)
