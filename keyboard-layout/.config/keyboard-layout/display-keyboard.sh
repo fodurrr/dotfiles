@@ -44,26 +44,11 @@ if [[ "$MODE" == "cycle" ]]; then
         esac
     done
 else
-    # All mode: show all layers stacked vertically
-    # Display directly (no pipe) so chafa graphics render properly
-    # Press q to quit, scroll with terminal
+    # All mode: show all 3 layers stacked (sized to fit without scrolling)
     clear
-    echo ""
-    echo "  Voyager Keyboard Layout - All Layers  [q=quit]"
-    echo ""
-
-    for i in 1 2 3; do
-        case $i in
-            1) layer_name="Main" ;;
-            2) layer_name="Code" ;;
-            3) layer_name="NumPad" ;;
-        esac
-
-        echo "  ═══ Layer ${i}: ${layer_name} ═══"
-        echo ""
-        chafa "${CONFIG_DIR}/layer-${i}.png"
-        echo ""
-    done
+    chafa --size=80x12 "${CONFIG_DIR}/layer-1.png"
+    chafa --size=80x12 "${CONFIG_DIR}/layer-2.png"
+    chafa --size=80x12 "${CONFIG_DIR}/layer-3.png"
 
     # Wait for q to quit
     while true; do
