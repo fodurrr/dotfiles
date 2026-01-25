@@ -331,8 +331,9 @@ Then run: `./install.sh --profile=my-new-profile`
 | UTM | | | ✓ | ✓ | |
 | **DATABASE** |
 | TablePlus | | | ✓ | ✓ | |
-| **DISPLAY** |
-| MonitorControl | | ✓ | ✓ | ✓ | |
+| **DISPLAY** (choose one) |
+| BetterDisplay | | ✓ | ✓ | ✓ | |
+| ~~MonitorControl~~ | | ✓ | ✓ | ✓ | |
 | **UTILITIES** |
 | Setapp | | ✓ | ✓ | ✓ | |
 | Keymapp | | | | ✓ | |
