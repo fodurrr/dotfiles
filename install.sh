@@ -667,6 +667,8 @@ if [[ "$EXTRAS_MODE" == true ]]; then
                 brew install --cask "$name" && add_to_summary INSTALLED "$name" "$app_key"
                 ;;
             brew)
+                tap=$(get_app_prop "$app_key" "tap")
+                [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
                 log_success "Installing $name (brew)..."
                 brew install "$name" && add_to_summary INSTALLED "$name" "$app_key"
                 ;;
@@ -807,6 +809,7 @@ if [[ "$CLEAN_MODE" == true ]]; then
                     echo "cask \"$name\"" >> "$TEMP_BREWFILE"
                     ;;
                 brew)
+                    [[ -n "$tap" ]] && echo "tap \"$tap\"" >> "$TEMP_BREWFILE"
                     echo "brew \"$name\"" >> "$TEMP_BREWFILE"
                     ;;
             esac

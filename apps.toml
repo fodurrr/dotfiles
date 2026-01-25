@@ -149,7 +149,7 @@ profiles = ["hacker"]
 description = "i3-like tiling window manager"
 
 [apps.sketchybar]
-type = "cask"
+type = "brew"
 tap = "FelixKratz/formulae"
 category = "status-bar"
 profiles = ["hacker"]
