@@ -98,7 +98,6 @@ IGNORE_LIST=(
 # =============================================================================
 stow_enforce() {
     local package="$1"
-    local target_home="$HOME"
 
     # Build Ignore Flags for Stow
     local stow_opts=()
@@ -107,25 +106,37 @@ stow_enforce() {
     done
     stow_opts+=("--ignore=\.bak$")
 
-    # Find Files and backup conflicts
-    find "$package" -type f \( -name ".DS_Store" -o -name ".gitkeep" -o -name "*.bak" \) -prune -o -type f -print 2>/dev/null | while read source_file; do
-        local relative_path="${source_file#$package/}"
-        local target_path="$target_home/$relative_path"
+    # Back up entire directories that would conflict with stow
+    # Check .config/* directories
+    for top_dir in "$package"/.config/*/; do
+        if [[ -d "$top_dir" ]]; then
+            local rel_path="${top_dir#$package/}"
+            rel_path="${rel_path%/}"
+            local target_path="$HOME/$rel_path"
 
-        if [ -e "$target_path" ]; then
-            if [ -L "$target_path" ]; then
-                continue
+            # If target is a real directory (not symlink), back it up entirely
+            if [[ -d "$target_path" && ! -L "$target_path" ]]; then
+                echo "      Backing up: $target_path"
+                mv "$target_path" "${target_path}.bak"
             fi
-            resolved_path="$(cd "$(dirname "$target_path")" 2>/dev/null && pwd -P)/$(basename "$target_path")"
-            if [[ "$resolved_path" == "$PWD"/* ]]; then
-                continue
-            fi
-            echo "      Backing up: ~/$relative_path"
-            mv "$target_path" "${target_path}.bak"
         fi
     done
 
-    # Create Links
+    # Check dotfiles in home directory (.[!.]*)
+    for top_file in "$package"/.[!.]*; do
+        if [[ -e "$top_file" ]]; then
+            local rel_path="${top_file#$package/}"
+            local target_path="$HOME/$rel_path"
+
+            # If target exists and is not a symlink, back it up
+            if [[ -e "$target_path" && ! -L "$target_path" ]]; then
+                echo "      Backing up: $target_path"
+                mv "$target_path" "${target_path}.bak"
+            fi
+        fi
+    done
+
+    # Create Links - stow will succeed now that conflicts are backed up
     local stow_output
     if ! stow_output=$(stow --restow --target="$HOME" "${stow_opts[@]}" "$package" 2>&1); then
         log_error "Failed to link $package"
