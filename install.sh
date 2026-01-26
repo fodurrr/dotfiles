@@ -23,7 +23,7 @@ SELECTED_PROFILES=()
 CLEAN_MODE=false
 INTERACTIVE=true
 EXTRAS_MODE=false
-DOTFILES_DIR=~/dotfiles
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 
 # Installation tracking for summary (newline+pipe delimited: "name|description\nname|description")
