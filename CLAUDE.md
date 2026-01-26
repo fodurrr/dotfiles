@@ -415,6 +415,13 @@ git merge origin/feature/your-branch-name
 
 For merging to main environment (not VM): `source ~/.zshrc` if zsh changes were made, or create a PR at `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`
 
+## Documentation Searches
+
+When searching for tool/app documentation online:
+- **NEVER include year constraints** (like "2025" or "2026") - docs change rapidly
+- **Prefer official sites** using `site:` operator (e.g., `site:ghostty.org`)
+- **Search for "latest" or "current"** documentation, not dated versions
+
 ## Asking Questions & Making Recommendations
 
 When presenting options to the user:
