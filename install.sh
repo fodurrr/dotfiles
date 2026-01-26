@@ -106,15 +106,15 @@ stow_enforce() {
     done
     stow_opts+=("--ignore=\.bak$")
 
-    # Back up entire directories that would conflict with stow
-    # Check .config/* directories
+    # Back up .config/* subdirectories that would conflict with stow
     for top_dir in "$package"/.config/*/; do
         if [[ -d "$top_dir" ]]; then
-            local rel_path="${top_dir#$package/}"
-            rel_path="${rel_path%/}"
-            local target_path="$HOME/$rel_path"
+            local dir_name
+            dir_name="${top_dir#$package/.config/}"
+            dir_name="${dir_name%/}"
+            local target_path="$HOME/.config/$dir_name"
 
-            # If target is a real directory (not symlink), back it up entirely
+            # If target is a real directory (not symlink), back it up
             if [[ -d "$target_path" && ! -L "$target_path" ]]; then
                 echo "      Backing up: $target_path"
                 mv "$target_path" "${target_path}.bak"
@@ -122,11 +122,15 @@ stow_enforce() {
         fi
     done
 
-    # Check dotfiles in home directory (.[!.]*)
+    # Back up home directory dotfiles (e.g., .gitconfig, .zshrc)
+    # Skip .config - it's handled above
     for top_file in "$package"/.[!.]*; do
         if [[ -e "$top_file" ]]; then
-            local rel_path="${top_file#$package/}"
-            local target_path="$HOME/$rel_path"
+            local file_name="${top_file##*/}"
+            # Skip .config directory - handled by the loop above
+            [[ "$file_name" == ".config" ]] && continue
+
+            local target_path="$HOME/$file_name"
 
             # If target exists and is not a symlink, back it up
             if [[ -e "$target_path" && ! -L "$target_path" ]]; then
