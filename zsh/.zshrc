@@ -123,4 +123,4 @@ if command -v sv &>/dev/null; then
 fi
 
 # opencode
-export PATH=/Users/fodurrr/.opencode/bin:$PATH
+export PATH="${HOME}/.opencode/bin:$PATH"
