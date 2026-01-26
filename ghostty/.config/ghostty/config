@@ -9,6 +9,7 @@ window-padding-balance = true
 
 # Colors / theme
 theme = "Catppuccin Mocha"
+split-divider-color = #f9e2af
 
 # Cursor
 cursor-style = block
