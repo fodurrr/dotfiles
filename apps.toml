@@ -292,11 +292,17 @@ description = "Virtual machine manager"
 # ─────────────────────────────────────────────────────────────────────────────
 # DATABASE
 # ─────────────────────────────────────────────────────────────────────────────
-[apps.tableplus]
+[apps.beekeeper-studio]
 type = "cask"
 category = "database"
 profiles = ["developer", "hacker"]
-description = "Native database GUI client"
+description = "Open source SQL editor and database manager"
+
+[apps.pgadmin4]
+type = "cask"
+category = "database"
+profiles = ["developer", "hacker"]
+description = "Official PostgreSQL admin GUI"
 
 [apps.postgresql]
 type = "brew"

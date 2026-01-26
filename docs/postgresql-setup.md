@@ -51,7 +51,11 @@ psql -U postgres -c "\l"
 psql -U postgres -c "\du"
 ```
 
-## TablePlus Connection
+## GUI Client Connection
+
+Both Beekeeper Studio and pgAdmin4 are included in developer/hacker profiles.
+
+### Connection Settings
 
 | Field | Value |
 |-------|-------|
@@ -61,6 +65,17 @@ psql -U postgres -c "\du"
 | User | `postgres` |
 | Password | `postgres` |
 | Database | `postgres` |
+
+### Beekeeper Studio (Recommended)
+1. Open Beekeeper Studio
+2. Click "New Connection" → Select "Postgres"
+3. Enter settings above → "Connect"
+
+### pgAdmin4
+1. Open pgAdmin4
+2. Right-click "Servers" → "Register" → "Server"
+3. General tab: Name = `Local Dev`
+4. Connection tab: Enter settings above → "Save"
 
 ## Phoenix/Ecto Config
 

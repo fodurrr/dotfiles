@@ -358,7 +358,8 @@ Then run: `./install.sh --profile=my-new-profile`
 | OrbStack | | | ✓ | ✓ | |
 | UTM | | | ✓ | ✓ | |
 | **DATABASE** |
-| TablePlus | | | ✓ | ✓ | |
+| Beekeeper Studio | | | ✓ | ✓ | |
+| pgAdmin4 | | | ✓ | ✓ | |
 | **DISPLAY** (choose one) |
 | BetterDisplay | | ✓ | ✓ | ✓ | |
 | ~~MonitorControl~~ | | ✓ | ✓ | ✓ | |
@@ -410,7 +411,7 @@ Then run: `./install.sh --profile=my-new-profile`
 
 **Standard (~32 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, BetterDisplay, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Setapp
 
-**Developer (~52 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, TablePlus, all runtimes
+**Developer (~52 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, Beekeeper Studio, pgAdmin4, all runtimes
 
 **Hacker (~60 apps):** Terminal-centric - adds Aerospace, tmux, Neovim, yazi, lazygit, btop, ncdu, AI CLI tools, Keymapp
 

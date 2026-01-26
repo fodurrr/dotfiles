@@ -157,7 +157,8 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | OrbStack | | | ✓ | ✓ | |
 | UTM | | | ✓ | ✓ | |
 | **DATABASE** |
-| TablePlus | | | ✓ | ✓ | |
+| Beekeeper Studio | | | ✓ | ✓ | |
+| pgAdmin4 | | | ✓ | ✓ | |
 | **DISPLAY** (choose one) |
 | BetterDisplay | | ✓ | ✓ | ✓ | |
 | ~~MonitorControl~~ | | ✓ | ✓ | ✓ | |
