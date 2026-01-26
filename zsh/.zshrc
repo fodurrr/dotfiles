@@ -5,6 +5,9 @@
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
+# PostgreSQL (Homebrew keg-only formula)
+[[ -d /opt/homebrew/opt/postgresql@17/bin ]] && export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+
 # Editor Defaults (fallback chain: Zed → VSCode → nvim → vim)
 if command -v zed &>/dev/null; then
     export EDITOR='zed --wait'
