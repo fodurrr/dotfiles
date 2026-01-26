@@ -106,6 +106,14 @@ stow_enforce() {
     done
     stow_opts+=("--ignore=\.bak$")
 
+    # Helper: Check if symlink points to this dotfiles repo
+    is_our_symlink() {
+        local link_target
+        link_target="$(readlink "$1" 2>/dev/null)"
+        # Check if it points to this dotfiles directory (absolute or relative)
+        [[ "$link_target" == *"$DOTFILES_DIR"* ]] || [[ "$link_target" == *"/dev/dotfiles/"* ]]
+    }
+
     # Back up .config/* subdirectories that would conflict with stow
     for top_dir in "$package"/.config/*/; do
         if [[ -d "$top_dir" ]]; then
@@ -114,8 +122,14 @@ stow_enforce() {
             dir_name="${dir_name%/}"
             local target_path="$HOME/.config/$dir_name"
 
-            # If target is a real directory (not symlink), back it up
-            if [[ -d "$target_path" && ! -L "$target_path" ]]; then
+            if [[ -L "$target_path" ]]; then
+                # Symlink exists - remove if it points elsewhere
+                if ! is_our_symlink "$target_path"; then
+                    echo "      Removing old symlink: $target_path"
+                    rm "$target_path"
+                fi
+            elif [[ -d "$target_path" ]]; then
+                # Real directory - back it up
                 echo "      Backing up: $target_path"
                 mv "$target_path" "${target_path}.bak"
             fi
@@ -132,15 +146,21 @@ stow_enforce() {
 
             local target_path="$HOME/$file_name"
 
-            # If target exists and is not a symlink, back it up
-            if [[ -e "$target_path" && ! -L "$target_path" ]]; then
+            if [[ -L "$target_path" ]]; then
+                # Symlink exists - remove if it points elsewhere
+                if ! is_our_symlink "$target_path"; then
+                    echo "      Removing old symlink: $target_path"
+                    rm "$target_path"
+                fi
+            elif [[ -e "$target_path" ]]; then
+                # Real file - back it up
                 echo "      Backing up: $target_path"
                 mv "$target_path" "${target_path}.bak"
             fi
         fi
     done
 
-    # Create Links - stow will succeed now that conflicts are backed up
+    # Create Links - stow will succeed now that conflicts are handled
     local stow_output
     if ! stow_output=$(stow --restow --target="$HOME" "${stow_opts[@]}" "$package" 2>&1); then
         log_error "Failed to link $package"
