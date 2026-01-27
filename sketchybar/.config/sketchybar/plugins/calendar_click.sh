@@ -2,7 +2,8 @@
 # =============================================================================
 # Calendar Click Plugin
 # =============================================================================
-# Opens Calendar app when calendar item is clicked
+# Opens Itsycal popup when calendar item is clicked
+# Itsycal provides a lightweight floating calendar for date checking
 # =============================================================================
 
-open -a "Calendar"
+osascript -e 'tell application "Itsycal" to activate'

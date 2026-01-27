@@ -352,6 +352,12 @@ category = "utilities"
 profiles = ["hacker"]
 description = "ZSA keyboard configuration"
 
+[apps.itsycal]
+type = "cask"
+category = "utilities"
+profiles = ["hacker"]
+description = "Lightweight menu bar calendar"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FONTS
 # ─────────────────────────────────────────────────────────────────────────────
