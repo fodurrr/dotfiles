@@ -2,14 +2,15 @@
 # =============================================================================
 # SketchyBar Keyboard Layout Icon
 # =============================================================================
-# Centered keyboard icon - click to show Voyager keyboard layout viewer
+# Centered keyboard icon in Mauve (#cba6f7)
+# Click to show Voyager keyboard layout viewer
 # =============================================================================
 
 sketchybar --add item keyboard center \
            --set keyboard \
                  icon="$ICON_KEYBOARD" \
-                 icon.font="SF Pro:Bold:14.0" \
-                 icon.color=$ICON_COLOR \
+                 icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                 icon.color=$MAUVE \
                  label.drawing=off \
                  background.color=$ITEM_BG_COLOR \
                  background.corner_radius=5 \

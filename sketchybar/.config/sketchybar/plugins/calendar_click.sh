@@ -1,9 +1,8 @@
 #!/bin/bash
 # =============================================================================
-# Calendar Plugin
+# Calendar Click Plugin
 # =============================================================================
-# Updates the calendar item with current date and time
-# Format: Mon 27 Jan 14:30
+# Opens Calendar app when calendar item is clicked
 # =============================================================================
 
-sketchybar --set $NAME label="$(date '+%a %d %b %H:%M')"
+open -a "Calendar"

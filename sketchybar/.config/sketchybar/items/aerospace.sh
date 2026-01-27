@@ -2,18 +2,18 @@
 # =============================================================================
 # Aerospace Workspaces Item
 # =============================================================================
-# Displays workspace indicators that sync with Aerospace
+# Displays workspace indicators 1-3 in center
 # Click to switch workspaces
 # =============================================================================
 
-WORKSPACES=(1 2 3 4 5)
+WORKSPACES=(1 2 3)
 
 for sid in "${WORKSPACES[@]}"; do
-    sketchybar --add item space.$sid left \
+    sketchybar --add item space.$sid center \
         --subscribe space.$sid aerospace_workspace_change \
         --set space.$sid \
             icon="$sid" \
-            icon.font="SF Pro:Bold:12.0" \
+            icon.font="JetBrainsMono Nerd Font:Bold:12.0" \
             icon.padding_left=8 \
             icon.padding_right=8 \
             background.color=$ITEM_BG_COLOR \

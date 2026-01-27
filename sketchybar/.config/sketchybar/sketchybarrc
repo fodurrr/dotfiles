@@ -2,7 +2,8 @@
 # =============================================================================
 # SketchyBar Configuration
 # =============================================================================
-# Catppuccin Mocha theme with Aerospace integration
+# Catppuccin Mocha theme with JetBrains Mono Nerd Font
+# Layout: Apple+App (left) | Workspaces+Help (center) | Stats+Date (right)
 # =============================================================================
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
@@ -11,6 +12,13 @@ ITEM_DIR="$CONFIG_DIR/items"
 # Load colors and icons
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/icons.sh"
+
+# =============================================================================
+# Start System Stats Provider (sketchybar-system-stats)
+# =============================================================================
+# Kill any existing instance and start fresh
+killall sketchybar-system-stats 2>/dev/null
+sketchybar-system-stats &
 
 # =============================================================================
 # Bar Appearance
@@ -35,9 +43,9 @@ sketchybar --bar "${bar[@]}"
 # Default Item Settings
 # =============================================================================
 defaults=(
-    icon.font="SF Pro:Semibold:14.0"
+    icon.font="JetBrainsMono Nerd Font:Bold:14.0"
     icon.color=$ICON_COLOR
-    label.font="SF Pro:Semibold:13.0"
+    label.font="JetBrainsMono Nerd Font:Medium:13.0"
     label.color=$TEXT_COLOR
     background.color=$ITEM_BG_COLOR
     background.corner_radius=5
@@ -56,23 +64,30 @@ sketchybar --default "${defaults[@]}"
 # Events (register BEFORE items subscribe to them)
 # =============================================================================
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event system_stats           # From sketchybar-system-stats
 
 # =============================================================================
 # Left Items
 # =============================================================================
 source "$ITEM_DIR/apple.sh"
-source "$ITEM_DIR/aerospace.sh"
+source "$ITEM_DIR/front_app.sh"
 
 # =============================================================================
 # Center Items
 # =============================================================================
+source "$ITEM_DIR/aerospace.sh"
 source "$ITEM_DIR/keyboard.sh"
 source "$ITEM_DIR/help.sh"
 
 # =============================================================================
-# Right Items
+# Right Items (added right-to-left, so calendar first = rightmost)
 # =============================================================================
 source "$ITEM_DIR/calendar.sh"
+source "$ITEM_DIR/network.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/volume.sh"
+source "$ITEM_DIR/memory.sh"
+source "$ITEM_DIR/cpu.sh"
 
 # =============================================================================
 # Finalize
