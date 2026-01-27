@@ -35,6 +35,43 @@
   // Auto-install required extensions on first run
   "auto_install_extensions": {
     "catppuccin": true,
+    "catppuccin-icons": true,
+    "elixir": true,
+    "toml": true,
+    "html": true,
+    "emmet": true,
+    "sql": true,
+    "dockerfile": true,
+    "make": true,
+    "git-firefly": true,
+    "unocss": true
+  },
+
+  // Language configurations
+  "languages": {
+    "Elixir": {
+      "language_servers": ["elixir-ls"],
+      "format_on_save": "on"
+    },
+    "HEEX": {
+      "language_servers": [
+        "elixir-ls",
+        "!tailwindcss-language-server",
+        "unocss",
+        "emmet-language-server"
+      ]
+    }
+  },
+
+  // LSP settings
+  "lsp": {
+    "elixir-ls": {
+      "settings": {
+        "dialyzerEnabled": false,
+        "fetchDeps": false,
+        "suggestSpecs": true
+      }
+    }
   },
 
   // Vim mode indicator colors - fix visibility on Catppuccin Mocha
