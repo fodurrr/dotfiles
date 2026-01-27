@@ -7,7 +7,7 @@
 
 apple_logo=(
     icon=$ICON_APPLE
-    icon.font="JetBrainsMono Nerd Font:Bold:16.0"
+    icon.font="SF Pro:Black:16.0"
     icon.color=$ACCENT_COLOR
     padding_right=15
     label.drawing=off
