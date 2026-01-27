@@ -37,6 +37,7 @@
     "catppuccin": true,
     "catppuccin-icons": true,
     "elixir": true,
+    "ruby": true,
     "toml": true,
     "html": true,
     "emmet": true,
