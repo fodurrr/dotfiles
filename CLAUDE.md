@@ -6,17 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 1. **NEVER commit, merge, or push to `main` branch** - Always work in a feature branch
 2. **After completing work**, commit AND push to GitHub so the user can test in their VM
-3. **Provide VM testing commands** after every push:
+3. **Provide VM testing commands** after every push, using the **actual repo path** from your working directory:
 
 ```bash
-# Run these commands in your VM to test the changes:
-cd ~/dotfiles
-git fetch origin
-git merge origin/<branch-name>
+# Example format (replace <repo-path> with actual path like ~/dev/dotfiles):
+cd <repo-path>
+git pull
 ./install.sh --profile=<profile>
 ```
 
-Replace `<branch-name>` with the actual branch name (e.g., `feature/profiles-system`).
+**IMPORTANT:** Always use the actual repo path from your current working directory, not a hardcoded path.
 
 ---
 
@@ -230,8 +229,8 @@ bash scripts/curl-installs.sh
 # Update mise tools only (Layer 3)
 mise install
 
-# Stow a single package (Layer 2)
-cd ~/dotfiles && stow <package>
+# Stow a single package (Layer 2) - run from repo root
+stow <package>
 
 # Reload shell
 source ~/.zshrc
@@ -322,15 +321,16 @@ profiles = ["hacker", "server"]
 ### Creating a Stow Package
 
 ```bash
-mkdir -p ~/dotfiles/newtool/.config/newtool
-mv ~/.config/newtool/config ~/dotfiles/newtool/.config/newtool/
-cd ~/dotfiles && stow newtool
+# From the repo root (e.g., ~/dev/dotfiles):
+mkdir -p newtool/.config/newtool
+mv ~/.config/newtool/config newtool/.config/newtool/
+stow newtool
 ```
 
 ## Directory Structure
 
 ```
-~/dotfiles/
+dotfiles/                        # Repo root (location varies, check working directory)
 ├── apps.toml                    # Centralized app registry
 ├── Brewfile.bootstrap           # Infrastructure packages only
 ├── install.sh                   # Two-phase installer
@@ -403,18 +403,18 @@ This ensures the repo is always the source of truth without data loss.
 
 When working in a Conductor workspace (separate git worktree), changes are isolated from the main dotfiles directory.
 
-**IMPORTANT: After every commit, push to GitHub and provide VM testing commands** (see Git Workflow Rules at top of this file).
+**IMPORTANT: After every commit, push to GitHub and provide testing commands** (see Git Workflow Rules at top of this file).
 
-Example reminder to give the user:
+When providing commands, always use the **actual repo path** from your current working directory. Example:
 ```
-Changes pushed! To test in your VM:
-cd ~/dotfiles
-git fetch origin
-git merge origin/feature/your-branch-name
-./install.sh --profile=standard
+Changes merged to main! To apply:
+cd /Users/fodurrr/dev/dotfiles   # Use actual path from working directory
+git pull
+./install.sh --profile=hacker
+brew services restart sketchybar  # If sketchybar changes
 ```
 
-For merging to main environment (not VM): `source ~/.zshrc` if zsh changes were made, or create a PR at `https://github.com/fodurrr/dotfiles/pull/new/<branch-name>`
+For shell changes: `source ~/.zshrc`
 
 ## Documentation Searches
 
