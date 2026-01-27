@@ -2,6 +2,7 @@
 # =============================================================================
 # SketchyBar Help Icon
 # =============================================================================
+# Centered book icon in Peach (#fab387)
 # Click: tiled cheatsheet (managed by Aerospace)
 # Ctrl+click: centered cheatsheet (floating)
 # =============================================================================
@@ -9,8 +10,8 @@
 sketchybar --add item help center \
            --set help \
                  icon="$ICON_HELP" \
-                 icon.font="SF Pro:Bold:14.0" \
-                 icon.color=$ICON_COLOR \
+                 icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                 icon.color=$PEACH \
                  label.drawing=off \
                  background.color=$ITEM_BG_COLOR \
                  background.corner_radius=5 \

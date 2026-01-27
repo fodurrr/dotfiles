@@ -156,6 +156,14 @@ profiles = ["hacker"]
 service = true
 description = "Customizable macOS status bar"
 
+[apps.sketchybar-system-stats]
+type = "brew"
+tap = "joncrangle/tap"
+category = "status-bar"
+profiles = ["hacker"]
+depends_on = "sketchybar"
+description = "Event-driven system stats for SketchyBar"
+
 [apps.borders]
 type = "brew"
 tap = "FelixKratz/formulae"
