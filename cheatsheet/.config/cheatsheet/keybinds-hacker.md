@@ -1,21 +1,6 @@
 [1;35m# Keyboard Shortcuts Cheatsheet[0m                                                            Press [1;33mq[0m to close
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
-│  [1;36mHELIX MODES[0m  (selection-first editing)             │  [1;36mHELIX MOTIONS[0m                                      │
-├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
-│  [1;33mEsc[0m         Normal mode                            │  [1;33mh/j/k/l[0m     Left / Down / Up / Right               │
-│  [1;33mi[0m           Insert before selection                │  [1;33mw/b[0m         Select next/prev word                  │
-│  [1;33ma[0m           Insert after selection                 │  [1;33me[0m           Select to end of word                  │
-│  [1;33mo/O[0m         New line below/above                   │  [1;33m0/$[0m         Start / End of line                    │
-│  [1;33mv[0m           Select mode (extend)                   │  [1;33mgg/ge[0m       Top / Bottom of file                   │
-│  [1;33mx[0m           Select line (repeat to extend)         │  [1;33mCtrl+d/u[0m    Page down / Page up                    │
-│  [1;33mSpace[0m       Open picker/command palette            │  [1;33m/pattern[0m    Search forward                         │
-│  [1;33m:[0m           Command mode                           │  [1;33mn/N[0m         Next / Previous match                  │
-│  [1;33m:w :q :wq[0m   Save / Quit / Save+Quit                │  [1;33mf/t{char}[0m   Find/Till character                    │
-│  [1;33md/c/y[0m       Delete/Change/Yank selection           │  [1;33mmm/ms/md[0m    Surround add/select/delete             │
-└─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
 │  [1;36mAEROSPACE[0m (Window Manager)                         │  [1;36mGHOSTTY[0m (Terminal)                                 │
 ├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
 │  [1;33malt + h/j/k/l[0m       Focus left/down/up/right       │  [1;33mcmd + t[0m           New tab                          │
@@ -28,6 +13,21 @@
 │  [1;33malt + shift + space[0m Toggle floating/tiling         │  [1;33mcmd + k[0m           Clear screen                     │
 │  [1;33malt + -/=[0m           Resize smaller/larger          │  [1;33mcmd + ,[0m           Open config                      │
 │  [1;33malt + ?[0m             Show this cheatsheet           │                                                     │
+└─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
+│  [1;36mHELIX MODES[0m  (selection-first editing)             │  [1;36mHELIX MOTIONS[0m                                      │
+├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
+│  [1;33mEsc[0m         Normal mode                            │  [1;33mh/j/k/l[0m     Left / Down / Up / Right               │
+│  [1;33mi[0m           Insert before selection                │  [1;33mw/b[0m         Select next/prev word                  │
+│  [1;33ma[0m           Insert after selection                 │  [1;33me[0m           Select to end of word                  │
+│  [1;33mo/O[0m         New line below/above                   │  [1;33m0/$[0m         Start / End of line                    │
+│  [1;33mv[0m           Select mode (extend)                   │  [1;33mgg/ge[0m       Top / Bottom of file                   │
+│  [1;33mx[0m           Select line (repeat to extend)         │  [1;33mCtrl+d/u[0m    Page down / Page up                    │
+│  [1;33mSpace[0m       Open picker/command palette            │  [1;33m/pattern[0m    Search forward                         │
+│  [1;33m:[0m           Command mode                           │  [1;33mn/N[0m         Next / Previous match                  │
+│  [1;33m:w :q :wq[0m   Save / Quit / Save+Quit                │  [1;33mf/t{char}[0m   Find/Till character                    │
+│  [1;33md/c/y[0m       Delete/Change/Yank selection           │  [1;33mmm/ms/md[0m    Surround add/select/delete             │
 └─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
