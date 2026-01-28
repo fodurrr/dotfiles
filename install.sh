@@ -544,8 +544,18 @@ install_mise_app() {
     [[ -z "$version" ]] && version="latest"
 
     # Check if already installed with correct version
-    # Use 'mise current' to get the active version (handles multiple installed versions correctly)
-    local installed_version=$(mise current "$name" 2>/dev/null)
+    # IMPORTANT: mise current returns configured version even if not installed!
+    # We must check mise ls for "(missing)" to detect actual installation state
+    local installed_version=""
+    local ls_output=$(mise ls "$name" 2>/dev/null)
+    # Only trust mise current if tool exists AND is not marked as missing
+    if [[ -n "$ls_output" ]]; then
+        if [[ "$ls_output" == *"(missing)"* ]]; then
+            : # Tool is in config but not installed - leave installed_version empty
+        else
+            installed_version=$(mise current "$name" 2>/dev/null)
+        fi
+    fi
 
     if [[ -n "$installed_version" ]]; then
         if [[ "$version" == "latest" ]]; then
