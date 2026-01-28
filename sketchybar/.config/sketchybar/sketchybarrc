@@ -81,6 +81,14 @@ sketchybar --add bracket system_controls apple.logo preferences activity \
         background.corner_radius=5 \
         background.height=28
 
+# Spacer between system_controls and front_app
+sketchybar --add item spacer.left1 left \
+    --set spacer.left1 \
+        width=10 \
+        background.drawing=off \
+        icon.drawing=off \
+        label.drawing=off
+
 source "$ITEM_DIR/front_app.sh"
 
 # Bracket around front app (separate from system controls)
@@ -94,7 +102,25 @@ sketchybar --add bracket front_app_bracket front_app \
 # Center Items
 # =============================================================================
 source "$ITEM_DIR/lock.sh"
+
+# Spacer between lock and workspaces
+sketchybar --add item spacer.center1 center \
+    --set spacer.center1 \
+        width=10 \
+        background.drawing=off \
+        icon.drawing=off \
+        label.drawing=off
+
 source "$ITEM_DIR/aerospace.sh"
+
+# Spacer between workspaces and tools
+sketchybar --add item spacer.center2 center \
+    --set spacer.center2 \
+        width=10 \
+        background.drawing=off \
+        icon.drawing=off \
+        label.drawing=off
+
 source "$ITEM_DIR/keyboard.sh"
 source "$ITEM_DIR/help.sh"
 

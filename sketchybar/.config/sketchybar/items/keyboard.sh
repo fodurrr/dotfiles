@@ -14,7 +14,6 @@ sketchybar --add item keyboard center \
                  icon.color=$MAUVE \
                  icon.padding_left=8 \
                  icon.padding_right=8 \
-                 padding_left=10 \
                  label.drawing=off \
                  background.drawing=off \
                  click_script="~/.config/keyboard-layout/show-keyboard.sh"

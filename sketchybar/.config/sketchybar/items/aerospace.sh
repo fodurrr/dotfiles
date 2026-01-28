@@ -9,13 +9,6 @@
 WORKSPACES=(1 2 3)
 
 for sid in "${WORKSPACES[@]}"; do
-    # Add extra padding_left to first workspace for gap after lock bracket
-    if [ "$sid" = "1" ]; then
-        EXTRA_PADDING="padding_left=10"
-    else
-        EXTRA_PADDING=""
-    fi
-
     sketchybar --add item space.$sid center \
         --subscribe space.$sid aerospace_workspace_change \
         --set space.$sid \
@@ -29,8 +22,7 @@ for sid in "${WORKSPACES[@]}"; do
             background.drawing=on \
             label.drawing=off \
             click_script="aerospace workspace $sid" \
-            script="$CONFIG_DIR/plugins/aerospacer.sh $sid" \
-            $EXTRA_PADDING
+            script="$CONFIG_DIR/plugins/aerospacer.sh $sid"
 done
 
 # Add a bracket around workspaces
