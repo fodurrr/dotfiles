@@ -4,6 +4,7 @@
 # =============================================================================
 # Centered keyboard icon in Mauve (#cba6f7)
 # Click to show Voyager keyboard layout viewer
+# Part of tools_bracket (with help)
 # =============================================================================
 
 sketchybar --add item keyboard center \
@@ -11,10 +12,8 @@ sketchybar --add item keyboard center \
                  icon="$ICON_KEYBOARD" \
                  icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
                  icon.color=$MAUVE \
+                 icon.padding_left=8 \
+                 icon.padding_right=8 \
                  label.drawing=off \
-                 background.color=$ITEM_BG_COLOR \
-                 background.corner_radius=5 \
-                 background.height=24 \
-                 background.padding_left=8 \
-                 background.padding_right=8 \
+                 background.drawing=off \
                  click_script="~/.config/keyboard-layout/show-keyboard.sh"

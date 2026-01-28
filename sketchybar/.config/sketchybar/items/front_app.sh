@@ -13,6 +13,7 @@ front_app=(
     label.color=$BASE
     label.padding_left=8
     label.padding_right=8
+    padding_left=10
     background.color=$HIGHLIGHT
     background.corner_radius=5
     background.height=24
