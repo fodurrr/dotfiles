@@ -63,6 +63,14 @@ install_claude_code() {
     log_info "  Running official installer..."
     curl -fsSL https://claude.ai/install.sh | bash
 
+    # Move to Homebrew bin for sandvault access, symlink back for PATH compatibility
+    if [[ -f "$HOME/.local/bin/claude" ]] && [[ ! -L "$HOME/.local/bin/claude" ]]; then
+        log_info "  Moving to /opt/homebrew/bin/ for sandvault compatibility..."
+        mv "$HOME/.local/bin/claude" /opt/homebrew/bin/claude
+        ln -sf /opt/homebrew/bin/claude "$HOME/.local/bin/claude"
+        log_info "  Created symlink: ~/.local/bin/claude → /opt/homebrew/bin/claude"
+    fi
+
     if command -v claude &>/dev/null; then
         local new_version
         new_version=$(claude --version 2>/dev/null || echo "unknown")
