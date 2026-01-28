@@ -27,8 +27,8 @@ export ICON_VOLUME_LOW=""         # nf-fa-volume_down (U+F027)
 export ICON_VOLUME_MUTE=""        # nf-fa-volume_off (U+F026)
 
 # System status
-export ICON_CPU=""                # nf-oct-cpu (U+F078)
-export ICON_MEMORY=""             # nf-fa-microchip (U+F2DB)
+export ICON_CPU="󰍛"               # nf-md-cpu-64-bit (U+F035B)
+export ICON_MEMORY="󰘚"            # nf-md-memory (U+F061A)
 export ICON_BATTERY=""            # nf-fa-battery_full (U+F240)
 export ICON_BATTERY_75=""         # nf-fa-battery_three_quarters (U+F241)
 export ICON_BATTERY_50=""         # nf-fa-battery_half (U+F242)

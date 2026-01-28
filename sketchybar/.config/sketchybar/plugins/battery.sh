@@ -11,7 +11,7 @@ source "$CONFIG_DIR/icons.sh"
 # Check if battery exists
 BATTERY_INFO=$(pmset -g batt)
 
-if echo "$BATTERY_INFO" | grep -q "No battery"; then
+if ! echo "$BATTERY_INFO" | grep -qE '[0-9]+%'; then
     # No battery - hide the item
     sketchybar --set $NAME drawing=off
     exit 0
