@@ -19,3 +19,6 @@ cursor-style-blink = false
 copy-on-select = true
 scrollback-limit = 10485760
 quit-after-last-window-closed = true
+
+# Shell integration for sudo (required for sandvault TTY allocation)
+shell-integration-features = sudo
