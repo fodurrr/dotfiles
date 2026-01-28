@@ -17,7 +17,7 @@ lock=(
     background.corner_radius=5
     background.height=24
     background.drawing=on
-    click_script="pmset displaysleepnow"
+    click_script="/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 )
 
 sketchybar --add item lock center \

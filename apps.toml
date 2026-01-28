@@ -194,6 +194,13 @@ category = "productivity"
 profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Spotlight replacement launcher"
 
+[apps.raycast-config]
+type = "stow"
+package = "raycast"
+category = "config"
+profiles = ["minimal", "standard", "developer", "hacker"]
+description = "Raycast scripts and settings"
+
 [apps.obsidian]
 type = "cask"
 category = "productivity"
