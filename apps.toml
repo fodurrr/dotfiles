@@ -560,6 +560,12 @@ category = "config"
 profiles = ["minimal", "standard", "developer", "hacker"]
 description = "Ghostty terminal config"
 
+[apps.terminal-config]
+type = "defaults"
+category = "config"
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
+description = "Terminal.app Catppuccin theme"
+
 [apps.zed-config]
 type = "stow"
 package = "zed"

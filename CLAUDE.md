@@ -209,6 +209,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | sheldon-config | ✓ | ✓ | ✓ | ✓ | ✓ |
 | starship-config | ✓ | ✓ | ✓ | ✓ | ✓ |
 | ghostty-config | ✓ | ✓ | ✓ | ✓ | |
+| terminal-config | ✓ | ✓ | ✓ | ✓ | ✓ |
 | mise-config | ✓ | ✓ | ✓ | ✓ | ✓ |
 | zed-config | | | ✓ | ✓ | |
 | aerospace-config | | | | ✓ | |
@@ -297,6 +298,7 @@ profiles = ["hacker", "server"]
 | `mise` | Mise-managed tool/runtime | starship, eza, node, python |
 | `stow` | Config symlinks | git, zsh, ghostty configs |
 | `curl` | Curl installer script | claude-cli, opencode-cli |
+| `defaults` | macOS defaults write settings | Terminal.app, Raycast settings |
 
 ## Adding New Tools
 
@@ -358,6 +360,7 @@ dotfiles/                        # Repo root (location varies, check working dir
 ├── sheldon/                     # Stow package → ~/.config/sheldon/
 ├── starship/                    # Stow package → ~/.config/starship.toml
 ├── ghostty/                     # Stow package → ~/.config/ghostty/
+├── terminal/                    # Terminal.app profile (imported via defaults)
 ├── zed/                         # Stow package → ~/.config/zed/
 ├── aerospace/                   # Stow package → ~/.config/aerospace/
 ├── tmux/                        # Stow package → ~/.config/tmux/
