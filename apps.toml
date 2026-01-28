@@ -360,7 +360,7 @@ profiles = ["standard", "developer", "hacker"]
 description = "Mac app subscription service"
 
 [apps.sandvault]
-type = "cask"
+type = "brew"
 category = "security"
 profiles = ["developer", "hacker"]
 description = "macOS sandbox for AI coding agents"
