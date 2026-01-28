@@ -9,7 +9,7 @@
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/icons.sh"
 
-# Check Ethernet first (en0 is usually Ethernet on Mac mini, en1 on MacBooks with dongle)
+# Check Ethernet first (en0 is Ethernet on Mac mini)
 ETHERNET_STATUS=$(ifconfig en0 2>/dev/null | grep "status: active")
 
 if [ -n "$ETHERNET_STATUS" ]; then
@@ -18,20 +18,14 @@ if [ -n "$ETHERNET_STATUS" ]; then
     COLOR=$TEAL
     LABEL="ETH"
 else
-    # Check WiFi (usually en0 on MacBook, en1 on Mac mini)
-    # Try to get WiFi info from networksetup
-    WIFI_SSID=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I 2>/dev/null | grep " SSID" | awk '{print $2}')
+    # Check WiFi on en1 (Mac mini) by checking interface status
+    WIFI_STATUS=$(ifconfig en1 2>/dev/null | grep "status: active")
 
-    if [ -n "$WIFI_SSID" ]; then
-        # WiFi connected
+    if [ -n "$WIFI_STATUS" ]; then
+        # WiFi connected - SSID is redacted on macOS Tahoe, so just show "WiFi"
         ICON=$ICON_WIFI
         COLOR=$TEAL
-        # Truncate SSID if too long
-        if [ ${#WIFI_SSID} -gt 10 ]; then
-            LABEL="${WIFI_SSID:0:8}.."
-        else
-            LABEL="$WIFI_SSID"
-        fi
+        LABEL="WiFi"
     else
         # No connection
         ICON=$ICON_NETWORK_OFF
