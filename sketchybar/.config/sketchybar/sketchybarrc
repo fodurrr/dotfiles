@@ -73,11 +73,27 @@ sketchybar --add event system_stats           # From sketchybar-system-stats
 source "$ITEM_DIR/apple.sh"
 source "$ITEM_DIR/preferences.sh"
 source "$ITEM_DIR/activity.sh"
+
+# Bracket around system controls (Apple, Preferences, Activity)
+sketchybar --add bracket system_controls apple.logo preferences activity \
+    --set system_controls \
+        background.color=$SURFACE0 \
+        background.corner_radius=5 \
+        background.height=28
+
 source "$ITEM_DIR/front_app.sh"
+
+# Bracket around front app (separate from system controls)
+sketchybar --add bracket front_app_bracket front_app \
+    --set front_app_bracket \
+        background.color=$SURFACE0 \
+        background.corner_radius=5 \
+        background.height=28
 
 # =============================================================================
 # Center Items
 # =============================================================================
+source "$ITEM_DIR/lock.sh"
 source "$ITEM_DIR/aerospace.sh"
 source "$ITEM_DIR/keyboard.sh"
 source "$ITEM_DIR/help.sh"
@@ -91,6 +107,13 @@ source "$ITEM_DIR/battery.sh"
 source "$ITEM_DIR/volume.sh"
 source "$ITEM_DIR/memory.sh"
 source "$ITEM_DIR/cpu.sh"
+
+# Bracket around all stats (CPU, Memory, Volume, Battery, Network)
+sketchybar --add bracket stats cpu memory volume battery network \
+    --set stats \
+        background.color=$SURFACE0 \
+        background.corner_radius=5 \
+        background.height=28
 
 # =============================================================================
 # Finalize

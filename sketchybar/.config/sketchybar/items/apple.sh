@@ -2,16 +2,15 @@
 # =============================================================================
 # Apple Menu Item
 # =============================================================================
-# Click to open Raycast Power Menu (sleep/restart/shutdown/lock)
+# Click to open Raycast with power search (shows Lock, Sleep, Restart, Shutdown)
 # =============================================================================
 
 apple_logo=(
     icon=$ICON_APPLE
     icon.font="SF Pro:Black:16.0"
     icon.color=$ACCENT_COLOR
-    padding_right=15
     label.drawing=off
-    click_script="open 'raycast://extensions/raycast/system/power'"
+    click_script="open 'raycast://search/power'"
 )
 
 sketchybar --add item apple.logo left \
