@@ -99,7 +99,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
 | **standard** | Regular users (spouse/family) | Browsing, media, basic productivity |
 | **developer** | GUI-centric developers | VSCode, Warp, mouse-driven workflow |
-| **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
+| **hacker** | Terminal-centric power users | Helix, tmux, Aerospace, keyboard-driven |
 | **server** | SSH/remote admin | Terminal-only tools for headless servers |
 
 ### App Distribution Matrix
@@ -118,7 +118,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | **EDITORS** |
 | Zed | | | ✓ | ✓ | |
 | VSCode | | | ✓ | ✓ | |
-| Neovim | | | | ✓ | ✓ |
+| Helix | | | ✓ | ✓ | ✓ |
 | Antigravity | | | ✓ | ✓ | |
 | **TERMINALS** |
 | Warp | | | ✓ | ✓ | |
@@ -198,7 +198,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | aerospace-config | | | | ✓ | |
 | sketchybar-config | | | | ✓ | |
 | tmux-config | | | | ✓ | ✓ |
-| nvim-config | | | | ✓ | ✓ |
+| helix-config | | | ✓ | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
 | keyboard-layout-config | | | ✓ | ✓ | |
@@ -345,7 +345,7 @@ dotfiles/                        # Repo root (location varies, check working dir
 ├── zed/                         # Stow package → ~/.config/zed/
 ├── aerospace/                   # Stow package → ~/.config/aerospace/
 ├── tmux/                        # Stow package → ~/.config/tmux/
-├── nvim/                        # Stow package → ~/.config/nvim/
+├── helix/                       # Stow package → ~/.config/helix/
 ├── yazi/                        # Stow package → ~/.config/yazi/
 ├── cheatsheet/                  # Stow package → ~/.config/cheatsheet/
 ├── keyboard-layout/             # Stow package → ~/.config/keyboard-layout/

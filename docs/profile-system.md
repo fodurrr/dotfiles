@@ -22,7 +22,7 @@ The dotfiles use a **centralized app registry** (`apps.toml`) that defines ALL a
 | **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
 | **standard** | Regular users (spouse/family) | Browsing, media, basic productivity |
 | **developer** | GUI-centric developers | VSCode, Zed, Warp, mouse-driven workflow |
-| **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
+| **hacker** | Terminal-centric power users | Helix, tmux, Aerospace, keyboard-driven |
 | **server** | SSH/remote admin | Terminal-only tools for headless servers |
 
 ### Profile Progression
@@ -114,7 +114,7 @@ description = "Tmux multiplexer config"
 | **Target User** | Fresh Mac | Friends/family | Developers | Power users | Remote/SSH |
 | **Window Mgmt** | macOS | macOS | macOS | Aerospace | N/A |
 | **Terminals** | Ghostty | Ghostty | Ghostty+Warp | Ghostty+Warp+tmux | tmux |
-| **Editors** | - | - | Zed+VSCode | Zed+VSCode+Neovim | Neovim |
+| **Editors** | - | - | Zed+VSCode+Helix | Zed+VSCode+Helix | Helix |
 | **AI Tools** | - | Desktop | Desktop | Desktop+CLI | - |
 | **File Manager** | Finder | Finder | Finder | yazi | yazi |
 | **Browsers** | Firefox+Chrome | All | All | All | - |
@@ -242,7 +242,7 @@ cd ~/dotfiles && stow newtool
 ├── zed/                         # Stow package → ~/.config/zed/
 ├── aerospace/                   # Stow package → ~/.config/aerospace/
 ├── tmux/                        # Stow package → ~/.config/tmux/
-├── nvim/                        # Stow package → ~/.config/nvim/
+├── helix/                       # Stow package → ~/.config/helix/
 ├── yazi/                        # Stow package → ~/.config/yazi/
 ├── docs/                        # Documentation
 ├── README.md                    # User documentation

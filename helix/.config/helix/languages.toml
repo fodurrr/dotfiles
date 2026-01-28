@@ -1,0 +1,12 @@
+# Elixir - zero config needed, works with elixir-ls in PATH
+# Rust - zero config needed, works with rust-analyzer in PATH
+
+# Optional: Enable Dialyzer for Elixir
+[[language]]
+name = "elixir"
+
+[language-server.elixir-ls]
+command = "elixir-ls"
+
+[language-server.elixir-ls.config]
+elixirLS.dialyzerEnabled = true

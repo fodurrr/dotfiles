@@ -53,11 +53,17 @@ category = "editors"
 profiles = ["developer", "hacker"]
 description = "Note-taking app"
 
-[apps.neovim]
+# [apps.neovim]
+# type = "mise"
+# category = "editors"
+# profiles = ["hacker", "server"]
+# description = "Vim-based text editor"
+
+[apps.helix]
 type = "mise"
 category = "editors"
-profiles = ["hacker", "server"]
-description = "Vim-based text editor"
+profiles = ["developer", "hacker", "server"]
+description = "Post-modern modal text editor"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # BROWSERS
@@ -569,12 +575,19 @@ category = "config"
 profiles = ["hacker", "server"]
 description = "Tmux multiplexer config"
 
-[apps.nvim-config]
+# [apps.nvim-config]
+# type = "stow"
+# package = "nvim"
+# category = "config"
+# profiles = ["hacker", "server"]
+# description = "Neovim editor config"
+
+[apps.helix-config]
 type = "stow"
-package = "nvim"
+package = "helix"
 category = "config"
-profiles = ["hacker", "server"]
-description = "Neovim editor config"
+profiles = ["developer", "hacker", "server"]
+description = "Helix editor config"
 
 [apps.yazi-config]
 type = "stow"

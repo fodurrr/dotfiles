@@ -50,7 +50,7 @@ Both **developer** and **hacker** profiles include a built-in keyboard shortcuts
 | **Keyboard** | Press `alt + ?` (alt-shift-slash) |
 | **Mouse** | Click the help icon (?) in the center of SketchyBar |
 
-The cheatsheet includes: Vim modes & motions, Aerospace, Ghostty, Yazi, Zsh, Zed, tmux, file navigation (eza), and Git aliases.
+The cheatsheet includes: Helix modes & motions, Aerospace, Ghostty, Yazi, Zsh, Zed, tmux, file navigation (eza), and Git aliases.
 
 ### Developer Profile
 
@@ -58,7 +58,7 @@ The cheatsheet includes: Vim modes & motions, Aerospace, Ghostty, Yazi, Zsh, Zed
 |--------|------------|
 | **Raycast** | Open Raycast and search for "Keybinds" or "Cheatsheet" |
 
-The cheatsheet includes: Vim modes & motions, Ghostty, Zsh, Zed, file navigation (eza), and Git aliases.
+The cheatsheet includes: Helix modes & motions, Ghostty, Zsh, Zed, file navigation (eza), and Git aliases.
 
 > **Tip:** Press `q` to close the cheatsheet window.
 
@@ -103,7 +103,7 @@ This dotfiles repo uses a **profile-based installation system** to support diffe
 | **minimal** | Fresh Mac, testing | Bare essentials on top of macOS |
 | **standard** | Regular users (spouse/family) | Browsing, media, basic productivity |
 | **developer** | GUI-centric developers | VSCode, Warp, mouse-driven workflow |
-| **hacker** | Terminal-centric power users | Neovim, tmux, Aerospace, keyboard-driven |
+| **hacker** | Terminal-centric power users | Helix, tmux, Aerospace, keyboard-driven |
 | **server** | SSH/remote admin | Terminal-only tools for headless servers |
 
 ### Usage Examples
@@ -140,7 +140,7 @@ When switching between profiles, there are two modes:
 
 **Example:** If you have `developer` installed and run this:
 - Keeps: Warp, VSCode, Zed (from developer)
-- Adds: Aerospace, tmux, neovim, AI CLI tools (from hacker)
+- Adds: Aerospace, tmux, Helix, AI CLI tools (from hacker)
 - Result: Everything combined
 
 #### Clean Mode (Strict)
@@ -168,12 +168,12 @@ When switching between profiles, there are two modes:
 │  ├── Chrome                 ├── Chrome                          │
 │  ├── Claude Desktop         ├── Claude Desktop                  │
 │  ├── ChatGPT Desktop        ├── Aerospace                       │
-│  └── Firefox                ├── tmux, neovim                    │
+│  └── Firefox                ├── tmux, Helix                     │
 │                             └── AI CLI tools                    │
 │                                                                  │
 ├─────────────────────────────────────────────────────────────────┤
 │  MERGE: ./install.sh --profile=hacker                           │
-│  Result: Everything from standard + Aerospace, tmux, neovim,       │
+│  Result: Everything from standard + Aerospace, tmux, Helix,        │
 │          AI CLI tools (everything combined)                     │
 ├─────────────────────────────────────────────────────────────────┤
 │  CLEAN: ./install.sh --profile=hacker --clean                   │
@@ -231,7 +231,7 @@ When switching between profiles, there are two modes:
 ├── zed/                         # Stow package → ~/.config/zed/
 ├── aerospace/                   # Stow package → ~/.config/aerospace/
 ├── tmux/                        # Stow package → ~/.config/tmux/
-├── nvim/                        # Stow package → ~/.config/nvim/
+├── helix/                       # Stow package → ~/.config/helix/
 ├── yazi/                        # Stow package → ~/.config/yazi/
 ├── cheatsheet/                  # Stow package → ~/.config/cheatsheet/
 ├── keyboard-layout/             # Stow package → ~/.config/keyboard-layout/
@@ -320,7 +320,7 @@ Then run: `./install.sh --profile=my-new-profile`
 | **EDITORS** |
 | Zed | | | ✓ | ✓ | |
 | VSCode | | | ✓ | ✓ | |
-| Neovim | | | | ✓ | ✓ |
+| Helix | | | ✓ | ✓ | ✓ |
 | Antigravity | | | ✓ | ✓ | |
 | **TERMINALS** |
 | Warp | | | ✓ | ✓ | |
@@ -400,7 +400,7 @@ Then run: `./install.sh --profile=my-new-profile`
 | aerospace-config | | | | ✓ | |
 | sketchybar-config | | | | ✓ | |
 | tmux-config | | | | ✓ | ✓ |
-| nvim-config | | | | ✓ | ✓ |
+| helix-config | | | ✓ | ✓ | ✓ |
 | yazi-config | | | | ✓ | ✓ |
 | cheatsheet-config | | | ✓ | ✓ | |
 | keyboard-layout-config | | | ✓ | ✓ | |
@@ -413,7 +413,7 @@ Then run: `./install.sh --profile=my-new-profile`
 
 **Developer (~52 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, Beekeeper Studio, pgAdmin4, all runtimes
 
-**Hacker (~60 apps):** Terminal-centric - adds Aerospace, tmux, Neovim, yazi, lazygit, btop, ncdu, AI CLI tools, Keymapp
+**Hacker (~60 apps):** Terminal-centric - adds Aerospace, tmux, Helix, yazi, lazygit, btop, ncdu, AI CLI tools, Keymapp
 
 **Server (~20 apps):** Headless/SSH - terminal tools only, no GUI apps
 
@@ -505,7 +505,7 @@ This ensures the repository is always the source of truth without data loss.
 
 ## Zed Editor Configuration
 
-Zed is configured with vim mode and keybindings that match Neovim/tmux for unified muscle memory:
+Zed is configured with vim mode and keybindings that match Helix/tmux for unified muscle memory:
 
 | Key | Action |
 |-----|--------|
@@ -530,7 +530,7 @@ All tools are configured with a consistent **Catppuccin Mocha** theme for visual
 | Tool | Theme Source |
 |------|--------------|
 | Ghostty | Built-in Catppuccin Mocha |
-| Neovim | catppuccin/nvim plugin |
+| Helix | Built-in catppuccin_mocha |
 | Zed | Built-in Catppuccin Mocha |
 | Tmux | catppuccin/tmux plugin (via TPM) |
 | Starship | Catppuccin Mocha palette |
