@@ -71,6 +71,8 @@ sketchybar --add event system_stats           # From sketchybar-system-stats
 # Left Items
 # =============================================================================
 source "$ITEM_DIR/apple.sh"
+source "$ITEM_DIR/preferences.sh"
+source "$ITEM_DIR/activity.sh"
 source "$ITEM_DIR/front_app.sh"
 
 # =============================================================================
