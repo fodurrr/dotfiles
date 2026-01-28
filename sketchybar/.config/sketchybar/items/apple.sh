@@ -2,7 +2,7 @@
 # =============================================================================
 # Apple Menu Item
 # =============================================================================
-# Click to open Raycast (type "Power Menu" for power actions)
+# Click to open Raycast with Power Menu search
 # =============================================================================
 
 apple_logo=(
@@ -10,7 +10,7 @@ apple_logo=(
     icon.font="SF Pro:Black:16.0"
     icon.color=$ACCENT_COLOR
     label.drawing=off
-    click_script="open -a Raycast"
+    click_script="open raycast://script-commands/power-menu"
 )
 
 sketchybar --add item apple.logo left \

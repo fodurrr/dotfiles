@@ -17,6 +17,20 @@ git pull
 
 **IMPORTANT:** Always use the actual repo path from your current working directory, not a hardcoded path.
 
+## Documentation Searches
+
+When searching for tool/app documentation online:
+- **ALWAYS Search for "latest" or "current"** documentation, not dated versions
+- **NEVER include year constraints** (like "2025" or "2026") - docs change rapidly
+- **Prefer official sites** using `site:` operator (e.g., `site:ghostty.org`)
+
+## Asking Questions & Making Recommendations
+
+When presenting options to the user:
+- **Always include a recommendation** with "(Recommended)" suffix
+- Explain WHY it's recommended in the description
+- Put the recommended option FIRST in the list
+- Don't just present options neutrally - take a stance based on best practices
 ---
 
 ## Overview
@@ -415,18 +429,3 @@ brew services restart sketchybar  # If sketchybar changes
 ```
 
 For shell changes: `source ~/.zshrc`
-
-## Documentation Searches
-
-When searching for tool/app documentation online:
-- **NEVER include year constraints** (like "2025" or "2026") - docs change rapidly
-- **Prefer official sites** using `site:` operator (e.g., `site:ghostty.org`)
-- **Search for "latest" or "current"** documentation, not dated versions
-
-## Asking Questions & Making Recommendations
-
-When presenting options to the user:
-- **Always include a recommendation** with "(Recommended)" suffix
-- Explain WHY it's recommended in the description
-- Put the recommended option FIRST in the list
-- Don't just present options neutrally - take a stance based on best practices
