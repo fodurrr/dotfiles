@@ -1,6 +1,6 @@
 # Keyboard-Driven Window Management
 
-A guide to navigating your Mac using only the keyboard with Aerospace, tmux, and Neovim.
+A guide to navigating your Mac using only the keyboard with Aerospace, tmux, and Helix.
 
 ## Overview
 
@@ -10,7 +10,7 @@ This setup uses three layers of keyboard navigation:
 |-------|------|---------|--------|
 | Desktop | Aerospace | Manage application windows | `Alt` |
 | Terminal | tmux | Manage terminal panes | `Ctrl+a` |
-| Editor | Neovim | Manage editor splits | `Ctrl` |
+| Editor | Helix | Manage editor splits | `Space` |
 
 ## The Navigation Flow
 
@@ -25,9 +25,9 @@ This setup uses three layers of keyboard navigation:
 │  │   │ tmux            │   │               │                   │   │
 │  │   │ Ctrl+a + hjkl   │   │               │                   │   │
 │  │   │ ┌─────┬───────┐ │   │               │                   │   │
-│  │   │ │nvim │ shell │ │   │               │                   │   │
-│  │   │ │Ctrl │       │ │   │               │                   │   │
-│  │   │ │hjkl │       │ │   │               │                   │   │
+│  │   │ │helix│ shell │ │   │               │                   │   │
+│  │   │ │Space│       │ │   │               │                   │   │
+│  │   │ │w/b  │       │ │   │               │                   │   │
 │  │   │ └─────┴───────┘ │   │               │                   │   │
 │  │   └─────────────────┘   │               │                   │   │
 │  └─────────────────────────┴───────────────┴───────────────────┘   │
@@ -125,30 +125,35 @@ All tmux commands start with the prefix `Ctrl+a`.
 | `tmux a` | Attach to last session |
 | `tmux a -t <name>` | Attach to named session |
 
-## Neovim (Editor Splits)
+## Helix (Editor)
 
-### Split Navigation
+Helix uses a selection-first editing model. Press `Space` to open the command palette.
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl + h` | Move to split on left |
-| `Ctrl + j` | Move to split below |
-| `Ctrl + k` | Move to split above |
-| `Ctrl + l` | Move to split on right |
-
-### Creating Splits
+### Navigation
 
 | Shortcut | Action |
 |----------|--------|
-| `ss` | Vertical split |
-| `sv` | Horizontal split |
+| `h/j/k/l` | Move cursor left/down/up/right |
+| `w/b` | Select next/previous word |
+| `gg/ge` | Go to top/bottom of file |
+| `Ctrl+d/u` | Page down/up |
 
-### Tab Navigation
+### Selection & Editing
 
 | Shortcut | Action |
 |----------|--------|
-| `Tab` | Next tab |
-| `Shift + Tab` | Previous tab |
+| `x` | Select line (repeat to extend) |
+| `v` | Extend selection |
+| `d/c/y` | Delete/Change/Yank selection |
+| `Space` | Open picker/command palette |
+
+### Buffer Navigation
+
+| Shortcut | Action |
+|----------|--------|
+| `Shift + h` | Previous buffer |
+| `Shift + l` | Next buffer |
+| `Shift + q` | Close buffer |
 
 ## Common Workflows
 
@@ -158,7 +163,7 @@ All tmux commands start with the prefix `Ctrl+a`.
 2. Open Ghostty (terminal)
 3. `tmux` - Start tmux session
 4. `Ctrl+a + v` - Split for editor
-5. `nvim .` - Open Neovim in left pane
+5. `hx .` - Open Helix in left pane
 6. Focus right pane for shell commands
 
 ### Workflow 2: Research + Coding
@@ -197,17 +202,17 @@ All tmux commands start with the prefix `Ctrl+a`.
 │  Alt + /       Toggle layout  │  Ctrl+a x     Close pane  │
 │  Alt + f       Fullscreen     │  Ctrl+a r     Reload      │
 ├────────────────────────────────────────────────────────────┤
-│  NEOVIM (Editor)              │  GENERAL                  │
-│  Ctrl + hjkl   Navigate       │  Esc          Normal mode │
-│  ss / sv       Split V/H      │  :w           Save        │
-│  Tab           Next tab       │  :q           Quit        │
+│  HELIX (Editor)               │  GENERAL                  │
+│  hjkl          Navigate       │  Esc          Normal mode │
+│  Space         Command menu   │  :w           Save        │
+│  Shift + h/l   Prev/Next buf  │  :q           Quit        │
 └────────────────────────────────────────────────────────────┘
 ```
 
 ## Tips
 
 1. **Muscle memory**: All navigation uses `hjkl` (vim keys) - learn once, use everywhere
-2. **Consistent prefixes**: Desktop=Alt, Terminal=Ctrl+a, Editor=Ctrl
+2. **Consistent prefixes**: Desktop=Alt, Terminal=Ctrl+a, Editor=Space
 3. **Start with Aerospace**: Master desktop navigation first, then add tmux
 4. **Use workspaces**: Keep different projects on different workspaces
 5. **tmux sessions**: Name your sessions (`tmux new -s project`) for easy switching

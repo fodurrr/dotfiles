@@ -153,7 +153,7 @@ When switching between profiles, there are two modes:
 
 **Example:** If you have `developer` installed and run this:
 - Removes: (nothing - hacker includes all of developer)
-- Adds: Aerospace, tmux, neovim, AI CLI tools (hacker-only)
+- Adds: Aerospace, tmux, Helix, AI CLI tools (hacker-only)
 - Keeps: Everything from developer
 
 ### Visual Comparison
@@ -510,7 +510,7 @@ Zed is configured with vim mode and keybindings that match Helix/tmux for unifie
 | Key | Action |
 |-----|--------|
 | `jk` | Escape to normal mode |
-| `Ctrl+hjkl` | Navigate panes (matches tmux/Neovim) |
+| `Ctrl+hjkl` | Navigate panes (matches tmux) |
 | `ss` | Split vertical |
 | `sv` | Split horizontal |
 | `Shift+h/l` | Previous/next buffer |

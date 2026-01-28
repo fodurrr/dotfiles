@@ -31,7 +31,7 @@ The dotfiles support five profiles with different philosophies:
 │                                                                              │
 │  (none)        (none)         Zed            Zed            (none)          │
 │                               + VSCode       + VSCode                       │
-│                                              + Neovim       + Neovim        │
+│                               + Helix        + Helix        + Helix         │
 │                                                                              │
 │  Firefox       Firefox        Firefox        Firefox        (none)          │
 │  Chrome        + Chrome       + Chrome       + Chrome                       │
@@ -110,7 +110,7 @@ The dotfiles support five profiles with different philosophies:
 | direnv | | | ✓ | ✓ | | Directory environments |
 | **Hacker/Server Extras** |||||||
 | tmux | | | | ✓ | ✓ | Terminal multiplexer |
-| neovim | | | | ✓ | ✓ | Modal editor |
+| helix | | | ✓ | ✓ | ✓ | Modal editor |
 | yazi | | | | ✓ | ✓ | Terminal file manager |
 | btop | | | | ✓ | ✓ | System monitor |
 | ncdu | | | | ✓ | ✓ | Disk usage analyzer |
@@ -150,7 +150,7 @@ The dotfiles support five profiles with different philosophies:
 | zed | | | ✓ | ✓ | | ~/.config/zed/ |
 | aerospace | | | | ✓ | | ~/.config/aerospace/ |
 | tmux | | | | ✓ | ✓ | ~/.config/tmux/ |
-| nvim | | | | ✓ | ✓ | ~/.config/nvim/ |
+| helix | | | ✓ | ✓ | ✓ | ~/.config/helix/ |
 | yazi | | | | ✓ | ✓ | ~/.config/yazi/ |
 
 ---
@@ -360,7 +360,7 @@ After switching profiles, verify:
 4. **Hacker tools (hacker profile):**
    ```bash
    tmux -V
-   nvim --version
+   hx --version
    yazi --version
    btop --version
    lazygit --version

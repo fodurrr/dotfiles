@@ -6,7 +6,7 @@
 # =============================================================================
 
 [tools]
-neovim = "latest"
+helix = "latest"
 codex = "latest"
 gemini-cli = "latest"
 starship = "latest"
