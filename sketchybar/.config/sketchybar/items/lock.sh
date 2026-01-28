@@ -17,7 +17,7 @@ lock=(
     background.corner_radius=5
     background.height=24
     background.drawing=on
-    click_script="/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+    click_script="osascript -e 'tell application \"System Events\" to keystroke \"q\" using {command down, control down}'"
 )
 
 sketchybar --add item lock center \

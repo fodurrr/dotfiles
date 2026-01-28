@@ -4,27 +4,31 @@
 # @raycast.schemaVersion 1
 # @raycast.title Power Menu
 # @raycast.mode silent
-# @raycast.icon
+# @raycast.icon ⚡
 # @raycast.description Quick access to power actions (Lock, Sleep, Restart, Shut Down, Log Out)
 # @raycast.author Peter Fodor
 # @raycast.authorURL https://github.com/fodurrr
 
-# @raycast.argument1 { "type": "dropdown", "placeholder": "Action", "data": [ { "title": "Lock Screen", "value": "lock" }, { "title": "Sleep", "value": "sleep" }, { "title": "Restart", "value": "restart" }, { "title": "Shut Down", "value": "shutdown" }, { "title": "Log Out", "value": "logout" } ] }
+# Show native macOS dialog to pick action
+action=$(osascript -e 'choose from list {"🔒 Lock Screen", "😴 Sleep", "🔄 Restart", "⏻ Shut Down", "🚪 Log Out"} with title "Power Menu" with prompt "Choose an action:"')
 
-case "$1" in
-    lock)
-        /System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
+# Exit if cancelled
+[[ "$action" == "false" ]] && exit 0
+
+case "$action" in
+    *"Lock"*)
+        osascript -e 'tell application "System Events" to keystroke "q" using {command down, control down}'
         ;;
-    sleep)
+    *"Sleep"*)
         pmset sleepnow
         ;;
-    restart)
+    *"Restart"*)
         osascript -e 'tell app "System Events" to restart'
         ;;
-    shutdown)
+    *"Shut Down"*)
         osascript -e 'tell app "System Events" to shut down'
         ;;
-    logout)
+    *"Log Out"*)
         osascript -e 'tell app "System Events" to log out'
         ;;
 esac
