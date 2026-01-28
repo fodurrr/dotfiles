@@ -366,6 +366,8 @@ Then run: `./install.sh --profile=my-new-profile`
 | **UTILITIES** |
 | Setapp | | ✓ | ✓ | ✓ | |
 | Keymapp | | | | ✓ | |
+| **SECURITY** |
+| SandVault | | | ✓ | ✓ | |
 | **CLI TOOLS** |
 | starship | ✓ | ✓ | ✓ | ✓ | ✓ |
 | eza | ✓ | ✓ | ✓ | ✓ | ✓ |
@@ -411,9 +413,9 @@ Then run: `./install.sh --profile=my-new-profile`
 
 **Standard (~32 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, BetterDisplay, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Setapp
 
-**Developer (~52 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, Beekeeper Studio, pgAdmin4, all runtimes
+**Developer (~53 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, Beekeeper Studio, pgAdmin4, SandVault, all runtimes
 
-**Hacker (~60 apps):** Terminal-centric - adds Aerospace, tmux, Helix, yazi, lazygit, btop, ncdu, AI CLI tools, Keymapp
+**Hacker (~61 apps):** Terminal-centric - adds Aerospace, tmux, Helix, yazi, lazygit, btop, ncdu, AI CLI tools, Keymapp, SandVault
 
 **Server (~20 apps):** Headless/SSH - terminal tools only, no GUI apps
 
@@ -559,6 +561,21 @@ Tmux uses [TPM (Tmux Plugin Manager)](https://github.com/tmux-plugins/tpm) for p
 | `s` | Split horizontal |
 | `H/J/K/L` | Resize panes |
 | `r` | Reload config |
+
+---
+
+## AI Agent Sandboxing
+
+Both **developer** and **hacker** profiles include SandVault for running AI coding agents safely in isolation.
+
+See **[docs/ai-agent-sandbox-guide.md](docs/ai-agent-sandbox-guide.md)** for the complete workflow guide.
+
+**Quick start:**
+```bash
+cd ~/dev/my-project
+sandbox-claude                              # Claude in sandbox
+sandbox-claude --dangerously-skip-permissions  # Autonomous mode
+```
 
 ---
 

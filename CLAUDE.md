@@ -178,6 +178,8 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | **UTILITIES** |
 | Setapp | | ✓ | ✓ | ✓ | |
 | Keymapp | | | | ✓ | |
+| **SECURITY** |
+| SandVault | | | ✓ | ✓ | |
 | **CLI TOOLS** |
 | starship | ✓ | ✓ | ✓ | ✓ | ✓ |
 | eza | ✓ | ✓ | ✓ | ✓ | ✓ |

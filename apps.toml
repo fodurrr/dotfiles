@@ -359,6 +359,12 @@ category = "utilities"
 profiles = ["standard", "developer", "hacker"]
 description = "Mac app subscription service"
 
+[apps.sandvault]
+type = "cask"
+category = "security"
+profiles = ["developer", "hacker"]
+description = "macOS sandbox for AI coding agents"
+
 [apps.keymapp]
 type = "cask"
 category = "utilities"
