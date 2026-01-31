@@ -335,6 +335,7 @@ Then run: `./install.sh --profile=my-new-profile`
 | **AI CLI** |
 | claude-cli | | | | ✓ | |
 | codex-cli | | | | ✓ | |
+| codex-acp | | | ✓ | ✓ | |
 | opencode-cli | | | | ✓ | |
 | gemini-cli | | | | ✓ | |
 | **PRODUCTIVITY** |

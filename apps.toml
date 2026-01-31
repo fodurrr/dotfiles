@@ -137,6 +137,12 @@ category = "ai"
 profiles = ["hacker"]
 description = "OpenAI Codex assistant (CLI)"
 
+[apps.codex-acp]
+type = "brew"
+category = "ai"
+profiles = ["developer", "hacker"]
+description = "Codex adapter for ACP-compatible clients (Zed integration)"
+
 [apps.gemini-cli]
 type = "mise"
 category = "ai"

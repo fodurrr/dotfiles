@@ -147,6 +147,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | **AI CLI** |
 | claude-cli | | | | ✓ | |
 | codex-cli | | | | ✓ | |
+| codex-acp | | | ✓ | ✓ | |
 | opencode-cli | | | | ✓ | |
 | gemini-cli | | | | ✓ | |
 | **PRODUCTIVITY** |
@@ -414,7 +415,7 @@ This ensures the repo is always the source of truth without data loss.
 |------|-------|-----------|--------|
 | Claude | Desktop (cask) | Desktop (cask) | Desktop + CLI |
 | ChatGPT | Desktop (cask) | Desktop (cask) | Desktop (cask) |
-| Codex | - | Desktop (cask) | Desktop + CLI |
+| Codex | - | Desktop + ACP | Desktop + CLI + ACP |
 | OpenCode | - | Desktop (cask) | Desktop + CLI |
 | Gemini | - | - | CLI only (mise) |
 
