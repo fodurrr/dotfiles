@@ -98,13 +98,13 @@
   "experimental.theme_overrides": {
     "syntax": {
       // Headings
-      "markup.heading": { "color": "#f5e0dc", "font_weight": 700 },
-      "markup.heading.1": { "color": "#f38ba8" },
-      "markup.heading.2": { "color": "#eba0ac" },
-      "markup.heading.3": { "color": "#fab387" },
-      "markup.heading.4": { "color": "#f9e2af" },
-      "markup.heading.5": { "color": "#a6e3a1" },
-      "markup.heading.6": { "color": "#89b4fa" },
+      "title": { "color": "#f5e0dc", "font_weight": 700 },
+      "title.1": { "color": "#f38ba8" },
+      "title.2": { "color": "#eba0ac" },
+      "title.3": { "color": "#fab387" },
+      "title.4": { "color": "#f9e2af" },
+      "title.5": { "color": "#a6e3a1" },
+      "title.6": { "color": "#89b4fa" },
 
       // Emphasis
       "markup.bold": { "color": "#f38ba8", "font_weight": 700 },
