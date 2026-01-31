@@ -221,6 +221,8 @@ When switching between profiles, there are two modes:
 ├── Brewfile.bootstrap           # Infrastructure packages only
 ├── install.sh                   # Two-phase installer with profile support
 ├── scripts/
+│   ├── install/                 # Modular installer steps (sourced by install.sh)
+│   ├── validate.sh              # Local validation checks
 │   └── curl-installs.sh         # Layer 5: AI tool installers
 ├── git/                         # Stow package → ~/.gitconfig
 ├── zsh/                         # Stow package → ~/.zshrc
@@ -442,6 +444,12 @@ Then run: `./install.sh --profile=my-new-profile`
 
 # List available profiles
 ./install.sh --list-profiles
+
+# Doctor mode (read-only checks)
+./install.sh --doctor
+
+# Validation checks (syntax + apps.toml)
+./scripts/validate.sh
 
 # Update AI tools only (Layer 5)
 bash scripts/curl-installs.sh
