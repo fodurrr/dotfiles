@@ -143,6 +143,9 @@ Shows an interactive menu with profile selection using gum.
 
 # Clean mode (removes apps not in profile)
 ./install.sh --profile=hacker --clean
+
+# Doctor mode (read-only checks)
+./install.sh --doctor
 ```
 
 ### Profile Switching Modes
