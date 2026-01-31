@@ -147,6 +147,7 @@ description = "Codex adapter for ACP-compatible clients (Zed integration)"
 type = "mise"
 category = "ai"
 profiles = ["hacker"]
+depends_on = "node"
 description = "Google Gemini AI (CLI)"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -634,4 +635,3 @@ package = "keyboard-layout"
 category = "config"
 profiles = ["developer", "hacker"]
 description = "Voyager keyboard layout viewer"
-
