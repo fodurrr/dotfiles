@@ -22,6 +22,7 @@ git pull
 ## Documentation Searches
 
 When searching for tool/app documentation online:
+- **Always check the locally installed tool version first** (e.g., `tool --version`) and align research/answers to that version or explicitly call out mismatches
 - **ALWAYS Search for "latest" or "current"** documentation, not dated versions
 - **NEVER include year constraints** (like "2025" or "2026") - docs change rapidly
 - **Prefer official sites** using `site:` operator (e.g., `site:ghostty.org`)

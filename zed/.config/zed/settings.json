@@ -47,23 +47,23 @@
     "make": true,
     "git-firefly": true,
     "unocss": true,
-    "log": true
+    "log": true,
   },
 
   // Language configurations
   "languages": {
     "Elixir": {
       "language_servers": ["elixir-ls"],
-      "format_on_save": "on"
+      "format_on_save": "on",
     },
     "HEEX": {
       "language_servers": [
         "elixir-ls",
         "!tailwindcss-language-server",
         "unocss",
-        "emmet-language-server"
-      ]
-    }
+        "emmet-language-server",
+      ],
+    },
   },
 
   // LSP settings
@@ -72,9 +72,9 @@
       "settings": {
         "dialyzerEnabled": false,
         "fetchDeps": false,
-        "suggestSpecs": true
-      }
-    }
+        "suggestSpecs": true,
+      },
+    },
   },
 
   // Vim mode indicator colors - fix visibility on Catppuccin Mocha
@@ -99,12 +99,13 @@
     "syntax": {
       // Headings
       "title": { "color": "#f5e0dc", "font_weight": 700 },
-      "title.1": { "color": "#f38ba8" },
-      "title.2": { "color": "#eba0ac" },
-      "title.3": { "color": "#fab387" },
-      "title.4": { "color": "#f9e2af" },
-      "title.5": { "color": "#a6e3a1" },
-      "title.6": { "color": "#89b4fa" },
+      // Not supported by Zed yet as of 31-Jan-2026
+      // "title.1": { "color": "#f38ba8" },
+      // "title.2": { "color": "#eba0ac" },
+      // "title.3": { "color": "#fab387" },
+      // "title.4": { "color": "#f9e2af" },
+      // "title.5": { "color": "#a6e3a1" },
+      // "title.6": { "color": "#89b4fa" },
 
       // Emphasis
       "markup.bold": { "color": "#f38ba8", "font_weight": 700 },
@@ -130,8 +131,8 @@
       "markup.separator": { "color": "#45475a" },
 
       // Tables
-      "markup.table": { "color": "#f9e2af" }
-    }
+      "markup.table": { "color": "#f9e2af" },
+    },
   },
 
   // Font - match Ghostty
