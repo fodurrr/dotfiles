@@ -303,13 +303,13 @@ install_mise_app() {
     # We must check mise ls for "(missing)" to detect actual installation state
     local installed_version=""
     local ls_output
-    ls_output=$(mise ls "$name" 2>/dev/null)
+    ls_output=$(mise ls "$name" 2>/dev/null || true)
     # Only trust mise current if tool exists AND is not marked as missing
     if [[ -n "$ls_output" ]]; then
         if [[ "$ls_output" == *"(missing)"* ]]; then
             : # Tool is in config but not installed - leave installed_version empty
         else
-            installed_version=$(mise current "$name" 2>/dev/null)
+            installed_version=$(mise current "$name" 2>/dev/null || true)
         fi
     fi
 
@@ -317,7 +317,7 @@ install_mise_app() {
         if [[ "$version" == "latest" ]]; then
             # For "latest", check if there's a newer version available
             local latest_version
-            latest_version=$(mise latest "$name" 2>/dev/null)
+            latest_version=$(mise latest "$name" 2>/dev/null || true)
             if [[ "$installed_version" == "$latest_version" ]]; then
                 add_to_summary SKIPPED "$name" "$app_key"
                 return 0
@@ -351,6 +351,7 @@ install_mise_app() {
         local error_line
         error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
         [[ -n "$error_line" ]] && echo "      $error_line"
+        return 0
     fi
 }
 
