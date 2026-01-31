@@ -28,10 +28,10 @@
   // Use object format for proper light/dark mode support
   "theme": {
     "mode": "dark",
-    "dark": "Catppuccin Macchiato - No Italics",
+    "dark": "Catppuccin Mocha - No Italics",
     "light": "One Light",
   },
-  "icon_theme": "Catppuccin Macchiato",
+  "icon_theme": "Catppuccin Mocha",
 
   // Auto-install required extensions on first run
   "auto_install_extensions": {
@@ -94,6 +94,19 @@
       "vim.replace.background": "#f38ba8",
       "vim.replace.foreground": "#1e1e2e",
     },
+  },
+  "experimental.theme_overrides": {
+    "syntax": {
+      "markup.heading": { "color": "#89b4fa", "font_weight": 700 },
+      "markup.bold": { "color": "#f9e2af", "font_weight": 700 },
+      "markup.italic": { "color": "#cba6f7", "font_style": "italic" },
+      "markup.quote": { "color": "#a6e3a1", "font_style": "italic" },
+      "markup.list": { "color": "#f5c2e7" },
+      "markup.link": { "color": "#89b4fa" },
+      "markup.link.url": { "color": "#94e2d5" },
+      "markup.raw": { "color": "#f9e2af", "background_color": "#1e1e2e" },
+      "markup.raw.inline": { "color": "#f9e2af", "background_color": "#1e1e2e" }
+    }
   },
 
   // Font - match Ghostty
