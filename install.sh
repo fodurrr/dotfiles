@@ -23,6 +23,7 @@ SELECTED_PROFILES=()
 CLEAN_MODE=false
 INTERACTIVE=true
 EXTRAS_MODE=false
+DOCTOR_MODE=false
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 
@@ -78,6 +79,10 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=false
             shift
             ;;
+        --doctor)
+            DOCTOR_MODE=true
+            shift
+            ;;
         --list-profiles)
             # Check if yq is available (installed during bootstrap)
             if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
@@ -101,6 +106,12 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Doctor mode: profile selection + read-only checks, then exit
+if [[ "$DOCTOR_MODE" == true ]]; then
+    source "$DOTFILES_DIR/scripts/install/phase2_profiles.sh"
+    source "$DOTFILES_DIR/scripts/install/doctor.sh"
+fi
 
 # =============================================================================
 # Execution Phases
