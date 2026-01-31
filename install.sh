@@ -1160,10 +1160,19 @@ if [[ "$TERMINAL_IN_PROFILE" == true ]]; then
     TERMINAL_PROFILE="$DOTFILES_DIR/terminal/${PROFILE_NAME}.terminal"
 
     if [[ -f "$TERMINAL_PROFILE" ]]; then
-        # Import the profile by opening the .terminal file
-        log_info "Importing $PROFILE_NAME profile..."
-        open "$TERMINAL_PROFILE"
-        sleep 2  # Wait for Terminal.app to import the profile
+        # Import the profile only if it isn't already in Terminal preferences
+        PROFILE_IMPORTED=false
+        if defaults read com.apple.Terminal "Window Settings" 2>/dev/null | grep -Fq "$PROFILE_NAME"; then
+            PROFILE_IMPORTED=true
+        fi
+
+        if [[ "$PROFILE_IMPORTED" == false ]]; then
+            log_info "Importing $PROFILE_NAME profile..."
+            open "$TERMINAL_PROFILE"
+            sleep 2  # Wait for Terminal.app to import the profile
+        else
+            log_info "$PROFILE_NAME profile already imported; skipping import..."
+        fi
 
         # Set font to match Ghostty (JetBrainsMono Nerd Font, size 16)
         log_info "Setting font to JetBrainsMono Nerd Font (size 16)..."
