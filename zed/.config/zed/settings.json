@@ -31,7 +31,7 @@
     "dark": "Catppuccin Macchiato - No Italics",
     "light": "One Light",
   },
-  "icon_theme": "Catppuccin Mocha",
+  "icon_theme": "Catppuccin Macchiato",
 
   // Auto-install required extensions on first run
   "auto_install_extensions": {
@@ -101,9 +101,8 @@
   "buffer_font_size": 16,
   "ui_font_size": 16,
   "ui_font_family": "JetBrainsMono Nerd Font",
-  "agent": {
-    "agent_font_size": 16,
-  },
+  "agent_ui_font_size": 16,
+  "agent_buffer_font_size": 16,
 
   // Terminal - match shell setup
   "terminal": {
