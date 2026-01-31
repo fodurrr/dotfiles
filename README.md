@@ -237,7 +237,8 @@ When switching between profiles, there are two modes:
 ├── keyboard-layout/             # Stow package → ~/.config/keyboard-layout/
 ├── docs/                        # Documentation
 ├── README.md
-└── CLAUDE.md                    # AI assistant instructions
+├── AGENTS.md                    # AI assistant instructions (mirrors CLAUDE.md)
+└── CLAUDE.md                    # AI assistant instructions (source of truth)
 ```
 
 ---

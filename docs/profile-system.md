@@ -246,7 +246,8 @@ cd ~/dotfiles && stow newtool
 ├── yazi/                        # Stow package → ~/.config/yazi/
 ├── docs/                        # Documentation
 ├── README.md                    # User documentation
-└── CLAUDE.md                    # AI assistant guidance
+├── AGENTS.md                    # AI assistant guidance (mirrors CLAUDE.md)
+└── CLAUDE.md                    # AI assistant guidance (source of truth)
 ```
 
 ---
@@ -281,5 +282,6 @@ This ensures the repo is always the source of truth without data loss.
 | `Brewfile.bootstrap` | Infrastructure packages (runs before apps.toml) |
 | `install.sh` | Two-phase installer with profile support |
 | `scripts/curl-installs.sh` | Layer 5: AI CLI installers |
+| `AGENTS.md` | AI assistant guidance (mirrors CLAUDE.md) |
 | `CLAUDE.md` | AI assistant guidance and constraints |
 | `README.md` | User documentation |
