@@ -24,6 +24,7 @@ CLEAN_MODE=false
 INTERACTIVE=true
 EXTRAS_MODE=false
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR_REAL="$(cd "$DOTFILES_DIR" 2>/dev/null && pwd -P)"
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 
 # Installation tracking for summary (newline+pipe delimited: "name|description\nname|description")
@@ -107,11 +108,31 @@ stow_enforce() {
     stow_opts+=("--ignore=\.bak$")
 
     # Helper: Check if symlink points to this dotfiles repo
+    resolve_path() {
+        local path="$1"
+        local dir base abs_dir
+        dir="$(dirname "$path")"
+        base="$(basename "$path")"
+        abs_dir="$(cd "$dir" 2>/dev/null && pwd -P)" || return 1
+        echo "$abs_dir/$base"
+    }
+
+    resolve_symlink_target() {
+        local link="$1"
+        local target link_dir
+        target="$(readlink "$link" 2>/dev/null)" || return 1
+        if [[ "$target" == /* ]]; then
+            resolve_path "$target"
+        else
+            link_dir="$(cd "$(dirname "$link")" 2>/dev/null && pwd -P)" || return 1
+            resolve_path "$link_dir/$target"
+        fi
+    }
+
     is_our_symlink() {
-        local link_target
-        link_target="$(readlink "$1" 2>/dev/null)"
-        # Check if it points to this dotfiles directory (absolute or relative)
-        [[ "$link_target" == *"$DOTFILES_DIR"* ]] || [[ "$link_target" == *"/dev/dotfiles/"* ]]
+        local resolved_target
+        resolved_target="$(resolve_symlink_target "$1")" || return 1
+        [[ "$resolved_target" == "$DOTFILES_DIR_REAL"* ]]
     }
 
     # Back up .config/* subdirectories that would conflict with stow
@@ -383,6 +404,33 @@ exec > >(tee -a "$LOG_FILE") 2>&1
 if [[ "$EXTRAS_MODE" != true ]]; then
     echo ""
     echo "Installing for profiles: ${SELECTED_PROFILES[*]}"
+fi
+
+# =============================================================================
+# Clean Mode Safety Guards
+# =============================================================================
+CLEAN_SAFE=true
+if [[ "$CLEAN_MODE" == true && "$CLEAN_SAFE" == true ]]; then
+    if ! command -v yq &> /dev/null; then
+        log_warning "yq not found; skipping clean mode to avoid accidental removals"
+        CLEAN_SAFE=false
+    elif [[ ! -s "$APPS_CONFIG" ]]; then
+        log_warning "apps.toml missing or empty; skipping clean mode to avoid accidental removals"
+        CLEAN_SAFE=false
+    else
+        # Ensure profile resolution yields at least one match
+        profile_match=false
+        for app_key in $(get_all_apps); do
+            if app_in_profile "$app_key"; then
+                profile_match=true
+                break
+            fi
+        done
+        if [[ "$profile_match" != true ]]; then
+            log_warning "No apps matched selected profiles; skipping clean mode to avoid accidental removals"
+            CLEAN_SAFE=false
+        fi
+    fi
 fi
 
 # =============================================================================
@@ -891,7 +939,7 @@ for app_key in $(get_all_apps); do
     fi
 done
 
-if [[ "$CLEAN_MODE" == true ]]; then
+if [[ "$CLEAN_MODE" == true && "$CLEAN_SAFE" == true ]]; then
     echo "Cleaning up unlisted Homebrew packages..."
 
     # Cache sudo credentials for removing admin apps (Edge, etc.)
@@ -975,7 +1023,7 @@ for app_key in $(get_all_apps); do
     fi
 done
 
-if [[ "$CLEAN_MODE" == true ]]; then
+if [[ "$CLEAN_MODE" == true && "$CLEAN_SAFE" == true ]]; then
     echo "Removing stow packages not in selected profiles..."
 
     for app_key in $(get_all_apps); do
@@ -999,6 +1047,10 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Layer 3: Mise"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if command -v mise &> /dev/null; then
+    eval "$(mise activate bash)" 2>/dev/null || true
+fi
 
 echo "Installing mise tools..."
 for app_key in $(get_all_apps); do
@@ -1160,10 +1212,19 @@ if [[ "$TERMINAL_IN_PROFILE" == true ]]; then
     TERMINAL_PROFILE="$DOTFILES_DIR/terminal/${PROFILE_NAME}.terminal"
 
     if [[ -f "$TERMINAL_PROFILE" ]]; then
-        # Import the profile by opening the .terminal file
-        log_info "Importing $PROFILE_NAME profile..."
-        open "$TERMINAL_PROFILE"
-        sleep 2  # Wait for Terminal.app to import the profile
+        profile_exists=false
+        if defaults read com.apple.Terminal "Window Settings" 2>/dev/null | grep -q "$PROFILE_NAME"; then
+            profile_exists=true
+        fi
+
+        if [[ "$profile_exists" != true ]]; then
+            # Import the profile by opening the .terminal file
+            log_info "Importing $PROFILE_NAME profile..."
+            open "$TERMINAL_PROFILE"
+            sleep 2  # Wait for Terminal.app to import the profile
+        else
+            log_info "$PROFILE_NAME profile already imported; skipping import"
+        fi
 
         # Set font to match Ghostty (JetBrainsMono Nerd Font, size 16)
         log_info "Setting font to JetBrainsMono Nerd Font (size 16)..."
