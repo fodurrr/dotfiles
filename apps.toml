@@ -232,6 +232,24 @@ category = "productivity"
 profiles = ["developer", "hacker"]
 description = "Keystroke visualizer for presentations"
 
+[apps.bettershot]
+type = "cask"
+category = "productivity"
+profiles = ["standard", "developer", "hacker"]
+description = "Screenshot capture and editing tool"
+
+[apps.kap]
+type = "cask"
+category = "productivity"
+profiles = ["standard", "developer", "hacker"]
+description = "Open-source screen recorder"
+
+[apps.stretchly]
+type = "cask"
+category = "productivity"
+profiles = ["standard", "developer", "hacker"]
+description = "Break reminder and wellness app"
+
 # Alternative dictation tools - uncomment if preferred over Aqua Voice
 # [apps.superwhisper]
 # type = "cask"
@@ -360,11 +378,11 @@ description = "Advanced display management with virtual monitors"
 # ─────────────────────────────────────────────────────────────────────────────
 # UTILITIES
 # ─────────────────────────────────────────────────────────────────────────────
-[apps.setapp]
-type = "cask"
-category = "utilities"
-profiles = ["standard", "developer", "hacker"]
-description = "Mac app subscription service"
+# [apps.setapp]
+# type = "cask"
+# category = "utilities"
+# profiles = ["standard", "developer", "hacker"]
+# description = "Mac app subscription service"
 
 [apps.sandvault]
 type = "brew"
@@ -377,6 +395,12 @@ type = "cask"
 category = "utilities"
 profiles = ["hacker"]
 description = "ZSA keyboard configuration"
+
+[apps.pearcleaner]
+type = "cask"
+category = "utilities"
+profiles = ["standard", "developer", "hacker"]
+description = "Uninstall apps and remove leftovers"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FONTS
@@ -426,11 +450,11 @@ category = "cli"
 profiles = ["developer", "hacker", "server"]
 description = "JSON processor"
 
-[apps.yq]
-type = "mise"
-category = "cli"
-profiles = ["developer", "hacker", "server"]
-description = "YAML/TOML processor"
+# [apps.yq]
+# type = "mise"
+# category = "cli"
+# profiles = ["developer", "hacker", "server"]
+# description = "YAML/TOML processor"
 
 [apps.gh]
 type = "mise"
@@ -474,6 +498,13 @@ type = "mise"
 category = "cli"
 profiles = ["hacker", "server"]
 description = "Terminal Git UI"
+
+[apps.mole]
+type = "brew"
+tap = "tw93/tap"
+category = "cli"
+profiles = ["minimal", "standard", "developer", "hacker"]
+description = "System cleanup and optimization CLI"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # RUNTIMES (mise)

@@ -788,7 +788,12 @@ if [[ "$EXTRAS_MODE" == true ]]; then
                 tap=$(get_app_prop "$app_key" "tap")
                 [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
                 log_success "Installing $name (cask)..."
-                if brew install --cask "$name"; then
+                if [[ "$name" == "stretchly" ]]; then
+                    brew install --cask --no-quarantine "$name"
+                else
+                    brew install --cask "$name"
+                fi
+                if [[ $? -eq 0 ]]; then
                     add_to_summary INSTALLED "$name" "$app_key"
                     # Start service if configured
                     service=$(get_app_prop "$app_key" "service")
@@ -877,7 +882,11 @@ for app_key in $(get_all_apps); do
                 # Check if outdated
                 if brew outdated --cask 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
-                    brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
+                    if [[ "$name" == "stretchly" ]]; then
+                        brew upgrade --cask --no-quarantine "$name" || log_warning "Failed to upgrade $name"
+                    else
+                        brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
+                    fi
                     add_to_summary INSTALLED "$name" "$app_key"
                 else
                     add_to_summary SKIPPED "$name" "$app_key"
@@ -887,7 +896,12 @@ for app_key in $(get_all_apps); do
                 [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
             else
                 log_success "Installing $name..."
-                if brew install --cask "$name"; then
+                if [[ "$name" == "stretchly" ]]; then
+                    brew install --cask --no-quarantine "$name"
+                else
+                    brew install --cask "$name"
+                fi
+                if [[ $? -eq 0 ]]; then
                     add_to_summary INSTALLED "$name" "$app_key"
                     # Start service if configured
                     service=$(get_app_prop "$app_key" "service")
@@ -1218,12 +1232,34 @@ if [[ "$TERMINAL_IN_PROFILE" == true ]]; then
         fi
 
         if [[ "$profile_exists" != true ]]; then
-            # Import the profile by opening the .terminal file
-            log_info "Importing $PROFILE_NAME profile..."
-            open "$TERMINAL_PROFILE"
-            sleep 2  # Wait for Terminal.app to import the profile
+            if [[ "$INTERACTIVE" == true ]]; then
+                log_info "Importing $PROFILE_NAME profile..."
+                open "$TERMINAL_PROFILE"
+                sleep 2  # Wait for Terminal.app to import the profile
+            else
+                log_warning "$PROFILE_NAME profile not imported (non-interactive). Run: open \"$TERMINAL_PROFILE\""
+            fi
         else
-            log_info "$PROFILE_NAME profile already imported; skipping import"
+            reimport=false
+            if [[ "$INTERACTIVE" == true ]]; then
+                if command -v gum &> /dev/null; then
+                    if gum confirm "Re-import Terminal profile to apply updates? (Opens Terminal once)"; then
+                        reimport=true
+                    fi
+                else
+                    read -p "Re-import Terminal profile to apply updates? (Opens Terminal once) [y/N] " -n 1 -r
+                    echo
+                    [[ $REPLY =~ ^[Yy]$ ]] && reimport=true
+                fi
+            fi
+
+            if [[ "$reimport" == true ]]; then
+                log_info "Re-importing $PROFILE_NAME profile..."
+                open "$TERMINAL_PROFILE"
+                sleep 2  # Wait for Terminal.app to import the profile
+            else
+                log_info "$PROFILE_NAME profile already imported; skipping import"
+            fi
         fi
 
         # Set font to match Ghostty (JetBrainsMono Nerd Font, size 16)

@@ -342,6 +342,9 @@ Then run: `./install.sh --profile=my-new-profile`
 | **PRODUCTIVITY** |
 | Obsidian | | ✓ | ✓ | ✓ | |
 | KeyCastr | | | ✓ | ✓ | |
+| Bettershot | | ✓ | ✓ | ✓ | |
+| Kap | | ✓ | ✓ | ✓ | |
+| Stretchly | | ✓ | ✓ | ✓ | |
 | **CLOUD STORAGE** |
 | OneDrive | | ✓ | ✓ | ✓ | |
 | Google Drive | | ✓ | ✓ | ✓ | |
@@ -366,8 +369,8 @@ Then run: `./install.sh --profile=my-new-profile`
 | BetterDisplay | | ✓ | ✓ | ✓ | |
 | ~~MonitorControl~~ | | ✓ | ✓ | ✓ | |
 | **UTILITIES** |
-| Setapp | | ✓ | ✓ | ✓ | |
 | Keymapp | | | | ✓ | |
+| Pearcleaner | | ✓ | ✓ | ✓ | |
 | **SECURITY** |
 | SandVault | | | ✓ | ✓ | |
 | **CLI TOOLS** |
@@ -377,7 +380,6 @@ Then run: `./install.sh --profile=my-new-profile`
 | fzf | ✓ | ✓ | ✓ | ✓ | ✓ |
 | ripgrep | | | ✓ | ✓ | ✓ |
 | jq | | | ✓ | ✓ | ✓ |
-| yq | | | ✓ | ✓ | ✓ |
 | gh | | | ✓ | ✓ | ✓ |
 | direnv | | | ✓ | ✓ | |
 | yazi | | | | ✓ | ✓ |
@@ -385,6 +387,7 @@ Then run: `./install.sh --profile=my-new-profile`
 | btop | | | | ✓ | ✓ |
 | ncdu | | | | ✓ | ✓ |
 | chafa | | | ✓ | ✓ | |
+| Mole | ✓ | ✓ | ✓ | ✓ | |
 | **RUNTIMES** |
 | Node | | | ✓ | ✓ | |
 | Python | | | ✓ | ✓ | |
@@ -413,7 +416,7 @@ Then run: `./install.sh --profile=my-new-profile`
 
 **Minimal (~16 apps):** Bare essentials - Raycast, Bitwarden, Firefox, Chrome, Ghostty, basic CLI tools
 
-**Standard (~32 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, BetterDisplay, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Setapp
+**Standard (~36 apps):** Regular users - adds Edge, Spotify, VLC, Discord, Obsidian, Claude/ChatGPT Desktop, BetterDisplay, OneDrive, Google Drive, Microsoft Office, Teams, WhatsApp, Bettershot, Kap, Stretchly, Pearcleaner, Mole
 
 **Developer (~53 apps):** GUI-centric devs - adds Warp, Zed, VSCode, Aqua Voice, KeyCastr, dev AI apps, OrbStack, UTM, Beekeeper Studio, pgAdmin4, SandVault, all runtimes
 

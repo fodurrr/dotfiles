@@ -156,6 +156,9 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | **PRODUCTIVITY** |
 | Obsidian | | ✓ | ✓ | ✓ | |
 | KeyCastr | | | ✓ | ✓ | |
+| Bettershot | | ✓ | ✓ | ✓ | |
+| Kap | | ✓ | ✓ | ✓ | |
+| Stretchly | | ✓ | ✓ | ✓ | |
 | **CLOUD STORAGE** |
 | OneDrive | | ✓ | ✓ | ✓ | |
 | Google Drive | | ✓ | ✓ | ✓ | |
@@ -180,8 +183,8 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | BetterDisplay | | ✓ | ✓ | ✓ | |
 | ~~MonitorControl~~ | | ✓ | ✓ | ✓ | |
 | **UTILITIES** |
-| Setapp | | ✓ | ✓ | ✓ | |
 | Keymapp | | | | ✓ | |
+| Pearcleaner | | ✓ | ✓ | ✓ | |
 | **SECURITY** |
 | SandVault | | | ✓ | ✓ | |
 | **CLI TOOLS** |
@@ -191,7 +194,6 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | fzf | ✓ | ✓ | ✓ | ✓ | ✓ |
 | ripgrep | | | ✓ | ✓ | ✓ |
 | jq | | | ✓ | ✓ | ✓ |
-| yq | | | ✓ | ✓ | ✓ |
 | gh | | | ✓ | ✓ | ✓ |
 | direnv | | | ✓ | ✓ | |
 | yazi | | | | ✓ | ✓ |
@@ -199,6 +201,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 | btop | | | | ✓ | ✓ |
 | ncdu | | | | ✓ | ✓ |
 | chafa | | | ✓ | ✓ | |
+| Mole | ✓ | ✓ | ✓ | ✓ | |
 | **RUNTIMES** |
 | Node | | | ✓ | ✓ | |
 | Python | | | ✓ | ✓ | |
