@@ -507,6 +507,18 @@ This ensures the repository is always the source of truth without data loss.
 
 ---
 
+## Stow Policy (Must Follow)
+
+We only stow stable config files. We never stow runtime/state directories.
+
+- Only include files we explicitly want versioned in each stow package
+- Never symlink an app’s entire config directory if it also stores runtime data there
+- Prefer stowing stable subpaths (e.g., `scripts/`) rather than the parent directory
+
+Full policy: `docs/stow-policy.md`
+
+---
+
 ## Zed Editor Configuration
 
 Zed is configured with vim mode and keybindings that match Helix/tmux for unified muscle memory:

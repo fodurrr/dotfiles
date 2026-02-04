@@ -386,6 +386,16 @@ dotfiles/                        # Repo root (location varies, check working dir
 
 This ensures the repo is always the source of truth without data loss.
 
+## Stow Policy (MANDATORY)
+
+We only stow stable config files. We never stow runtime/state directories.
+
+- Only include files we explicitly want versioned in each stow package
+- Never symlink an app’s entire config directory if it also stores runtime data there
+- Prefer stowing stable subpaths (e.g., `scripts/`) rather than the parent directory
+
+Full policy: `docs/stow-policy.md`
+
 ## Profile Switching Modes
 
 ### Merge Mode (Default)
