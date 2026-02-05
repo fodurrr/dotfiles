@@ -20,6 +20,18 @@ format_app_entry() {
     echo "${name} (${type})"
 }
 
+append_list_line() {
+    local var_name="$1"
+    local line="$2"
+    local current
+    current="${!var_name}"
+    if [[ -z "$current" ]]; then
+        printf -v "$var_name" '%s' "$line"
+    else
+        printf -v "$var_name" '%s\n%s' "$current" "$line"
+    fi
+}
+
 confirm_continue() {
     if command -v gum &> /dev/null; then
         gum confirm "Continue?" || exit 0
@@ -30,60 +42,98 @@ confirm_continue() {
     fi
 }
 
-show_profile_summary() {
-    local installed_list="$1"
-    local to_install_list="$2"
+build_installed_keys() {
+    INSTALLED_KEYS=()
+    local app_key
+    for app_key in $(get_all_apps); do
+        if is_installable_app "$app_key"; then
+            if is_app_installed "$app_key"; then
+                INSTALLED_KEYS+=("$app_key")
+            fi
+        fi
+    done
+}
+
+build_selection_diff() {
+    local include_removals="$1"
+
+    SELECTION_ALREADY_INSTALLED=""
+    SELECTION_TO_INSTALL=""
+    SELECTION_TO_REMOVE=""
+    SELECTION_REMOVE_KEYS=""
+
+    local selected_set="|"
+    local app_key
+    for app_key in "${SELECTED_KEYS[@]}"; do
+        if [[ "$selected_set" == *"|$app_key|"* ]]; then
+            continue
+        fi
+        selected_set="${selected_set}${app_key}|"
+        if is_app_installed "$app_key"; then
+            local line_entry
+            line_entry=$(format_app_entry "$app_key")
+            line_entry="${ALACARTE_DIM}•${ALACARTE_RESET} ${line_entry}"
+            append_list_line SELECTION_ALREADY_INSTALLED "$line_entry"
+        else
+            local line_entry
+            line_entry=$(format_app_entry "$app_key")
+            line_entry="${ALACARTE_GREEN}✓${ALACARTE_RESET} ${line_entry}"
+            append_list_line SELECTION_TO_INSTALL "$line_entry"
+        fi
+    done
+
+    if [[ "$include_removals" == "true" ]]; then
+        for app_key in "${INSTALLED_KEYS[@]}"; do
+            if [[ "$selected_set" != *"|$app_key|"* ]]; then
+                local line_entry
+                line_entry=$(format_app_entry "$app_key")
+                line_entry="${ALACARTE_RED}✗${ALACARTE_RESET} ${line_entry}"
+                append_list_line SELECTION_TO_REMOVE "$line_entry"
+                append_list_line SELECTION_REMOVE_KEYS "$app_key"
+            fi
+        done
+    fi
+}
+
+show_selection_summary() {
+    local title="$1"
+    local selected_label="$2"
+    local show_empty_install="$3"
+    local exit_if_no_changes="$4"
 
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Installation Summary"
+    echo "  ${title}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "Selected profiles: ${SELECTED_PROFILES[*]}"
-    echo ""
-
-    if [[ -n "$installed_list" ]]; then
-        echo "Already installed:"
-        echo "$installed_list"
+    if [[ -n "$selected_label" ]]; then
+        echo "$selected_label"
         echo ""
     fi
 
-    if [[ -n "$to_install_list" ]]; then
-        echo "Will install:"
-        echo "$to_install_list"
+    if [[ -n "$SELECTION_ALREADY_INSTALLED" ]]; then
+        echo "Already installed:"
+        echo "$SELECTION_ALREADY_INSTALLED"
         echo ""
-    else
+    fi
+
+    if [[ -n "$SELECTION_TO_REMOVE" ]]; then
+        echo "Will remove:"
+        echo "$SELECTION_TO_REMOVE"
+        echo ""
+    fi
+
+    if [[ -n "$SELECTION_TO_INSTALL" ]]; then
+        echo "Will install:"
+        echo "$SELECTION_TO_INSTALL"
+        echo ""
+    elif [[ "$show_empty_install" == "true" ]]; then
         echo "Will install:"
         echo "- (none)"
         echo ""
     fi
 
-    confirm_continue
-}
-
-show_alacarte_summary() {
-    local to_remove_list="$1"
-    local to_install_list="$2"
-
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  A la carte Summary"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    if [[ -n "$to_remove_list" ]]; then
-        echo "Will remove:"
-        echo "$to_remove_list"
-        echo ""
-    fi
-
-    if [[ -n "$to_install_list" ]]; then
-        echo "Will install:"
-        echo "$to_install_list"
-        echo ""
-    fi
-
-    if [[ -z "$to_remove_list" && -z "$to_install_list" ]]; then
+    if [[ "$exit_if_no_changes" == "true" && -z "$SELECTION_TO_REMOVE" && -z "$SELECTION_TO_INSTALL" ]]; then
         echo "No changes selected. Exiting."
         exit 0
     fi
@@ -254,7 +304,7 @@ run_alacarte_selection() {
 
     # Build selected list (ignore headers)
     A_LA_CARTE_SELECTED="|"
-    local selected_keys=()
+    SELECTED_KEYS=()
     for line in "${SELECTED_ALACARTE[@]}"; do
         local value="$line"
         if [[ "$value" == __HEADER__* ]]; then
@@ -266,48 +316,19 @@ run_alacarte_selection() {
         if [[ -z "$value" || "$value" == __HEADER__* ]]; then
             continue
         fi
-        selected_keys+=("$value")
+        if [[ "$A_LA_CARTE_SELECTED" == *"|$value|"* ]]; then
+            continue
+        fi
+        SELECTED_KEYS+=("$value")
         A_LA_CARTE_SELECTED="${A_LA_CARTE_SELECTED}${value}|"
     done
 
     # Compute installed set for diff
-    local installed_keys=()
-    local app_key
-    for app_key in $(get_all_apps); do
-        if is_installable_app "$app_key"; then
-            if is_app_installed "$app_key"; then
-                installed_keys+=("$app_key")
-            fi
-        fi
-    done
+    build_installed_keys
+    build_selection_diff "true"
+    A_LA_CARTE_REMOVE="$SELECTION_REMOVE_KEYS"
 
-    # Build to_remove and to_install lists
-    local to_remove_list=""
-    local to_install_list=""
-
-    for app_key in "${installed_keys[@]}"; do
-        if [[ "$A_LA_CARTE_SELECTED" != *"|$app_key|"* ]]; then
-            local line_entry
-            line_entry=$(format_app_entry "$app_key")
-            line_entry="${ALACARTE_RED}✗${ALACARTE_RESET} ${line_entry}"
-            [[ -z "$to_remove_list" ]] && to_remove_list="$line_entry" || to_remove_list="${to_remove_list}
-${line_entry}"
-            [[ -z "$A_LA_CARTE_REMOVE" ]] && A_LA_CARTE_REMOVE="$app_key" || A_LA_CARTE_REMOVE="${A_LA_CARTE_REMOVE}
-${app_key}"
-        fi
-    done
-
-    for app_key in "${selected_keys[@]}"; do
-        if ! is_app_installed "$app_key"; then
-            local line_entry
-            line_entry=$(format_app_entry "$app_key")
-            line_entry="${ALACARTE_GREEN}✓${ALACARTE_RESET} ${line_entry}"
-            [[ -z "$to_install_list" ]] && to_install_list="$line_entry" || to_install_list="${to_install_list}
-${line_entry}"
-        fi
-    done
-
-    show_alacarte_summary "$to_remove_list" "$to_install_list"
+    show_selection_summary "A la carte Summary" "" "false" "true"
 }
 
 run_profiles_selection() {
@@ -343,26 +364,25 @@ run_profiles_selection() {
         SELECTED_PROFILES=("minimal")
     fi
 
-    # Build profile summary
-    local installed_list=""
-    local to_install_list=""
+    echo ""
+    echo "Scanning installed apps (this may take a minute)..."
+    build_installed_keys
+
+    # Build profile-based selection list (preserve apps.toml order)
+    SELECTED_KEYS=()
     local app_key
     for app_key in $(get_all_apps); do
         if app_in_profile "$app_key" && is_installable_app "$app_key"; then
-            local line_entry
-            line_entry=$(format_app_entry "$app_key")
-            line_entry="- ${line_entry}"
-            if is_app_installed "$app_key"; then
-                [[ -z "$installed_list" ]] && installed_list="$line_entry" || installed_list="${installed_list}
-${line_entry}"
-            else
-                [[ -z "$to_install_list" ]] && to_install_list="$line_entry" || to_install_list="${to_install_list}
-${line_entry}"
-            fi
+            SELECTED_KEYS+=("$app_key")
         fi
     done
 
-    show_profile_summary "$installed_list" "$to_install_list"
+    echo ""
+    echo "Preparing selection summary..."
+    build_selection_diff "$CLEAN_MODE"
+
+    local selected_label="Selected profiles: ${SELECTED_PROFILES[*]}"
+    show_selection_summary "Installation Summary" "$selected_label" "true" "false"
 }
 
 run_profile_selection() {
