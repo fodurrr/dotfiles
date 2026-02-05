@@ -72,7 +72,7 @@ description = "Post-modern modal text editor"
 [apps.firefox]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "standard", "developer", "hacker"]
+profiles = ["developer", "hacker"]
 description = "Privacy-focused web browser"
 
 [apps.google-chrome]
