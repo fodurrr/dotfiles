@@ -66,15 +66,19 @@ export FZF_DEFAULT_OPTS=" \
 # 5. Aliases
 # =============================================================================
 # File System (using eza instead of ls)
-alias ls='eza --icons --git'
-alias l='eza --icons --git'
-alias la='eza --long --all --header --icons --git'
-alias lt='eza --icons --git --tree --level=2'
-alias lta='eza --all --icons --git --tree --level=2'
-alias tree='eza --tree --icons --level=3'  # Replaces brew tree
+if command -v eza &>/dev/null; then
+    alias ls='eza --icons --git'
+    alias l='eza --icons --git'
+    alias la='eza --long --all --header --icons --git'
+    alias lt='eza --icons --git --tree --level=2'
+    alias lta='eza --all --icons --git --tree --level=2'
+    alias tree='eza --tree --icons --level=3'  # Replaces brew tree
+fi
 
 # Cat (using bat)
-alias cat='bat --style=plain'
+if command -v bat &>/dev/null; then
+    alias cat='bat --style=plain'
+fi
 
 # Git
 alias g='git'
