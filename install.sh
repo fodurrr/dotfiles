@@ -12,6 +12,7 @@ set -e
 #   ./install.sh --profile=developer      # Non-interactive, single profile
 #   ./install.sh -p dev -p devops         # Merge multiple profiles
 #   ./install.sh --list-profiles          # Show available profiles
+#   ./install.sh --list-installed         # Show installed apps (from apps.toml)
 #   ./install.sh --clean                  # Strict cleanup mode
 #   ./install.sh --extras                 # Install extra apps interactively
 # =============================================================================
@@ -66,6 +67,7 @@ source "$DOTFILES_DIR/scripts/lib/summary.sh"
 # =============================================================================
 # Load Install Phases
 # =============================================================================
+source "$DOTFILES_DIR/scripts/install/list_installed.sh"
 source "$DOTFILES_DIR/scripts/install/args.sh"
 source "$DOTFILES_DIR/scripts/install/bootstrap.sh"
 source "$DOTFILES_DIR/scripts/install/interactive.sh"

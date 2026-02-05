@@ -29,11 +29,11 @@ parse_args() {
                 EXTRAS_MODE=true
                 shift
                 ;;
-            --list-profiles)
-                # Check if yq is available (installed during bootstrap)
-                if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
-                    echo "Available profiles:"
-                    echo ""
+        --list-profiles)
+            # Check if yq is available (installed during bootstrap)
+            if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
+                echo "Available profiles:"
+                echo ""
                     # Extract unique profiles from apps.toml
                     grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u | while read -r profile; do
                         # Count apps in this profile
@@ -43,9 +43,12 @@ parse_args() {
                 else
                     echo "Run bootstrap first (./install.sh), then use --list-profiles"
                     echo "Or check apps.toml for available profiles"
-                fi
-                exit 0
-                ;;
+            fi
+            exit 0
+            ;;
+        --list-installed)
+            list_installed_and_exit
+            ;;
             *)
                 echo "Unknown option: $1"
                 exit 1
