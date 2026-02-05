@@ -11,6 +11,7 @@
 #   category    = grouping for documentation
 #   profiles    = ["minimal", "standard", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
+#   config_for  = "app-key" (optional, associate config/defaults to app)
 #   description = short description for summary display (<40 chars)
 #
 # To add an app to a profile: add the profile name to the profiles array
@@ -190,6 +191,7 @@ package = "sketchybar"
 category = "config"
 profiles = ["hacker"]
 depends_on = "sketchybar"
+config_for = "sketchybar"
 description = "SketchyBar configuration"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -206,6 +208,7 @@ type = "stow"
 package = "raycast"
 category = "config"
 profiles = ["minimal", "standard", "developer", "hacker"]
+config_for = "raycast"
 description = "Raycast scripts and settings"
 
 [apps.obsidian]
@@ -589,6 +592,7 @@ type = "stow"
 package = "starship"
 category = "config"
 profiles = ["minimal", "standard", "developer", "hacker", "server"]
+config_for = "starship"
 description = "Starship prompt config"
 
 [apps.ghostty-config]
@@ -596,6 +600,7 @@ type = "stow"
 package = "ghostty"
 category = "config"
 profiles = ["minimal", "standard", "developer", "hacker"]
+config_for = "ghostty"
 description = "Ghostty terminal config"
 
 [apps.terminal-config]
@@ -609,6 +614,7 @@ type = "stow"
 package = "zed"
 category = "config"
 profiles = ["developer", "hacker"]
+config_for = "zed"
 description = "Zed editor config"
 
 [apps.mise-config]
@@ -623,6 +629,7 @@ type = "stow"
 package = "aerospace"
 category = "config"
 profiles = ["hacker"]
+config_for = "aerospace"
 description = "Aerospace WM config"
 
 [apps.tmux-config]
@@ -630,6 +637,7 @@ type = "stow"
 package = "tmux"
 category = "config"
 profiles = ["hacker", "server"]
+config_for = "tmux"
 description = "Tmux multiplexer config"
 
 # [apps.nvim-config]
@@ -644,6 +652,7 @@ type = "stow"
 package = "helix"
 category = "config"
 profiles = ["developer", "hacker", "server"]
+config_for = "helix"
 description = "Helix editor config"
 
 [apps.yazi-config]
@@ -651,6 +660,7 @@ type = "stow"
 package = "yazi"
 category = "config"
 profiles = ["hacker", "server"]
+config_for = "yazi"
 description = "Yazi file manager config"
 
 [apps.cheatsheet-config]
