@@ -220,7 +220,7 @@ description = "Markdown-based knowledge base"
 [apps.bitwarden]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "standard", "developer", "hacker"]
+profiles = ["standard", "developer", "hacker"]
 description = "Open-source password manager"
 
 [apps.aqua-voice]
@@ -272,7 +272,7 @@ description = "Break reminder and wellness app"
 [apps.onedrive]
 type = "cask"
 category = "cloud-storage"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["developer", "hacker"]
 description = "Microsoft cloud storage"
 
 [apps.google-drive]
