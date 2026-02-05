@@ -6,6 +6,9 @@ setup_logging() {
     LOG_FILE="$DOTFILES_DIR/install.log"
 
     # Initialize log file with header
+    local profile_label="${SELECTED_PROFILES[*]}"
+    [[ "$A_LA_CARTE_MODE" == true ]] && profile_label="a-la-carte"
+
     {
         echo "================================================================================"
         echo "Dotfiles Installation Log"
@@ -13,7 +16,7 @@ setup_logging() {
         echo "Date:     $(date '+%Y-%m-%d %H:%M:%S')"
         echo "Host:     $(hostname)"
         echo "User:     $(whoami)"
-        echo "Profiles: ${SELECTED_PROFILES[*]}"
+        echo "Profiles: ${profile_label}"
         echo "Clean:    $CLEAN_MODE"
         echo "================================================================================"
         echo ""

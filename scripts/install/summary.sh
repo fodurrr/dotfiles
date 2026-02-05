@@ -8,7 +8,11 @@ show_summary_and_reload() {
     echo "  Installation Summary"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "  Profiles: ${SELECTED_PROFILES[*]}"
+    if [[ "$A_LA_CARTE_MODE" == true ]]; then
+        echo "  Profiles: a-la-carte"
+    else
+        echo "  Profiles: ${SELECTED_PROFILES[*]}"
+    fi
     echo ""
 
     if [[ -n "$SUMMARY_INSTALLED" ]]; then
