@@ -3,7 +3,13 @@
 # =============================================================================
 
 ALACARTE_DIM=$'\033[2m'
+ALACARTE_RED=$'\033[0;31m'
+ALACARTE_GREEN=$'\033[0;32m'
 ALACARTE_RESET=$'\033[0m'
+
+strip_ansi() {
+    printf '%s' "$1" | sed -E $'s/\x1B\\[[0-9;]*[mK]//g'
+}
 
 format_app_entry() {
     local app_key="$1"
@@ -11,7 +17,7 @@ format_app_entry() {
     name=$(get_app_display_name "$app_key")
     local type
     type=$(get_app_prop "$app_key" "type")
-    echo "- ${name} (${type})"
+    echo "${name} (${type})"
 }
 
 confirm_continue() {
@@ -87,10 +93,46 @@ show_alacarte_summary() {
 
 ALACARTE_OPTIONS=()
 ALACARTE_SELECTED_VALUES=""
+ALACARTE_LABELS=()
+ALACARTE_VALUES=()
+
+append_selected_value() {
+    local value="$1"
+    if [[ -z "$ALACARTE_SELECTED_VALUES" ]]; then
+        ALACARTE_SELECTED_VALUES="$value"
+    else
+        ALACARTE_SELECTED_VALUES="${ALACARTE_SELECTED_VALUES},${value}"
+    fi
+}
+
+alacarte_value_for_label() {
+    local label="$1"
+    local i
+    for ((i=0; i<${#ALACARTE_LABELS[@]}; i++)); do
+        if [[ "${ALACARTE_LABELS[$i]}" == "$label" ]]; then
+            echo "${ALACARTE_VALUES[$i]}"
+            return 0
+        fi
+    done
+    return 1
+}
+
+alacarte_value_exists() {
+    local value="$1"
+    local i
+    for ((i=0; i<${#ALACARTE_VALUES[@]}; i++)); do
+        if [[ "${ALACARTE_VALUES[$i]}" == "$value" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
 
 build_alacarte_options() {
     ALACARTE_OPTIONS=()
     ALACARTE_SELECTED_VALUES=""
+    ALACARTE_LABELS=()
+    ALACARTE_VALUES=()
 
     local group
     while IFS= read -r group; do
@@ -115,7 +157,17 @@ build_alacarte_options() {
         [[ "$group_has_apps" != true ]] && continue
 
         # Add group header
-        ALACARTE_OPTIONS+=("${ALACARTE_DIM}── ${group} ──${ALACARTE_RESET}|__HEADER__${group}")
+        local header_label="${ALACARTE_DIM}── ${group} ──${ALACARTE_RESET}"
+        local header_value="__HEADER__${group}"
+        ALACARTE_OPTIONS+=("${header_label}|${header_value}")
+        ALACARTE_LABELS+=("$header_label")
+        ALACARTE_VALUES+=("$header_value")
+        local header_label_stripped
+        header_label_stripped=$(strip_ansi "$header_label")
+        if [[ "$header_label_stripped" != "$header_label" ]]; then
+            ALACARTE_LABELS+=("$header_label_stripped")
+            ALACARTE_VALUES+=("$header_value")
+        fi
 
         # Add apps in this group (preserve apps.toml order)
         for app_key in $(get_all_apps); do
@@ -139,14 +191,24 @@ build_alacarte_options() {
             local label="  ${name} — ${desc}"
             if is_app_installed "$app_key"; then
                 label="${label} ${ALACARTE_DIM}(installed)${ALACARTE_RESET}"
-                if [[ -z "$ALACARTE_SELECTED_VALUES" ]]; then
-                    ALACARTE_SELECTED_VALUES="$app_key"
-                else
-                    ALACARTE_SELECTED_VALUES="${ALACARTE_SELECTED_VALUES},${app_key}"
+                append_selected_value "$app_key"
+                append_selected_value "$label"
+                local label_stripped
+                label_stripped=$(strip_ansi "$label")
+                if [[ "$label_stripped" != "$label" ]]; then
+                    append_selected_value "$label_stripped"
                 fi
             fi
 
             ALACARTE_OPTIONS+=("${label}|${app_key}")
+            ALACARTE_LABELS+=("$label")
+            ALACARTE_VALUES+=("$app_key")
+            local label_stripped
+            label_stripped=$(strip_ansi "$label")
+            if [[ "$label_stripped" != "$label" ]]; then
+                ALACARTE_LABELS+=("$label_stripped")
+                ALACARTE_VALUES+=("$app_key")
+            fi
         done
     done < <(get_group_order)
 }
@@ -180,23 +242,32 @@ run_alacarte_selection() {
     done < <(gum choose --no-limit \
         --header "A la carte selection" \
         --cursor-prefix "  " \
-        --selected-prefix "  " \
+        --selected-prefix "${ALACARTE_GREEN}✓${ALACARTE_RESET} " \
         --unselected-prefix "  " \
-        --selected.foreground="2" \
         --label-delimiter="|" \
         --no-strip-ansi \
         --selected="$ALACARTE_SELECTED_VALUES" \
         "${ALACARTE_OPTIONS[@]}")
 
+    echo ""
+    echo "Preparing selection summary..."
+
     # Build selected list (ignore headers)
     A_LA_CARTE_SELECTED="|"
     local selected_keys=()
     for line in "${SELECTED_ALACARTE[@]}"; do
-        if [[ "$line" == __HEADER__* ]]; then
+        local value="$line"
+        if [[ "$value" == __HEADER__* ]]; then
             continue
         fi
-        selected_keys+=("$line")
-        A_LA_CARTE_SELECTED="${A_LA_CARTE_SELECTED}${line}|"
+        if ! alacarte_value_exists "$value"; then
+            value=$(alacarte_value_for_label "$line" || true)
+        fi
+        if [[ -z "$value" || "$value" == __HEADER__* ]]; then
+            continue
+        fi
+        selected_keys+=("$value")
+        A_LA_CARTE_SELECTED="${A_LA_CARTE_SELECTED}${value}|"
     done
 
     # Compute installed set for diff
@@ -218,6 +289,7 @@ run_alacarte_selection() {
         if [[ "$A_LA_CARTE_SELECTED" != *"|$app_key|"* ]]; then
             local line_entry
             line_entry=$(format_app_entry "$app_key")
+            line_entry="${ALACARTE_RED}✗${ALACARTE_RESET} ${line_entry}"
             [[ -z "$to_remove_list" ]] && to_remove_list="$line_entry" || to_remove_list="${to_remove_list}
 ${line_entry}"
             [[ -z "$A_LA_CARTE_REMOVE" ]] && A_LA_CARTE_REMOVE="$app_key" || A_LA_CARTE_REMOVE="${A_LA_CARTE_REMOVE}
@@ -229,6 +301,7 @@ ${app_key}"
         if ! is_app_installed "$app_key"; then
             local line_entry
             line_entry=$(format_app_entry "$app_key")
+            line_entry="${ALACARTE_GREEN}✓${ALACARTE_RESET} ${line_entry}"
             [[ -z "$to_install_list" ]] && to_install_list="$line_entry" || to_install_list="${to_install_list}
 ${line_entry}"
         fi
@@ -278,6 +351,7 @@ run_profiles_selection() {
         if app_in_profile "$app_key" && is_installable_app "$app_key"; then
             local line_entry
             line_entry=$(format_app_entry "$app_key")
+            line_entry="- ${line_entry}"
             if is_app_installed "$app_key"; then
                 [[ -z "$installed_list" ]] && installed_list="$line_entry" || installed_list="${installed_list}
 ${line_entry}"
