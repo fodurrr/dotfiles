@@ -2,6 +2,9 @@
 # PHASE 2: PROFILE SELECTION / A LA CARTE
 # =============================================================================
 
+ALACARTE_DIM=$'\033[2m'
+ALACARTE_RESET=$'\033[0m'
+
 format_app_entry() {
     local app_key="$1"
     local name
@@ -112,7 +115,7 @@ build_alacarte_options() {
         [[ "$group_has_apps" != true ]] && continue
 
         # Add group header
-        ALACARTE_OPTIONS+=("── ${group} ──|__HEADER__${group}")
+        ALACARTE_OPTIONS+=("${ALACARTE_DIM}── ${group} ──${ALACARTE_RESET}|__HEADER__${group}")
 
         # Add apps in this group (preserve apps.toml order)
         for app_key in $(get_all_apps); do
@@ -135,7 +138,7 @@ build_alacarte_options() {
 
             local label="  ${name} — ${desc}"
             if is_app_installed "$app_key"; then
-                label="${GREEN}${label} (installed)${NC}"
+                label="${label} ${ALACARTE_DIM}(installed)${ALACARTE_RESET}"
                 if [[ -z "$ALACARTE_SELECTED_VALUES" ]]; then
                     ALACARTE_SELECTED_VALUES="$app_key"
                 else
@@ -160,6 +163,9 @@ run_alacarte_selection() {
         exit 1
     fi
 
+    echo ""
+    echo "Scanning installed apps (this may take a minute)..."
+
     A_LA_CARTE_REMOVE=""
     build_alacarte_options
 
@@ -173,8 +179,10 @@ run_alacarte_selection() {
         [[ -n "$line" ]] && SELECTED_ALACARTE+=("$line")
     done < <(gum choose --no-limit \
         --header "A la carte selection" \
-        --cursor-prefix "[ ] " \
-        --selected-prefix "[x] " \
+        --cursor-prefix "  " \
+        --selected-prefix "  " \
+        --unselected-prefix "  " \
+        --selected.foreground="2" \
         --label-delimiter="|" \
         --no-strip-ansi \
         --selected="$ALACARTE_SELECTED_VALUES" \
