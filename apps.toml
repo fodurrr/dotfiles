@@ -30,7 +30,7 @@ description = "GPU-accelerated terminal emulator"
 [apps.warp]
 type = "cask"
 category = "terminals"
-profiles = ["developer", "hacker"]
+profiles = ["developer"]
 description = "AI-powered modern terminal"
 
 # ─────────────────────────────────────────────────────────────────────────────
