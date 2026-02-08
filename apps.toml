@@ -185,6 +185,12 @@ category = "window-management"
 profiles = ["hacker"]
 description = "Active window border highlight"
 
+[apps.hammerspoon]
+type = "cask"
+category = "window-management"
+profiles = ["hacker"]
+description = "Automation runtime for hover window border"
+
 [apps.sketchybar-config]
 type = "stow"
 package = "sketchybar"
@@ -631,6 +637,14 @@ category = "config"
 profiles = ["hacker"]
 config_for = "aerospace"
 description = "Aerospace WM config"
+
+[apps.hammerspoon-config]
+type = "stow"
+package = "hammerspoon"
+category = "config"
+profiles = ["hacker"]
+config_for = "hammerspoon"
+description = "Hammerspoon hover-border config"
 
 [apps.tmux-config]
 type = "stow"
