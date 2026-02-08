@@ -4,7 +4,7 @@
 
 parse_args() {
     while [[ $# -gt 0 ]]; do
-        case $1 in
+        case "$1" in
             --help|-h)
                 show_help_and_exit
                 ;;
@@ -24,7 +24,12 @@ parse_args() {
                 CLEAN_MODE=true
                 shift
                 ;;
+            --clean-untracked)
+                CLEAN_UNTRACKED=true
+                shift
+                ;;
             --yes|-y)
+                YES_MODE=true
                 INTERACTIVE=false
                 shift
                 ;;
@@ -32,14 +37,25 @@ parse_args() {
                 EXTRAS_MODE=true
                 shift
                 ;;
+            --reconcile-casks)
+                RECONCILE_CASKS=true
+                shift
+                ;;
+            --reconcile-dry-run)
+                RECONCILE_CASKS=true
+                RECONCILE_DRY_RUN=true
+                shift
+                ;;
+            --reconcile-only)
+                RECONCILE_CASKS=true
+                RECONCILE_ONLY=true
+                shift
+                ;;
             --list-profiles)
-                # Check if yq is available (installed during bootstrap)
                 if command -v yq >/dev/null 2>&1 && [[ -f "$APPS_CONFIG" ]]; then
                     echo "Available profiles:"
                     echo ""
-                    # Extract unique profiles from apps.toml
                     grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u | while read -r profile; do
-                        # Count apps in this profile
                         count=$(grep -c "\"$profile\"" "$APPS_CONFIG" 2>/dev/null || echo "0")
                         printf "  %-12s (%d apps)\n" "$profile" "$count"
                     done

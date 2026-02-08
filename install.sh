@@ -22,11 +22,16 @@ set -e
 # =============================================================================
 SELECTED_PROFILES=()
 CLEAN_MODE=false
+YES_MODE=false
 INTERACTIVE=true
 EXTRAS_MODE=false
 A_LA_CARTE_MODE=false
 A_LA_CARTE_SELECTED=""
 A_LA_CARTE_REMOVE=""
+RECONCILE_CASKS=false
+RECONCILE_DRY_RUN=false
+RECONCILE_ONLY=false
+CLEAN_UNTRACKED=false
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR_REAL="$(cd "$DOTFILES_DIR" 2>/dev/null && pwd -P)"
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
@@ -74,6 +79,8 @@ source "$DOTFILES_DIR/scripts/install/bootstrap.sh"
 source "$DOTFILES_DIR/scripts/install/interactive.sh"
 source "$DOTFILES_DIR/scripts/install/logging.sh"
 source "$DOTFILES_DIR/scripts/install/clean_guard.sh"
+source "$DOTFILES_DIR/scripts/install/reconcile_casks.sh"
+source "$DOTFILES_DIR/scripts/install/clean_review.sh"
 source "$DOTFILES_DIR/scripts/install/extras.sh"
 source "$DOTFILES_DIR/scripts/install/alacarte.sh"
 source "$DOTFILES_DIR/scripts/install/layer_homebrew.sh"
@@ -93,6 +100,10 @@ run_profile_selection
 setup_logging
 check_clean_safety
 run_extras_mode
+run_reconcile_casks
+if [[ "$RECONCILE_ONLY" == true ]]; then
+    show_reconcile_summary_and_exit
+fi
 run_alacarte_removals
 run_layer_homebrew
 

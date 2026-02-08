@@ -3,7 +3,7 @@
 # =============================================================================
 
 list_installed_and_exit() {
-    if ! command -v yq &> /dev/null; then
+    if ! command -v yq >/dev/null 2>&1; then
         echo "yq not found. Run bootstrap first (./install.sh) to install dependencies."
         exit 1
     fi
@@ -16,8 +16,8 @@ list_installed_and_exit() {
     local has_brew=true
     local has_mise=true
 
-    command -v brew &> /dev/null || has_brew=false
-    command -v mise &> /dev/null || has_mise=false
+    command -v brew >/dev/null 2>&1 || has_brew=false
+    command -v mise >/dev/null 2>&1 || has_mise=false
 
     if [[ "$has_brew" != true ]]; then
         echo "Note: Homebrew not found; cask/brew checks will be skipped."
@@ -42,6 +42,22 @@ list_installed_and_exit() {
                 [[ "$has_mise" != true ]] && continue
                 ;;
         esac
+
+        if [[ "$type" == "cask" ]]; then
+            local cask
+            cask=$(get_app_prop "$app_key" "name")
+            [[ -z "$cask" ]] && cask="$app_key"
+            local state
+            state=$(get_cask_install_state "$cask")
+            if [[ "$state" == "managed" || "$state" == "unmanaged" ]]; then
+                local name
+                name=$(get_app_display_name "$app_key")
+                local line="- ${name} (${type}, ${state})"
+                [[ -z "$installed_list" ]] && installed_list="$line" || installed_list="${installed_list}
+${line}"
+            fi
+            continue
+        fi
 
         if is_app_installed "$app_key"; then
             local name
