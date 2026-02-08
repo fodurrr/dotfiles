@@ -355,6 +355,12 @@ category = "virtualization"
 profiles = ["developer", "hacker"]
 description = "Virtual machine manager"
 
+[apps.qemu]
+type = "brew"
+category = "virtualization"
+profiles = ["developer", "hacker"]
+description = "Machine emulator and virtualizer"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # DATABASE
 # ─────────────────────────────────────────────────────────────────────────────
