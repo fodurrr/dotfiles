@@ -26,6 +26,9 @@ EOF
     local app_name
     app_name=$(get_cask_app_name "$cask")
     if [[ -n "$app_name" ]]; then
+        if [[ "$app_name" == */* ]]; then
+            app_name=$(basename "$app_name")
+        fi
         echo "/Applications/$app_name"
     fi
 }
@@ -60,7 +63,7 @@ get_cask_install_state() {
     local paths
     paths=$(get_cask_candidate_app_paths "$cask")
     if [[ -z "$paths" ]]; then
-        echo "unknown"
+        echo "missing"
         return 0
     fi
 
