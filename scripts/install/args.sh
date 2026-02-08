@@ -5,6 +5,9 @@
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
+            --help|-h)
+                show_help_and_exit
+                ;;
             --profile=*)
                 local profile_value
                 profile_value="${1#*=}"
@@ -29,11 +32,11 @@ parse_args() {
                 EXTRAS_MODE=true
                 shift
                 ;;
-        --list-profiles)
-            # Check if yq is available (installed during bootstrap)
-            if command -v yq &> /dev/null && [[ -f "$APPS_CONFIG" ]]; then
-                echo "Available profiles:"
-                echo ""
+            --list-profiles)
+                # Check if yq is available (installed during bootstrap)
+                if command -v yq >/dev/null 2>&1 && [[ -f "$APPS_CONFIG" ]]; then
+                    echo "Available profiles:"
+                    echo ""
                     # Extract unique profiles from apps.toml
                     grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u | while read -r profile; do
                         # Count apps in this profile
@@ -43,14 +46,15 @@ parse_args() {
                 else
                     echo "Run bootstrap first (./install.sh), then use --list-profiles"
                     echo "Or check apps.toml for available profiles"
-            fi
-            exit 0
-            ;;
-        --list-installed)
-            list_installed_and_exit
-            ;;
+                fi
+                exit 0
+                ;;
+            --list-installed)
+                list_installed_and_exit
+                ;;
             *)
                 echo "Unknown option: $1"
+                echo "Run ./install.sh --help to see available options."
                 exit 1
                 ;;
         esac

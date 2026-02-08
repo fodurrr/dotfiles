@@ -68,6 +68,7 @@ source "$DOTFILES_DIR/scripts/lib/summary.sh"
 # Load Install Phases
 # =============================================================================
 source "$DOTFILES_DIR/scripts/install/list_installed.sh"
+source "$DOTFILES_DIR/scripts/install/help.sh"
 source "$DOTFILES_DIR/scripts/install/args.sh"
 source "$DOTFILES_DIR/scripts/install/bootstrap.sh"
 source "$DOTFILES_DIR/scripts/install/interactive.sh"
