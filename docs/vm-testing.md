@@ -1,6 +1,7 @@
 # Testing Dotfiles in a Virtual Machine
 
 A complete guide for safely testing these dotfiles in a macOS VM before applying them to your real machine.
+For current profile/app membership, rely on `apps.toml` and installer listing commands.
 
 ## Start Here: Prepare a Clean macOS VM (UTM + IPSW)
 

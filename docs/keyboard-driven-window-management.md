@@ -1,6 +1,7 @@
 # Keyboard-Driven Window Management
 
 A guide to navigating your Mac using only the keyboard with Aerospace, tmux, and Helix.
+This page is workflow guidance; app/profile membership is defined in `apps.toml`.
 
 ## Overview
 

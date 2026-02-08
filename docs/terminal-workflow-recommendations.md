@@ -1,379 +1,152 @@
 # Terminal Workflow Recommendations
 
-This document explains the 5-profile system, provides complete app matrices, and suggests terminal alternatives for GUI apps.
+This document focuses on terminal-centric workflows and operational patterns.
+It does not define profile app membership; profile/app truth lives in `apps.toml`.
 
----
+## Scope
 
-## Profile System Overview
+Use this doc for:
+- keyboard-first window and terminal habits
+- tmux/Helix workflow examples
+- practical CLI replacements for common GUI tasks
 
-The dotfiles support five profiles with different philosophies:
-
-| Profile | Philosophy | Target User |
-|---------|-----------|-------------|
-| **minimal** | Bare essentials only | Fresh Mac, testing, minimal footprint |
-| **standard** | Full GUI experience | Friends/family, casual users, new Mac owners |
-| **developer** | GUI + dev tools | Developers who prefer VSCode/Zed |
-| **hacker** | Terminal-centric workflow | Power users, keyboard-driven workflows |
-| **server** | Headless/CLI only | Remote servers, SSH environments |
-
-### Key Differences
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         PROFILE COMPARISON                                   │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  minimal       standard          developer      hacker         server          │
-│  ────────      ─────          ─────────      ──────         ──────          │
-│  Ghostty       Ghostty        Ghostty        Ghostty        (none)          │
-│                               + Warp         + Warp                         │
-│                                              + tmux         + tmux          │
-│                                                                              │
-│  (none)        (none)         Zed            Zed            (none)          │
-│                               + VSCode       + VSCode                       │
-│                               + Helix        + Helix        + Helix         │
-│                                                                              │
-│  Firefox       Firefox        Firefox        Firefox        (none)          │
-│  Chrome        + Chrome       + Chrome       + Chrome                       │
-│                + Edge         + Edge         + Edge                         │
-│                                                                              │
-│  (none)        Claude         Claude         Claude         (none)          │
-│                ChatGPT        ChatGPT        ChatGPT                        │
-│                               Codex          Codex                          │
-│                               OpenCode       OpenCode                       │
-│                                              + CLI tools                    │
-│                                                                              │
-│  (none)        (none)         (none)         Aerospace      (none)          │
-│                                                                              │
-│  Finder        Finder         Finder         yazi           yazi            │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Complete App Matrix
-
-### GUI Applications (Homebrew Casks)
-
-| App | minimal | standard | developer | hacker | server | Notes |
-|-----|:-------:|:-----:|:---------:|:------:|:------:|-------|
-| **Terminals** |||||||
-| Ghostty | ✓ | ✓ | ✓ | ✓ | | GPU-accelerated terminal |
-| Warp | | | ✓ | ✓ | | AI-powered terminal |
-| **Editors** |||||||
-| Zed | | | ✓ | ✓ | | Fast, modern editor |
-| VSCode | | | ✓ | ✓ | | Extension ecosystem |
-| Antigravity | | | ✓ | ✓ | | Note-taking |
-| **Browsers** |||||||
-| Firefox | ✓ | ✓ | ✓ | ✓ | | Privacy-focused |
-| Chrome | ✓ | ✓ | ✓ | ✓ | | DevTools, compatibility |
-| Edge | | ✓ | ✓ | ✓ | | PDF, Microsoft integration |
-| **AI Desktop Apps** |||||||
-| Claude Desktop | | ✓ | ✓ | ✓ | | GUI chat interface |
-| ChatGPT Desktop | | ✓ | ✓ | ✓ | | GUI chat interface |
-| Codex Desktop | | | ✓ | ✓ | | AI coding GUI |
-| OpenCode Desktop | | | ✓ | ✓ | | AI coding GUI |
-| **Productivity** |||||||
-| Raycast | ✓ | ✓ | ✓ | ✓ | | Launcher, extensions |
-| Obsidian | | ✓ | ✓ | ✓ | | Notes, knowledge base |
-| Bitwarden | ✓ | ✓ | ✓ | ✓ | | Password manager |
-| Aqua Voice | | | ✓ | ✓ | | Real-time voice dictation |
-| **Media** |||||||
-| Spotify | | ✓ | ✓ | ✓ | | Music streaming |
-| VLC | | ✓ | ✓ | ✓ | | Media player |
-| Discord | | ✓ | ✓ | ✓ | | Communication |
-| **Virtualization** |||||||
-| OrbStack | | | ✓ | ✓ | | Docker/Linux VMs |
-| UTM | | | ✓ | ✓ | | macOS/Windows VMs |
-| **Display** |||||||
-| BetterDisplay | | ✓ | ✓ | ✓ | | DDC control, virtual monitors |
-| **Window Management** |||||||
-| Aerospace | | | | ✓ | | i3-like tiling WM |
-| **Fonts** |||||||
-| JetBrains Mono NF | ✓ | ✓ | ✓ | ✓ | ✓ | Nerd Font icons |
-
-### CLI Tools (Mise)
-
-| Tool | minimal | standard | developer | hacker | server | Notes |
-|------|:-------:|:-----:|:---------:|:------:|:------:|-------|
-| **Core CLI** |||||||
-| starship | ✓ | ✓ | ✓ | ✓ | ✓ | Cross-shell prompt |
-| eza | ✓ | ✓ | ✓ | ✓ | ✓ | Modern ls |
-| bat | ✓ | ✓ | ✓ | ✓ | ✓ | cat with syntax highlighting |
-| fzf | ✓ | ✓ | ✓ | ✓ | ✓ | Fuzzy finder |
-| **Developer CLI** |||||||
-| ripgrep | | | ✓ | ✓ | ✓ | Fast grep |
-| jq | | | ✓ | ✓ | ✓ | JSON processor |
-| yq | | | ✓ | ✓ | ✓ | YAML processor |
-| gh | | | ✓ | ✓ | ✓ | GitHub CLI |
-| direnv | | | ✓ | ✓ | | Directory environments |
-| **Hacker/Server Extras** |||||||
-| tmux | | | | ✓ | ✓ | Terminal multiplexer |
-| helix | | | ✓ | ✓ | ✓ | Modal editor |
-| yazi | | | | ✓ | ✓ | Terminal file manager |
-| btop | | | | ✓ | ✓ | System monitor |
-| ncdu | | | | ✓ | ✓ | Disk usage analyzer |
-| lazygit | | | | ✓ | ✓ | TUI for git |
-
-### AI CLI Tools (Hacker Profile Only)
-
-| Tool | minimal | standard | developer | hacker | server | Notes |
-|------|:-------:|:-----:|:---------:|:------:|:------:|-------|
-| claude-cli | | | | ✓ | | Claude Code CLI |
-| codex-cli | | | | ✓ | | OpenAI Codex CLI |
-| opencode-cli | | | | ✓ | | OpenCode CLI |
-| gemini-cli | | | | ✓ | | Google Gemini CLI |
-
-### Runtimes (Mise)
-
-| Runtime | minimal | standard | developer | hacker | server | Version |
-|---------|:-------:|:-----:|:---------:|:------:|:------:|---------|
-| Node.js | | | ✓ | ✓ | | lts |
-| Python | | | ✓ | ✓ | | 3.14 |
-| Rust | | | ✓ | ✓ | | stable |
-| Bun | | | ✓ | ✓ | | 1.3 |
-| pnpm | | | ✓ | ✓ | | 10.28 |
-| Erlang | | | ✓ | ✓ | | 28.3 |
-| Elixir | | | ✓ | ✓ | | 1.19.5-otp-28 |
-
-### Stow Packages (Configs)
-
-| Package | minimal | standard | developer | hacker | server | Target Path |
-|---------|:-------:|:-----:|:---------:|:------:|:------:|-------------|
-| git | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.gitconfig |
-| zsh | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.zshrc |
-| sheldon | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.config/sheldon/ |
-| starship | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.config/starship.toml |
-| mise | ✓ | ✓ | ✓ | ✓ | ✓ | ~/.config/mise/ |
-| ghostty | ✓ | ✓ | ✓ | ✓ | | ~/.config/ghostty/ |
-| zed | | | ✓ | ✓ | | ~/.config/zed/ |
-| aerospace | | | | ✓ | | ~/.config/aerospace/ |
-| tmux | | | | ✓ | ✓ | ~/.config/tmux/ |
-| helix | | | ✓ | ✓ | ✓ | ~/.config/helix/ |
-| yazi | | | | ✓ | ✓ | ~/.config/yazi/ |
-
----
-
-## Terminal Alternatives for GUI Apps
-
-The **hacker** profile replaces several GUI apps with terminal equivalents:
-
-### Clipboard Manager
-**GUI:** Paste (Setapp)
-**Terminal:** tmux buffers + pbcopy
+Use these for source-of-truth app membership:
 
 ```bash
-# In tmux copy mode (Ctrl+a + [)
-v          # Start selection (vi-mode)
-y          # Copy to system clipboard (pbcopy)
-Ctrl+a + b # List all buffers (clipboard history)
+./install.sh --list-profiles
+./install.sh --list-installed
 ```
 
-### System Monitor
-**GUI:** iStat Menus, Activity Monitor
-**Terminal:** btop
+## Recommended Profile Paths
+
+- `developer` (Recommended): GUI-forward development with terminal tooling.
+- `hacker`: terminal-first workflow with tiling/window tooling.
+- `server`: headless terminal-only workflow.
+
+## Terminal-First Workflow Stack
+
+- Window manager: AeroSpace (hacker profile)
+- Terminal multiplexer: tmux
+- Editor: Helix
+- Shell utilities: `eza`, `bat`, `fzf`, `ripgrep`, `jq`, `gh`
+
+## Practical Alternatives to GUI Tasks
+
+### Clipboard history and quick reuse
+
+Use tmux buffers and system clipboard integration:
 
 ```bash
-btop       # Interactive system monitor
-           # CPU, memory, disk, network, processes
-           # Vim-like keybindings
+# tmux copy mode
+# Ctrl+a then [
+# Select text, yank, then paste via system clipboard
 ```
 
-### Disk Usage
-**GUI:** CleanMyMac, DaisyDisk
-**Terminal:** ncdu
+### System and process monitoring
 
 ```bash
-ncdu /     # Scan from root
-ncdu ~     # Scan home directory
-           # Navigate with arrow keys
-           # Press 'd' to delete
+btop
 ```
 
-### File Manager
-**GUI:** Finder
-**Terminal:** yazi
+### Disk usage analysis
 
 ```bash
-yazi       # or just 'y' with shell wrapper
-           # Image previews, vim keybindings
-           # Bulk rename, copy/move operations
+ncdu ~
 ```
 
-### Git GUI
-**GUI:** GitHub Desktop, Tower
-**Terminal:** lazygit
+### File navigation
 
 ```bash
-lazygit    # Full TUI for git
-           # Stage hunks, interactive rebase
-           # Cherry-pick, stash management
+yazi
 ```
 
-### Window Management
-**GUI:** Magnet, Rectangle, BetterTouchTool
-**Terminal-adjacent:** Aerospace
+### Git workflow
 
-```toml
-# ~/.config/aerospace/aerospace.toml
-# i3-like tiling with vim keybindings
-alt-h = "focus left"
-alt-j = "focus down"
-alt-k = "focus up"
-alt-l = "focus right"
-
-alt-shift-h = "move left"
-alt-shift-j = "move down"
-alt-shift-k = "move up"
-alt-shift-l = "move right"
+```bash
+lazygit
 ```
 
----
+## Core Workflow Examples
 
-## Adding New Apps to Profiles
+### Coding session (single machine)
 
-### Step 1: Determine the app type
+1. Start window manager layout.
+2. Open tmux session.
+3. Split panes by task (editor, tests, logs, git).
+4. Keep one shell for install/reconcile commands.
 
-| Type | When to Use | Example |
-|------|-------------|---------|
-| `cask` | GUI app installed via Homebrew | Spotify, VSCode |
-| `brew` | CLI tool (rare, prefer mise) | btop, ncdu |
-| `mise` | CLI tool or runtime | starship, node, python |
-| `stow` | Config files to symlink | zsh, tmux configs |
-| `curl` | Vendor installer fallback (optional) | Reserved for exceptional cases |
+### Research + implementation
 
-### Step 2: Add to apps.toml
+1. Left pane: browser or notes.
+2. Right pane: editor + terminal.
+3. Bottom pane: tests/lint/install output.
 
-```toml
-# Example: Add a new GUI app
-[apps.figma]
-type = "cask"
-category = "design"
-profiles = ["developer", "hacker"]
-description = "Design tool"
+### Multi-project context switching
 
-# Example: Add a new CLI tool
-[apps.htop]
-type = "mise"
-category = "cli"
-profiles = ["hacker", "server"]
-description = "Process viewer"
+1. Use one tmux session per project.
+2. Keep branch naming consistent (`codex/<topic>`).
+3. Use profile-based install to converge toolchain across machines.
 
-# Example: Add a new config
-[apps.alacritty-config]
-type = "stow"
-package = "alacritty"
-category = "config"
-profiles = ["hacker"]
-description = "Alacritty terminal config"
+## Safe Operations
+
+Before major install changes:
+
+```bash
+./install.sh --help
+./install.sh --list-profiles
+./install.sh --list-installed
 ```
 
-### Step 3: Install
+For strict profile convergence:
+
+```bash
+./install.sh --profile=hacker --clean
+```
+
+For GUI app ownership reconciliation:
+
+```bash
+./install.sh --profile=hacker --reconcile-casks --reconcile-dry-run
+```
+
+## Adding or Changing Tools
+
+Use this decision path:
+
+1. Runtime or CLI: prefer `mise`.
+2. GUI app: use Homebrew `cask`.
+3. Rare vendor-only CLI: `curl` fallback.
+
+Then update `apps.toml` and run:
 
 ```bash
 ./install.sh --profile=hacker
 ```
 
----
+## Validation Checklist
 
-## Creating Custom Profiles
-
-### Example: DevOps Profile
-
-Add your profile name to relevant apps in `apps.toml`:
-
-```toml
-# Add to existing apps
-[apps.orbstack]
-profiles = ["developer", "hacker", "devops"]  # Add devops
-
-# Add new apps specific to devops
-[apps.k9s]
-type = "mise"
-category = "cli"
-profiles = ["devops"]
-description = "Kubernetes TUI"
-
-[apps.terraform]
-type = "mise"
-category = "cli"
-profiles = ["devops"]
-description = "Infrastructure as code"
-```
-
-Then install:
-```bash
-./install.sh --profile=devops
-```
-
----
-
-## tmux Clipboard Quick Reference
+- Commands resolve:
 
 ```bash
-# Enter copy mode
-Ctrl+a + [
-
-# In copy mode (vi-mode)
-v          # Start selection
-V          # Line selection
-y          # Copy to system clipboard
-q          # Exit copy mode
-
-# Buffer management
-Ctrl+a + b # List all buffers
-Ctrl+a + p # Paste most recent buffer
-Ctrl+a + = # Choose buffer to paste
-
-# From command line
-echo "text" | pbcopy    # Copy to clipboard
-pbpaste                 # Paste from clipboard
+which -a tmux helix yazi lazygit
 ```
 
----
+- Shell config is loaded:
 
-## Verification Checklist
+```bash
+source ~/.zshrc
+```
 
-After switching profiles, verify:
+- Mise tool state is healthy:
 
-1. **Shell works:**
-   ```bash
-   source ~/.zshrc
-   starship --version  # Prompt should load
-   ```
+```bash
+mise install
+mise ls
+```
 
-2. **Core CLI tools:**
-   ```bash
-   eza --version
-   bat --version
-   fzf --version
-   ```
+## Related Docs
 
-3. **Developer tools (developer/hacker profiles):**
-   ```bash
-   rg --version
-   jq --version
-   gh --version
-   ```
-
-4. **Hacker tools (hacker profile):**
-   ```bash
-   tmux -V
-   hx --version
-   yazi --version
-   btop --version
-   lazygit --version
-   ```
-
-5. **Window management (hacker profile):**
-   ```bash
-   aerospace --version
-   # Verify keybindings: alt+h/j/k/l for focus
-   ```
-
-6. **AI CLI (hacker profile):**
-   ```bash
-   claude --version
-   opencode --version
-   ```
+- [`docs/profile-system.md`](profile-system.md)
+- [`docs/stow-policy.md`](stow-policy.md)
+- [`docs/keyboard-driven-window-management.md`](keyboard-driven-window-management.md)
+- [`docs/vm-testing.md`](vm-testing.md)

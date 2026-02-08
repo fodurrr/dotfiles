@@ -1,6 +1,7 @@
 # AI Agent Sandbox Guide
 
 A guide to running AI coding agents safely in isolation on macOS.
+Profile/app membership is managed in `apps.toml`; use `./install.sh --list-installed` to verify local state.
 
 ---
 
@@ -35,7 +36,7 @@ AI coding agents are powerful but can cause damage if unconstrained:
 ### Setup (one-time)
 
 ```bash
-# Install via Homebrew (included in developer/hacker profiles)
+# Install via Homebrew
 brew install sandvault
 
 # Create the isolated user account

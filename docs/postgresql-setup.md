@@ -1,13 +1,16 @@
 # PostgreSQL Setup Guide
 
 Quick reference for PostgreSQL on macOS via Homebrew.
+This page is setup-focused; it does not define profile app membership.
 
 ## Installation
 
-PostgreSQL is included in the `developer` and `hacker` profiles:
+Install PostgreSQL from your configured profile or directly with Homebrew:
 
 ```bash
 ./install.sh --profile=developer
+# or
+brew install postgresql@17
 ```
 
 ## One-Time Setup
@@ -53,7 +56,7 @@ psql -U postgres -c "\du"
 
 ## GUI Client Connection
 
-Both Beekeeper Studio and pgAdmin4 are included in developer/hacker profiles.
+Beekeeper Studio and pgAdmin4 are optional external clients.
 
 ### Connection Settings
 
