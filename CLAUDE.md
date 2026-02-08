@@ -105,7 +105,7 @@ Scripts must work on **any macOS system** - from fresh installs to fully configu
 │  Layer 1: Homebrew - Casks and brews                            │
 │  Layer 2: Stow     - Config symlinks                            │
 │  Layer 3: Mise     - CLI tools and runtimes                     │
-│  Layer 5: Curl     - AI CLI installers                          │
+│  Layer 5: Curl     - Optional vendor CLI installers (fallback)                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -267,7 +267,7 @@ source ~/.zshrc
 | `apps.toml` | **Centralized app registry** - All apps with profile assignments |
 | `Brewfile.bootstrap` | Infrastructure packages only (runs before apps.toml can be read) |
 | `install.sh` | Two-phase installer with profile support and clean mode |
-| `scripts/curl-installs.sh` | Layer 5: AI CLI installers |
+| `scripts/curl-installs.sh` | Layer 5: Optional vendor CLI installer fallback |
 
 ## The Centralized Config: apps.toml
 
@@ -304,7 +304,7 @@ profiles = ["hacker", "server"]
 | `brew` | Homebrew formula (CLI) | Used rarely, most CLIs via mise |
 | `mise` | Mise-managed tool/runtime | starship, eza, node, python |
 | `stow` | Config symlinks | git, zsh, ghostty configs |
-| `curl` | Curl installer script | claude-cli, opencode-cli |
+| `curl` | Vendor installer fallback (optional) | Reserved for exceptional cases |
 | `defaults` | macOS defaults write settings | Terminal.app, Raycast settings |
 
 ## Adding New Tools

@@ -241,7 +241,7 @@ alt-shift-l = "move right"
 | `brew` | CLI tool (rare, prefer mise) | btop, ncdu |
 | `mise` | CLI tool or runtime | starship, node, python |
 | `stow` | Config files to symlink | zsh, tmux configs |
-| `curl` | AI tools with curl installers | claude-cli |
+| `curl` | Vendor installer fallback (optional) | Reserved for exceptional cases |
 
 ### Step 2: Add to apps.toml
 

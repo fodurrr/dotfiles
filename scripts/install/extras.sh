@@ -113,12 +113,10 @@ run_extras_mode() {
             curl)
                 case "$app_key" in
                     claude-cli)
-                        log_success "Installing claude-cli..."
-                        curl -fsSL https://claude.ai/install.sh | bash
+                        install_or_update_curl_tool "$app_key" "claude" "claude-cli"
                         ;;
                     opencode-cli)
-                        log_success "Installing opencode-cli..."
-                        curl -fsSL https://opencode.ai/install | bash
+                        install_or_update_curl_tool "$app_key" "opencode" "opencode-cli"
                         ;;
                 esac
                 ;;

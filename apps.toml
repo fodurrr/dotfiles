@@ -120,13 +120,17 @@ description = "OpenCode AI assistant (GUI)"
 
 # Hacker users: CLI tools only
 [apps.claude-cli]
-type = "curl"
+type = "mise"
+name = "claude"
+version = "latest"
 category = "ai"
 profiles = ["hacker"]
 description = "Claude AI assistant (CLI)"
 
 [apps.opencode-cli]
-type = "curl"
+type = "mise"
+name = "opencode"
+version = "latest"
 category = "ai"
 profiles = ["hacker"]
 description = "OpenCode AI assistant (CLI)"
@@ -134,6 +138,7 @@ description = "OpenCode AI assistant (CLI)"
 [apps.codex-cli]
 type = "mise"
 name = "codex"
+version = "latest"
 category = "ai"
 profiles = ["hacker"]
 description = "OpenAI Codex assistant (CLI)"
