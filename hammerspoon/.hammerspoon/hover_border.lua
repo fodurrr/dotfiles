@@ -7,6 +7,7 @@ local screen_watcher = nil
 
 local last_window_id = nil
 local last_frame_key = nil
+local accessibility_warning_shown = false
 
 local config = {
   poll_interval = 0.08,
@@ -14,6 +15,7 @@ local config = {
   width = 6,
   corner_radius = 10,
   inset = 2,
+  prompt_for_accessibility = true,
 }
 
 local function frame_key(frame)
@@ -22,6 +24,17 @@ end
 
 local function expanded_frame(frame, inset)
   return hs.geometry.rect(frame.x - inset, frame.y - inset, frame.w + (inset * 2), frame.h + (inset * 2))
+end
+
+local function has_valid_frame(frame)
+  return frame and frame.x and frame.y and frame.w and frame.h and frame.w > 0 and frame.h > 0
+end
+
+local function point_in_frame(point, frame)
+  return point.x >= frame.x and
+         point.x <= (frame.x + frame.w) and
+         point.y >= frame.y and
+         point.y <= (frame.y + frame.h)
 end
 
 local function is_window_eligible(win)
@@ -45,11 +58,17 @@ end
 
 local function window_under_mouse()
   local point = hs.mouse.absolutePosition()
+  if not point or point.x == nil or point.y == nil then
+    return nil
+  end
+
   local windows = hs.window.orderedWindows()
   for _, win in ipairs(windows) do
     if is_window_eligible(win) then
-      local frame = win:frame()
-      if frame:contains(point) then
+      local ok, frame = pcall(function()
+        return win:frame()
+      end)
+      if ok and has_valid_frame(frame) and point_in_frame(point, frame) then
         return win
       end
     end
@@ -72,14 +91,29 @@ local function refresh_hover_border()
     return
   end
 
-  local focused = hs.window.focusedWindow()
-  if focused and hovered:id() == focused:id() then
+  local hovered_id = hovered:id()
+  if not hovered_id then
     hide_border()
     return
   end
 
-  local frame = expanded_frame(hovered:frame(), config.inset)
-  local current_window_id = hovered:id()
+  local focused = hs.window.focusedWindow()
+  if focused then
+    local focused_id = focused:id()
+    if focused_id and hovered_id == focused_id then
+      hide_border()
+      return
+    end
+  end
+
+  local hovered_frame = hovered:frame()
+  if not has_valid_frame(hovered_frame) then
+    hide_border()
+    return
+  end
+
+  local frame = expanded_frame(hovered_frame, config.inset)
+  local current_window_id = hovered_id
   local current_frame_key = frame_key(frame)
 
   if current_window_id == last_window_id and current_frame_key == last_frame_key then
@@ -90,6 +124,21 @@ local function refresh_hover_border()
   hover_border:show()
   last_window_id = current_window_id
   last_frame_key = current_frame_key
+end
+
+local function safe_refresh_hover_border()
+  local ok, err = pcall(refresh_hover_border)
+  if ok then
+    return
+  end
+
+  print("hover_border: stopping hover timer after error: " .. tostring(err))
+  hide_border()
+
+  if poll_timer then
+    poll_timer:stop()
+    poll_timer = nil
+  end
 end
 
 local function merge_config(user_config)
@@ -105,6 +154,21 @@ function M.start(user_config)
   M.stop()
   merge_config(user_config)
 
+  if not hs.accessibilityState() then
+    if config.prompt_for_accessibility then
+      hs.accessibilityState(true)
+    end
+
+    if not accessibility_warning_shown then
+      hs.alert.show("Enable Accessibility for Hammerspoon in System Settings > Privacy & Security > Accessibility")
+      print("hover_border: accessibility permission missing; hover border is disabled")
+      accessibility_warning_shown = true
+    end
+    return
+  end
+
+  accessibility_warning_shown = false
+
   hover_border = hs.drawing.rectangle(hs.geometry.rect(0, 0, 1, 1))
   hover_border:setFill(false)
   hover_border:setStroke(true)
@@ -115,7 +179,7 @@ function M.start(user_config)
   hover_border:setBehaviorByLabels({ "canJoinAllSpaces", "stationary", "ignoresCycle" })
   hover_border:hide()
 
-  poll_timer = hs.timer.doEvery(config.poll_interval, refresh_hover_border)
+  poll_timer = hs.timer.doEvery(config.poll_interval, safe_refresh_hover_border)
 
   if hs.spaces and hs.spaces.watcher then
     spaces_watcher = hs.spaces.watcher.new(function()
@@ -129,7 +193,7 @@ function M.start(user_config)
   end)
   screen_watcher:start()
 
-  refresh_hover_border()
+  safe_refresh_hover_border()
 end
 
 function M.stop()

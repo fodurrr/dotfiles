@@ -10,4 +10,5 @@ hover_border.start({
   width = 6,
   corner_radius = 10,
   inset = 2,
+  prompt_for_accessibility = true,
 })
