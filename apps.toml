@@ -228,6 +228,12 @@ category = "productivity"
 profiles = ["standard", "developer", "hacker"]
 description = "Markdown-based knowledge base"
 
+[apps.tana]
+type = "cask"
+category = "productivity"
+profiles = ["developer", "hacker"]
+description = "Knowledge management workspace with AI-powered outlining"
+
 [apps.bitwarden]
 type = "cask"
 category = "productivity"
@@ -416,6 +422,12 @@ category = "utilities"
 profiles = ["standard", "developer", "hacker"]
 description = "Uninstall apps and remove leftovers"
 
+[apps.thaw]
+type = "cask"
+category = "utilities"
+profiles = ["developer", "hacker"]
+description = "Menu bar manager"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FONTS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -481,6 +493,14 @@ type = "mise"
 category = "cli"
 profiles = ["developer", "hacker"]
 description = "Directory environment loader"
+
+[apps.pitchfork]
+type = "mise"
+name = "pitchfork"
+version = "latest"
+category = "cli"
+profiles = ["developer", "hacker"]
+description = "Mise registry utility for release and changelog workflows"
 
 # Hacker/Server extras
 [apps.tmux]
