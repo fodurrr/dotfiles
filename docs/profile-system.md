@@ -58,7 +58,7 @@ Each profile builds on the previous, with **server** being a specialized branch 
 │  Layer 1: Homebrew - Casks and brews                            │
 │  Layer 2: Stow     - Config symlinks                            │
 │  Layer 3: Mise     - CLI tools and runtimes                     │
-│  Layer 5: Curl     - AI CLI installers                          │
+│  Layer 5: Curl     - Optional vendor CLI installers (fallback)                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -103,7 +103,7 @@ description = "Tmux multiplexer config"
 | `brew` | Homebrew formula (CLI) | btop, ncdu |
 | `mise` | Mise-managed tool/runtime | starship, eza, node, python |
 | `stow` | Config symlinks | git, zsh, ghostty configs |
-| `curl` | Curl installer script | claude-cli, opencode-cli |
+| `curl` | Vendor installer fallback (optional) | Reserved for exceptional cases |
 
 ---
 
@@ -281,7 +281,7 @@ This ensures the repo is always the source of truth without data loss.
 | `apps.toml` | Centralized app registry with profile assignments |
 | `Brewfile.bootstrap` | Infrastructure packages (runs before apps.toml) |
 | `install.sh` | Two-phase installer with profile support |
-| `scripts/curl-installs.sh` | Layer 5: AI CLI installers |
+| `scripts/curl-installs.sh` | Layer 5: Optional vendor CLI installer fallback |
 | `AGENTS.md` | AI assistant guidance (mirrors CLAUDE.md) |
 | `CLAUDE.md` | AI assistant guidance and constraints |
 | `README.md` | User documentation |

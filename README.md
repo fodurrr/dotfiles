@@ -207,7 +207,7 @@ When switching between profiles, there are two modes:
 │  Layer 1: Homebrew - Casks and brews from apps.toml              │
 │  Layer 2: Stow     - Config symlinks from apps.toml              │
 │  Layer 3: Mise     - CLI tools and runtimes from apps.toml       │
-│  Layer 5: Curl     - AI CLI installers from apps.toml            │
+│  Layer 5: Curl     - Optional vendor CLI installers (fallback)            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -287,7 +287,7 @@ profiles = ["hacker", "server"]
 | `brew` | Homebrew formula (CLI) | Used rarely, most CLIs via mise |
 | `mise` | Mise-managed tool | starship, eza, bat, node, python |
 | `stow` | Config symlinks | git, zsh, ghostty configs |
-| `curl` | Curl installer script | claude-cli, opencode-cli |
+| `curl` | Vendor installer fallback (optional) | Reserved for exceptional cases |
 
 ### Creating a New Profile
 
@@ -653,6 +653,29 @@ source ~/.zshrc
 # Find all backups
 find ~ -name "*.bak" -type f 2>/dev/null
 ```
+
+### AI CLI version cleanup (one-time after migration)
+```bash
+# Check active command resolution
+which -a claude
+which -a opencode
+which -a codex
+
+# Compare active vs latest
+claude --version
+opencode --version
+codex --version
+mise latest claude
+mise latest opencode
+mise latest codex
+
+# Re-apply profile and prune old runtimes
+./install.sh --profile=hacker
+mise prune -y
+hash -r
+```
+
+If old non-mise binaries still appear first in `which -a`, remove them manually only after confirming the mise-managed binary works.
 
 ---
 

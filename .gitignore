@@ -24,3 +24,6 @@
 
 # Installation log (auto-generated)
 install.log
+
+# Mise generated config (auto-generated)
+mise/.config/mise/config.toml

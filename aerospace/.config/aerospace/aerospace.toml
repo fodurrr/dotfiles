@@ -11,13 +11,13 @@ start-at-login = true
 # Default to tiled layout (not accordion/fullscreen)
 default-root-container-layout = 'tiles'
 
-# Start JankyBorders for active window highlighting (yellow, more visible)
+# Start JankyBorders for focused window highlighting (green)
 after-startup-command = [
-    'exec-and-forget borders active_color=0xfff9e2af inactive_color=0xff313244 width=6.0'
+    'exec-and-forget borders active_color=0xff7ee787 inactive_color=0xff313244 width=6.0'
 ]
 
 # Mouse follows focus
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center', 'layout tiles horizontal vertical']
 
 # Notify SketchyBar on workspace change
 exec-on-workspace-change = [
@@ -40,6 +40,12 @@ outer.bottom = 0
 # Main Mode Bindings
 # =============================================================================
 [mode.main.binding]
+# --- Main App Shortcuts ---
+alt-t = 'exec-and-forget open -a Ghostty'
+alt-b = 'exec-and-forget open -a "Google Chrome"'
+alt-e = 'exec-and-forget open -a "Visual Studio Code"'
+alt-o = 'exec-and-forget open -a Obsidian'
+
 # --- Navigation (Alt + hjkl) ---
 alt-h = 'focus left'
 alt-j = 'focus down'

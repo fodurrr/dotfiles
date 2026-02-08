@@ -11,6 +11,7 @@
 #   category    = grouping for documentation
 #   profiles    = ["minimal", "standard", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
+#   config_for  = "app-key" (optional, associate config/defaults to app)
 #   description = short description for summary display (<40 chars)
 #
 # To add an app to a profile: add the profile name to the profiles array
@@ -29,7 +30,7 @@ description = "GPU-accelerated terminal emulator"
 [apps.warp]
 type = "cask"
 category = "terminals"
-profiles = ["developer", "hacker"]
+profiles = ["developer"]
 description = "AI-powered modern terminal"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -71,19 +72,19 @@ description = "Post-modern modal text editor"
 [apps.firefox]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "standard", "developer", "hacker"]
+profiles = ["developer", "hacker"]
 description = "Privacy-focused web browser"
 
 [apps.google-chrome]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "standard", "developer", "hacker"]
+profiles = ["minimal", "standard"]
 description = "Google web browser"
 
 [apps.microsoft-edge]
 type = "cask"
 category = "browsers"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Microsoft web browser"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -94,14 +95,14 @@ description = "Microsoft web browser"
 type = "cask"
 name = "claude"
 category = "ai"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard", "developer"]
 description = "Claude AI assistant (GUI)"
 
 [apps.chatgpt-desktop]
 type = "cask"
 name = "chatgpt"
 category = "ai"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard", "developer"]
 description = "ChatGPT AI assistant (GUI)"
 
 [apps.codex-desktop]
@@ -119,22 +120,27 @@ description = "OpenCode AI assistant (GUI)"
 
 # Hacker users: CLI tools only
 [apps.claude-cli]
-type = "curl"
+type = "mise"
+name = "claude"
+version = "latest"
 category = "ai"
-profiles = ["hacker"]
+profiles = ["developer", "hacker"]
 description = "Claude AI assistant (CLI)"
 
 [apps.opencode-cli]
-type = "curl"
+type = "mise"
+name = "opencode"
+version = "latest"
 category = "ai"
-profiles = ["hacker"]
+profiles = ["developer", "hacker"]
 description = "OpenCode AI assistant (CLI)"
 
 [apps.codex-cli]
 type = "mise"
 name = "codex"
+version = "latest"
 category = "ai"
-profiles = ["hacker"]
+profiles = ["developer", "hacker"]
 description = "OpenAI Codex assistant (CLI)"
 
 [apps.codex-acp]
@@ -146,7 +152,7 @@ description = "Codex adapter for ACP-compatible clients (Zed integration)"
 [apps.gemini-cli]
 type = "mise"
 category = "ai"
-profiles = ["hacker"]
+profiles = ["developer", "hacker"]
 depends_on = "node"
 description = "Google Gemini AI (CLI)"
 
@@ -184,12 +190,19 @@ category = "window-management"
 profiles = ["hacker"]
 description = "Active window border highlight"
 
+[apps.hammerspoon]
+type = "cask"
+category = "window-management"
+profiles = ["hacker"]
+description = "Automation runtime for hover window border"
+
 [apps.sketchybar-config]
 type = "stow"
 package = "sketchybar"
 category = "config"
 profiles = ["hacker"]
 depends_on = "sketchybar"
+config_for = "sketchybar"
 description = "SketchyBar configuration"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -206,18 +219,25 @@ type = "stow"
 package = "raycast"
 category = "config"
 profiles = ["minimal", "standard", "developer", "hacker"]
+config_for = "raycast"
 description = "Raycast scripts and settings"
 
 [apps.obsidian]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard", "developer"]
 description = "Markdown-based knowledge base"
+
+[apps.tana]
+type = "cask"
+category = "productivity"
+profiles = ["developer"]
+description = "Knowledge management workspace with AI-powered outlining"
 
 [apps.bitwarden]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Open-source password manager"
 
 [apps.aqua-voice]
@@ -266,16 +286,16 @@ description = "Break reminder and wellness app"
 # ─────────────────────────────────────────────────────────────────────────────
 # CLOUD STORAGE
 # ─────────────────────────────────────────────────────────────────────────────
-[apps.onedrive]
-type = "cask"
-category = "cloud-storage"
-profiles = ["standard", "developer", "hacker"]
-description = "Microsoft cloud storage"
+# [apps.onedrive]
+# type = "cask"
+# category = "cloud-storage"
+# profiles = ["standard"]
+# description = "Microsoft cloud storage"
 
 [apps.google-drive]
 type = "cask"
 category = "cloud-storage"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Google cloud storage"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -287,11 +307,11 @@ category = "office"
 profiles = ["standard"]
 description = "Microsoft 365 Office suite"
 
-[apps.microsoft-teams]
-type = "cask"
-category = "communication"
-profiles = ["standard"]
-description = "Team collaboration"
+# [apps.microsoft-teams]
+# type = "cask"
+# category = "communication"
+# profiles = ["standard"]
+# description = "Team collaboration"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MEDIA & COMMUNICATION
@@ -299,64 +319,70 @@ description = "Team collaboration"
 [apps.discord]
 type = "cask"
 category = "media"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Voice and text chat platform"
 
 [apps.spotify]
 type = "cask"
 category = "media"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Music streaming service"
 
 [apps.vlc]
 type = "cask"
 category = "media"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Universal media player"
 
 [apps.whatsapp]
 type = "cask"
 category = "communication"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Messaging app"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # VIRTUALIZATION
 # ─────────────────────────────────────────────────────────────────────────────
-[apps.orbstack]
-type = "cask"
-category = "virtualization"
-profiles = ["developer", "hacker"]
-description = "Fast Docker & Linux VMs"
+# [apps.orbstack]
+# type = "cask"
+# category = "virtualization"
+# profiles = ["developer", "hacker"]
+# description = "Fast Docker & Linux VMs"
 
-[apps.utm]
-type = "cask"
-category = "virtualization"
-profiles = ["developer", "hacker"]
-description = "Virtual machine manager"
+# [apps.utm]
+# type = "cask"
+# category = "virtualization"
+# profiles = ["developer", "hacker"]
+# description = "Virtual machine manager"
+
+# [apps.qemu]
+# type = "brew"
+# category = "virtualization"
+# profiles = ["developer", "hacker"]
+# description = "Machine emulator and virtualizer"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DATABASE
 # ─────────────────────────────────────────────────────────────────────────────
-[apps.beekeeper-studio]
-type = "cask"
-category = "database"
-profiles = ["developer", "hacker"]
-description = "Open source SQL editor and database manager"
+# [apps.beekeeper-studio]
+# type = "cask"
+# category = "database"
+# profiles = ["developer", "hacker"]
+# description = "Open source SQL editor and database manager"
 
-[apps.pgadmin4]
-type = "cask"
-category = "database"
-profiles = ["developer", "hacker"]
-description = "Official PostgreSQL admin GUI"
+# [apps.pgadmin4]
+# type = "cask"
+# category = "database"
+# profiles = ["developer", "hacker"]
+# description = "Official PostgreSQL admin GUI"
 
-[apps.postgresql]
-type = "brew"
-name = "postgresql@17"
-category = "database"
-profiles = ["developer", "hacker"]
-service = true
-description = "PostgreSQL database server"
+# [apps.postgresql]
+# type = "brew"
+# name = "postgresql@17"
+# category = "database"
+# profiles = ["developer", "hacker"]
+# service = true
+# description = "PostgreSQL database server"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DISPLAY
@@ -381,7 +407,7 @@ description = "Advanced display management with virtual monitors"
 # [apps.setapp]
 # type = "cask"
 # category = "utilities"
-# profiles = ["standard", "developer", "hacker"]
+# profiles = ["standard"]
 # description = "Mac app subscription service"
 
 [apps.sandvault]
@@ -399,8 +425,14 @@ description = "ZSA keyboard configuration"
 [apps.pearcleaner]
 type = "cask"
 category = "utilities"
-profiles = ["standard", "developer", "hacker"]
+profiles = ["standard"]
 description = "Uninstall apps and remove leftovers"
+
+[apps.thaw]
+type = "cask"
+category = "utilities"
+profiles = ["developer", "hacker"]
+description = "Menu bar manager"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FONTS
@@ -462,11 +494,19 @@ category = "cli"
 profiles = ["developer", "hacker", "server"]
 description = "GitHub CLI"
 
-[apps.direnv]
+# [apps.direnv]
+# type = "mise"
+# category = "cli"
+# profiles = ["developer", "hacker"]
+# description = "Directory environment loader"
+
+[apps.pitchfork]
 type = "mise"
+name = "pitchfork"
+version = "latest"
 category = "cli"
 profiles = ["developer", "hacker"]
-description = "Directory environment loader"
+description = "Mise registry utility for release and changelog workflows"
 
 # Hacker/Server extras
 [apps.tmux]
@@ -589,6 +629,7 @@ type = "stow"
 package = "starship"
 category = "config"
 profiles = ["minimal", "standard", "developer", "hacker", "server"]
+config_for = "starship"
 description = "Starship prompt config"
 
 [apps.ghostty-config]
@@ -596,6 +637,7 @@ type = "stow"
 package = "ghostty"
 category = "config"
 profiles = ["minimal", "standard", "developer", "hacker"]
+config_for = "ghostty"
 description = "Ghostty terminal config"
 
 [apps.terminal-config]
@@ -609,6 +651,7 @@ type = "stow"
 package = "zed"
 category = "config"
 profiles = ["developer", "hacker"]
+config_for = "zed"
 description = "Zed editor config"
 
 [apps.mise-config]
@@ -623,13 +666,23 @@ type = "stow"
 package = "aerospace"
 category = "config"
 profiles = ["hacker"]
+config_for = "aerospace"
 description = "Aerospace WM config"
+
+[apps.hammerspoon-config]
+type = "stow"
+package = "hammerspoon"
+category = "config"
+profiles = ["hacker"]
+config_for = "hammerspoon"
+description = "Hammerspoon hover-border config"
 
 [apps.tmux-config]
 type = "stow"
 package = "tmux"
 category = "config"
 profiles = ["hacker", "server"]
+config_for = "tmux"
 description = "Tmux multiplexer config"
 
 # [apps.nvim-config]
@@ -644,6 +697,7 @@ type = "stow"
 package = "helix"
 category = "config"
 profiles = ["developer", "hacker", "server"]
+config_for = "helix"
 description = "Helix editor config"
 
 [apps.yazi-config]
@@ -651,6 +705,7 @@ type = "stow"
 package = "yazi"
 category = "config"
 profiles = ["hacker", "server"]
+config_for = "yazi"
 description = "Yazi file manager config"
 
 [apps.cheatsheet-config]

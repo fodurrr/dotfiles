@@ -8,13 +8,13 @@ export PATH="$HOME/.local/bin:$PATH"
 # PostgreSQL (Homebrew keg-only formula)
 [[ -d /opt/homebrew/opt/postgresql@17/bin ]] && export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 
-# Editor Defaults (fallback chain: Zed → VSCode → nvim → vim)
-if command -v zed &>/dev/null; then
-    export EDITOR='zed --wait'
-elif command -v code &>/dev/null; then
+# Editor Defaults (fallback chain: VSCode → Zed → helix → vim)
+if command -v code &>/dev/null; then
     export EDITOR='code --wait'
-elif command -v nvim &>/dev/null; then
-    export EDITOR='nvim'
+elif command -v zed &>/dev/null; then
+    export EDITOR='zed --wait'
+elif command -v helix &>/dev/null; then
+    export EDITOR='helix --wait'
 else
     export EDITOR='vim'
 fi
@@ -66,15 +66,19 @@ export FZF_DEFAULT_OPTS=" \
 # 5. Aliases
 # =============================================================================
 # File System (using eza instead of ls)
-alias ls='eza --icons --git'
-alias l='eza --icons --git'
-alias la='eza --long --all --header --icons --git'
-alias lt='eza --icons --git --tree --level=2'
-alias lta='eza --all --icons --git --tree --level=2'
-alias tree='eza --tree --icons --level=3'  # Replaces brew tree
+if command -v eza &>/dev/null; then
+    alias ls='eza --icons --git'
+    alias l='eza --icons --git'
+    alias la='eza --long --all --header --icons --git'
+    alias lt='eza --icons --git --tree --level=2'
+    alias lta='eza --all --icons --git --tree --level=2'
+    alias tree='eza --tree --icons --level=3'  # Replaces brew tree
+fi
 
 # Cat (using bat)
-alias cat='bat --style=plain'
+if command -v bat &>/dev/null; then
+    alias cat='bat --style=plain'
+fi
 
 # Git
 alias g='git'
@@ -125,5 +129,3 @@ if command -v sv &>/dev/null; then
     alias svg='sv gemini'
 fi
 
-# opencode
-export PATH="${HOME}/.opencode/bin:$PATH"
