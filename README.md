@@ -203,6 +203,7 @@ find ~ -name "*.bak" -type f 2>/dev/null
 - [`docs/stow-policy.md`](docs/stow-policy.md): Stow rules for stable config-only symlinking
 - [`docs/ai-agent-sandbox-guide.md`](docs/ai-agent-sandbox-guide.md): Sandboxing patterns for AI coding tools
 - [`docs/ssh-github-setup.md`](docs/ssh-github-setup.md): SSH setup for GitHub access
+- [`docs/ntfs-fuse-t-automount.md`](docs/ntfs-fuse-t-automount.md): Optional NTFS FUSE-T automount reference (manual setup)
 
 ## License
 
