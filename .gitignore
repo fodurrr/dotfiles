@@ -27,7 +27,3 @@ install.log
 
 # Mise generated config (auto-generated)
 mise/.config/mise/config.toml
-
-# Raycast runtime/state (must never be stored in dotfiles repo)
-raycast/.config/raycast/extensions/
-raycast/.config/raycast/ai/
