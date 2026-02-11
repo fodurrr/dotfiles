@@ -60,7 +60,11 @@ remove_alacarte_configs() {
                     package=$(get_app_prop "$config_key" "package")
                     if [[ -d "$DOTFILES_DIR/$package" ]]; then
                         log_warning "Unlinking $package config..."
-                        stow -D "$package" 2>/dev/null || true
+                        if stow --help 2>&1 | grep -q -- "--no-folding"; then
+                            stow --no-folding -D "$package" 2>/dev/null || true
+                        else
+                            stow -D "$package" 2>/dev/null || true
+                        fi
                         add_to_summary REMOVED "$package" "$config_key"
                     fi
                     ;;
