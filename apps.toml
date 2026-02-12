@@ -13,6 +13,9 @@
 #   depends_on  = "app-key" (optional, install dependency first)
 #   config_for  = "app-key" (optional, associate config/defaults to app)
 #   platform    = ["macos", "linux"] (optional, defaults to all platforms)
+#   linux_name  = Linux package name for cross-platform brew entries (optional)
+#   linux_apt   = Debian/Ubuntu package override (optional)
+#   linux_dnf   = Fedora/RHEL package override (optional)
 #
 # To add an app to a profile: add the profile name to the profiles array
 # To create a new profile: just use a new name in any profiles array
@@ -163,7 +166,7 @@ description = "OpenAI Codex assistant (CLI)"
 type = "brew"
 category = "ai"
 profiles = ["developer", "hacker"]
-platform = ["macos", "linux"]
+platform = ["macos"]
 description = "Codex adapter for ACP-compatible clients (Zed integration)"
 
 [apps.gemini-cli]
@@ -566,6 +569,7 @@ type = "brew"
 category = "cli"
 profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
+linux_name = "btop"
 description = "Resource monitor"
 
 [apps.ncdu]
@@ -573,6 +577,7 @@ type = "brew"
 category = "cli"
 profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
+linux_name = "ncdu"
 description = "Disk usage analyzer"
 
 [apps.lazygit]

@@ -3,11 +3,15 @@
 # =============================================================================
 
 configure_terminal() {
+    if [[ "$(get_current_platform)" != "macos" ]]; then
+        return 0
+    fi
+
     # Check if terminal-config is in selected profiles
     local TERMINAL_IN_PROFILE=false
     local app_key
     for app_key in $(get_all_apps); do
-        if [[ "$app_key" == "terminal-config" ]] && app_in_profile "$app_key"; then
+        if [[ "$app_key" == "terminal-config" ]] && app_selected_for_install "$app_key"; then
             TERMINAL_IN_PROFILE=true
             break
         fi

@@ -110,7 +110,7 @@ EOF_MISE
     # Add tools from apps.toml that match selected profiles and type=mise
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "mise" ]]; then

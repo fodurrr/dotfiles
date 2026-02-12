@@ -16,6 +16,7 @@ This repository installs apps and shell/config tooling through a single `install
 - Ubuntu 20.04+, Debian 11+, Fedora 35+
 - Git
 - sudo access for package installation
+- Native package manager support only (`apt` or `dnf`; Linuxbrew is not used)
 
 Optional:
 - Fresh VM testing workflow: see [`docs/vm-testing.md`](docs/vm-testing.md)
@@ -81,6 +82,8 @@ Install individual apps interactively.
 ```
 
 ### Cask Reconciliation
+
+macOS only.
 
 Adopt unmanaged `/Applications` GUI apps into Homebrew cask ownership.
 
@@ -186,6 +189,8 @@ brew list --cask | rg 'onedrive|microsoft-office'
 ```
 
 ### 3) Clean mode stops because of untracked Homebrew apps
+
+macOS only.
 
 This is expected safety behavior. Re-run with explicit acknowledgment:
 

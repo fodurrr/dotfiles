@@ -2,6 +2,16 @@
 # EXTRAS MODE: Install additional apps interactively
 # =============================================================================
 
+is_extra_linux_package_available() {
+    local pm="$1"
+    local package="$2"
+    case "$pm" in
+        apt) apt-cache show "$package" >/dev/null 2>&1 ;;
+        dnf) dnf info "$package" >/dev/null 2>&1 ;;
+        *) return 1 ;;
+    esac
+}
+
 run_extras_mode() {
     if [[ "$EXTRAS_MODE" != true ]]; then
         return 0
@@ -20,6 +30,9 @@ run_extras_mode() {
     for app_key in $(get_all_apps); do
         type=$(get_app_prop "$app_key" "type")
         [[ "$type" == "stow" ]] && continue  # Skip config packages
+        if ! is_app_supported "$app_key"; then
+            continue
+        fi
 
         if ! is_app_installed "$app_key"; then
             desc=$(get_app_prop "$app_key" "description")
@@ -68,6 +81,11 @@ run_extras_mode() {
     echo "Installing ${#SELECTED_EXTRAS[@]} selected app(s)..."
     echo ""
 
+    local current_platform
+    current_platform=$(get_current_platform)
+    local current_pm
+    current_pm=$(pm_get_manager)
+
     # Install selected apps by type
     for app_key in "${SELECTED_EXTRAS[@]}"; do
         type=$(get_app_prop "$app_key" "type")
@@ -77,6 +95,11 @@ run_extras_mode() {
 
         case "$type" in
             cask)
+                if [[ "$current_platform" != "macos" ]]; then
+                    log_info "Skipping $name (cask installs are macOS-only)"
+                    add_to_summary SKIPPED "$name" "$app_key"
+                    continue
+                fi
                 local tap
                 tap=$(get_app_prop "$app_key" "tap")
                 [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
@@ -95,16 +118,38 @@ run_extras_mode() {
                 fi
                 ;;
             brew)
-                local tap
-                tap=$(get_app_prop "$app_key" "tap")
-                [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
-                log_success "Installing $name (brew)..."
-                if brew install "$name"; then
-                    add_to_summary INSTALLED "$name" "$app_key"
-                    # Start service if configured
-                    local service
-                    service=$(get_app_prop "$app_key" "service")
-                    [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
+                if [[ "$current_platform" == "linux" ]]; then
+                    local linux_package
+                    linux_package=$(get_linux_package_name "$app_key" "$current_pm")
+                    if [[ -z "$linux_package" ]]; then
+                        log_info "Skipping $name (no Linux package mapping for $current_pm)"
+                        add_to_summary SKIPPED "$name" "$app_key"
+                        continue
+                    fi
+                    if ! is_extra_linux_package_available "$current_pm" "$linux_package"; then
+                        log_info "Skipping $name (package '$linux_package' unavailable in $current_pm repos)"
+                        add_to_summary SKIPPED "$name" "$app_key"
+                        continue
+                    fi
+
+                    log_success "Installing $name ($linux_package)..."
+                    if pm_install "$linux_package"; then
+                        add_to_summary INSTALLED "$name" "$app_key"
+                    else
+                        log_warning "Failed to install $name ($linux_package)"
+                    fi
+                else
+                    local tap
+                    tap=$(get_app_prop "$app_key" "tap")
+                    [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
+                    log_success "Installing $name (brew)..."
+                    if brew install "$name"; then
+                        add_to_summary INSTALLED "$name" "$app_key"
+                        # Start service if configured
+                        local service
+                        service=$(get_app_prop "$app_key" "service")
+                        [[ "$service" == "true" ]] && brew services start "$name" 2>/dev/null
+                    fi
                 fi
                 ;;
             mise)

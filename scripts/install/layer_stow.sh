@@ -12,7 +12,7 @@ run_layer_stow() {
 
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "stow" ]]; then
@@ -35,7 +35,7 @@ run_layer_stow() {
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "stow" ]]; then
-                if ! app_in_profile "$app_key"; then
+                if ! app_selected_for_install "$app_key"; then
                     local package
                     package=$(get_app_prop "$app_key" "package")
                     if [[ -d "$DOTFILES_DIR/$package" ]]; then

@@ -6,7 +6,7 @@ has_cask_conflict_with_office() {
     if [[ "$1" != "onedrive" ]]; then
         return 1
     fi
-    app_in_profile "microsoft-office"
+    app_selected_for_install "microsoft-office"
 }
 
 remove_unmanaged_cask_bundle() {
@@ -47,7 +47,7 @@ run_layer_homebrew() {
     TAPPED_LIST="|"
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             local tap
             tap=$(get_app_prop "$app_key" "tap")
             if [[ -n "$tap" && "$TAPPED_LIST" != *"|$tap|"* ]]; then
@@ -65,7 +65,7 @@ run_layer_homebrew() {
         if [[ "$type" != "cask" ]]; then
             continue
         fi
-        if ! app_in_profile "$app_key"; then
+        if ! app_selected_for_install "$app_key"; then
             continue
         fi
 
@@ -131,7 +131,7 @@ run_layer_homebrew() {
 
     echo "Installing brews..."
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "brew" ]]; then

@@ -104,33 +104,13 @@ get_cask_app_name() {
 is_linux_package_installed() {
     local package="$1"
     local platform
+    platform=$(get_current_platform)
 
-    # Detect platform
-    if [[ -n "$(type -t detect_platform)" ]]; then
-        platform=$(detect_platform)
-    else
-        case "$(uname -s)" in
-            Darwin) platform="macos" ;;
-            Linux) platform="linux" ;;
-            *) platform="unknown" ;;
-        esac
-    fi
-
-    # Only relevant for Linux
-    if [[ "$platform" != "linux" ]]; then
+    if [[ "$platform" != "linux" || -z "$package" ]]; then
         return 1
     fi
 
-    # Check using appropriate package manager
-    if command -v dpkg &>/dev/null; then
-        dpkg -l "$package" 2>/dev/null | grep -q "^ii"
-        return $?
-    elif command -v rpm &>/dev/null; then
-        rpm -q "$package" &>/dev/null
-        return $?
-    else
-        return 1
-    fi
+    pm_is_installed "$package"
 }
 
 # Check if an app is currently installed
@@ -141,19 +121,25 @@ is_app_installed() {
     local name
     name=$(get_app_prop "$app_key" "name")
     [[ -z "$name" ]] && name="$app_key"
+    local platform
+    platform=$(get_current_platform)
 
     case "$type" in
         cask)
+            [[ "$platform" != "macos" ]] && return 1
             local state
             state=$(get_cask_install_state "$name")
             [[ "$state" == "managed" || "$state" == "unmanaged" ]]
             ;;
         brew)
-            # On Linux, check via apt/dnf instead
-            if is_linux_package_installed "$name"; then
-                return 0
+            if [[ "$platform" == "linux" ]]; then
+                local pm
+                pm=$(pm_get_manager)
+                local linux_package
+                linux_package=$(get_linux_package_name "$app_key" "$pm")
+                is_linux_package_installed "$linux_package"
+                return $?
             fi
-            # Fallback to brew on macOS
             brew list 2>/dev/null | grep -q "^${name}$"
             ;;
         mise)
@@ -176,4 +162,3 @@ is_app_installed() {
             ;;
     esac
 }
-

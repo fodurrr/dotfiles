@@ -1,247 +1,99 @@
 # Linux Support
 
-This repository now supports Linux (Ubuntu, Debian, Fedora) in addition to macOS.
+This repository supports Linux (Ubuntu, Debian, Fedora) with native package managers.
+
+## Strategy
+
+- Linux installs use `apt` (Ubuntu/Debian) or `dnf` (Fedora/RHEL/CentOS).
+- Linux bootstrap does **not** install or depend on Homebrew/Linuxbrew.
+- macOS keeps the existing Homebrew-based flow.
 
 ## Supported Platforms
 
-- **macOS** (Apple Silicon) - Full support
-- **Ubuntu** 20.04+ - Full support
-- **Debian** 11+ - Full support
-- **Fedora** 35+ - Full support
-- **RHEL/CentOS** - Experimental support
+- Ubuntu 20.04+
+- Debian 11+
+- Fedora 35+
+- RHEL/CentOS (best-effort)
 
 ## Installation
 
-### Quick Start
-
 ```bash
-# Clone the repository
-git clone https://github.com/fodurrr/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-
-# Interactive installation
-./install.sh
-
-# Non-interactive with profile
+git clone git@github.com:fodurrr/dotfiles.git
+cd dotfiles
 ./install.sh --profile=hacker
 ```
 
-### Platform Detection
+## Bootstrap Behavior
 
-The installer automatically detects your platform and installs packages using the appropriate package manager:
+On Linux, bootstrap installs prerequisites for the remaining layers:
 
-- **macOS**: Homebrew
-- **Ubuntu/Debian**: apt
-- **Fedora/RHEL**: dnf
+- installer/runtime tools (`yq`, `stow`, `git`, `curl`, etc.)
+- build toolchain and common dev headers for clean-machine runtime builds
+- `mise` (if not already installed)
 
-## Platform-Specific Notes
+`yq` is validated for TOML support (`-p toml`). If distro `yq` is incompatible, the installer falls back to the mikefarah binary.
 
-### Linux
+## Linux Layer Behavior
 
-**Package Managers**:
-- CLI tools are installed via `apt` or `dnf`
-- Version management (mise) works the same as macOS
-- Stow config management is cross-platform
+Linux package installs are driven by `apps.toml` metadata for `type = "brew"` entries:
 
-**GUI Applications**:
-- GUI apps (casks) are marked as `platform = ["macos"]` in `apps.toml`
-- These are automatically skipped on Linux systems
-- Install Linux GUI apps manually (e.g., via apt/dnf, AppImage, or Snap)
+- `linux_name`: common Linux package name
+- `linux_apt`: apt override
+- `linux_dnf`: dnf override
 
-**Available on Linux**:
-- CLI tools: eza, bat, ripgrep, fzf, jq, lazygit, tmux, yazi, etc.
-- Runtimes: Node, Python, Rust, Elixir, Erlang, etc.
-- Version manager: mise (for all above)
-- Configs: git, zsh, starship, tmux, helix, yazi, etc.
+If an app is selected for Linux but has no mapping (or the package is unavailable), it is skipped with an explicit message.
 
-**Not Available on Linux**:
-- GUI terminals: Ghostty, Warp
-- GUI editors: Zed, VS Code
-- GUI productivity: Raycast, Obsidian, etc.
-- macOS-specific: Hammerspoon, SketchyBar, Aerospace
+## GUI Apps on Linux
+
+- GUI apps are only automated when a native Linux package mapping exists.
+- macOS-only GUI apps are marked `platform = ["macos"]` and are skipped on Linux.
+- No Flatpak/Snap fallback is configured in this pass.
+
+## Platform-Aware Layering
 
 ### macOS
-
-**No Changes** - macOS installation works exactly as before:
-- Homebrew for all packages
-- GUI apps via Homebrew casks
-- Same profiles, same layers, same functionality
-
-## App Registry (apps.toml)
-
-### Platform Field
-
-Each app in `apps.toml` now has an optional `platform` field:
-
-```toml
-[apps.ghostty]
-type = "cask"
-platform = ["macos"]
-profiles = ["minimal", "standard", "developer", "hacker"]
-description = "GPU-accelerated terminal emulator"
-
-[apps.ripgrep]
-type = "mise"
-platform = ["macos", "linux"]
-profiles = ["developer", "hacker", "server"]
-description = "Fast recursive grep"
-```
-
-### Platform Values
-
-- `macos` - macOS only
-- `linux` - All Linux distributions
-- `ubuntu` - Ubuntu/Debian only
-- `debian` - Debian only
-- `fedora` - Fedora/RHEL/CentOS only
-
-### Default Behavior
-
-If `platform` is not specified, the app is assumed to work on all platforms:
-
-```toml
-[apps.some-tool]
-type = "mise"
-# No platform field = all platforms supported
-profiles = ["hacker"]
-```
-
-## Profiles
-
-All profiles work on all supported platforms:
-
-| Profile  | Description                                  | Linux Support |
-|----------|----------------------------------------------|--------------|
-| minimal  | Shell + essential CLI tools                  | ✓ Full      |
-| standard | GUI apps + CLI tools (many macOS-only)      | ✓ Partial   |
-| developer| Full development environment                   | ✓ Partial   |
-| hacker   | Terminal-forward power usage                  | ✓ Full      |
-| server   | Server/headless environment                  | ✓ Full      |
-
-**Linux-specific recommendations**:
-- `hacker` - Best choice for Linux (CLI-focused, no GUI)
-- `server` - For headless servers
-- `minimal` - Lightweight setup
-
-## Installation Layers
-
-The installer uses platform-aware layering:
-
-### macOS
-1. **Bootstrap** - Install Homebrew
-2. **Homebrew Layer** - Install brew/cask packages
-3. **Stow Layer** - Symlink config files
-4. **Mise Layer** - Install tools via mise
-5. **Curl Layer** - Vendor-specific installers
+1. Bootstrap (Homebrew + `Brewfile.bootstrap`)
+2. Homebrew layer
+3. Stow layer
+4. Mise layer
+5. Curl layer
 
 ### Linux
-1. **Bootstrap** - Install apt/dnf dependencies
-2. **Linux Layer** - Install packages via apt/dnf
-3. **Stow Layer** - Symlink config files
-4. **Mise Layer** - Install tools via mise
-5. **Curl Layer** - Vendor-specific installers
+1. Bootstrap (`apt`/`dnf` + prerequisites)
+2. Linux packages layer (`apt`/`dnf`, mapped from `apps.toml`)
+3. Stow layer
+4. Mise layer
+5. Curl layer
 
-## Testing
+## Validation
 
-Run the Linux test suite to verify your setup:
+Run Linux-focused assertions:
 
 ```bash
 ./scripts/test-linux.sh
 ```
 
-This tests:
-- Platform detection
-- Package manager availability
-- App filtering by platform
-- App state detection
+This validates:
 
-## Troubleshooting
+- platform filtering (`ghostty` false on Linux, `starship` true)
+- Linux package mapping presence
+- Linux bootstrap branch behavior (no `brew` calls in Linux bootstrap function)
+- macOS-only guardrails for post-install steps
 
-### "Skipping Homebrew layer (not a macOS system)"
+## Adding Cross-Platform Brew Apps
 
-This is expected on Linux systems. The Linux layer handles package installation instead.
-
-### GUI apps not available on Linux
-
-Many GUI apps are macOS-only (marked in `apps.toml` with `platform = ["macos"]`). Install Linux alternatives manually:
-
-```bash
-# Example: Install Linux terminal emulator
-sudo apt install alacritty
-
-# Example: Install Linux code editor
-sudo apt install neovim
-```
-
-### Package not found in apt/dnf
-
-Some tools in `apps.toml` may not be available in your distro's repositories. Install them manually:
-
-```bash
-# Example: Install mise version manager
-curl https://mise.jdx.dev/install.sh | sh
-
-# Example: Install ripgrep
-cargo install ripgrep
-```
-
-### Permissions issues on Linux
-
-You may need sudo for package operations:
-
-```bash
-# Add current user to sudoers (if needed)
-sudo visudo
-
-# Then run installer with sudo
-./install.sh
-```
-
-## Platform Comparison
-
-| Feature               | macOS           | Linux                    |
-|-----------------------|-----------------|--------------------------|
-| Package Manager       | Homebrew        | apt / dnf                |
-| GUI Apps            | Homebrew casks  | Manual / AppImage / Snap  |
-| CLI Tools            | Homebrew/mise   | apt/dnf/mise             |
-| Runtimes            | mise            | mise                     |
-| Config Management     | Stow            | Stow (same)             |
-| Shell               | Zsh             | Zsh (same)              |
-
-## Contributing
-
-When adding new apps to `apps.toml`:
-
-1. Specify the `platform` field if it's platform-specific
-2. Use `["macos"]` for macOS GUI apps
-3. Use `["macos", "linux"]` for cross-platform CLI tools
-4. Omit `platform` if app works on all platforms
-
-Example:
+For a `type = "brew"` app that should install on Linux, add package mapping fields:
 
 ```toml
-# macOS GUI app
-[apps.ghostty]
-type = "cask"
-platform = ["macos"]
-profiles = ["minimal", "standard", "developer", "hacker"]
-description = "GPU-accelerated terminal emulator"
-
-# Cross-platform CLI tool
-[apps.ripgrep]
-type = "mise"
+[apps.btop]
+type = "brew"
 platform = ["macos", "linux"]
-profiles = ["developer", "hacker", "server"]
-description = "Fast recursive grep"
+linux_name = "btop"
 ```
 
-## Future Enhancements
+Use distro overrides only when names differ:
 
-Planned improvements for Linux support:
-
-- [ ] AppImage auto-detection and installation
-- [ ] Snap integration for Ubuntu
-- [ ] Flatpak support
-- [ ] Linux-specific GUI apps (optional layer)
-- [ ] Distro-specific profiles
-- [ ] Automated GUI app installation via native package managers
+```toml
+linux_apt = "package-name-on-apt"
+linux_dnf = "package-name-on-dnf"
+```

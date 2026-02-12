@@ -1,258 +1,134 @@
 #!/bin/bash
 # =============================================================================
-# Linux Support Test Script
+# Linux Support Validation Script
 # =============================================================================
-# Tests platform detection, package manager abstraction, and app filtering
-# Runs in dry-run mode - no system changes
+# Assertion-based checks for Linux install safety and platform behavior.
+# Exits non-zero when any required check fails.
 # =============================================================================
 
-set -e
+set -u
 
-# Source libraries
-# Get script directory (scripts/test-linux.sh -> scripts/ -> repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
+
 source "$DOTFILES_DIR/scripts/lib/platform.sh"
 source "$DOTFILES_DIR/scripts/lib/package-manager.sh"
 source "$DOTFILES_DIR/scripts/lib/app_config.sh"
 source "$DOTFILES_DIR/scripts/lib/app_state.sh"
 
-# =============================================================================
-# Test Functions
-# =============================================================================
+FAILURES=0
 
-test_platform_detection() {
+print_header() {
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test: Platform Detection"
+    echo "  $1"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
+}
 
-    local platform
-    platform=$(detect_platform)
+pass() {
+    echo "  ✓ $1"
+}
 
-    echo "Platform Family: $platform"
+fail() {
+    echo "  ✗ $1"
+    FAILURES=$((FAILURES + 1))
+}
 
-    if [[ "$platform" == "linux" ]]; then
-        local distro
-        distro=$(detect_linux_distro)
-        echo "Distribution: $distro"
-    fi
-
-    local arch
-    arch=$(detect_architecture)
-    echo "Architecture: $arch"
-
-    local pm
-    pm=$(get_package_manager)
-    echo "Package Manager: $pm"
-
-    echo ""
-    if is_supported_platform; then
-        echo "✓ Platform supported"
+assert_true() {
+    local message="$1"
+    shift
+    if "$@"; then
+        pass "$message"
     else
-        echo "✗ Platform NOT supported"
+        fail "$message"
     fi
 }
 
-test_package_manager() {
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test: Package Manager"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
+assert_false() {
+    local message="$1"
+    shift
+    if "$@"; then
+        fail "$message"
+    else
+        pass "$message"
+    fi
+}
 
+is_grep_match() {
+    local pattern="$1"
+    local file="$2"
+    grep -q "$pattern" "$file"
+}
+
+test_platform_filtering() {
+    print_header "Platform Filtering"
+    assert_false "ghostty should not be supported on Linux" is_app_supported ghostty linux
+    assert_true "starship should be supported on Linux" is_app_supported starship linux
+    assert_true "btop should be selected for Linux in hacker profile when profile matches" is_app_supported btop linux
+}
+
+test_linux_package_mapping() {
+    print_header "Linux Package Mapping"
+    assert_true "btop should map to Linux package for apt" test -n "$(get_linux_package_name btop apt)"
+    assert_true "btop should map to Linux package for dnf" test -n "$(get_linux_package_name btop dnf)"
+    assert_true "ncdu should map to Linux package for apt" test -n "$(get_linux_package_name ncdu apt)"
+    assert_true "ncdu should map to Linux package for dnf" test -n "$(get_linux_package_name ncdu dnf)"
+    assert_false "codex-acp should not be Linux-supported app" is_app_supported codex-acp linux
+}
+
+test_bootstrap_linux_path() {
+    print_header "Bootstrap Routing"
+    local bootstrap_file="$DOTFILES_DIR/scripts/install/bootstrap.sh"
+
+    assert_true "bootstrap should define Linux bootstrap function" is_grep_match '^run_bootstrap_linux()' "$bootstrap_file"
+    assert_true "bootstrap should include Linux platform case branch" is_grep_match 'linux)' "$bootstrap_file"
+    assert_true "bootstrap should call Linux bootstrap branch" is_grep_match 'run_bootstrap_linux' "$bootstrap_file"
+    assert_false "Linux bootstrap function should not invoke brew" bash -c "sed -n '/^run_bootstrap_linux()/,/^}/p' '$bootstrap_file' | grep -q '\\<brew\\>'"
+}
+
+test_macos_guards() {
+    print_header "macOS-only Guards"
+    assert_true "raycast config should guard for macOS" is_grep_match 'get_current_platform' "$DOTFILES_DIR/scripts/install/raycast.sh"
+    assert_true "terminal config should guard for macOS" is_grep_match 'get_current_platform' "$DOTFILES_DIR/scripts/install/terminal.sh"
+    assert_true "reconcile should be guarded for macOS" is_grep_match 'Skipping cask reconciliation' "$DOTFILES_DIR/scripts/install/reconcile_casks.sh"
+}
+
+test_linux_manager_detection() {
+    print_header "Package Manager Detection"
+    local platform
+    platform=$(detect_platform)
     local pm
     pm=$(pm_get_manager)
 
-    echo "Package Manager: $pm"
-    echo ""
-
-    case "$pm" in
-        brew)
-            if command -v brew &>/dev/null; then
-                echo "✓ Homebrew is available"
-            else
-                echo "✗ Homebrew not found"
-            fi
-            ;;
-        apt)
-            if command -v apt-get &>/dev/null; then
-                echo "✓ apt is available"
-            else
-                echo "✗ apt not found"
-            fi
-            ;;
-        dnf)
-            if command -v dnf &>/dev/null; then
-                echo "✓ dnf is available"
-            else
-                echo "✗ dnf not found"
-            fi
-            ;;
-        *)
-            echo "✗ Unknown package manager"
-            ;;
-    esac
-}
-
-test_app_filtering() {
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test: App Platform Filtering"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    local platform
-    platform=$(detect_platform)
-
-    echo "Current Platform: $platform"
-    echo ""
-    echo "Testing app filtering for various apps:"
-    echo ""
-
-    local test_apps=(
-        "ghostty:macOS GUI terminal"
-        "ripgrep:Cross-platform CLI tool"
-        "starship:Cross-platform prompt"
-        "tmux:Cross-platform multiplexer"
-        "warp:macOS GUI terminal"
-        "lazygit:Cross-platform Git UI"
-    )
-
-    for app_spec in "${test_apps[@]}"; do
-        local app_key="${app_spec%%:*}"
-        local description="${app_spec##*:}"
-
-        local is_supported
-        if is_app_supported "$app_key"; then
-            is_supported="✓ Supported"
+    if [[ "$platform" == "linux" ]]; then
+        if [[ "$pm" == "apt" || "$pm" == "dnf" ]]; then
+            pass "Linux package manager should be apt or dnf (got: $pm)"
         else
-            is_supported="✗ Not supported"
+            fail "Linux package manager should be apt or dnf (got: $pm)"
         fi
-
-        printf "  %-20s %s\n" "$app_key" "$description"
-        printf "  %-20s %s\n\n" "" "$is_supported"
-    done
-}
-
-test_apps_for_profile() {
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test: Get Apps for 'hacker' Profile"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    # Temporarily set profile for testing
-    SELECTED_PROFILES=("hacker")
-    APPS_CONFIG="$DOTFILES_DIR/apps.toml"
-
-    local apps
-    apps=$(get_apps_for_profile)
-
-    if [[ -z "$apps" ]]; then
-        echo "✗ No apps found for hacker profile"
-        return 1
+    else
+        pass "Host is not Linux (current platform: $platform); Linux manager assertion skipped"
     fi
-
-    echo "Apps for 'hacker' profile (filtered by platform):"
-    echo ""
-
-    local count=0
-    for app_key in $apps; do
-        ((count++))
-        local display_name
-        display_name=$(get_app_display_name "$app_key")
-        printf "  %-30s\n" "$display_name"
-    done
-
-    echo ""
-    echo "Total: $count apps"
 }
-
-test_app_state() {
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test: App State Detection"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    local test_packages=("git" "curl" "wget")
-
-    for package in "${test_packages[@]}"; do
-        local installed
-
-        if command -v "$package" &>/dev/null; then
-            installed="✓ Installed"
-        else
-            installed="✗ Not installed"
-        fi
-
-        echo "  $package: $installed"
-    done
-}
-
-test_platform_matches() {
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test: Platform Matching Function"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    local platform
-    platform=$(detect_platform)
-
-    echo "Current Platform: $platform"
-    echo ""
-    echo "Testing platform_matches() function:"
-    echo ""
-
-    # Mock platform_matches for testing
-    # In real usage, this is in platform.sh
-    local test_cases=(
-        "macos:Should match if current is macOS"
-        "linux:Should match if current is Linux"
-        "ubuntu:Should match if current is Linux (Ubuntu)"
-        "debian:Should match if current is Linux (Debian)"
-        "fedora:Should match if current is Linux (Fedora)"
-    )
-
-    for case in "${test_cases[@]}"; do
-        local test_platform="${case%%:*}"
-        local description="${case##*:}"
-
-        echo "  Testing: $test_platform"
-        echo "  Description: $description"
-        echo ""
-    done
-}
-
-# =============================================================================
-# Main Test Runner
-# =============================================================================
 
 main() {
     echo ""
     echo "╔════════════════════════════════════════════════════════════════════╗"
-    echo "║  Linux Support Test Suite                                          ║"
-    echo "║  Dry-run mode - no system changes                                  ║"
+    echo "║  Linux Validation Suite                                            ║"
     echo "╚════════════════════════════════════════════════════════════════════╝"
-    echo ""
 
-    test_platform_detection
-    test_package_manager
-    test_app_filtering
-    test_apps_for_profile
-    test_app_state
-    test_platform_matches
+    test_platform_filtering
+    test_linux_package_mapping
+    test_bootstrap_linux_path
+    test_macos_guards
+    test_linux_manager_detection
 
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Test Suite Complete"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
+    echo "Failures: $FAILURES"
+    if [[ "$FAILURES" -gt 0 ]]; then
+        exit 1
+    fi
 }
 
-# Run tests
 main "$@"

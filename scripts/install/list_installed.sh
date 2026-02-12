@@ -15,11 +15,13 @@ list_installed_and_exit() {
 
     local has_brew=true
     local has_mise=true
+    local current_platform
+    current_platform=$(get_current_platform)
 
     command -v brew >/dev/null 2>&1 || has_brew=false
     command -v mise >/dev/null 2>&1 || has_mise=false
 
-    if [[ "$has_brew" != true ]]; then
+    if [[ "$current_platform" == "macos" && "$has_brew" != true ]]; then
         echo "Note: Homebrew not found; cask/brew checks will be skipped."
     fi
     if [[ "$has_mise" != true ]]; then
@@ -32,14 +34,23 @@ list_installed_and_exit() {
         if ! is_installable_app "$app_key"; then
             continue
         fi
+        if ! is_app_supported "$app_key"; then
+            continue
+        fi
+
         local type
         type=$(get_app_prop "$app_key" "type")
         case "$type" in
-            cask|brew)
+            cask)
                 [[ "$has_brew" != true ]] && continue
                 ;;
             mise)
                 [[ "$has_mise" != true ]] && continue
+                ;;
+            brew)
+                if [[ "$current_platform" == "macos" && "$has_brew" != true ]]; then
+                    continue
+                fi
                 ;;
         esac
 

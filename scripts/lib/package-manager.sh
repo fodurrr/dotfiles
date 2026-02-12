@@ -16,6 +16,21 @@ _CACHED_OS=""
 _CACHED_PM=""
 _PM_UPDATE_DONE=false
 
+# Run command with sudo when needed
+_pm_run() {
+    if [[ "$EUID" -eq 0 ]]; then
+        "$@"
+        return $?
+    fi
+
+    if command -v sudo >/dev/null 2>&1; then
+        sudo "$@"
+        return $?
+    fi
+
+    return 1
+}
+
 # Initialize cache
 _init_pm_cache() {
     if [[ -z "$_CACHED_OS" ]]; then
@@ -47,19 +62,16 @@ pm_update() {
 
     case "$_CACHED_PM" in
         apt)
-            if command -v apt-get &>/dev/null; then
-                sudo apt-get update -qq || return 1
-            fi
+            command -v apt-get >/dev/null 2>&1 || return 1
+            _pm_run apt-get update -qq || return 1
             ;;
         dnf)
-            if command -v dnf &>/dev/null; then
-                sudo dnf check-update -q || true
-            fi
+            command -v dnf >/dev/null 2>&1 || return 1
+            _pm_run dnf check-update -q >/dev/null 2>&1 || true
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew update --quiet || true
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew update --quiet || true
             ;;
         *)
             return 1
@@ -74,23 +86,20 @@ pm_update() {
 pm_install() {
     [[ $# -eq 0 ]] && return 0
 
-    pm_update
+    pm_update || return 1
 
     case "$_CACHED_PM" in
         apt)
-            if command -v apt-get &>/dev/null; then
-                sudo apt-get install -y -qq "$@" || return 1
-            fi
+            command -v apt-get >/dev/null 2>&1 || return 1
+            _pm_run apt-get install -y -qq "$@" || return 1
             ;;
         dnf)
-            if command -v dnf &>/dev/null; then
-                sudo dnf install -y -q "$@" || return 1
-            fi
+            command -v dnf >/dev/null 2>&1 || return 1
+            _pm_run dnf install -y -q "$@" || return 1
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew install --quiet "$@" || return 1
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew install --quiet "$@" || return 1
             ;;
         *)
             return 1
@@ -104,22 +113,19 @@ pm_is_installed() {
 
     case "$_CACHED_PM" in
         apt)
-            if command -v dpkg &>/dev/null; then
-                dpkg -l "$package" 2>/dev/null | grep -q "^ii"
-                return $?
-            fi
+            command -v dpkg >/dev/null 2>&1 || return 1
+            dpkg -l "$package" 2>/dev/null | grep -q "^ii"
+            return $?
             ;;
         dnf)
-            if command -v rpm &>/dev/null; then
-                rpm -q "$package" &>/dev/null
-                return $?
-            fi
+            command -v rpm >/dev/null 2>&1 || return 1
+            rpm -q "$package" >/dev/null 2>&1
+            return $?
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew list "$package" &>/dev/null
-                return $?
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew list "$package" >/dev/null 2>&1
+            return $?
             ;;
         *)
             return 1
@@ -133,19 +139,16 @@ pm_remove() {
 
     case "$_CACHED_PM" in
         apt)
-            if command -v apt-get &>/dev/null; then
-                sudo apt-get remove -y -qq "$@" || return 1
-            fi
+            command -v apt-get >/dev/null 2>&1 || return 1
+            _pm_run apt-get remove -y -qq "$@" || return 1
             ;;
         dnf)
-            if command -v dnf &>/dev/null; then
-                sudo dnf remove -y -q "$@" || return 1
-            fi
+            command -v dnf >/dev/null 2>&1 || return 1
+            _pm_run dnf remove -y -q "$@" || return 1
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew uninstall --quiet "$@" || return 1
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew uninstall --quiet "$@" || return 1
             ;;
         *)
             return 1
@@ -159,25 +162,22 @@ pm_add_repository() {
 
     case "$_CACHED_PM" in
         apt)
-            if command -v add-apt-repository &>/dev/null; then
-                if [[ "$repo" == ppa:* ]]; then
-                    sudo add-apt-repository -y "$repo" || return 1
-                else
-                    echo "$repo" | sudo tee /etc/apt/sources.list.d/custom.list >/dev/null || return 1
-                fi
+            command -v add-apt-repository >/dev/null 2>&1 || return 1
+            if [[ "$repo" == ppa:* ]]; then
+                _pm_run add-apt-repository -y "$repo" || return 1
+            else
+                echo "$repo" | _pm_run tee /etc/apt/sources.list.d/custom.list >/dev/null || return 1
             fi
             _PM_UPDATE_DONE=false
             ;;
         dnf)
-            if command -v dnf &>/dev/null; then
-                sudo dnf config-manager --add-repo "$repo" || return 1
-            fi
+            command -v dnf >/dev/null 2>&1 || return 1
+            _pm_run dnf config-manager --add-repo "$repo" || return 1
             _PM_UPDATE_DONE=false
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew tap "$repo" || return 1
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew tap "$repo" || return 1
             ;;
         *)
             return 1
@@ -193,9 +193,8 @@ pm_enable_copr() {
         return 1
     fi
 
-    if command -v dnf &>/dev/null; then
-        sudo dnf copr enable -y "$copr" || return 1
-    fi
+    command -v dnf >/dev/null 2>&1 || return 1
+    _pm_run dnf copr enable -y "$copr" || return 1
 
     _PM_UPDATE_DONE=false
 }
@@ -207,14 +206,12 @@ pm_add_gpg_key() {
 
     case "$_CACHED_PM" in
         apt)
-            if command -v gpg &>/dev/null; then
-                curl -fsSL "$key_url" | sudo gpg --dearmor -o "$keyring_path" || return 1
-            fi
+            command -v gpg >/dev/null 2>&1 || return 1
+            curl -fsSL "$key_url" | _pm_run gpg --dearmor -o "$keyring_path" || return 1
             ;;
         dnf)
-            if command -v rpm &>/dev/null; then
-                sudo rpm --import "$key_url" || return 1
-            fi
+            command -v rpm >/dev/null 2>&1 || return 1
+            _pm_run rpm --import "$key_url" || return 1
             ;;
         brew)
             # brew handles keys automatically
@@ -230,22 +227,19 @@ pm_add_gpg_key() {
 pm_clean() {
     case "$_CACHED_PM" in
         apt)
-            if command -v apt-get &>/dev/null; then
-                sudo apt-get clean
-                sudo apt-get autoclean
-                sudo apt-get autoremove -y
-            fi
+            command -v apt-get >/dev/null 2>&1 || return 1
+            _pm_run apt-get clean
+            _pm_run apt-get autoclean
+            _pm_run apt-get autoremove -y
             ;;
         dnf)
-            if command -v dnf &>/dev/null; then
-                sudo dnf clean all
-                sudo dnf autoremove -y
-            fi
+            command -v dnf >/dev/null 2>&1 || return 1
+            _pm_run dnf clean all
+            _pm_run dnf autoremove -y
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew cleanup --quiet
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew cleanup --quiet
             ;;
     esac
 }
@@ -256,19 +250,16 @@ pm_get_version() {
 
     case "$_CACHED_PM" in
         apt)
-            if command -v dpkg &>/dev/null; then
-                dpkg -l "$package" 2>/dev/null | grep "^ii" | awk '{print $3}'
-            fi
+            command -v dpkg >/dev/null 2>&1 || return 1
+            dpkg -l "$package" 2>/dev/null | grep "^ii" | awk '{print $3}'
             ;;
         dnf)
-            if command -v rpm &>/dev/null; then
-                rpm -q --qf "%{VERSION}-%{RELEASE}\n" "$package" 2>/dev/null
-            fi
+            command -v rpm >/dev/null 2>&1 || return 1
+            rpm -q --qf "%{VERSION}-%{RELEASE}\n" "$package" 2>/dev/null
             ;;
         brew)
-            if command -v brew &>/dev/null; then
-                brew list --versions "$package" 2>/dev/null | awk '{print $2}'
-            fi
+            command -v brew >/dev/null 2>&1 || return 1
+            brew list --versions "$package" 2>/dev/null | awk '{print $2}'
             ;;
         *)
             echo "unknown"
@@ -278,7 +269,11 @@ pm_get_version() {
 
 # Check if we have sudo access (for package operations)
 pm_has_sudo() {
-    if command -v sudo &>/dev/null; then
+    if [[ "$EUID" -eq 0 ]]; then
+        return 0
+    fi
+
+    if command -v sudo >/dev/null 2>&1; then
         if sudo -n true 2>/dev/null; then
             return 0
         elif sudo -v 2>/dev/null; then

@@ -16,7 +16,7 @@ check_clean_safety() {
             local profile_match=false
             local app_key
             for app_key in $(get_all_apps); do
-                if app_in_profile "$app_key"; then
+                if app_selected_for_install "$app_key"; then
                     profile_match=true
                     break
                 fi

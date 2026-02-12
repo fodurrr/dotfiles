@@ -115,6 +115,8 @@ if [[ "$PLATFORM" == "macos" ]]; then
     run_layer_homebrew
 elif [[ "$PLATFORM" == "linux" ]]; then
     run_layer_linux
+else
+    log_warning "Unsupported platform '$PLATFORM'; skipping package layer"
 fi
 
 generate_mise_config

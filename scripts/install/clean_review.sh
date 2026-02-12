@@ -39,7 +39,7 @@ collect_clean_candidates() {
 
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             continue
         fi
 
@@ -113,6 +113,10 @@ collect_clean_candidates() {
 
 prepare_homebrew_clean_selection() {
     if [[ "$CLEAN_MODE" != true || "$CLEAN_SAFE" != true ]]; then
+        return 0
+    fi
+
+    if [[ "$(get_current_platform)" != "macos" ]]; then
         return 0
     fi
 
