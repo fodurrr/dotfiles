@@ -48,6 +48,8 @@ If an app is selected for Linux but has no mapping (or the package is unavailabl
 
 If a selected mapped package install fails, the Linux layer exits non-zero.
 
+`sheldon` is not currently available in default Ubuntu/Fedora repositories and is not present in the current mise registry. On Linux, it is installed via a dedicated `type = "curl"` entry (`sheldon-linux`) that downloads the official upstream binary.
+
 ## GUI Apps on Linux
 
 - GUI apps are only automated when a native Linux package mapping exists.
@@ -96,7 +98,7 @@ This validates:
 
 - platform filtering (`ghostty` false on Linux, `starship` true)
 - Linux package mapping presence
-- `sheldon` configured as a package-manager tool with Linux mapping
+- `sheldon` strategy split: Homebrew on macOS, curl binary installer on Linux
 - Linux bootstrap branch behavior (no `brew` calls in Linux bootstrap function)
 - macOS-only guardrails for post-install steps
 - summary fallback behavior when gum is missing

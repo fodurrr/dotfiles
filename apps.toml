@@ -531,9 +531,15 @@ description = "Fuzzy finder"
 type = "brew"
 category = "cli"
 profiles = ["minimal", "standard", "developer", "hacker", "server"]
-platform = ["macos", "linux"]
-linux_name = "sheldon"
+platform = ["macos"]
 description = "Fast shell plugin manager"
+
+[apps.sheldon-linux]
+type = "curl"
+category = "cli"
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
+platform = ["linux"]
+description = "Fast shell plugin manager (Linux binary install)"
 
 [apps.jq]
 type = "mise"

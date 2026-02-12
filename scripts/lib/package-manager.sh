@@ -67,7 +67,7 @@ pm_update() {
             ;;
         dnf)
             command -v dnf >/dev/null 2>&1 || return 1
-            _pm_run dnf check-update -q >/dev/null 2>&1 || true
+            _pm_run dnf makecache --refresh -q >/dev/null 2>&1 || true
             ;;
         brew)
             command -v brew >/dev/null 2>&1 || return 1

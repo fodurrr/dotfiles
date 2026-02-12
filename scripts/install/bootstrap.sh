@@ -272,7 +272,7 @@ run_bootstrap_linux() {
             bootstrap_install_linux_packages "$pm" \
                 ca-certificates curl git jq stow zsh yq \
                 gcc gcc-c++ make patch autoconf automake bison pkgconf-pkg-config \
-                openssl-devel zlib-devel readline-devel libyaml-devel \
+                openssl-devel zlib-ng-compat-devel readline-devel libyaml-devel \
                 libffi-devel gdbm-devel ncurses-devel libxml2-devel \
                 libxslt-devel sqlite-devel tk-devel xz
             ;;

@@ -79,15 +79,30 @@ test_linux_package_mapping() {
 
 test_sheldon_source_config() {
     print_header "Sheldon Tool Configuration"
-    local sheldon_type
+    local sheldon_type sheldon_platform sheldon_linux_type
     sheldon_type=$(get_app_prop sheldon type)
+    sheldon_platform=$(get_app_prop sheldon platform)
+    sheldon_linux_type=$(get_app_prop sheldon-linux type)
+
     if [[ "$sheldon_type" == "brew" ]]; then
         pass "sheldon app should exist in apps.toml as brew tool"
     else
         fail "sheldon app should exist in apps.toml as brew tool"
     fi
-    assert_true "sheldon should have Linux package mapping" test -n "$(get_linux_package_name sheldon dnf)"
-    assert_true "sheldon should be Linux-supported" is_app_supported sheldon linux
+
+    if echo "$sheldon_platform" | grep -q "macos" && ! echo "$sheldon_platform" | grep -q "linux"; then
+        pass "brew sheldon should be macOS-only"
+    else
+        fail "brew sheldon should be macOS-only"
+    fi
+
+    if [[ "$sheldon_linux_type" == "curl" ]]; then
+        pass "sheldon-linux app should exist as curl tool"
+    else
+        fail "sheldon-linux app should exist as curl tool"
+    fi
+
+    assert_true "sheldon-linux should be Linux-supported" is_app_supported sheldon-linux linux
 }
 
 test_mise_registry_entries() {
@@ -130,6 +145,7 @@ test_bootstrap_linux_path() {
     assert_true "bootstrap should define Linux bootstrap function" is_grep_match '^run_bootstrap_linux()' "$bootstrap_file"
     assert_true "bootstrap should include Linux platform case branch" is_grep_match 'linux)' "$bootstrap_file"
     assert_true "bootstrap should call Linux bootstrap branch" is_grep_match 'run_bootstrap_linux' "$bootstrap_file"
+    assert_true "Fedora bootstrap should use zlib-ng-compat-devel" is_grep_match 'zlib-ng-compat-devel' "$bootstrap_file"
     assert_false "Linux bootstrap function should not invoke brew" bash -c "sed -n '/^run_bootstrap_linux()/,/^}/p' '$bootstrap_file' | grep -q '\\<brew\\>'"
 }
 
@@ -144,6 +160,14 @@ test_summary_fallback() {
     print_header "Summary Fallback"
     assert_true "summary should support non-gum fallback path" is_grep_match 'command -v gum' "$DOTFILES_DIR/scripts/lib/summary.sh"
     assert_true "summary should print plain table when gum is missing" is_grep_match 'printf "  %-22s %-12s %s\\n" "Package" "Status" "Description"' "$DOTFILES_DIR/scripts/lib/summary.sh"
+}
+
+test_curl_layer_linux_tools() {
+    print_header "Curl Layer Linux Tools"
+    local curl_layer_file="$DOTFILES_DIR/scripts/install/layer_curl.sh"
+    assert_true "curl layer should support sheldon-linux installer" is_grep_match 'sheldon-linux' "$curl_layer_file"
+    assert_true "curl layer should include sheldon binary installer" is_grep_match 'install_sheldon_linux_binary' "$curl_layer_file"
+    assert_true "curl layer should fail when selected curl tools fail" is_grep_match 'Curl layer failed for selected tools' "$curl_layer_file"
 }
 
 test_stow_strictness() {
@@ -193,6 +217,7 @@ main() {
     test_bootstrap_linux_path
     test_macos_guards
     test_summary_fallback
+    test_curl_layer_linux_tools
     test_stow_strictness
     test_shell_finalization
     test_linux_manager_detection
