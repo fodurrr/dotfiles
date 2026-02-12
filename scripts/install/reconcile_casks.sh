@@ -101,6 +101,11 @@ run_reconcile_casks() {
         return 0
     fi
 
+    if [[ "$(get_current_platform)" != "macos" ]]; then
+        log_info "Skipping cask reconciliation (macOS-only)"
+        return 0
+    fi
+
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  Cask Reconciliation"
@@ -109,7 +114,7 @@ run_reconcile_casks() {
     local unmanaged_lines=""
     local app_key
     for app_key in $(get_all_apps); do
-        if ! app_in_profile "$app_key"; then
+        if ! app_selected_for_install "$app_key"; then
             continue
         fi
         local type

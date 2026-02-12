@@ -100,6 +100,19 @@ get_cask_app_name() {
     fi
 }
 
+# Check if a Linux package is installed via apt/dnf
+is_linux_package_installed() {
+    local package="$1"
+    local platform
+    platform=$(get_current_platform)
+
+    if [[ "$platform" != "linux" || -z "$package" ]]; then
+        return 1
+    fi
+
+    pm_is_installed "$package"
+}
+
 # Check if an app is currently installed
 is_app_installed() {
     local app_key="$1"
@@ -108,14 +121,25 @@ is_app_installed() {
     local name
     name=$(get_app_prop "$app_key" "name")
     [[ -z "$name" ]] && name="$app_key"
+    local platform
+    platform=$(get_current_platform)
 
     case "$type" in
         cask)
+            [[ "$platform" != "macos" ]] && return 1
             local state
             state=$(get_cask_install_state "$name")
             [[ "$state" == "managed" || "$state" == "unmanaged" ]]
             ;;
         brew)
+            if [[ "$platform" == "linux" ]]; then
+                local pm
+                pm=$(pm_get_manager)
+                local linux_package
+                linux_package=$(get_linux_package_name "$app_key" "$pm")
+                is_linux_package_installed "$linux_package"
+                return $?
+            fi
             brew list 2>/dev/null | grep -q "^${name}$"
             ;;
         mise)

@@ -3,11 +3,15 @@
 # =============================================================================
 
 configure_raycast() {
+    if [[ "$(get_current_platform)" != "macos" ]]; then
+        return 0
+    fi
+
     # Check if raycast-config is in selected profiles
     local RAYCAST_IN_PROFILE=false
     local app_key
     for app_key in $(get_all_apps); do
-        if [[ "$app_key" == "raycast-config" ]] && app_in_profile "$app_key"; then
+        if [[ "$app_key" == "raycast-config" ]] && app_selected_for_install "$app_key"; then
             RAYCAST_IN_PROFILE=true
             break
         fi

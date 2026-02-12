@@ -8,16 +8,35 @@ remove_alacarte_app() {
     type=$(get_app_prop "$app_key" "type")
     local name
     name=$(get_app_display_name "$app_key")
+    local platform
+    platform=$(get_current_platform)
+    local pm
+    pm=$(pm_get_manager)
 
     case "$type" in
         cask)
+            if [[ "$platform" != "macos" ]]; then
+                log_warning "Skipping $name removal (cask is macOS-only)"
+                return 0
+            fi
             log_warning "Removing $name (cask)..."
             brew uninstall --cask "$name" 2>/dev/null || true
             add_to_summary REMOVED "$name" "$app_key"
             ;;
         brew)
-            log_warning "Removing $name (brew)..."
-            brew uninstall "$name" 2>/dev/null || true
+            if [[ "$platform" == "linux" ]]; then
+                local linux_package
+                linux_package=$(get_linux_package_name "$app_key" "$pm")
+                if [[ -z "$linux_package" ]]; then
+                    log_warning "Skipping $name removal (no Linux package mapping)"
+                    return 0
+                fi
+                log_warning "Removing $name ($linux_package)..."
+                pm_remove "$linux_package" 2>/dev/null || true
+            else
+                log_warning "Removing $name (brew)..."
+                brew uninstall "$name" 2>/dev/null || true
+            fi
             add_to_summary REMOVED "$name" "$app_key"
             ;;
         mise)

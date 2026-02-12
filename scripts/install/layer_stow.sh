@@ -12,7 +12,7 @@ run_layer_stow() {
 
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "stow" ]]; then
@@ -20,7 +20,10 @@ run_layer_stow() {
                 package=$(get_app_prop "$app_key" "package")
                 if [[ -d "$package" ]]; then
                     log_success "Linking $package config..."
-                    stow_enforce "$package" || true
+                    if ! stow_enforce "$package"; then
+                        log_error "Failed to link stow package: $package"
+                        return 1
+                    fi
                 else
                     log_warning "Stow package directory not found: $package/"
                 fi
@@ -35,7 +38,7 @@ run_layer_stow() {
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "stow" ]]; then
-                if ! app_in_profile "$app_key"; then
+                if ! app_selected_for_install "$app_key"; then
                     local package
                     package=$(get_app_prop "$app_key" "package")
                     if [[ -d "$DOTFILES_DIR/$package" ]]; then
@@ -49,5 +52,13 @@ run_layer_stow() {
                 fi
             fi
         done
+    fi
+
+    if app_selected_for_install "zsh-config"; then
+        if [[ ! -r "$HOME/.zshrc" ]]; then
+            log_error "zsh config expected but missing: $HOME/.zshrc"
+            log_error "Re-run install after resolving stow conflicts for zsh package"
+            return 1
+        fi
     fi
 }

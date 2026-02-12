@@ -46,10 +46,14 @@ build_installed_keys() {
     INSTALLED_KEYS=()
     local app_key
     for app_key in $(get_all_apps); do
-        if is_installable_app "$app_key"; then
-            if is_app_installed "$app_key"; then
-                INSTALLED_KEYS+=("$app_key")
-            fi
+        if ! is_installable_app "$app_key"; then
+            continue
+        fi
+        if ! is_app_supported "$app_key"; then
+            continue
+        fi
+        if is_app_installed "$app_key"; then
+            INSTALLED_KEYS+=("$app_key")
         fi
     done
 }
@@ -194,6 +198,9 @@ build_alacarte_options() {
             if ! is_installable_app "$app_key"; then
                 continue
             fi
+            if ! is_app_supported "$app_key"; then
+                continue
+            fi
             local category
             category=$(get_app_category "$app_key")
             local app_group
@@ -222,6 +229,9 @@ build_alacarte_options() {
         # Add apps in this group (preserve apps.toml order)
         for app_key in $(get_all_apps); do
             if ! is_installable_app "$app_key"; then
+                continue
+            fi
+            if ! is_app_supported "$app_key"; then
                 continue
             fi
             local category
@@ -372,7 +382,7 @@ run_profiles_selection() {
     SELECTED_KEYS=()
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key" && is_installable_app "$app_key"; then
+        if app_selected_for_install "$app_key" && is_installable_app "$app_key"; then
             SELECTED_KEYS+=("$app_key")
         fi
     done

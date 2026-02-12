@@ -5,6 +5,33 @@
 # Track installed apps to avoid duplicates (for dependency resolution)
 # Using string-based tracking for bash 3.2 compatibility (macOS default)
 INSTALLED_APPS=""
+MISE_REGISTRY_KEYS=""
+MISE_REGISTRY_LOADED=false
+
+load_mise_registry_keys() {
+    if [[ "$MISE_REGISTRY_LOADED" == true ]]; then
+        return 0
+    fi
+
+    if ! command -v mise >/dev/null 2>&1; then
+        return 1
+    fi
+
+    MISE_REGISTRY_KEYS=$(mise registry 2>/dev/null | awk '{print $1}')
+    MISE_REGISTRY_LOADED=true
+    return 0
+}
+
+mise_registry_has_tool() {
+    local tool_name="$1"
+    [[ -z "$tool_name" ]] && return 1
+
+    if ! load_mise_registry_keys; then
+        return 1
+    fi
+
+    echo "$MISE_REGISTRY_KEYS" | grep -Fxq "$tool_name"
+}
 
 # Install a mise app with dependency resolution
 install_mise_app() {
@@ -13,11 +40,19 @@ install_mise_app() {
     # Skip if already processed this session (pipe delimiters prevent partial matches)
     [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
 
+    if ! command -v mise >/dev/null 2>&1; then
+        log_error "mise is not installed but required for $app_key"
+        return 1
+    fi
+
     # Check for dependency (install silently if needed)
     local dep
     dep=$(get_app_prop "$app_key" "depends_on")
     if [[ -n "$dep" ]]; then
-        install_mise_app "$dep"
+        if ! install_mise_app "$dep"; then
+            log_error "Failed dependency '$dep' required by '$app_key'"
+            return 1
+        fi
     fi
 
     # Mark as processed
@@ -30,6 +65,12 @@ install_mise_app() {
     local version
     version=$(get_app_prop "$app_key" "version")
     [[ -z "$version" ]] && version="latest"
+
+    if ! mise_registry_has_tool "$name"; then
+        log_error "Mise registry does not contain tool: $name (app: $app_key)"
+        log_error "Choose a package-manager install source for this app instead of type=mise"
+        return 1
+    fi
 
     # Check if already installed with correct version
     # IMPORTANT: mise current returns configured version even if not installed!
@@ -78,12 +119,14 @@ install_mise_app() {
     local install_output
     if install_output=$(mise install "$name@$version" 2>&1); then
         add_to_summary INSTALLED "$name" "$app_key"
+        return 0
     else
-        log_warning "Failed to install $name"
+        log_error "Failed to install $name"
         # Show first line of error to help debugging
         local error_line
         error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
         [[ -n "$error_line" ]] && echo "      $error_line"
+        return 1
     fi
 }
 
@@ -110,7 +153,7 @@ EOF_MISE
     # Add tools from apps.toml that match selected profiles and type=mise
     local app_key
     for app_key in $(get_all_apps); do
-        if app_in_profile "$app_key"; then
+        if app_selected_for_install "$app_key"; then
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "mise" ]]; then
