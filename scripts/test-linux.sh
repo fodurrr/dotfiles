@@ -152,6 +152,16 @@ test_stow_strictness() {
     assert_true "stow layer should verify zshrc after linking zsh-config" is_grep_match 'zsh config expected but missing' "$DOTFILES_DIR/scripts/install/layer_stow.sh"
 }
 
+test_shell_finalization() {
+    print_header "Shell Finalization"
+    local summary_file="$DOTFILES_DIR/scripts/install/summary.sh"
+
+    assert_true "shell finalization should target original user under sudo" is_grep_match 'SUDO_USER' "$summary_file"
+    assert_true "yes mode should attempt non-interactive chsh via sudo" is_grep_match 'sudo -n chsh -s' "$summary_file"
+    assert_true "shell switch should be re-verified after chsh" is_grep_match 'Shell change command completed but login shell is still' "$summary_file"
+    assert_true "yes mode summary should not block on enter prompt" is_grep_match 'if \[\[ "\$YES_MODE" == true \]\]; then' "$summary_file"
+}
+
 test_linux_manager_detection() {
     print_header "Package Manager Detection"
     local platform
@@ -184,6 +194,7 @@ main() {
     test_macos_guards
     test_summary_fallback
     test_stow_strictness
+    test_shell_finalization
     test_linux_manager_detection
 
     echo ""
