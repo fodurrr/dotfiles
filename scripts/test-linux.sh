@@ -77,16 +77,50 @@ test_linux_package_mapping() {
     assert_false "codex-acp should not be Linux-supported app" is_app_supported codex-acp linux
 }
 
-test_sheldon_mise_config() {
+test_sheldon_source_config() {
     print_header "Sheldon Tool Configuration"
     local sheldon_type
     sheldon_type=$(get_app_prop sheldon type)
-    if [[ "$sheldon_type" == "mise" ]]; then
-        pass "sheldon app should exist in apps.toml as mise tool"
+    if [[ "$sheldon_type" == "brew" ]]; then
+        pass "sheldon app should exist in apps.toml as brew tool"
     else
-        fail "sheldon app should exist in apps.toml as mise tool"
+        fail "sheldon app should exist in apps.toml as brew tool"
     fi
+    assert_true "sheldon should have Linux package mapping" test -n "$(get_linux_package_name sheldon dnf)"
     assert_true "sheldon should be Linux-supported" is_app_supported sheldon linux
+}
+
+test_mise_registry_entries() {
+    print_header "Mise Registry Entries"
+    if ! command -v mise >/dev/null 2>&1; then
+        pass "mise not installed on host; registry validation skipped"
+        return 0
+    fi
+
+    local registry_keys
+    registry_keys=$(mise registry 2>/dev/null | awk '{print $1}')
+    if [[ -z "$registry_keys" ]]; then
+        fail "mise registry output is empty"
+        return 0
+    fi
+
+    local app_key
+    for app_key in $(get_all_apps); do
+        local app_type
+        app_type=$(get_app_prop "$app_key" "type")
+        if [[ "$app_type" != "mise" ]]; then
+            continue
+        fi
+        local tool_name
+        tool_name=$(get_app_prop "$app_key" "name")
+        [[ -z "$tool_name" ]] && tool_name="$app_key"
+
+        if echo "$registry_keys" | grep -Fxq "$tool_name"; then
+            pass "mise registry contains tool '$tool_name'"
+        else
+            fail "mise registry is missing tool '$tool_name' (app: $app_key)"
+        fi
+    done
 }
 
 test_bootstrap_linux_path() {
@@ -144,7 +178,8 @@ main() {
 
     test_platform_filtering
     test_linux_package_mapping
-    test_sheldon_mise_config
+    test_sheldon_source_config
+    test_mise_registry_entries
     test_bootstrap_linux_path
     test_macos_guards
     test_summary_fallback

@@ -96,7 +96,7 @@ This validates:
 
 - platform filtering (`ghostty` false on Linux, `starship` true)
 - Linux package mapping presence
-- `sheldon` configured as a mise tool
+- `sheldon` configured as a package-manager tool with Linux mapping
 - Linux bootstrap branch behavior (no `brew` calls in Linux bootstrap function)
 - macOS-only guardrails for post-install steps
 - summary fallback behavior when gum is missing

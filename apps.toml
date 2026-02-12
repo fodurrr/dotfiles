@@ -528,10 +528,11 @@ platform = ["macos", "linux"]
 description = "Fuzzy finder"
 
 [apps.sheldon]
-type = "mise"
+type = "brew"
 category = "cli"
 profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
+linux_name = "sheldon"
 description = "Fast shell plugin manager"
 
 [apps.jq]

@@ -5,6 +5,33 @@
 # Track installed apps to avoid duplicates (for dependency resolution)
 # Using string-based tracking for bash 3.2 compatibility (macOS default)
 INSTALLED_APPS=""
+MISE_REGISTRY_KEYS=""
+MISE_REGISTRY_LOADED=false
+
+load_mise_registry_keys() {
+    if [[ "$MISE_REGISTRY_LOADED" == true ]]; then
+        return 0
+    fi
+
+    if ! command -v mise >/dev/null 2>&1; then
+        return 1
+    fi
+
+    MISE_REGISTRY_KEYS=$(mise registry 2>/dev/null | awk '{print $1}')
+    MISE_REGISTRY_LOADED=true
+    return 0
+}
+
+mise_registry_has_tool() {
+    local tool_name="$1"
+    [[ -z "$tool_name" ]] && return 1
+
+    if ! load_mise_registry_keys; then
+        return 1
+    fi
+
+    echo "$MISE_REGISTRY_KEYS" | grep -Fxq "$tool_name"
+}
 
 # Install a mise app with dependency resolution
 install_mise_app() {
@@ -38,6 +65,12 @@ install_mise_app() {
     local version
     version=$(get_app_prop "$app_key" "version")
     [[ -z "$version" ]] && version="latest"
+
+    if ! mise_registry_has_tool "$name"; then
+        log_error "Mise registry does not contain tool: $name (app: $app_key)"
+        log_error "Choose a package-manager install source for this app instead of type=mise"
+        return 1
+    fi
 
     # Check if already installed with correct version
     # IMPORTANT: mise current returns configured version even if not installed!

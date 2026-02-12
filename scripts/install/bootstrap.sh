@@ -267,11 +267,11 @@ run_bootstrap_linux() {
                 libsqlite3-dev tk-dev xz-utils
             ;;
         dnf)
-            bootstrap_run_as_root dnf check-update -q >/dev/null 2>&1 || true
+            bootstrap_run_as_root dnf makecache --refresh -q >/dev/null 2>&1 || true
             bootstrap_run_as_root dnf groupinstall -y "Development Tools" >/dev/null 2>&1 || true
             bootstrap_install_linux_packages "$pm" \
                 ca-certificates curl git jq stow zsh yq \
-                gcc gcc-c++ make patch autoconf automake bison pkgconfig \
+                gcc gcc-c++ make patch autoconf automake bison pkgconf-pkg-config \
                 openssl-devel zlib-devel readline-devel libyaml-devel \
                 libffi-devel gdbm-devel ncurses-devel libxml2-devel \
                 libxslt-devel sqlite-devel tk-devel xz
