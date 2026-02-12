@@ -39,6 +39,42 @@ run_layer_mise() {
         return 1
     fi
 
+    echo "Validating strict command ownership for selected mise tools..."
+    local strict_failed_tools=""
+    for app_key in $(get_all_apps); do
+        if ! app_selected_for_install "$app_key"; then
+            continue
+        fi
+
+        local type
+        type=$(get_app_prop "$app_key" "type")
+        if [[ "$type" != "mise" ]]; then
+            continue
+        fi
+
+        local enforce_single_source
+        enforce_single_source=$(get_app_prop "$app_key" "enforce_single_source")
+        if [[ "$enforce_single_source" != "true" ]]; then
+            continue
+        fi
+
+        if ! validate_mise_single_source "$app_key"; then
+            local failed_name
+            failed_name=$(get_app_prop "$app_key" "name")
+            [[ -z "$failed_name" ]] && failed_name="$app_key"
+            if [[ -z "$strict_failed_tools" ]]; then
+                strict_failed_tools="$failed_name"
+            else
+                strict_failed_tools="${strict_failed_tools}, $failed_name"
+            fi
+        fi
+    done
+
+    if [[ -n "$strict_failed_tools" ]]; then
+        log_error "Mise command ownership validation failed: $strict_failed_tools"
+        return 1
+    fi
+
     if [[ "$CLEAN_MODE" == true ]]; then
         echo "Cleaning up mise tools not in selected profiles..."
 

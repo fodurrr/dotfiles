@@ -8,6 +8,8 @@
 #   name        = package name (optional, defaults to section name)
 #   tap         = homebrew tap (optional, for casks from taps)
 #   version     = version string (optional, for mise tools)
+#   bin         = command name for PATH collision checks (optional, for mise tools)
+#   enforce_single_source = fail install if command resolves to multiple sources (optional, for mise tools)
 #   category    = grouping for documentation
 #   profiles    = ["minimal", "standard", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
@@ -138,6 +140,8 @@ description = "OpenCode AI assistant (GUI)"
 [apps.claude-cli]
 type = "mise"
 name = "claude"
+bin = "claude"
+enforce_single_source = true
 version = "latest"
 category = "ai"
 profiles = ["developer", "hacker"]
@@ -147,6 +151,8 @@ description = "Claude AI assistant (CLI)"
 [apps.opencode-cli]
 type = "mise"
 name = "opencode"
+bin = "opencode"
+enforce_single_source = true
 version = "latest"
 category = "ai"
 profiles = ["developer", "hacker"]
@@ -156,6 +162,8 @@ description = "OpenCode AI assistant (CLI)"
 [apps.codex-cli]
 type = "mise"
 name = "codex"
+bin = "codex"
+enforce_single_source = true
 version = "latest"
 category = "ai"
 profiles = ["developer", "hacker"]
@@ -171,6 +179,8 @@ description = "Codex adapter for ACP-compatible clients (Zed integration)"
 
 [apps.gemini-cli]
 type = "mise"
+bin = "gemini"
+enforce_single_source = true
 category = "ai"
 profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
