@@ -32,7 +32,7 @@ When presenting options:
 
 ## Overview
 
-This is a macOS (Apple Silicon) dotfiles repository with a profile-based installer and a two-phase install flow.
+This is a macOS (Apple Silicon) and Linux (Ubuntu, Debian, Fedora) dotfiles repository with a profile-based installer and a platform-aware two-phase install flow.
 
 ## Critical Constraints
 
@@ -163,10 +163,38 @@ Full policy: `docs/stow-policy.md`
 4. Tool init (starship/fzf/etc.)
 5. aliases/functions
 
+## Linux Platform Support
+
+This repository now supports Linux (Ubuntu, Debian, Fedora) in addition to macOS.
+
+### Platform Detection
+- The installer automatically detects the platform (macOS or Linux)
+- Uses appropriate package manager: Homebrew (macOS), apt (Ubuntu/Debian), or dnf (Fedora)
+- Platform-aware layering: Homebrew layer runs on macOS, Linux layer runs on Linux
+
+### apps.toml Platform Fields
+- GUI apps have `platform = ["macos"]` to skip on Linux
+- CLI tools have `platform = ["macos", "linux"]` for cross-platform support
+- No `platform` field = all platforms supported
+
+### Linux Testing
+- Run `./scripts/test-linux.sh` to test platform detection and package manager integration
+- Use `docs/linux-support.md` for Linux-specific installation guidance
+
+### Platform-Specific Behavior
+- **macOS**: Homebrew for all packages, GUI apps via casks, full profile support
+- **Linux**: apt/dnf for packages, mise for version management, GUI apps skipped (install manually)
+
+### Platform Notes for Agents
+- When adding new apps, specify `platform` field appropriately
+- Cross-platform CLI tools should include both macOS and Linux
+- GUI apps should be marked macOS-only (`platform = ["macos"]`)
+
 ## Documentation Map
 
 - `README.md`: onboarding and quick start
 - `docs/profile-system.md`: architecture and profile behavior
+- `docs/linux-support.md`: Linux platform support and installation guide
 - `docs/terminal-workflow-recommendations.md`: terminal workflow guidance
 - `docs/vm-testing.md`: VM workflow
 - `docs/stow-policy.md`: stow boundaries

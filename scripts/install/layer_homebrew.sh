@@ -24,6 +24,20 @@ remove_unmanaged_cask_bundle() {
 }
 
 run_layer_homebrew() {
+    # Check if we should run Homebrew layer (macOS only)
+    local platform
+    platform=$(detect_platform)
+
+    if [[ "$platform" != "macos" ]]; then
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  Layer 1: Homebrew"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        log_info "Skipping Homebrew layer (not a macOS system)"
+        return 0
+    fi
+
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  Layer 1: Homebrew"

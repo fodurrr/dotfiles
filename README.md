@@ -1,15 +1,21 @@
 # Dotfiles
 
-Profile-based macOS dotfiles for Apple Silicon machines.
+Profile-based dotfiles for macOS (Apple Silicon) and Linux (Ubuntu, Debian, Fedora).
 This repository installs apps and shell/config tooling through a single `install.sh` entrypoint, with optional cleanup and reconciliation workflows.
 
 ## Quick Start
 
 ### Prerequisites
 
+**macOS**:
 - macOS on Apple Silicon
 - Xcode Command Line Tools (`xcode-select --install`)
 - Git
+
+**Linux**:
+- Ubuntu 20.04+, Debian 11+, Fedora 35+
+- Git
+- sudo access for package installation
 
 Optional:
 - Fresh VM testing workflow: see [`docs/vm-testing.md`](docs/vm-testing.md)
@@ -199,6 +205,7 @@ find ~ -name "*.bak" -type f 2>/dev/null
 
 - [`docs/profile-system.md`](docs/profile-system.md): Profile architecture and deeper behavior
 - [`docs/terminal-workflow-recommendations.md`](docs/terminal-workflow-recommendations.md): Terminal-focused recommendations and profile detail
+- [`docs/linux-support.md`](docs/linux-support.md): Linux platform support and installation guide
 - [`docs/vm-testing.md`](docs/vm-testing.md): Safe testing in a macOS VM
 - [`docs/stow-policy.md`](docs/stow-policy.md): Stow rules for stable config-only symlinking
 - [`docs/ai-agent-sandbox-guide.md`](docs/ai-agent-sandbox-guide.md): Sandboxing patterns for AI coding tools

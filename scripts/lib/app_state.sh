@@ -100,6 +100,39 @@ get_cask_app_name() {
     fi
 }
 
+# Check if a Linux package is installed via apt/dnf
+is_linux_package_installed() {
+    local package="$1"
+    local platform
+
+    # Detect platform
+    if [[ -n "$(type -t detect_platform)" ]]; then
+        platform=$(detect_platform)
+    else
+        case "$(uname -s)" in
+            Darwin) platform="macos" ;;
+            Linux) platform="linux" ;;
+            *) platform="unknown" ;;
+        esac
+    fi
+
+    # Only relevant for Linux
+    if [[ "$platform" != "linux" ]]; then
+        return 1
+    fi
+
+    # Check using appropriate package manager
+    if command -v dpkg &>/dev/null; then
+        dpkg -l "$package" 2>/dev/null | grep -q "^ii"
+        return $?
+    elif command -v rpm &>/dev/null; then
+        rpm -q "$package" &>/dev/null
+        return $?
+    else
+        return 1
+    fi
+}
+
 # Check if an app is currently installed
 is_app_installed() {
     local app_key="$1"
@@ -116,6 +149,11 @@ is_app_installed() {
             [[ "$state" == "managed" || "$state" == "unmanaged" ]]
             ;;
         brew)
+            # On Linux, check via apt/dnf instead
+            if is_linux_package_installed "$name"; then
+                return 0
+            fi
+            # Fallback to brew on macOS
             brew list 2>/dev/null | grep -q "^${name}$"
             ;;
         mise)
@@ -138,3 +176,4 @@ is_app_installed() {
             ;;
     esac
 }
+

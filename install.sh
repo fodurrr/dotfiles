@@ -62,6 +62,8 @@ trap cleanup EXIT
 # =============================================================================
 # Load Libraries
 # =============================================================================
+source "$DOTFILES_DIR/scripts/lib/platform.sh"
+source "$DOTFILES_DIR/scripts/lib/package-manager.sh"
 source "$DOTFILES_DIR/scripts/lib/logging.sh"
 source "$DOTFILES_DIR/scripts/lib/app_config.sh"
 source "$DOTFILES_DIR/scripts/lib/app_state.sh"
@@ -84,6 +86,7 @@ source "$DOTFILES_DIR/scripts/install/clean_review.sh"
 source "$DOTFILES_DIR/scripts/install/extras.sh"
 source "$DOTFILES_DIR/scripts/install/alacarte.sh"
 source "$DOTFILES_DIR/scripts/install/layer_homebrew.sh"
+source "$DOTFILES_DIR/scripts/install/layer_linux.sh"
 source "$DOTFILES_DIR/scripts/install/layer_stow.sh"
 source "$DOTFILES_DIR/scripts/install/layer_mise.sh"
 source "$DOTFILES_DIR/scripts/install/layer_curl.sh"
@@ -105,7 +108,14 @@ if [[ "$RECONCILE_ONLY" == true ]]; then
     show_reconcile_summary_and_exit
 fi
 run_alacarte_removals
-run_layer_homebrew
+
+# Platform-aware layer selection
+PLATFORM=$(detect_platform)
+if [[ "$PLATFORM" == "macos" ]]; then
+    run_layer_homebrew
+elif [[ "$PLATFORM" == "linux" ]]; then
+    run_layer_linux
+fi
 
 generate_mise_config
 run_layer_stow
