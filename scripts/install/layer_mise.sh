@@ -8,21 +8,36 @@ run_layer_mise() {
     echo "  Layer 3: Mise"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-    if command -v mise &> /dev/null; then
+    if command -v mise >/dev/null 2>&1; then
         eval "$(mise activate bash)" 2>/dev/null || true
     fi
 
     echo "Installing mise tools..."
     local app_key
+    local failed_tools=""
     for app_key in $(get_all_apps); do
         if app_selected_for_install "$app_key"; then
             local type
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "mise" ]]; then
-                install_mise_app "$app_key"
+                if ! install_mise_app "$app_key"; then
+                    local failed_name
+                    failed_name=$(get_app_prop "$app_key" "name")
+                    [[ -z "$failed_name" ]] && failed_name="$app_key"
+                    if [[ -z "$failed_tools" ]]; then
+                        failed_tools="$failed_name"
+                    else
+                        failed_tools="${failed_tools}, $failed_name"
+                    fi
+                fi
             fi
         fi
     done
+
+    if [[ -n "$failed_tools" ]]; then
+        log_error "Mise layer failed for selected tools: $failed_tools"
+        return 1
+    fi
 
     if [[ "$CLEAN_MODE" == true ]]; then
         echo "Cleaning up mise tools not in selected profiles..."

@@ -13,11 +13,19 @@ install_mise_app() {
     # Skip if already processed this session (pipe delimiters prevent partial matches)
     [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
 
+    if ! command -v mise >/dev/null 2>&1; then
+        log_error "mise is not installed but required for $app_key"
+        return 1
+    fi
+
     # Check for dependency (install silently if needed)
     local dep
     dep=$(get_app_prop "$app_key" "depends_on")
     if [[ -n "$dep" ]]; then
-        install_mise_app "$dep"
+        if ! install_mise_app "$dep"; then
+            log_error "Failed dependency '$dep' required by '$app_key'"
+            return 1
+        fi
     fi
 
     # Mark as processed
@@ -78,12 +86,14 @@ install_mise_app() {
     local install_output
     if install_output=$(mise install "$name@$version" 2>&1); then
         add_to_summary INSTALLED "$name" "$app_key"
+        return 0
     else
-        log_warning "Failed to install $name"
+        log_error "Failed to install $name"
         # Show first line of error to help debugging
         local error_line
         error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
         [[ -n "$error_line" ]] && echo "      $error_line"
+        return 1
     fi
 }
 

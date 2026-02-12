@@ -127,6 +127,91 @@ bootstrap_install_mise_linux() {
     fi
 }
 
+bootstrap_install_gum_binary_linux() {
+    local arch
+    case "$(uname -m)" in
+        x86_64) arch="x86_64" ;;
+        aarch64|arm64) arch="arm64" ;;
+        *)
+            log_warning "Unsupported Linux architecture for gum binary: $(uname -m)"
+            return 1
+            ;;
+    esac
+
+    local api_url="https://api.github.com/repos/charmbracelet/gum/releases/latest"
+    local gum_asset_url
+    gum_asset_url=$(curl -fsSL "$api_url" 2>/dev/null | grep -Eo "https://[^\\\"]*gum_[0-9.]+_Linux_${arch}\\.tar\\.gz" | head -1)
+    if [[ -z "$gum_asset_url" ]]; then
+        log_warning "Could not resolve gum release asset URL for Linux ${arch}"
+        return 1
+    fi
+
+    local tmp_dir
+    tmp_dir=$(mktemp -d)
+    if [[ ! -d "$tmp_dir" ]]; then
+        log_warning "Failed to create temp directory for gum installation"
+        return 1
+    fi
+
+    local archive="$tmp_dir/gum.tar.gz"
+    if ! curl -fsSL "$gum_asset_url" -o "$archive"; then
+        rm -rf "$tmp_dir"
+        log_warning "Failed to download gum release archive"
+        return 1
+    fi
+
+    if ! tar -xzf "$archive" -C "$tmp_dir"; then
+        rm -rf "$tmp_dir"
+        log_warning "Failed to extract gum release archive"
+        return 1
+    fi
+
+    local gum_bin
+    gum_bin=$(find "$tmp_dir" -type f -name gum 2>/dev/null | head -1)
+    if [[ -z "$gum_bin" ]]; then
+        rm -rf "$tmp_dir"
+        log_warning "gum binary not found in extracted archive"
+        return 1
+    fi
+
+    local bin_dir="$HOME/.local/bin"
+    mkdir -p "$bin_dir"
+    if ! cp "$gum_bin" "$bin_dir/gum"; then
+        rm -rf "$tmp_dir"
+        log_warning "Failed to copy gum binary to $bin_dir"
+        return 1
+    fi
+    chmod +x "$bin_dir/gum"
+    export PATH="$bin_dir:$PATH"
+    rm -rf "$tmp_dir"
+    return 0
+}
+
+bootstrap_install_gum_linux() {
+    local pm="$1"
+
+    if command -v gum >/dev/null 2>&1; then
+        return 0
+    fi
+
+    if bootstrap_linux_package_available "$pm" "gum"; then
+        bootstrap_install_linux_packages "$pm" "gum" || true
+        if command -v gum >/dev/null 2>&1; then
+            return 0
+        fi
+    fi
+
+    log_info "Installing gum binary fallback..."
+    if bootstrap_install_gum_binary_linux; then
+        if command -v gum >/dev/null 2>&1; then
+            return 0
+        fi
+    fi
+
+    log_warning "gum is not available; installer will use plain-text fallback output"
+    return 0
+}
+
 run_bootstrap_macos() {
     # Install Homebrew if missing
     if ! command -v brew >/dev/null 2>&1; then
@@ -210,6 +295,8 @@ run_bootstrap_linux() {
     if ! command -v mise >/dev/null 2>&1; then
         bootstrap_install_mise_linux
     fi
+
+    bootstrap_install_gum_linux "$pm"
 }
 
 run_bootstrap() {

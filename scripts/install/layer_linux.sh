@@ -84,6 +84,8 @@ run_layer_linux() {
 
     local installed_count=0
     local skipped_count=0
+    local failed_count=0
+    local failed_apps=""
     local app_key
 
     for app_key in $apps; do
@@ -119,11 +121,22 @@ run_layer_linux() {
         if install_linux_mapped_brew_app "$app_key" "$pm" "$package_name"; then
             installed_count=$((installed_count + 1))
         else
-            skipped_count=$((skipped_count + 1))
+            failed_count=$((failed_count + 1))
+            if [[ -z "$failed_apps" ]]; then
+                failed_apps="$display_name"
+            else
+                failed_apps="${failed_apps}, $display_name"
+            fi
         fi
     done
 
     echo ""
+    if [[ "$failed_count" -gt 0 ]]; then
+        log_error "Linux layer failed for selected apps: $failed_apps"
+        log_error "Linux layer summary: $installed_count installed, $skipped_count skipped, $failed_count failed"
+        return 1
+    fi
+
     log_success "Linux layer complete: $installed_count installed, $skipped_count skipped"
 }
 

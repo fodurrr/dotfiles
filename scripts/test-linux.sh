@@ -77,6 +77,18 @@ test_linux_package_mapping() {
     assert_false "codex-acp should not be Linux-supported app" is_app_supported codex-acp linux
 }
 
+test_sheldon_mise_config() {
+    print_header "Sheldon Tool Configuration"
+    local sheldon_type
+    sheldon_type=$(get_app_prop sheldon type)
+    if [[ "$sheldon_type" == "mise" ]]; then
+        pass "sheldon app should exist in apps.toml as mise tool"
+    else
+        fail "sheldon app should exist in apps.toml as mise tool"
+    fi
+    assert_true "sheldon should be Linux-supported" is_app_supported sheldon linux
+}
+
 test_bootstrap_linux_path() {
     print_header "Bootstrap Routing"
     local bootstrap_file="$DOTFILES_DIR/scripts/install/bootstrap.sh"
@@ -92,6 +104,18 @@ test_macos_guards() {
     assert_true "raycast config should guard for macOS" is_grep_match 'get_current_platform' "$DOTFILES_DIR/scripts/install/raycast.sh"
     assert_true "terminal config should guard for macOS" is_grep_match 'get_current_platform' "$DOTFILES_DIR/scripts/install/terminal.sh"
     assert_true "reconcile should be guarded for macOS" is_grep_match 'Skipping cask reconciliation' "$DOTFILES_DIR/scripts/install/reconcile_casks.sh"
+}
+
+test_summary_fallback() {
+    print_header "Summary Fallback"
+    assert_true "summary should support non-gum fallback path" is_grep_match 'command -v gum' "$DOTFILES_DIR/scripts/lib/summary.sh"
+    assert_true "summary should print plain table when gum is missing" is_grep_match 'printf "  %-22s %-12s %s\\n" "Package" "Status" "Description"' "$DOTFILES_DIR/scripts/lib/summary.sh"
+}
+
+test_stow_strictness() {
+    print_header "Stow Strictness"
+    assert_false "stow layer should not ignore stow_enforce failures" is_grep_match 'stow_enforce "\\$package" \\|\\| true' "$DOTFILES_DIR/scripts/install/layer_stow.sh"
+    assert_true "stow layer should verify zshrc after linking zsh-config" is_grep_match 'zsh config expected but missing' "$DOTFILES_DIR/scripts/install/layer_stow.sh"
 }
 
 test_linux_manager_detection() {
@@ -120,8 +144,11 @@ main() {
 
     test_platform_filtering
     test_linux_package_mapping
+    test_sheldon_mise_config
     test_bootstrap_linux_path
     test_macos_guards
+    test_summary_fallback
+    test_stow_strictness
     test_linux_manager_detection
 
     echo ""

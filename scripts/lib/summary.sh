@@ -48,11 +48,20 @@ print_summary_table() {
 ${name},${status_symbol} ${status_text},${desc}"
     done <<< "$data"
 
-    echo "$csv_data" | gum table \
-        --separator="," \
-        --columns="Package,Status,Description" \
-        --widths="22,12,40" \
-        --print \
-        --border="rounded"
+    if command -v gum >/dev/null 2>&1; then
+        echo "$csv_data" | gum table \
+            --separator="," \
+            --columns="Package,Status,Description" \
+            --widths="22,12,40" \
+            --print \
+            --border="rounded"
+    else
+        printf "  %-22s %-12s %s\n" "Package" "Status" "Description"
+        printf "  %-22s %-12s %s\n" "----------------------" "------------" "------------------------------"
+        while IFS='|' read -r name desc; do
+            [[ -z "$name" ]] && continue
+            printf "  %-22s %-12s %s\n" "$name" "${status_symbol} ${status_text}" "$desc"
+        done <<< "$data"
+    fi
     echo ""
 }

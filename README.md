@@ -17,6 +17,7 @@ This repository installs apps and shell/config tooling through a single `install
 - Git
 - sudo access for package installation
 - Native package manager support only (`apt` or `dnf`; Linuxbrew is not used)
+- Installer finalizes zsh login shell (`chsh`) as part of successful setup
 
 Optional:
 - Fresh VM testing workflow: see [`docs/vm-testing.md`](docs/vm-testing.md)
@@ -178,7 +179,11 @@ yq -p toml -oy '
 ```bash
 source ~/.zshrc
 hash -r
-which -a starship fzf mise
+which -a starship fzf mise sheldon yazi eza gum
+echo "$SHELL"
+getent passwd "$USER" | cut -d: -f7
+# If needed:
+chsh -s "$(command -v zsh)" "$USER"
 ```
 
 ### 2) Homebrew cask conflict (example: Office vs OneDrive)

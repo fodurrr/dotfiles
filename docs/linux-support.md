@@ -30,8 +30,11 @@ On Linux, bootstrap installs prerequisites for the remaining layers:
 - installer/runtime tools (`yq`, `stow`, `git`, `curl`, etc.)
 - build toolchain and common dev headers for clean-machine runtime builds
 - `mise` (if not already installed)
+- `gum` via distro package when available, with binary fallback
 
 `yq` is validated for TOML support (`-p toml`). If distro `yq` is incompatible, the installer falls back to the mikefarah binary.
+
+`gum` is best-effort on Linux. If package and binary fallback are unavailable, installer output falls back to plain shell formatting.
 
 ## Linux Layer Behavior
 
@@ -42,6 +45,8 @@ Linux package installs are driven by `apps.toml` metadata for `type = "brew"` en
 - `linux_dnf`: dnf override
 
 If an app is selected for Linux but has no mapping (or the package is unavailable), it is skipped with an explicit message.
+
+If a selected mapped package install fails, the Linux layer exits non-zero.
 
 ## GUI Apps on Linux
 
@@ -65,6 +70,20 @@ If an app is selected for Linux but has no mapping (or the package is unavailabl
 4. Mise layer
 5. Curl layer
 
+Selected profile tool failures are treated as fatal in strict mode:
+
+- stow link failures
+- selected mise tool install failures
+- selected mapped Linux package install failures
+
+### Linux Shell Finalization
+
+After install summary, Linux flow ensures zsh is the login shell:
+
+- interactive mode prompts before `chsh`
+- `--yes` mode performs non-interactive attempt when possible
+- failure to set zsh login shell is treated as install failure with manual remediation command
+
 ## Validation
 
 Run Linux-focused assertions:
@@ -77,8 +96,11 @@ This validates:
 
 - platform filtering (`ghostty` false on Linux, `starship` true)
 - Linux package mapping presence
+- `sheldon` configured as a mise tool
 - Linux bootstrap branch behavior (no `brew` calls in Linux bootstrap function)
 - macOS-only guardrails for post-install steps
+- summary fallback behavior when gum is missing
+- strict stow behavior (`stow_enforce` failures are not ignored)
 
 ## Adding Cross-Platform Brew Apps
 

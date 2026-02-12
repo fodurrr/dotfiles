@@ -527,6 +527,13 @@ profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Fuzzy finder"
 
+[apps.sheldon]
+type = "mise"
+category = "cli"
+profiles = ["minimal", "standard", "developer", "hacker", "server"]
+platform = ["macos", "linux"]
+description = "Fast shell plugin manager"
+
 [apps.jq]
 type = "mise"
 category = "cli"
