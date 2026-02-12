@@ -77,6 +77,45 @@ test_linux_package_mapping() {
     assert_false "codex-acp should not be Linux-supported app" is_app_supported codex-acp linux
 }
 
+test_linux_layer_upgrade_behavior() {
+    print_header "Linux Layer Upgrade Behavior"
+    local layer_file="$DOTFILES_DIR/scripts/install/layer_linux.sh"
+
+    assert_true "linux layer should call pm_install for selected mapped packages" is_grep_match 'pm_install "\$package_name"' "$layer_file"
+    assert_true "linux layer should classify installs with pre/post version checks" is_grep_match 'pre_version=' "$layer_file"
+    assert_true "linux layer should classify installs with pre/post version checks" is_grep_match 'post_version=' "$layer_file"
+    assert_false "linux layer should not short-circuit on already installed packages" is_grep_match 'already installed \\(\\$package_name\\)' "$layer_file"
+}
+
+test_ai_cli_single_source_fields() {
+    print_header "AI CLI Single-Source Fields"
+    local app_key
+    for app_key in claude-cli opencode-cli codex-cli gemini-cli; do
+        local app_type app_bin app_enforce
+        app_type=$(get_app_prop "$app_key" "type")
+        app_bin=$(get_app_prop "$app_key" "bin")
+        app_enforce=$(get_app_prop "$app_key" "enforce_single_source")
+
+        if [[ "$app_type" == "mise" ]]; then
+            pass "$app_key should remain a mise app"
+        else
+            fail "$app_key should remain a mise app"
+        fi
+
+        if [[ -n "$app_bin" ]]; then
+            pass "$app_key should define bin"
+        else
+            fail "$app_key should define bin"
+        fi
+
+        if [[ "$app_enforce" == "true" ]]; then
+            pass "$app_key should enforce single-source command ownership"
+        else
+            fail "$app_key should enforce single-source command ownership"
+        fi
+    done
+}
+
 test_sheldon_source_config() {
     print_header "Sheldon Tool Configuration"
     local sheldon_type sheldon_platform sheldon_linux_type
@@ -212,6 +251,8 @@ main() {
 
     test_platform_filtering
     test_linux_package_mapping
+    test_linux_layer_upgrade_behavior
+    test_ai_cli_single_source_fields
     test_sheldon_source_config
     test_mise_registry_entries
     test_bootstrap_linux_path

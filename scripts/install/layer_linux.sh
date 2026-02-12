@@ -31,20 +31,33 @@ is_linux_repo_package_available() {
 
 install_linux_mapped_brew_app() {
     local app_key="$1"
-    local pm="$2"
-    local package_name="$3"
+    local package_name="$2"
     local display_name
     display_name=$(get_app_display_name "$app_key")
+    local pre_version
+    pre_version=$(pm_get_version "$package_name" 2>/dev/null || true)
+    [[ "$pre_version" == "unknown" ]] && pre_version=""
 
-    if pm_is_installed "$package_name"; then
-        log_info "$display_name already installed ($package_name)"
-        add_to_summary SKIPPED "$display_name" "$app_key"
-        return 0
-    fi
-
-    log_success "Installing $display_name ($package_name)..."
+    log_success "Ensuring $display_name ($package_name) is installed and up-to-date..."
     if pm_install "$package_name"; then
-        add_to_summary INSTALLED "$display_name" "$app_key"
+        local post_version
+        post_version=$(pm_get_version "$package_name" 2>/dev/null || true)
+        [[ "$post_version" == "unknown" ]] && post_version=""
+
+        if [[ -z "$pre_version" ]]; then
+            add_to_summary INSTALLED "$display_name" "$app_key"
+            echo "installed"
+            return 0
+        fi
+
+        if [[ -n "$post_version" && "$pre_version" != "$post_version" ]]; then
+            add_to_summary INSTALLED "$display_name" "$app_key"
+            echo "installed"
+            return 0
+        fi
+
+        add_to_summary SKIPPED "$display_name" "$app_key"
+        echo "skipped"
         return 0
     fi
 
@@ -118,8 +131,13 @@ run_layer_linux() {
             continue
         fi
 
-        if install_linux_mapped_brew_app "$app_key" "$pm" "$package_name"; then
-            installed_count=$((installed_count + 1))
+        local install_result
+        if install_result=$(install_linux_mapped_brew_app "$app_key" "$package_name"); then
+            if [[ "$install_result" == "installed" ]]; then
+                installed_count=$((installed_count + 1))
+            else
+                skipped_count=$((skipped_count + 1))
+            fi
         else
             failed_count=$((failed_count + 1))
             if [[ -z "$failed_apps" ]]; then

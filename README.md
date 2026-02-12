@@ -211,6 +211,21 @@ ls -la ~/.zshrc
 find ~ -name "*.bak" -type f 2>/dev/null
 ```
 
+### 5) AI CLI command-source collision (strict mise enforcement)
+
+Layer 3 now fails for strict AI CLI tools (`claude`, `opencode`, `codex`, `gemini`) when a command resolves to multiple sources or the first path is not the expected mise install path.
+
+```bash
+which -a gemini
+mise current gemini-cli
+mise latest gemini-cli
+
+which -a claude opencode codex
+mise current claude opencode codex
+```
+
+`version = "latest"` mise tools are refreshed on each install run, while your existing `lts`/`stable`/pinned versions remain unchanged.
+
 ## Documentation Map
 
 - [`docs/profile-system.md`](docs/profile-system.md): Profile architecture and deeper behavior

@@ -46,7 +46,9 @@ Linux package installs are driven by `apps.toml` metadata for `type = "brew"` en
 
 If an app is selected for Linux but has no mapping (or the package is unavailable), it is skipped with an explicit message.
 
-If a selected mapped package install fails, the Linux layer exits non-zero.
+For selected mapped Linux packages, reruns now re-apply package manager installs to pick up newer repository versions.
+
+If a selected mapped package install/upgrade fails, the Linux layer exits non-zero.
 
 `sheldon` is not currently available in default Ubuntu/Fedora repositories and is not present in the current mise registry. On Linux, it is installed via a dedicated `type = "curl"` entry (`sheldon-linux`) that downloads the official upstream binary.
 
@@ -76,7 +78,7 @@ Selected profile tool failures are treated as fatal in strict mode:
 
 - stow link failures
 - selected mise tool install failures
-- selected mapped Linux package install failures
+- selected mapped Linux package install/upgrade failures
 
 ### Linux Shell Finalization
 
