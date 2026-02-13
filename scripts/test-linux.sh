@@ -416,6 +416,7 @@ test_reconcile_fail_fast_guards() {
     assert_true "reconcile should aggregate failures and return non-zero" is_grep_match 'Cask reconciliation failed for:' "$reconcile_file"
     assert_true "homebrew layer should fail on unresolved unmanaged casks after reconcile" is_grep_match 'Homebrew cask layer failed due to unresolved unmanaged casks:' "$homebrew_layer_file"
     assert_false "reconcile should not swallow brew install failures with || true" bash -c "sed -n '/reconcile_single_cask()/,/^}/p' '$reconcile_file' | grep -q 'brew install --cask .*|| true'"
+    assert_false "reconcile should not use inverted install capture that masks exit code" is_grep_match 'if ! install_output=' "$reconcile_file"
 }
 
 test_stow_strictness() {

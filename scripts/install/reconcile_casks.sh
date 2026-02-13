@@ -57,11 +57,15 @@ reconcile_single_cask() {
     local install_output=""
     local install_exit=0
     if [[ "$cask" == "stretchly" ]]; then
-        if ! install_output=$(brew install --cask --force --no-quarantine "$cask" 2>&1); then
+        if install_output=$(brew install --cask --force --no-quarantine "$cask" 2>&1); then
+            install_exit=0
+        else
             install_exit=$?
         fi
     else
-        if ! install_output=$(brew install --cask --force "$cask" 2>&1); then
+        if install_output=$(brew install --cask --force "$cask" 2>&1); then
+            install_exit=0
+        else
             install_exit=$?
         fi
     fi
