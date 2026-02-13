@@ -1,12 +1,20 @@
 # =============================================================================
 # 1. Path & Base Configuration
 # =============================================================================
-# Ensure Homebrew and standard paths are first
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
+# Keep PATH unique while preserving first-entry precedence.
+typeset -U path PATH
+
+# Ensure Homebrew and standard paths are first.
+path=(
+    /opt/homebrew/bin
+    /opt/homebrew/sbin
+    /usr/local/bin
+    "$HOME/.local/bin"
+    $path
+)
 
 # PostgreSQL (Homebrew keg-only formula)
-[[ -d /opt/homebrew/opt/postgresql@17/bin ]] && export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+[[ -d /opt/homebrew/opt/postgresql@17/bin ]] && path=(/opt/homebrew/opt/postgresql@17/bin $path)
 
 # Editor Defaults (fallback chain: VSCode → Zed → helix → vim)
 if command -v code &>/dev/null; then
