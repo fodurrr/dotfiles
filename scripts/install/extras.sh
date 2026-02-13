@@ -157,11 +157,12 @@ run_extras_mode() {
                 ;;
             curl)
                 case "$app_key" in
-                    claude-cli)
-                        install_or_update_curl_tool "$app_key" "claude" "claude-cli"
+                    sheldon-linux)
+                        install_or_update_curl_tool "$app_key" "sheldon" "sheldon"
                         ;;
-                    opencode-cli)
-                        install_or_update_curl_tool "$app_key" "opencode" "opencode-cli"
+                    *)
+                        log_warning "Unknown curl installer selected in extras mode: $app_key"
+                        add_to_summary SKIPPED "$name" "$app_key"
                         ;;
                 esac
                 ;;

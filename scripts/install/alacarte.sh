@@ -48,8 +48,7 @@ remove_alacarte_app() {
             log_warning "Removing $name (curl)..."
             local bin_name
             case "$app_key" in
-                claude-cli) bin_name="claude" ;;
-                opencode-cli) bin_name="opencode" ;;
+                sheldon-linux) bin_name="sheldon" ;;
                 *) bin_name="$name" ;;
             esac
             local bin_path

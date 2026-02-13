@@ -35,7 +35,7 @@ Apps are installed from `apps.toml` by type:
 - Layer 1: Homebrew (`cask`, `brew`)
 - Layer 2: Stow (`stow`)
 - Layer 3: Mise (`mise`)
-- Layer 5: Curl fallback (`curl`), reserved for exceptional vendor-only cases
+- Layer 5: Curl fallback (`curl`), reserved for exceptional cases (currently `sheldon-linux` on Linux)
 
 ## Install Modes
 
@@ -118,13 +118,13 @@ yq -p toml -oy '
 - `brew`: CLI formulae where Homebrew is preferred
 - `mise`: default for CLIs and runtimes
 - `stow`: configuration symlink packages
-- `curl`: vendor installer fallback only
+- `curl`: exceptional fallback only (currently `sheldon-linux` on Linux)
 - `defaults`: macOS defaults automation
 
 CLI tool decision order:
 1. `mise` (Recommended)
 2. `brew`
-3. `curl` fallback only when needed
+3. `curl` fallback only for explicit exceptions
 
 ## Stow and Config Ownership
 

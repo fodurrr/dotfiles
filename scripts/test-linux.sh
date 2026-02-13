@@ -144,6 +144,34 @@ test_sheldon_source_config() {
     assert_true "sheldon-linux should be Linux-supported" is_app_supported sheldon-linux linux
 }
 
+test_curl_registry_scope() {
+    print_header "Curl Registry Scope"
+
+    local curl_keys=""
+    local curl_count=0
+    local app_key
+    for app_key in $(get_all_apps); do
+        local app_type
+        app_type=$(get_app_prop "$app_key" "type")
+        if [[ "$app_type" != "curl" ]]; then
+            continue
+        fi
+
+        curl_count=$((curl_count + 1))
+        if [[ -z "$curl_keys" ]]; then
+            curl_keys="$app_key"
+        else
+            curl_keys="$curl_keys, $app_key"
+        fi
+    done
+
+    if [[ "$curl_count" -eq 1 && "$curl_keys" == "sheldon-linux" ]]; then
+        pass "only sheldon-linux should be configured as curl app"
+    else
+        fail "only sheldon-linux should be configured as curl app (found: ${curl_keys:-none})"
+    fi
+}
+
 test_mise_registry_entries() {
     print_header "Mise Registry Entries"
     if ! command -v mise >/dev/null 2>&1; then
@@ -204,6 +232,8 @@ test_summary_fallback() {
 test_curl_layer_linux_tools() {
     print_header "Curl Layer Linux Tools"
     local curl_layer_file="$DOTFILES_DIR/scripts/install/layer_curl.sh"
+    assert_false "curl layer should not include claude-cli installer path" is_grep_match 'claude-cli)' "$curl_layer_file"
+    assert_false "curl layer should not include opencode-cli installer path" is_grep_match 'opencode-cli)' "$curl_layer_file"
     assert_true "curl layer should support sheldon-linux installer" is_grep_match 'sheldon-linux' "$curl_layer_file"
     assert_true "curl layer should include sheldon binary installer" is_grep_match 'install_sheldon_linux_binary' "$curl_layer_file"
     assert_true "curl layer should fail when selected curl tools fail" is_grep_match 'Curl layer failed for selected tools' "$curl_layer_file"
@@ -254,6 +284,7 @@ main() {
     test_linux_layer_upgrade_behavior
     test_ai_cli_single_source_fields
     test_sheldon_source_config
+    test_curl_registry_scope
     test_mise_registry_entries
     test_bootstrap_linux_path
     test_macos_guards
