@@ -172,6 +172,27 @@ yq -p toml -oy '
 | `bash scripts/curl-installs.sh` | Run optional vendor CLI installer fallback layer |
 | `source ~/.zshrc` | Reload shell after config/tool changes |
 
+## Global AI Secrets
+
+Store machine-local AI tokens outside repositories:
+
+- file: `~/.config/secrets/ai.env`
+- expected mode: `600`
+- loaded automatically by `.zshrc`
+- synced to launchd for GUI tools from login shell or manually with:
+  - `ai-env-sync`
+
+Quick setup:
+
+```bash
+mkdir -p ~/.config/secrets
+chmod 700 ~/.config/secrets
+cp .env.ai.example ~/.config/secrets/ai.env
+chmod 600 ~/.config/secrets/ai.env
+source ~/.zshrc
+ai-env-sync
+```
+
 ## Troubleshooting
 
 ### 1) Command not found after install
@@ -232,6 +253,7 @@ mise current claude opencode codex
 - [`docs/terminal-workflow-recommendations.md`](docs/terminal-workflow-recommendations.md): Terminal-focused recommendations and profile detail
 - [`docs/linux-support.md`](docs/linux-support.md): Linux platform support and installation guide
 - [`docs/vm-testing.md`](docs/vm-testing.md): Safe testing in a macOS VM
+- [`docs/ai-secrets.md`](docs/ai-secrets.md): Portable global AI secret loading and launchd sync behavior
 - [`docs/stow-policy.md`](docs/stow-policy.md): Stow rules for stable config-only symlinking
 - [`docs/ai-agent-sandbox-guide.md`](docs/ai-agent-sandbox-guide.md): Sandboxing patterns for AI coding tools
 - [`docs/ssh-github-setup.md`](docs/ssh-github-setup.md): SSH setup for GitHub access

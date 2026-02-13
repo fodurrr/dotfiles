@@ -36,6 +36,68 @@ setopt auto_pushd
 setopt pushd_ignore_dups
 
 # =============================================================================
+# 1.5 AI Secrets (Portable Machine-Local Env)
+# =============================================================================
+typeset -g DOTFILES_AI_ENV_FILE="${DOTFILES_AI_ENV_FILE:-$HOME/.config/secrets/ai.env}"
+
+dotfiles_ai_env_mode() {
+    local file="$1"
+    local mode=""
+
+    if [[ "$OSTYPE" == darwin* ]]; then
+        mode="$(stat -f '%Lp' "$file" 2>/dev/null || true)"
+    else
+        mode="$(stat -c '%a' "$file" 2>/dev/null || true)"
+    fi
+
+    printf '%s' "$mode"
+}
+
+if [[ -r "$DOTFILES_AI_ENV_FILE" ]]; then
+    dotfiles_ai_env_mode_value="$(dotfiles_ai_env_mode "$DOTFILES_AI_ENV_FILE")"
+
+    if [[ -n "$dotfiles_ai_env_mode_value" && ! "$dotfiles_ai_env_mode_value" =~ '^[0-7]00$' ]]; then
+        echo "⚠️  AI env file permissions should be owner-only (recommended: 600): $DOTFILES_AI_ENV_FILE ($dotfiles_ai_env_mode_value)" >&2
+    fi
+
+    set -a
+    # shellcheck disable=SC1090
+    source "$DOTFILES_AI_ENV_FILE"
+    set +a
+fi
+
+sync_ai_env_to_launchctl() {
+    [[ "$OSTYPE" == darwin* ]] || return 0
+    command -v launchctl &>/dev/null || return 0
+
+    local key value
+    local -a managed_keys=(
+        AUGMENT_API_TOKEN
+        AUGMENT_MCP_CONTEXT_ENGINE_AUTHORIZATION
+        AUGMENT_MCP_CONTEXT_ENGINE_URL
+        AUGMENT_MCP_CONTEXT_ENGINE_HEADERS_JSON
+        AUGMENT_MCP_CONTEXT_ENGINE_APP_ID
+        AUGMENT_MCP_CONTEXT_ENGINE_DEPLOYMENT_URL
+        AUGMENT_MCP_CONTEXT_ENGINE_TRANSPORT
+    )
+
+    for key in "${managed_keys[@]}"; do
+        value="${(P)key}"
+        if [[ -n "$value" ]]; then
+            launchctl setenv "$key" "$value"
+        else
+            launchctl unsetenv "$key" 2>/dev/null || true
+        fi
+    done
+}
+
+alias ai-env-sync='sync_ai_env_to_launchctl'
+
+if [[ -o login ]]; then
+    sync_ai_env_to_launchctl >/dev/null 2>&1 || true
+fi
+
+# =============================================================================
 # 2. Initialize Mise (The Version Manager)
 # =============================================================================
 command -v mise &>/dev/null && eval "$(mise activate zsh)" || echo "⚠️  mise not found" >&2
@@ -128,4 +190,3 @@ if command -v sv &>/dev/null; then
     alias svx='sv codex'
     alias svg='sv gemini'
 fi
-
