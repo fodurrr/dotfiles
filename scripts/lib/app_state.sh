@@ -149,8 +149,7 @@ is_app_installed() {
             ;;
         curl)
             case "$app_key" in
-                claude-cli) command -v claude >/dev/null 2>&1 ;;
-                opencode-cli) command -v opencode >/dev/null 2>&1 ;;
+                sheldon-linux) command -v sheldon >/dev/null 2>&1 ;;
                 *) return 1 ;;
             esac
             ;;

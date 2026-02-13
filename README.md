@@ -169,7 +169,7 @@ yq -p toml -oy '
 | `./install.sh --list-profiles` | Print profiles parsed from `apps.toml` |
 | `./install.sh --list-installed` | Print local install status for configured apps |
 | `mise install` | Update/install Mise tools from generated config |
-| `bash scripts/curl-installs.sh` | Run optional vendor CLI installer fallback layer |
+| `bash scripts/curl-installs.sh` | Placeholder entrypoint (no active manual curl installers) |
 | `source ~/.zshrc` | Reload shell after config/tool changes |
 
 ## Global AI Secrets
@@ -234,7 +234,9 @@ find ~ -name "*.bak" -type f 2>/dev/null
 
 ### 5) AI CLI command-source collision (strict mise enforcement)
 
-Layer 3 now fails for strict AI CLI tools (`claude`, `opencode`, `codex`, `gemini`) when a command resolves to multiple sources or the first path is not the expected mise install path.
+Layer 3 fails for strict AI CLI tools (`claude`, `opencode`, `codex`, `gemini`) when a command resolves to multiple sources or the first path is not the expected mise install path.
+
+AI CLIs in this repo are `mise`-owned. Remove foreign non-mise command paths and re-run install.
 
 ```bash
 which -a gemini
@@ -243,6 +245,11 @@ mise latest gemini-cli
 
 which -a claude opencode codex
 mise current claude opencode codex
+
+# Example cleanup for legacy Claude vendor symlink:
+rm ~/.local/bin/claude
+hash -r
+which -a claude
 ```
 
 `version = "latest"` mise tools are refreshed on each install run, while your existing `lts`/`stable`/pinned versions remain unchanged.

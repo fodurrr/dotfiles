@@ -1,5 +1,5 @@
 # =============================================================================
-# Layer 5: Curl installers
+# Layer 5: Curl fallback installers (exceptional cases)
 # =============================================================================
 
 get_curl_tool_version() {
@@ -78,12 +78,6 @@ install_sheldon_linux_binary() {
 run_curl_installer() {
     local app_key="$1"
     case "$app_key" in
-        claude-cli)
-            curl -fsSL https://claude.ai/install.sh 2>/dev/null | bash 2>/dev/null
-            ;;
-        opencode-cli)
-            curl -fsSL https://opencode.ai/install 2>/dev/null | bash 2>/dev/null
-            ;;
         sheldon-linux)
             install_sheldon_linux_binary
             ;;
@@ -125,7 +119,7 @@ install_or_update_curl_tool() {
 run_layer_curl() {
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Layer 5: AI Coding Tools (curl)"
+    echo "  Layer 5: Curl Fallback (Exceptional)"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     CURL_TOOLS_FOUND=false
@@ -139,18 +133,6 @@ run_layer_curl() {
             if [[ "$type" == "curl" ]]; then
                 CURL_TOOLS_FOUND=true
                 case "$app_key" in
-                    claude-cli)
-                        if ! install_or_update_curl_tool "$app_key" "claude" "claude-cli"; then
-                            failed_count=$((failed_count + 1))
-                            failed_tools="${failed_tools} claude-cli"
-                        fi
-                        ;;
-                    opencode-cli)
-                        if ! install_or_update_curl_tool "$app_key" "opencode" "opencode-cli"; then
-                            failed_count=$((failed_count + 1))
-                            failed_tools="${failed_tools} opencode-cli"
-                        fi
-                        ;;
                     sheldon-linux)
                         if ! install_or_update_curl_tool "$app_key" "sheldon" "sheldon"; then
                             failed_count=$((failed_count + 1))

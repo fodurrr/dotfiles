@@ -104,6 +104,55 @@ record_mise_install_summary() {
     fi
 }
 
+print_mise_single_source_remediation() {
+    local tool_name="$1"
+    local command_name="$2"
+    local expected_prefix="$3"
+    local command_paths="$4"
+    local canonical_mise_path=""
+
+    canonical_mise_path=$(mise which "$command_name" 2>/dev/null || true)
+    if [[ -z "$canonical_mise_path" ]]; then
+        canonical_mise_path=$(mise which "$tool_name" 2>/dev/null || true)
+    fi
+
+    if [[ -n "$canonical_mise_path" ]]; then
+        log_error "Mise-owned path for '$command_name': $canonical_mise_path"
+    else
+        log_error "Mise-owned path for '$command_name' could not be resolved"
+    fi
+
+    log_error "Detected paths for '$command_name':"
+    while IFS= read -r path; do
+        [[ -z "$path" ]] && continue
+        echo "      - $path"
+    done <<< "$command_paths"
+
+    log_error "Suggested cleanup commands for non-mise paths:"
+    local printed_cleanup=false
+    while IFS= read -r path; do
+        [[ -z "$path" ]] && continue
+        if [[ "$path" == "$expected_prefix"* ]]; then
+            continue
+        fi
+
+        if [[ "$path" == "$HOME/"* ]]; then
+            echo "      rm \"$path\""
+        else
+            echo "      # remove or deprioritize this conflicting path: $path"
+        fi
+        printed_cleanup=true
+    done <<< "$command_paths"
+
+    if [[ "$printed_cleanup" != true ]]; then
+        echo "      # ensure mise command shims/path are activated first"
+        echo "      eval \"\$(mise activate bash)\""
+    fi
+
+    echo "      hash -r"
+    echo "      which -a $command_name"
+}
+
 validate_mise_single_source() {
     local app_key="$1"
 
@@ -146,11 +195,7 @@ validate_mise_single_source() {
     fi
 
     if [[ "$validation_failed" == true ]]; then
-        log_error "Detected paths for '$command_name':"
-        while IFS= read -r path; do
-            [[ -z "$path" ]] && continue
-            echo "      - $path"
-        done <<< "$command_paths"
+        print_mise_single_source_remediation "$tool_name" "$command_name" "$expected_prefix" "$command_paths"
         log_error "Resolve duplicate command sources and rerun install"
         return 1
     fi
