@@ -121,10 +121,19 @@ yq -p toml -oy '
 - `curl`: exceptional fallback only (currently `sheldon-linux` on Linux)
 - `defaults`: macOS defaults automation
 
+Selected cask metadata:
+- `kind = "desktop"`: GUI desktop app cask
+- `kind = "cli"`: cask that owns a command on PATH
+- `bin`: optional explicit command name used for ownership/collision checks
+
 CLI tool decision order:
 1. `mise` (Recommended)
 2. `brew`
 3. `curl` fallback only for explicit exceptions
+
+Ownership rule:
+1. A command must have one owner per platform/profile combination.
+2. If a command is cask-owned on macOS (for example `codex`), do not also assign a strict mise owner for macOS.
 
 ## Stow and Config Ownership
 

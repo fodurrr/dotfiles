@@ -54,10 +54,28 @@ reconcile_single_cask() {
 
     quit_cask_apps_if_running "$cask"
     log_info "Reconciling $cask to Homebrew ownership..."
+    local install_output=""
+    local install_exit=0
     if [[ "$cask" == "stretchly" ]]; then
-        brew install --cask --force --no-quarantine "$cask" >/dev/null 2>&1 || true
+        if install_output=$(brew install --cask --force --no-quarantine "$cask" 2>&1); then
+            install_exit=0
+        else
+            install_exit=$?
+        fi
     else
-        brew install --cask --force "$cask" >/dev/null 2>&1 || true
+        if install_output=$(brew install --cask --force "$cask" 2>&1); then
+            install_exit=0
+        else
+            install_exit=$?
+        fi
+    fi
+
+    if [[ "$install_exit" -ne 0 ]]; then
+        local error_line
+        error_line=$(echo "$install_output" | grep -Ei 'Error:|failed|permission|conflict|already exists|cannot|denied' | head -1)
+        [[ -z "$error_line" ]] && error_line=$(echo "$install_output" | head -1)
+        log_error "Reconcile failed for $cask (token: $cask)"
+        [[ -n "$error_line" ]] && echo "      $error_line"
     fi
 
     if is_cask_brew_managed "$cask"; then
@@ -65,7 +83,20 @@ reconcile_single_cask() {
         return 0
     fi
 
-    log_warning "Failed to reconcile $cask"
+    log_error "Reconcile failed for $cask (token: $cask): still not Homebrew-managed"
+    local path
+    local printed_path=false
+    while IFS= read -r path; do
+        [[ -z "$path" ]] && continue
+        if [[ -d "$path" ]]; then
+            if [[ "$printed_path" != true ]]; then
+                log_error "Detected unmanaged app path(s):"
+                printed_path=true
+            fi
+            echo "      - $path"
+        fi
+    done < <(get_cask_candidate_app_paths "$cask")
+
     return 1
 }
 
@@ -157,8 +188,20 @@ run_reconcile_casks() {
 
     prompt_reconcile_confirmation
 
+    local failed_reconciliations=""
     while IFS='|' read -r app_key cask; do
         [[ -z "$app_key" || -z "$cask" ]] && continue
-        reconcile_single_cask "$app_key" "$cask"
+        if ! reconcile_single_cask "$app_key" "$cask"; then
+            if [[ -z "$failed_reconciliations" ]]; then
+                failed_reconciliations="$cask"
+            else
+                failed_reconciliations="${failed_reconciliations}, $cask"
+            fi
+        fi
     done <<< "$unmanaged_lines"
+
+    if [[ -n "$failed_reconciliations" ]]; then
+        log_error "Cask reconciliation failed for: $failed_reconciliations"
+        return 1
+    fi
 }

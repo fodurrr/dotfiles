@@ -9,6 +9,22 @@ has_cask_conflict_with_office() {
     app_selected_for_install "microsoft-office"
 }
 
+log_unmanaged_cask_paths() {
+    local cask="$1"
+    local path
+    local printed=false
+    while IFS= read -r path; do
+        [[ -z "$path" ]] && continue
+        if [[ -d "$path" ]]; then
+            if [[ "$printed" != true ]]; then
+                log_error "Detected unmanaged app path(s) for $cask:"
+                printed=true
+            fi
+            echo "      - $path"
+        fi
+    done < <(get_cask_candidate_app_paths "$cask")
+}
+
 remove_unmanaged_cask_bundle() {
     local cask="$1"
     local removed=false
@@ -59,6 +75,7 @@ run_layer_homebrew() {
     done
 
     echo "Installing casks..."
+    local cask_layer_failures=""
     for app_key in $(get_all_apps); do
         local type
         type=$(get_app_prop "$app_key" "type")
@@ -103,7 +120,13 @@ run_layer_homebrew() {
                     if is_cask_brew_managed "$name"; then
                         add_to_summary SKIPPED "$name" "$app_key"
                     else
-                        log_warning "$name is unmanaged and not reconciled; skipping install"
+                        log_error "reconcile failed for $name (token: $name)"
+                        log_unmanaged_cask_paths "$name"
+                        if [[ -z "$cask_layer_failures" ]]; then
+                            cask_layer_failures="$name"
+                        else
+                            cask_layer_failures="${cask_layer_failures}, $name"
+                        fi
                     fi
                 else
                     log_warning "$name is present in /Applications but not Homebrew-managed; run with --reconcile-casks"
@@ -128,6 +151,11 @@ run_layer_homebrew() {
                 ;;
         esac
     done
+
+    if [[ -n "$cask_layer_failures" ]]; then
+        log_error "Homebrew cask layer failed due to unresolved unmanaged casks: $cask_layer_failures"
+        return 1
+    fi
 
     echo "Installing brews..."
     for app_key in $(get_all_apps); do

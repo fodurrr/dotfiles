@@ -8,8 +8,9 @@
 #   name        = package name (optional, defaults to section name)
 #   tap         = homebrew tap (optional, for casks from taps)
 #   version     = version string (optional, for mise tools)
-#   bin         = command name for PATH collision checks (optional, for mise tools)
+#   bin         = command name for command ownership/collision checks (optional)
 #   enforce_single_source = fail install if command resolves to multiple sources (optional, for mise tools)
+#   kind        = "desktop" | "cli" (optional, for casks)
 #   category    = grouping for documentation
 #   profiles    = ["minimal", "standard", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
@@ -108,6 +109,7 @@ description = "Microsoft web browser"
 [apps.claude-desktop]
 type = "cask"
 name = "claude"
+kind = "desktop"
 category = "ai"
 profiles = ["standard", "developer"]
 platform = ["macos"]
@@ -116,6 +118,7 @@ description = "Claude AI assistant (GUI)"
 [apps.chatgpt-desktop]
 type = "cask"
 name = "chatgpt"
+kind = "desktop"
 category = "ai"
 profiles = ["standard", "developer"]
 platform = ["macos"]
@@ -123,7 +126,8 @@ description = "ChatGPT AI assistant (GUI)"
 
 [apps.codex-desktop]
 type = "cask"
-name = "codex"
+name = "codex-app"
+kind = "desktop"
 category = "ai"
 profiles = ["developer", "hacker"]
 platform = ["macos"]
@@ -131,6 +135,7 @@ description = "OpenAI Codex assistant (GUI)"
 
 [apps.opencode-desktop]
 type = "cask"
+kind = "desktop"
 category = "ai"
 profiles = ["developer", "hacker"]
 platform = ["macos"]
@@ -167,8 +172,17 @@ enforce_single_source = true
 version = "latest"
 category = "ai"
 profiles = ["developer", "hacker"]
-platform = ["macos", "linux"]
-description = "OpenAI Codex assistant (CLI)"
+platform = ["linux"]
+description = "OpenAI Codex assistant (CLI, Linux via mise)"
+
+[apps.codex-cli-macos]
+type = "cask"
+name = "codex"
+kind = "cli"
+category = "ai"
+profiles = ["developer", "hacker"]
+platform = ["macos"]
+description = "OpenAI Codex assistant (CLI via Homebrew cask)"
 
 [apps.codex-acp]
 type = "brew"
@@ -471,7 +485,7 @@ description = "macOS sandbox for AI coding agents"
 [apps.keymapp]
 type = "cask"
 category = "utilities"
-profiles = ["hacker"]
+profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "ZSA keyboard configuration"
 
