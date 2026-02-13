@@ -81,6 +81,7 @@ sync_ai_env_to_launchctl() {
     local key value
     local -a managed_keys=(
         AUGMENT_API_TOKEN
+        AUGMENT_API_URL
         AUGMENT_MCP_CONTEXT_ENGINE_AUTHORIZATION
         AUGMENT_MCP_CONTEXT_ENGINE_URL
         AUGMENT_MCP_CONTEXT_ENGINE_HEADERS_JSON

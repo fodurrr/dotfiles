@@ -19,12 +19,17 @@ Use plain `KEY=value` lines (no quotes required unless value needs them).
 Example:
 
 ```bash
+# Required global contract (no auggie dependency):
 AUGMENT_API_TOKEN=replace_me
-# Optional explicit Authorization header:
+AUGMENT_API_URL=https://d15.api.augmentcode.com
+
+# Optional advanced override: explicit Authorization header value
 # AUGMENT_MCP_CONTEXT_ENGINE_AUTHORIZATION=Bearer replace_me
 
-# Optional endpoint/header overrides:
+# Optional advanced override: explicit endpoint URL (takes precedence over AUGMENT_API_URL)
 # AUGMENT_MCP_CONTEXT_ENGINE_URL=https://api.augmentcode.com/mcp
+
+# Optional endpoint/header overrides:
 # AUGMENT_MCP_CONTEXT_ENGINE_HEADERS_JSON={"x-example":"value"}
 # AUGMENT_MCP_CONTEXT_ENGINE_APP_ID=replace_me
 # AUGMENT_MCP_CONTEXT_ENGINE_DEPLOYMENT_URL=https://example.com
@@ -67,13 +72,21 @@ Login shells run this sync automatically once per shell startup.
 Shell env:
 
 ```bash
-printenv AUGMENT_API_TOKEN
+printenv AUGMENT_API_TOKEN AUGMENT_API_URL
 ```
 
 launchd env (GUI-visible after sync):
 
 ```bash
 launchctl getenv AUGMENT_API_TOKEN
+launchctl getenv AUGMENT_API_URL
+```
+
+MCP preflight (routing + auth):
+
+```bash
+elixir /Users/fodurrr/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPClient.list_servers()'
+elixir /Users/fodurrr/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPTools.AugmentContextEngine.codebase_retrieval()'
 ```
 
 ## Caveat
