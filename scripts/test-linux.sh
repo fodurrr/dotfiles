@@ -61,6 +61,49 @@ is_grep_match() {
     grep -q "$pattern" "$file"
 }
 
+list_has_token() {
+    local list="$1"
+    local token="$2"
+    local item
+    for item in $list; do
+        if [[ "$item" == "$token" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+lists_overlap() {
+    local first="$1"
+    local second="$2"
+    local item
+    for item in $first; do
+        if list_has_token "$second" "$item"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+get_app_profiles_list() {
+    local app_key="$1"
+    normalize_app_list_tokens "$(get_app_prop "$app_key" "profiles")"
+}
+
+get_app_bin_or_name() {
+    local app_key="$1"
+    local command_name
+    command_name=$(get_app_prop "$app_key" "bin")
+    if [[ -n "$command_name" ]]; then
+        echo "$command_name"
+        return 0
+    fi
+
+    command_name=$(get_app_prop "$app_key" "name")
+    [[ -z "$command_name" ]] && command_name="$app_key"
+    echo "$command_name"
+}
+
 test_platform_filtering() {
     print_header "Platform Filtering"
     assert_false "ghostty should not be supported on Linux" is_app_supported ghostty linux
@@ -114,6 +157,132 @@ test_ai_cli_single_source_fields() {
             fail "$app_key should enforce single-source command ownership"
         fi
     done
+}
+
+test_codex_owner_split() {
+    print_header "Codex Owner Split"
+
+    local codex_desktop_name codex_desktop_kind codex_cli_platform codex_cli_macos_type codex_cli_macos_kind codex_cli_macos_platform
+    codex_desktop_name=$(get_app_prop codex-desktop name)
+    codex_desktop_kind=$(get_app_prop codex-desktop kind)
+    codex_cli_platform=$(get_app_platform codex-cli)
+    codex_cli_macos_type=$(get_app_prop codex-cli-macos type)
+    codex_cli_macos_kind=$(get_app_prop codex-cli-macos kind)
+    codex_cli_macos_platform=$(get_app_platform codex-cli-macos)
+
+    if [[ "$codex_desktop_name" == "codex-app" ]]; then
+        pass "codex-desktop should target codex-app cask"
+    else
+        fail "codex-desktop should target codex-app cask"
+    fi
+
+    if [[ "$codex_desktop_kind" == "desktop" ]]; then
+        pass "codex-desktop should be marked kind=desktop"
+    else
+        fail "codex-desktop should be marked kind=desktop"
+    fi
+
+    if list_has_token "$codex_cli_platform" "linux" && ! list_has_token "$codex_cli_platform" "macos"; then
+        pass "codex-cli should be Linux-only mise"
+    else
+        fail "codex-cli should be Linux-only mise"
+    fi
+
+    if [[ "$codex_cli_macos_type" == "cask" && "$codex_cli_macos_kind" == "cli" && "$codex_cli_macos_platform" == "macos" ]]; then
+        pass "codex-cli-macos should be macOS cask CLI owner"
+    else
+        fail "codex-cli-macos should be macOS cask CLI owner"
+    fi
+}
+
+test_keymapp_profiles() {
+    print_header "Keymapp Profiles"
+    local keymapp_profiles
+    keymapp_profiles=$(get_app_profiles_list keymapp)
+
+    if list_has_token "$keymapp_profiles" "developer" && list_has_token "$keymapp_profiles" "hacker"; then
+        pass "keymapp should be assigned to developer and hacker profiles"
+    else
+        fail "keymapp should be assigned to developer and hacker profiles"
+    fi
+}
+
+test_cask_kind_metadata() {
+    print_header "Cask Kind Metadata"
+    local app_key
+    local failures_before="$FAILURES"
+
+    for app_key in $(get_all_apps); do
+        case "$app_key" in
+            *-desktop)
+                local app_type app_kind
+                app_type=$(get_app_prop "$app_key" "type")
+                app_kind=$(get_app_prop "$app_key" "kind")
+                if [[ "$app_type" != "cask" ]]; then
+                    fail "$app_key should be a cask app"
+                fi
+                if [[ "$app_kind" != "desktop" ]]; then
+                    fail "$app_key should set kind=desktop"
+                fi
+                ;;
+        esac
+    done
+
+    if [[ "$FAILURES" == "$failures_before" ]]; then
+        pass "desktop app keys should be typed and classified consistently"
+    fi
+}
+
+test_no_cli_owner_overlap() {
+    print_header "CLI Owner Overlap Guard"
+
+    local overlap_count=0
+    local strict_app
+    for strict_app in $(get_all_apps); do
+        local strict_type strict_enforce
+        strict_type=$(get_app_prop "$strict_app" "type")
+        strict_enforce=$(get_app_prop "$strict_app" "enforce_single_source")
+        if [[ "$strict_type" != "mise" || "$strict_enforce" != "true" ]]; then
+            continue
+        fi
+
+        local strict_cmd strict_profiles strict_platforms
+        strict_cmd=$(get_app_bin_or_name "$strict_app")
+        strict_profiles=$(get_app_profiles_list "$strict_app")
+        strict_platforms=$(get_app_platform "$strict_app")
+
+        local cask_app
+        for cask_app in $(get_all_apps); do
+            local cask_type cask_kind
+            cask_type=$(get_app_prop "$cask_app" "type")
+            cask_kind=$(get_app_prop "$cask_app" "kind")
+            if [[ "$cask_type" != "cask" || "$cask_kind" != "cli" ]]; then
+                continue
+            fi
+
+            local cask_cmd cask_profiles cask_platforms
+            cask_cmd=$(get_app_bin_or_name "$cask_app")
+            cask_profiles=$(get_app_profiles_list "$cask_app")
+            cask_platforms=$(get_app_platform "$cask_app")
+
+            if [[ "$strict_cmd" != "$cask_cmd" ]]; then
+                continue
+            fi
+            if ! lists_overlap "$strict_profiles" "$cask_profiles"; then
+                continue
+            fi
+            if ! lists_overlap "$strict_platforms" "$cask_platforms"; then
+                continue
+            fi
+
+            fail "CLI owner overlap: $strict_app (mise) conflicts with $cask_app (cask) for command '$strict_cmd'"
+            overlap_count=$((overlap_count + 1))
+        done
+    done
+
+    if [[ "$overlap_count" -eq 0 ]]; then
+        pass "no strict mise command should overlap with cask CLI owner on same platform/profile"
+    fi
 }
 
 test_sheldon_source_config() {
@@ -239,6 +408,16 @@ test_curl_layer_linux_tools() {
     assert_true "curl layer should fail when selected curl tools fail" is_grep_match 'Curl layer failed for selected tools' "$curl_layer_file"
 }
 
+test_reconcile_fail_fast_guards() {
+    print_header "Reconcile Fail-Fast Guards"
+    local reconcile_file="$DOTFILES_DIR/scripts/install/reconcile_casks.sh"
+    local homebrew_layer_file="$DOTFILES_DIR/scripts/install/layer_homebrew.sh"
+
+    assert_true "reconcile should aggregate failures and return non-zero" is_grep_match 'Cask reconciliation failed for:' "$reconcile_file"
+    assert_true "homebrew layer should fail on unresolved unmanaged casks after reconcile" is_grep_match 'Homebrew cask layer failed due to unresolved unmanaged casks:' "$homebrew_layer_file"
+    assert_false "reconcile should not swallow brew install failures with || true" bash -c "sed -n '/reconcile_single_cask()/,/^}/p' '$reconcile_file' | grep -q 'brew install --cask .*|| true'"
+}
+
 test_stow_strictness() {
     print_header "Stow Strictness"
     assert_false "stow layer should not ignore stow_enforce failures" is_grep_match 'stow_enforce "\\$package" \\|\\| true' "$DOTFILES_DIR/scripts/install/layer_stow.sh"
@@ -283,6 +462,10 @@ main() {
     test_linux_package_mapping
     test_linux_layer_upgrade_behavior
     test_ai_cli_single_source_fields
+    test_codex_owner_split
+    test_keymapp_profiles
+    test_cask_kind_metadata
+    test_no_cli_owner_overlap
     test_sheldon_source_config
     test_curl_registry_scope
     test_mise_registry_entries
@@ -290,6 +473,7 @@ main() {
     test_macos_guards
     test_summary_fallback
     test_curl_layer_linux_tools
+    test_reconcile_fail_fast_guards
     test_stow_strictness
     test_shell_finalization
     test_linux_manager_detection

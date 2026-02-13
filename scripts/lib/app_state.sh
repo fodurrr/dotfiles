@@ -93,11 +93,8 @@ get_cask_app_name() {
         return
     fi
 
-    app_name=$(echo "$json" | yq -r '.casks[0].name[0]' 2>/dev/null)
-    if [[ -n "$app_name" ]] && [[ "$app_name" != "null" ]]; then
-        echo "${app_name}.app"
-        return
-    fi
+    # Do not guess .app names from cask metadata display names.
+    # CLI-only casks can share names with GUI apps and would be misclassified.
 }
 
 # Check if a Linux package is installed via apt/dnf

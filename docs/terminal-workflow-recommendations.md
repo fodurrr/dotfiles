@@ -117,6 +117,10 @@ Use this decision path:
 2. GUI app: use Homebrew `cask`.
 3. Use `curl` only for explicit exceptional cases (currently `sheldon-linux` on Linux).
 
+Command ownership rule:
+1. Keep one command owner per platform/profile.
+2. Avoid assigning both strict mise and cask CLI ownership for the same command on the same platform/profile.
+
 Then update `apps.toml` and run:
 
 ```bash

@@ -234,17 +234,30 @@ find ~ -name "*.bak" -type f 2>/dev/null
 
 ### 5) AI CLI command-source collision (strict mise enforcement)
 
-Layer 3 fails for strict AI CLI tools (`claude`, `opencode`, `codex`, `gemini`) when a command resolves to multiple sources or the first path is not the expected mise install path.
+Layer 3 fails for strict AI CLI tools (`claude`, `opencode`, `gemini`, and Linux `codex`) when a command resolves to multiple sources or the first path is not the expected mise install path.
 
-AI CLIs in this repo are `mise`-owned. Remove foreign non-mise command paths and re-run install.
+Ownership model:
+- macOS `codex` CLI: Homebrew cask (`codex`)
+- macOS Codex desktop app: Homebrew cask (`codex-app`)
+- Linux `codex` CLI: `mise`
+- `claude`, `opencode`, `gemini`: `mise`
 
 ```bash
+# macOS Codex ownership check
+which -a codex
+brew info --cask codex codex-app
+
+# Linux Codex ownership check
+which -a codex
+mise current codex
+
+# Strict mise-owned AI CLIs
 which -a gemini
 mise current gemini-cli
 mise latest gemini-cli
 
-which -a claude opencode codex
-mise current claude opencode codex
+which -a claude opencode
+mise current claude opencode
 
 # Example cleanup for legacy Claude vendor symlink:
 rm ~/.local/bin/claude
