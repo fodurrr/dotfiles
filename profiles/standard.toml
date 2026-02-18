@@ -1,0 +1,62 @@
+version = 1
+
+# TERMINALS
+[macos.terminals]
+apps = ["ghostty"]
+
+# BROWSERS
+[macos.browsers]
+apps = ["google-chrome", "microsoft-edge"]
+
+# AI
+[macos.ai]
+apps = ["claude-desktop", "chatgpt-desktop"]
+
+# CONFIG
+[macos.config]
+apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "mise-config"]
+
+# PRODUCTIVITY
+[macos.productivity]
+apps = ["raycast", "obsidian", "bitwarden", "bettershot", "kap", "stretchly"]
+
+# CLOUD STORAGE
+[macos.cloud_storage]
+apps = ["google-drive"]
+
+# OFFICE
+[macos.office]
+apps = ["microsoft-office"]
+
+# MEDIA
+[macos.media]
+apps = ["discord", "spotify", "vlc"]
+
+# COMMUNICATION
+[macos.communication]
+apps = ["whatsapp"]
+
+# DISPLAY
+[macos.display]
+apps = ["betterdisplay"]
+
+# UTILITIES
+[macos.utilities]
+apps = ["pearcleaner"]
+
+# FONTS
+[macos.fonts]
+apps = ["font-jetbrains-mono-nerd-font"]
+
+# CLI
+[macos.cli]
+apps = ["starship", "eza", "bat", "fzf", "sheldon", "mole"]
+
+# CONFIG
+[linux.config]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config"]
+
+# CLI
+[linux.cli]
+apps = ["starship", "eza", "bat", "fzf", "sheldon-linux"]
+

@@ -2,24 +2,167 @@
 # App Config Helpers
 # =============================================================================
 
-# Set default apps.toml path if not already set
-if [[ -z "$APPS_CONFIG" ]]; then
+# Set default config paths if not already set
+if [[ -z "${APPS_CONFIG:-}" ]]; then
     DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
     APPS_CONFIG="$DOTFILES_DIR/apps.toml"
 fi
 
-# Get available profiles from apps.toml in preferred order
+if [[ -z "${PROFILES_DIR:-}" ]]; then
+    DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+    PROFILES_DIR="$DOTFILES_DIR/profiles"
+fi
+
+RESOLVED_PROFILE_PLATFORM=""
+RESOLVED_PROFILE_SELECTION_KEY=""
+RESOLVED_SELECTED_PROFILE_APPS="|"
+
+profile_error() {
+    local message="$1"
+    if [[ -n "$(type -t log_error)" ]]; then
+        log_error "$message"
+    else
+        echo "ERROR: $message" >&2
+    fi
+}
+
+get_profile_file_path() {
+    local profile="$1"
+    echo "$PROFILES_DIR/$profile.toml"
+}
+
+profile_exists() {
+    local profile="$1"
+    local profile_file
+    profile_file=$(get_profile_file_path "$profile")
+    [[ -f "$profile_file" ]]
+}
+
+# Get available profiles from profiles/ in preferred order
 get_profiles() {
-    # Extract all unique profiles
-    local all_profiles
-    all_profiles=$(grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u)
+    local all_profiles=""
+    local file base
+
+    for file in "$PROFILES_DIR"/*.toml; do
+        [[ -e "$file" ]] || continue
+        base="${file##*/}"
+        base="${base%.toml}"
+        if [[ -z "$all_profiles" ]]; then
+            all_profiles="$base"
+        else
+            all_profiles="${all_profiles}
+$base"
+        fi
+    done
 
     # Output in preferred order: minimal, standard, developer, hacker, server, then others
+    local preferred
     for preferred in minimal standard developer hacker server; do
         echo "$all_profiles" | grep -x "$preferred" 2>/dev/null || true
     done
-    # Then any others not in the preferred list
-    echo "$all_profiles" | grep -vxE "minimal|standard|developer|hacker|server" 2>/dev/null || true
+
+    echo "$all_profiles" | grep -vxE "minimal|standard|developer|hacker|server" 2>/dev/null | sort -u
+}
+
+get_profile_apps_for_platform() {
+    local profile="$1"
+    local platform="$2"
+    local profile_file
+    profile_file=$(get_profile_file_path "$profile")
+
+    if [[ ! -f "$profile_file" ]]; then
+        return 1
+    fi
+
+    local legacy_apps
+    legacy_apps=$(yq -p toml -oy ".${platform}.apps[]" "$profile_file" 2>/dev/null || true)
+    if [[ -n "$legacy_apps" ]]; then
+        echo "$legacy_apps"
+        return 0
+    fi
+
+    # Category-grouped format:
+    # [macos.<group>]
+    # apps = ["app-key"]
+    yq -p toml -oy ".${platform} | to_entries | map(select(.value.apps != null)) | .[].value.apps[]" "$profile_file" 2>/dev/null || true
+}
+
+validate_profile_apps_for_platform() {
+    local profile="$1"
+    local platform="$2"
+    local profile_file
+    profile_file=$(get_profile_file_path "$profile")
+
+    if [[ ! -f "$profile_file" ]]; then
+        profile_error "Profile '$profile' not found: $profile_file"
+        return 1
+    fi
+
+    local failed=false
+    local app_key
+    while IFS= read -r app_key; do
+        [[ -z "$app_key" ]] && continue
+
+        local app_exists
+        app_exists=$(yq -p toml -oy ".apps.\"$app_key\"" "$APPS_CONFIG" 2>/dev/null || echo "")
+        if [[ -z "$app_exists" || "$app_exists" == "null" ]]; then
+            profile_error "Invalid profile app reference: '$app_key' in profile '$profile' is not defined in apps.toml"
+            failed=true
+            continue
+        fi
+
+        if ! is_app_supported "$app_key" "$platform"; then
+            profile_error "Invalid profile app reference: '$app_key' in profile '$profile' is not supported on platform '$platform'"
+            failed=true
+        fi
+    done < <(get_profile_apps_for_platform "$profile" "$platform")
+
+    [[ "$failed" != true ]]
+}
+
+validate_selected_profiles_for_platform() {
+    local platform="${1:-}"
+    [[ -z "$platform" ]] && platform=$(get_current_platform)
+
+    local failed=false
+    local profile
+    for profile in "${SELECTED_PROFILES[@]}"; do
+        if ! validate_profile_apps_for_platform "$profile" "$platform"; then
+            failed=true
+        fi
+    done
+
+    [[ "$failed" != true ]]
+}
+
+resolve_selected_apps_for_platform() {
+    local platform="${1:-}"
+    [[ -z "$platform" ]] && platform=$(get_current_platform)
+
+    local selection_key
+    selection_key=$(printf '%s|' "${SELECTED_PROFILES[@]}")
+
+    if [[ "$RESOLVED_PROFILE_PLATFORM" == "$platform" && "$RESOLVED_PROFILE_SELECTION_KEY" == "$selection_key" ]]; then
+        echo "$RESOLVED_SELECTED_PROFILE_APPS" | tr '|' '\n' | sed '/^$/d'
+        return 0
+    fi
+
+    RESOLVED_SELECTED_PROFILE_APPS="|"
+    local profile app_key
+    for profile in "${SELECTED_PROFILES[@]}"; do
+        while IFS= read -r app_key; do
+            [[ -z "$app_key" ]] && continue
+            if [[ "$RESOLVED_SELECTED_PROFILE_APPS" == *"|$app_key|"* ]]; then
+                continue
+            fi
+            RESOLVED_SELECTED_PROFILE_APPS="${RESOLVED_SELECTED_PROFILE_APPS}${app_key}|"
+        done < <(get_profile_apps_for_platform "$profile" "$platform")
+    done
+
+    RESOLVED_PROFILE_PLATFORM="$platform"
+    RESOLVED_PROFILE_SELECTION_KEY="$selection_key"
+
+    echo "$RESOLVED_SELECTED_PROFILE_APPS" | tr '|' '\n' | sed '/^$/d'
 }
 
 # Check if app belongs to current selection
@@ -38,14 +181,10 @@ app_in_profile() {
         return 1
     fi
 
-    local profiles
-    profiles=$(yq -p toml -oy ".apps.\"$app_key\".profiles" "$APPS_CONFIG" 2>/dev/null || echo "")
-    for profile in "${SELECTED_PROFILES[@]}"; do
-        if echo "$profiles" | grep -q "$profile"; then
-            return 0
-        fi
-    done
-    return 1
+    local platform
+    platform=$(get_current_platform)
+    resolve_selected_apps_for_platform "$platform" >/dev/null
+    [[ "$RESOLVED_SELECTED_PROFILE_APPS" == *"|$app_key|"* ]]
 }
 
 # Check if app key is selected in a la carte mode
@@ -271,6 +410,7 @@ get_apps_for_profile() {
     local apps
     apps=$(get_all_apps)
 
+    local app_key
     for app_key in $apps; do
         if app_selected_for_install "$app_key"; then
             echo "$app_key"
@@ -283,6 +423,7 @@ get_all_installable_apps() {
     local apps
     apps=$(get_all_apps)
 
+    local app_key
     for app_key in $apps; do
         if is_installable_app "$app_key"; then
             if is_app_supported "$app_key"; then

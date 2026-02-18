@@ -374,6 +374,12 @@ run_profiles_selection() {
         SELECTED_PROFILES=("minimal")
     fi
 
+    if ! validate_selected_profiles_for_platform; then
+        echo ""
+        log_error "Profile validation failed. Fix profile definitions and rerun."
+        exit 1
+    fi
+
     echo ""
     echo "Scanning installed apps (this may take a minute)..."
     build_installed_keys
@@ -434,5 +440,14 @@ run_profile_selection() {
     # Default to minimal if nothing selected (skip for a la carte mode)
     if [[ "$A_LA_CARTE_MODE" != true && ${#SELECTED_PROFILES[@]} -eq 0 && "$EXTRAS_MODE" != true ]]; then
         SELECTED_PROFILES=("minimal")
+    fi
+
+    if [[ "$A_LA_CARTE_MODE" != true && "$EXTRAS_MODE" != true ]]; then
+        if ! validate_selected_profiles_for_platform; then
+            echo ""
+            log_error "Profile validation failed. Fix profile definitions and rerun."
+            exit 1
+        fi
+        resolve_selected_apps_for_platform >/dev/null
     fi
 }

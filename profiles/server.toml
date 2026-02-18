@@ -1,0 +1,30 @@
+version = 1
+
+# EDITORS
+[macos.editors]
+apps = ["helix"]
+
+# CONFIG
+[macos.config]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "terminal-config", "mise-config", "tmux-config", "helix-config", "yazi-config"]
+
+# FONTS
+[macos.fonts]
+apps = ["font-jetbrains-mono-nerd-font"]
+
+# CLI
+[macos.cli]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
+
+# EDITORS
+[linux.editors]
+apps = ["helix"]
+
+# CONFIG
+[linux.config]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config"]
+
+# CLI
+[linux.cli]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
+

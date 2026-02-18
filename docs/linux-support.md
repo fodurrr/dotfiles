@@ -46,6 +46,8 @@ Linux package installs are driven by `apps.toml` metadata for `type = "brew"` en
 
 If an app is selected for Linux but has no mapping (or the package is unavailable), it is skipped with an explicit message.
 
+Selected Linux apps come from the active profile's `[linux].apps` list in `profiles/*.toml`.
+
 For selected mapped Linux packages, reruns now re-apply package manager installs to pick up newer repository versions.
 
 If a selected mapped package install/upgrade fails, the Linux layer exits non-zero.

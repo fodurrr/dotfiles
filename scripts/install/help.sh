@@ -20,8 +20,9 @@ Options:
   --reconcile-casks       Reconcile unmanaged /Applications GUI apps into Homebrew cask ownership.
   --reconcile-dry-run     Preview reconciliation actions without changing anything.
   --reconcile-only        Run reconciliation and exit without running install layers.
-  --list-profiles         Print all available profiles from apps.toml.
+  --list-profiles         Print all available profiles from profiles/*.toml.
   --list-installed        Print installed apps from apps.toml with local detection.
+  --create-profile        Create a new profile TOML interactively and exit.
 
 Examples:
   ./install.sh
@@ -33,6 +34,7 @@ Examples:
   ./install.sh --profile=standard --reconcile-casks
   ./install.sh --profile=standard --reconcile-casks --reconcile-dry-run
   ./install.sh --list-profiles
+  ./install.sh --create-profile
 EOF
     exit 0
 }

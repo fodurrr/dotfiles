@@ -1,0 +1,78 @@
+version = 1
+
+# TERMINALS
+[macos.terminals]
+apps = ["ghostty"]
+
+# EDITORS
+[macos.editors]
+apps = ["zed", "visual-studio-code", "antigravity", "helix"]
+
+# BROWSERS
+[macos.browsers]
+apps = ["firefox"]
+
+# AI
+[macos.ai]
+apps = ["codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "codex-cli-macos", "codex-acp", "gemini-cli"]
+
+# WINDOW MANAGEMENT
+[macos.window_management]
+apps = ["aerospace", "borders", "hammerspoon"]
+
+# STATUS BAR
+[macos.status_bar]
+apps = ["sketchybar", "sketchybar-system-stats"]
+
+# CONFIG
+[macos.config]
+apps = ["sketchybar-config", "raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "zed-config", "mise-config", "aerospace-config", "hammerspoon-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+
+# PRODUCTIVITY
+[macos.productivity]
+apps = ["raycast", "aqua-voice", "keycastr", "bettershot", "kap", "stretchly"]
+
+# DISPLAY
+[macos.display]
+apps = ["betterdisplay"]
+
+# SECURITY
+[macos.security]
+apps = ["sandvault"]
+
+# UTILITIES
+[macos.utilities]
+apps = ["keymapp", "thaw"]
+
+# FONTS
+[macos.fonts]
+apps = ["font-jetbrains-mono-nerd-font"]
+
+# CLI
+[macos.cli]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "pitchfork", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic", "mole"]
+
+# RUNTIMES
+[macos.runtimes]
+apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir"]
+
+# EDITORS
+[linux.editors]
+apps = ["helix"]
+
+# AI
+[linux.ai]
+apps = ["claude-cli", "opencode-cli", "codex-cli", "gemini-cli"]
+
+# CONFIG
+[linux.config]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+
+# CLI
+[linux.cli]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "pitchfork", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
+
+# RUNTIMES
+[linux.runtimes]
+apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir"]
+
