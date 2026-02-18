@@ -56,7 +56,7 @@ Use `yq` with TOML input:
 
 ```bash
 yq -p toml -oy '.apps.ghostty.type' apps.toml
-yq -p toml -oy '.apps.ghostty.profiles' apps.toml
+yq -p toml -oy '.macos.apps[]' profiles/developer.toml
 ```
 
 ### Target Environment
@@ -71,7 +71,7 @@ Use a clean macOS VM for confidence checks.
 ## Install Architecture (High Level)
 
 1. **Phase 1 bootstrap**: installs install-time dependencies (`Brewfile.bootstrap`).
-2. **Phase 2 profile/extras**: installs configured apps from `apps.toml` in layers:
+2. **Phase 2 profile/extras**: resolves selected apps from `profiles/*.toml`, then installs by `apps.toml` metadata in layers:
 - Layer 1: Homebrew (`cask`/`brew`)
 - Layer 2: Stow (`stow`)
 - Layer 3: Mise (`mise`)
@@ -108,6 +108,7 @@ Use dynamic discovery instead of static matrices:
 
 # Extras menu
 ./install.sh --extras
+./install.sh --create-profile
 
 # Reconciliation
 ./install.sh --profile=standard --reconcile-casks --reconcile-dry-run
@@ -128,7 +129,8 @@ source ~/.zshrc
 
 ## App Registry Rules
 
-`apps.toml` is the only source of app/profile truth.
+`apps.toml` is the source of app metadata.
+`profiles/*.toml` are the source of profile membership.
 
 Supported app types:
 - `cask`: Homebrew GUI app

@@ -82,6 +82,14 @@ Install individual apps interactively.
 ./install.sh --extras
 ```
 
+### Create Profile
+
+Create a new profile TOML interactively.
+
+```bash
+./install.sh --create-profile
+```
+
 ### Cask Reconciliation
 
 macOS only.
@@ -108,7 +116,7 @@ Apply only reconciliation and exit:
 
 ## Profiles and Apps (Dynamic Listing)
 
-Avoid static profile/app matrices in README. Use live data from `apps.toml`.
+Avoid static profile/app matrices in README. Use live data from `profiles/*.toml` and `apps.toml`.
 
 ### List available profiles
 
@@ -125,23 +133,16 @@ Avoid static profile/app matrices in README. Use live data from `apps.toml`.
 ### List apps in a profile (example: `hacker`)
 
 ```bash
-yq -p toml -oy '
-  .apps
-  | to_entries
-  | map(select((.value.profiles // [])[] == "hacker"))
-  | .[].key
-' apps.toml
+yq -p toml -oy '.linux.apps[]' profiles/hacker.toml
+yq -p toml -oy '.macos.apps[]' profiles/hacker.toml
 ```
 
 ### List app + type for a profile (example: `developer`)
 
 ```bash
-yq -p toml -oy '
-  .apps
-  | to_entries
-  | map(select((.value.profiles // [])[] == "developer"))
-  | map({"app": .key, "type": .value.type})
-' apps.toml
+for app in $(yq -p toml -oy '.macos.apps[]' profiles/developer.toml); do
+  printf "%s (%s)\n" "$app" "$(yq -p toml -oy ".apps.\"$app\".type" apps.toml)"
+done
 ```
 
 ### List all apps by type
@@ -166,8 +167,9 @@ yq -p toml -oy '
 | `./install.sh -p <a> -p <b>` | Install merged profiles |
 | `./install.sh --profile=<name> --clean` | Strict profile sync for managed apps |
 | `./install.sh --extras` | Install individual apps interactively |
-| `./install.sh --list-profiles` | Print profiles parsed from `apps.toml` |
+| `./install.sh --list-profiles` | Print profiles parsed from `profiles/*.toml` |
 | `./install.sh --list-installed` | Print local install status for configured apps |
+| `./install.sh --create-profile` | Create a profile TOML interactively |
 | `mise install` | Update/install Mise tools from generated config |
 | `bash scripts/curl-installs.sh` | Placeholder entrypoint (no active manual curl installers) |
 | `source ~/.zshrc` | Reload shell after config/tool changes |

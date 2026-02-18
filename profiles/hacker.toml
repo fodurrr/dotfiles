@@ -1,0 +1,8 @@
+version = 1
+
+[macos]
+apps = ["ghostty", "zed", "visual-studio-code", "antigravity", "helix", "firefox", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "codex-cli-macos", "codex-acp", "gemini-cli", "aerospace", "sketchybar", "sketchybar-system-stats", "borders", "hammerspoon", "sketchybar-config", "raycast", "raycast-config", "aqua-voice", "keycastr", "bettershot", "kap", "stretchly", "betterdisplay", "sandvault", "keymapp", "thaw", "font-jetbrains-mono-nerd-font", "starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "pitchfork", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic", "mole", "node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "zed-config", "mise-config", "aerospace-config", "hammerspoon-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+
+[linux]
+apps = ["helix", "claude-cli", "opencode-cli", "codex-cli", "gemini-cli", "starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "pitchfork", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic", "node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+

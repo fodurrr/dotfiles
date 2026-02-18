@@ -85,9 +85,28 @@ lists_overlap() {
     return 1
 }
 
-get_app_profiles_list() {
+get_profile_apps_list() {
+    local profile="$1"
+    local platform="$2"
+    get_profile_apps_for_platform "$profile" "$platform" | tr '\n' ' '
+}
+
+profile_has_app_for_platform() {
+    local profile="$1"
+    local platform="$2"
+    local app_key="$3"
+    list_has_token "$(get_profile_apps_list "$profile" "$platform")" "$app_key"
+}
+
+app_supports_platform_token() {
     local app_key="$1"
-    normalize_app_list_tokens "$(get_app_prop "$app_key" "profiles")"
+    local platform="$2"
+    local platforms
+    platforms=$(get_app_platform "$app_key")
+    if [[ -z "$platforms" ]]; then
+        return 0
+    fi
+    list_has_token "$platforms" "$platform"
 }
 
 get_app_bin_or_name() {
@@ -195,12 +214,56 @@ test_codex_owner_split() {
     fi
 }
 
+test_profile_files_exist() {
+    print_header "Profile File Presence"
+    local profile
+    for profile in minimal standard developer hacker server; do
+        if profile_exists "$profile"; then
+            pass "profile file exists: $profile"
+        else
+            fail "profile file missing: $profile"
+        fi
+    done
+}
+
+test_profile_app_references_valid() {
+    print_header "Profile App Validation"
+    local profile
+    while IFS= read -r profile; do
+        [[ -z "$profile" ]] && continue
+        if validate_profile_apps_for_platform "$profile" "macos"; then
+            pass "profile '$profile' has valid macOS app references"
+        else
+            fail "profile '$profile' has invalid macOS app references"
+        fi
+
+        if validate_profile_apps_for_platform "$profile" "linux"; then
+            pass "profile '$profile' has valid Linux app references"
+        else
+            fail "profile '$profile' has invalid Linux app references"
+        fi
+    done < <(get_profiles)
+}
+
+test_linux_profile_selection_valid() {
+    print_header "Linux Profile App Selection"
+    local profile app_key
+    while IFS= read -r profile; do
+        [[ -z "$profile" ]] && continue
+        while IFS= read -r app_key; do
+            [[ -z "$app_key" ]] && continue
+            if is_app_supported "$app_key" "linux"; then
+                pass "$profile/linux app is Linux-supported: $app_key"
+            else
+                fail "$profile/linux app is not Linux-supported: $app_key"
+            fi
+        done < <(get_profile_apps_for_platform "$profile" "linux")
+    done < <(get_profiles)
+}
+
 test_keymapp_profiles() {
     print_header "Keymapp Profiles"
-    local keymapp_profiles
-    keymapp_profiles=$(get_app_profiles_list keymapp)
-
-    if list_has_token "$keymapp_profiles" "developer" && list_has_token "$keymapp_profiles" "hacker"; then
+    if profile_has_app_for_platform "developer" "macos" "keymapp" && profile_has_app_for_platform "hacker" "macos" "keymapp"; then
         pass "keymapp should be assigned to developer and hacker profiles"
     else
         fail "keymapp should be assigned to developer and hacker profiles"
@@ -246,10 +309,8 @@ test_no_cli_owner_overlap() {
             continue
         fi
 
-        local strict_cmd strict_profiles strict_platforms
+        local strict_cmd
         strict_cmd=$(get_app_bin_or_name "$strict_app")
-        strict_profiles=$(get_app_profiles_list "$strict_app")
-        strict_platforms=$(get_app_platform "$strict_app")
 
         local cask_app
         for cask_app in $(get_all_apps); do
@@ -260,23 +321,34 @@ test_no_cli_owner_overlap() {
                 continue
             fi
 
-            local cask_cmd cask_profiles cask_platforms
+            local cask_cmd
             cask_cmd=$(get_app_bin_or_name "$cask_app")
-            cask_profiles=$(get_app_profiles_list "$cask_app")
-            cask_platforms=$(get_app_platform "$cask_app")
 
             if [[ "$strict_cmd" != "$cask_cmd" ]]; then
                 continue
             fi
-            if ! lists_overlap "$strict_profiles" "$cask_profiles"; then
-                continue
-            fi
-            if ! lists_overlap "$strict_platforms" "$cask_platforms"; then
-                continue
-            fi
 
-            fail "CLI owner overlap: $strict_app (mise) conflicts with $cask_app (cask) for command '$strict_cmd'"
-            overlap_count=$((overlap_count + 1))
+            local profile platform
+            while IFS= read -r profile; do
+                [[ -z "$profile" ]] && continue
+                for platform in macos linux; do
+                    if ! app_supports_platform_token "$strict_app" "$platform"; then
+                        continue
+                    fi
+                    if ! app_supports_platform_token "$cask_app" "$platform"; then
+                        continue
+                    fi
+                    if ! profile_has_app_for_platform "$profile" "$platform" "$strict_app"; then
+                        continue
+                    fi
+                    if ! profile_has_app_for_platform "$profile" "$platform" "$cask_app"; then
+                        continue
+                    fi
+
+                    fail "CLI owner overlap: $strict_app (mise) conflicts with $cask_app (cask) for command '$strict_cmd' in profile '$profile' on '$platform'"
+                    overlap_count=$((overlap_count + 1))
+                done
+            done < <(get_profiles)
         done
     done
 
@@ -464,6 +536,9 @@ main() {
     test_linux_layer_upgrade_behavior
     test_ai_cli_single_source_fields
     test_codex_owner_split
+    test_profile_files_exist
+    test_profile_app_references_valid
+    test_linux_profile_selection_valid
     test_keymapp_profiles
     test_cask_kind_metadata
     test_no_cli_owner_overlap

@@ -1,0 +1,8 @@
+version = 1
+
+[macos]
+apps = ["ghostty", "google-chrome", "microsoft-edge", "claude-desktop", "chatgpt-desktop", "raycast", "raycast-config", "obsidian", "bitwarden", "bettershot", "kap", "stretchly", "google-drive", "microsoft-office", "discord", "spotify", "vlc", "whatsapp", "betterdisplay", "pearcleaner", "font-jetbrains-mono-nerd-font", "starship", "eza", "bat", "fzf", "sheldon", "mole", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "mise-config"]
+
+[linux]
+apps = ["starship", "eza", "bat", "fzf", "sheldon-linux", "git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config"]
+

@@ -1,7 +1,7 @@
 # =============================================================================
 # apps.toml - Centralized App Registry
 # =============================================================================
-# Every app, tool, and config is defined here with profile assignments.
+# Every app, tool, and config is defined here.
 #
 # Fields:
 #   type        = "cask" | "brew" | "mise" | "curl" | "stow"
@@ -12,7 +12,6 @@
 #   enforce_single_source = fail install if command resolves to multiple sources (optional, for mise tools)
 #   kind        = "desktop" | "cli" (optional, for casks)
 #   category    = grouping for documentation
-#   profiles    = ["minimal", "standard", "developer", "hacker", "server"]
 #   depends_on  = "app-key" (optional, install dependency first)
 #   config_for  = "app-key" (optional, associate config/defaults to app)
 #   platform    = ["macos", "linux"] (optional, defaults to all platforms)
@@ -20,8 +19,7 @@
 #   linux_apt   = Debian/Ubuntu package override (optional)
 #   linux_dnf   = Fedora/RHEL package override (optional)
 #
-# To add an app to a profile: add the profile name to the profiles array
-# To create a new profile: just use a new name in any profiles array
+# Profile membership is defined in profiles/*.toml
 # =============================================================================
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -30,14 +28,12 @@
 [apps.ghostty]
 type = "cask"
 category = "terminals"
-profiles = ["minimal", "standard", "developer", "hacker"]
 platform = ["macos"]
 description = "GPU-accelerated terminal emulator"
 
 [apps.warp]
 type = "cask"
 category = "terminals"
-profiles = ["developer"]
 platform = ["macos"]
 description = "AI-powered modern terminal"
 
@@ -47,34 +43,29 @@ description = "AI-powered modern terminal"
 [apps.zed]
 type = "cask"
 category = "editors"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "High-performance code editor"
 
 [apps.visual-studio-code]
 type = "cask"
 category = "editors"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Extensible code editor"
 
 [apps.antigravity]
 type = "cask"
 category = "editors"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Note-taking app"
 
 # [apps.neovim]
 # type = "mise"
 # category = "editors"
-# profiles = ["hacker", "server"]
 # description = "Vim-based text editor"
 
 [apps.helix]
 type = "mise"
 category = "editors"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Post-modern modal text editor"
 
@@ -84,21 +75,18 @@ description = "Post-modern modal text editor"
 [apps.firefox]
 type = "cask"
 category = "browsers"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Privacy-focused web browser"
 
 [apps.google-chrome]
 type = "cask"
 category = "browsers"
-profiles = ["minimal", "standard"]
 platform = ["macos"]
 description = "Google web browser"
 
 [apps.microsoft-edge]
 type = "cask"
 category = "browsers"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Microsoft web browser"
 
@@ -111,7 +99,6 @@ type = "cask"
 name = "claude"
 kind = "desktop"
 category = "ai"
-profiles = ["standard", "developer"]
 platform = ["macos"]
 description = "Claude AI assistant (GUI)"
 
@@ -120,7 +107,6 @@ type = "cask"
 name = "chatgpt"
 kind = "desktop"
 category = "ai"
-profiles = ["standard", "developer"]
 platform = ["macos"]
 description = "ChatGPT AI assistant (GUI)"
 
@@ -129,7 +115,6 @@ type = "cask"
 name = "codex-app"
 kind = "desktop"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "OpenAI Codex assistant (GUI)"
 
@@ -137,7 +122,6 @@ description = "OpenAI Codex assistant (GUI)"
 type = "cask"
 kind = "desktop"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "OpenCode AI assistant (GUI)"
 
@@ -149,7 +133,6 @@ bin = "claude"
 enforce_single_source = true
 version = "latest"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Claude AI assistant (CLI)"
 
@@ -160,7 +143,6 @@ bin = "opencode"
 enforce_single_source = true
 version = "latest"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "OpenCode AI assistant (CLI)"
 
@@ -171,7 +153,6 @@ bin = "codex"
 enforce_single_source = true
 version = "latest"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["linux"]
 description = "OpenAI Codex assistant (CLI, Linux via mise)"
 
@@ -180,14 +161,12 @@ type = "cask"
 name = "codex"
 kind = "cli"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "OpenAI Codex assistant (CLI via Homebrew cask)"
 
 [apps.codex-acp]
 type = "brew"
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Codex adapter for ACP-compatible clients (Zed integration)"
 
@@ -196,7 +175,6 @@ type = "mise"
 bin = "gemini"
 enforce_single_source = true
 category = "ai"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 depends_on = "node"
 description = "Google Gemini AI (CLI)"
@@ -209,7 +187,6 @@ type = "cask"
 tap = "nikitabobko/tap"
 name = "aerospace"
 category = "window-management"
-profiles = ["hacker"]
 platform = ["macos"]
 description = "i3-like tiling window manager"
 
@@ -217,7 +194,6 @@ description = "i3-like tiling window manager"
 type = "brew"
 tap = "FelixKratz/formulae"
 category = "status-bar"
-profiles = ["hacker"]
 platform = ["macos"]
 service = true
 description = "Customizable macOS status bar"
@@ -226,7 +202,6 @@ description = "Customizable macOS status bar"
 type = "brew"
 tap = "joncrangle/tap"
 category = "status-bar"
-profiles = ["hacker"]
 platform = ["macos"]
 depends_on = "sketchybar"
 description = "Event-driven system stats for SketchyBar"
@@ -235,14 +210,12 @@ description = "Event-driven system stats for SketchyBar"
 type = "brew"
 tap = "FelixKratz/formulae"
 category = "window-management"
-profiles = ["hacker"]
 platform = ["macos"]
 description = "Active window border highlight"
 
 [apps.hammerspoon]
 type = "cask"
 category = "window-management"
-profiles = ["hacker"]
 platform = ["macos"]
 description = "Automation runtime for hover window border"
 
@@ -250,7 +223,6 @@ description = "Automation runtime for hover window border"
 type = "stow"
 package = "sketchybar"
 category = "config"
-profiles = ["hacker"]
 platform = ["macos"]
 depends_on = "sketchybar"
 config_for = "sketchybar"
@@ -262,7 +234,6 @@ description = "SketchyBar configuration"
 [apps.raycast]
 type = "cask"
 category = "productivity"
-profiles = ["minimal", "standard", "developer", "hacker"]
 platform = ["macos"]
 description = "Spotlight replacement launcher"
 
@@ -270,7 +241,6 @@ description = "Spotlight replacement launcher"
 type = "stow"
 package = "raycast"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker"]
 platform = ["macos"]
 config_for = "raycast"
 description = "Raycast scripts and settings"
@@ -278,56 +248,48 @@ description = "Raycast scripts and settings"
 [apps.obsidian]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer"]
 platform = ["macos"]
 description = "Markdown-based knowledge base"
 
 [apps.tana]
 type = "cask"
 category = "productivity"
-profiles = ["developer"]
 platform = ["macos"]
 description = "Knowledge management workspace with AI-powered outlining"
 
 [apps.bitwarden]
 type = "cask"
 category = "productivity"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Open-source password manager"
 
 [apps.aqua-voice]
 type = "cask"
 category = "productivity"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Real-time voice dictation (Recommended)"
 
 [apps.keycastr]
 type = "cask"
 category = "productivity"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Keystroke visualizer for presentations"
 
 [apps.bettershot]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer", "hacker"]
 platform = ["macos"]
 description = "Screenshot capture and editing tool"
 
 [apps.kap]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer", "hacker"]
 platform = ["macos"]
 description = "Open-source screen recorder"
 
 [apps.stretchly]
 type = "cask"
 category = "productivity"
-profiles = ["standard", "developer", "hacker"]
 platform = ["macos"]
 description = "Break reminder and wellness app"
 
@@ -335,13 +297,11 @@ description = "Break reminder and wellness app"
 # [apps.superwhisper]
 # type = "cask"
 # category = "productivity"
-# profiles = ["developer", "hacker"]
 # description = "Offline AI dictation"
 
 # [apps.wispr-flow]
 # type = "cask"
 # category = "productivity"
-# profiles = ["developer", "hacker"]
 # description = "AI voice assistant"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -350,27 +310,23 @@ description = "Break reminder and wellness app"
 # [apps.onedrive]
 # type = "cask"
 # category = "cloud-storage"
-# profiles = ["standard"]
 # description = "Microsoft cloud storage"
 
 [apps.google-drive]
 type = "cask"
 category = "cloud-storage"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Google cloud storage"
 
 [apps.microsoft-office]
 type = "cask"
 category = "office"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Microsoft 365 Office suite"
 
 # [apps.microsoft-teams]
 # type = "cask"
 # category = "communication"
-# profiles = ["standard"]
 # description = "Team collaboration"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -379,28 +335,24 @@ description = "Microsoft 365 Office suite"
 [apps.discord]
 type = "cask"
 category = "media"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Voice and text chat platform"
 
 [apps.spotify]
 type = "cask"
 category = "media"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Music streaming service"
 
 [apps.vlc]
 type = "cask"
 category = "media"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Universal media player"
 
 [apps.whatsapp]
 type = "cask"
 category = "communication"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Messaging app"
 
@@ -410,19 +362,16 @@ description = "Messaging app"
 # [apps.orbstack]
 # type = "cask"
 # category = "virtualization"
-# profiles = ["developer", "hacker"]
 # description = "Fast Docker & Linux VMs"
 
 # [apps.utm]
 # type = "cask"
 # category = "virtualization"
-# profiles = ["developer", "hacker"]
 # description = "Virtual machine manager"
 
 # [apps.qemu]
 # type = "brew"
 # category = "virtualization"
-# profiles = ["developer", "hacker"]
 # description = "Machine emulator and virtualizer"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -431,20 +380,17 @@ description = "Messaging app"
 # [apps.beekeeper-studio]
 # type = "cask"
 # category = "database"
-# profiles = ["developer", "hacker"]
 # description = "Open source SQL editor and database manager"
 
 # [apps.pgadmin4]
 # type = "cask"
 # category = "database"
-# profiles = ["developer", "hacker"]
 # description = "Official PostgreSQL admin GUI"
 
 # [apps.postgresql]
 # type = "brew"
 # name = "postgresql@17"
 # category = "database"
-# profiles = ["developer", "hacker"]
 # service = true
 # description = "PostgreSQL database server"
 
@@ -455,7 +401,6 @@ description = "Messaging app"
 [apps.betterdisplay]
 type = "cask"
 category = "display"
-profiles = ["standard", "developer", "hacker"]
 platform = ["macos"]
 description = "Advanced display management with virtual monitors"
 
@@ -463,7 +408,6 @@ description = "Advanced display management with virtual monitors"
 # [apps.monitorcontrol]
 # type = "cask"
 # category = "display"
-# profiles = ["standard", "developer", "hacker"]
 # description = "External display brightness (lighter alternative to BetterDisplay)"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -472,34 +416,29 @@ description = "Advanced display management with virtual monitors"
 # [apps.setapp]
 # type = "cask"
 # category = "utilities"
-# profiles = ["standard"]
 # description = "Mac app subscription service"
 
 [apps.sandvault]
 type = "brew"
 category = "security"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "macOS sandbox for AI coding agents"
 
 [apps.keymapp]
 type = "cask"
 category = "utilities"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "ZSA keyboard configuration"
 
 [apps.pearcleaner]
 type = "cask"
 category = "utilities"
-profiles = ["standard"]
 platform = ["macos"]
 description = "Uninstall apps and remove leftovers"
 
 [apps.thaw]
 type = "cask"
 category = "utilities"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 description = "Menu bar manager"
 
@@ -509,7 +448,6 @@ description = "Menu bar manager"
 [apps.font-jetbrains-mono-nerd-font]
 type = "cask"
 category = "fonts"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos"]
 description = "Developer font with icons"
 
@@ -519,63 +457,54 @@ description = "Developer font with icons"
 [apps.starship]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Cross-shell prompt"
 
 [apps.eza]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Modern ls replacement"
 
 [apps.bat]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Cat with syntax highlighting"
 
 [apps.ripgrep]
 type = "mise"
 category = "cli"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Fast recursive grep"
 
 [apps.fzf]
 type = "mise"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Fuzzy finder"
 
 [apps.sheldon]
 type = "brew"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos"]
 description = "Fast shell plugin manager"
 
 [apps.sheldon-linux]
 type = "curl"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["linux"]
 description = "Fast shell plugin manager (Linux binary install)"
 
 [apps.jq]
 type = "mise"
 category = "cli"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "JSON processor"
 
 [apps.gh]
 type = "mise"
 category = "cli"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "GitHub CLI"
 
@@ -584,28 +513,24 @@ type = "mise"
 name = "pitchfork"
 version = "latest"
 category = "cli"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Mise registry utility for release and changelog workflows"
 
 [apps.tmux]
 type = "mise"
 category = "cli"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 description = "Terminal multiplexer"
 
 [apps.yazi]
 type = "mise"
 category = "cli"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 description = "Terminal file manager"
 
 [apps.btop]
 type = "brew"
 category = "cli"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 linux_name = "btop"
 description = "Resource monitor"
@@ -613,7 +538,6 @@ description = "Resource monitor"
 [apps.ncdu]
 type = "brew"
 category = "cli"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 linux_name = "ncdu"
 description = "Disk usage analyzer"
@@ -621,14 +545,12 @@ description = "Disk usage analyzer"
 [apps.lazygit]
 type = "mise"
 category = "cli"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 description = "Terminal Git UI"
 
 [apps.tailscale]
 type = "brew"
 category = "cli"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 linux_name = "tailscale"
 description = "Zero-config mesh VPN"
@@ -636,7 +558,6 @@ description = "Zero-config mesh VPN"
 [apps.restic]
 type = "brew"
 category = "cli"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 linux_name = "restic"
 description = "Fast, secure, deduplicating backup program"
@@ -645,7 +566,6 @@ description = "Fast, secure, deduplicating backup program"
 type = "brew"
 tap = "tw93/tap"
 category = "cli"
-profiles = ["minimal", "standard", "developer", "hacker"]
 platform = ["macos"]
 description = "System cleanup and optimization CLI"
 
@@ -656,7 +576,6 @@ description = "System cleanup and optimization CLI"
 type = "mise"
 version = "lts"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "JavaScript runtime"
 
@@ -664,7 +583,6 @@ description = "JavaScript runtime"
 type = "mise"
 version = "3.14"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Python runtime"
 
@@ -672,7 +590,6 @@ description = "Python runtime"
 type = "mise"
 version = "stable"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Systems programming language"
 
@@ -680,7 +597,6 @@ description = "Systems programming language"
 type = "mise"
 version = "1.3"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Fast JavaScript runtime"
 
@@ -688,7 +604,6 @@ description = "Fast JavaScript runtime"
 type = "mise"
 version = "10.28"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 depends_on = "node"
 description = "Fast Node package manager"
@@ -697,7 +612,6 @@ description = "Fast Node package manager"
 type = "mise"
 version = "28.3"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Concurrent programming runtime"
 
@@ -705,7 +619,6 @@ description = "Concurrent programming runtime"
 type = "mise"
 version = "1.19.5-otp-28"
 category = "runtimes"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 depends_on = "erlang"
 description = "Functional programming language"
@@ -717,7 +630,6 @@ description = "Functional programming language"
 type = "stow"
 package = "git"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Git configuration"
 
@@ -725,7 +637,6 @@ description = "Git configuration"
 type = "stow"
 package = "zsh"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Zsh shell configuration"
 
@@ -733,7 +644,6 @@ description = "Zsh shell configuration"
 type = "stow"
 package = "sheldon"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Sheldon plugin config"
 
@@ -741,7 +651,6 @@ description = "Sheldon plugin config"
 type = "stow"
 package = "starship"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 config_for = "starship"
 description = "Starship prompt config"
@@ -750,7 +659,6 @@ description = "Starship prompt config"
 type = "stow"
 package = "ghostty"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker"]
 platform = ["macos"]
 config_for = "ghostty"
 description = "Ghostty terminal config"
@@ -758,7 +666,6 @@ description = "Ghostty terminal config"
 [apps.terminal-config]
 type = "defaults"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos"]
 description = "Terminal.app Catppuccin theme"
 
@@ -766,7 +673,6 @@ description = "Terminal.app Catppuccin theme"
 type = "stow"
 package = "zed"
 category = "config"
-profiles = ["developer", "hacker"]
 platform = ["macos"]
 config_for = "zed"
 description = "Zed editor config"
@@ -775,7 +681,6 @@ description = "Zed editor config"
 type = "stow"
 package = "mise"
 category = "config"
-profiles = ["minimal", "standard", "developer", "hacker", "server"]
 platform = ["macos", "linux"]
 description = "Mise version manager config"
 
@@ -783,7 +688,6 @@ description = "Mise version manager config"
 type = "stow"
 package = "aerospace"
 category = "config"
-profiles = ["hacker"]
 platform = ["macos"]
 config_for = "aerospace"
 description = "Aerospace WM config"
@@ -792,7 +696,6 @@ description = "Aerospace WM config"
 type = "stow"
 package = "hammerspoon"
 category = "config"
-profiles = ["hacker"]
 platform = ["macos"]
 config_for = "hammerspoon"
 description = "Hammerspoon hover-border config"
@@ -801,7 +704,6 @@ description = "Hammerspoon hover-border config"
 type = "stow"
 package = "tmux"
 category = "config"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 config_for = "tmux"
 description = "Tmux multiplexer config"
@@ -810,7 +712,6 @@ description = "Tmux multiplexer config"
 type = "stow"
 package = "helix"
 category = "config"
-profiles = ["developer", "hacker", "server"]
 platform = ["macos", "linux"]
 config_for = "helix"
 description = "Helix editor config"
@@ -819,7 +720,6 @@ description = "Helix editor config"
 type = "stow"
 package = "yazi"
 category = "config"
-profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 config_for = "yazi"
 description = "Yazi file manager config"
@@ -828,7 +728,6 @@ description = "Yazi file manager config"
 type = "stow"
 package = "cheatsheet"
 category = "config"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Keyboard shortcuts cheatsheet"
 
@@ -836,6 +735,5 @@ description = "Keyboard shortcuts cheatsheet"
 type = "stow"
 package = "keyboard-layout"
 category = "config"
-profiles = ["developer", "hacker"]
 platform = ["macos", "linux"]
 description = "Voyager keyboard layout viewer"

@@ -1,0 +1,8 @@
+version = 1
+
+[macos]
+apps = ["helix", "font-jetbrains-mono-nerd-font", "starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic", "git-config", "zsh-config", "sheldon-config", "starship-config", "terminal-config", "mise-config", "tmux-config", "helix-config", "yazi-config"]
+
+[linux]
+apps = ["helix", "starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic", "git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config"]
+

@@ -1,0 +1,8 @@
+version = 1
+
+[macos]
+apps = ["ghostty", "warp", "zed", "visual-studio-code", "antigravity", "helix", "firefox", "claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "codex-cli-macos", "codex-acp", "gemini-cli", "raycast", "raycast-config", "obsidian", "tana", "aqua-voice", "keycastr", "bettershot", "kap", "stretchly", "betterdisplay", "sandvault", "keymapp", "thaw", "font-jetbrains-mono-nerd-font", "starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "pitchfork", "tailscale", "restic", "mole", "node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "zed-config", "mise-config", "helix-config", "cheatsheet-config", "keyboard-layout-config"]
+
+[linux]
+apps = ["helix", "claude-cli", "opencode-cli", "codex-cli", "gemini-cli", "starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "pitchfork", "tailscale", "restic", "node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "helix-config", "cheatsheet-config", "keyboard-layout-config"]
+

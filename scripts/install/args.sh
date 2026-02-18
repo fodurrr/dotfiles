@@ -52,21 +52,31 @@ parse_args() {
                 shift
                 ;;
             --list-profiles)
-                if command -v yq >/dev/null 2>&1 && [[ -f "$APPS_CONFIG" ]]; then
+                if command -v yq >/dev/null 2>&1 && [[ -d "$PROFILES_DIR" ]]; then
                     echo "Available profiles:"
                     echo ""
-                    grep -oE 'profiles = \[.*\]' "$APPS_CONFIG" | grep -oE '"[^"]+"' | tr -d '"' | sort -u | while read -r profile; do
-                        count=$(grep -c "\"$profile\"" "$APPS_CONFIG" 2>/dev/null || echo "0")
+                    local current_platform
+                    current_platform=$(get_current_platform)
+                    local profile
+                    while IFS= read -r profile; do
+                        [[ -z "$profile" ]] && continue
+                        local count
+                        count=$(get_profile_apps_for_platform "$profile" "$current_platform" | sed '/^$/d' | wc -l | tr -d ' ')
                         printf "  %-12s (%d apps)\n" "$profile" "$count"
-                    done
+                    done < <(get_profiles)
                 else
                     echo "Run bootstrap first (./install.sh), then use --list-profiles"
-                    echo "Or check apps.toml for available profiles"
+                    echo "Or check profiles/*.toml for available profiles"
                 fi
                 exit 0
                 ;;
             --list-installed)
                 list_installed_and_exit
+                ;;
+            --create-profile)
+                CREATE_PROFILE_MODE=true
+                INTERACTIVE=false
+                shift
                 ;;
             *)
                 echo "Unknown option: $1"

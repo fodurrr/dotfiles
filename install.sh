@@ -13,6 +13,7 @@ set -e
 #   ./install.sh -p dev -p devops         # Merge multiple profiles
 #   ./install.sh --list-profiles          # Show available profiles
 #   ./install.sh --list-installed         # Show installed apps (from apps.toml)
+#   ./install.sh --create-profile         # Create profile TOML interactively
 #   ./install.sh --clean                  # Strict cleanup mode
 #   ./install.sh --extras                 # Install extra apps interactively
 # =============================================================================
@@ -32,9 +33,11 @@ RECONCILE_CASKS=false
 RECONCILE_DRY_RUN=false
 RECONCILE_ONLY=false
 CLEAN_UNTRACKED=false
+CREATE_PROFILE_MODE=false
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR_REAL="$(cd "$DOTFILES_DIR" 2>/dev/null && pwd -P)"
 APPS_CONFIG="$DOTFILES_DIR/apps.toml"
+PROFILES_DIR="$DOTFILES_DIR/profiles"
 
 # Installation tracking for summary (newline+pipe delimited: "name|description\nname|description")
 SUMMARY_INSTALLED=""
@@ -83,6 +86,7 @@ source "$DOTFILES_DIR/scripts/install/logging.sh"
 source "$DOTFILES_DIR/scripts/install/clean_guard.sh"
 source "$DOTFILES_DIR/scripts/install/reconcile_casks.sh"
 source "$DOTFILES_DIR/scripts/install/clean_review.sh"
+source "$DOTFILES_DIR/scripts/install/profile_create.sh"
 source "$DOTFILES_DIR/scripts/install/extras.sh"
 source "$DOTFILES_DIR/scripts/install/alacarte.sh"
 source "$DOTFILES_DIR/scripts/install/layer_homebrew.sh"
@@ -99,6 +103,7 @@ source "$DOTFILES_DIR/scripts/install/summary.sh"
 # =============================================================================
 parse_args "$@"
 run_bootstrap
+run_profile_create_mode
 run_profile_selection
 setup_logging
 check_clean_safety

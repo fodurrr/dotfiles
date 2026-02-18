@@ -1,12 +1,13 @@
 # Profile System Architecture
 
-This document describes how profile-driven installation works and how to inspect current profile/app assignments from `apps.toml`.
+This document describes how profile-driven installation works and how to inspect profile/app assignments from `profiles/*.toml`.
 
 ## Overview
 
-The installer uses a centralized app registry (`apps.toml`) plus layered installation logic.
+The installer uses profile files (`profiles/*.toml`) plus a centralized app registry (`apps.toml`) and layered installation logic.
 
-- Single source of truth: `apps.toml`
+- Profile membership source: `profiles/*.toml`
+- App metadata source: `apps.toml`
 - Install entrypoint: `./install.sh`
 - Modes: interactive, profile, extras, clean, reconciliation
 
@@ -58,6 +59,9 @@ Apps are installed from `apps.toml` by type:
 # Extras mode
 ./install.sh --extras
 
+# Create profile mode
+./install.sh --create-profile
+
 # Cask reconciliation
 ./install.sh --profile=standard --reconcile-casks --reconcile-dry-run
 ./install.sh --profile=standard --reconcile-casks
@@ -81,23 +85,16 @@ Apps are installed from `apps.toml` by type:
 ### List apps in a profile
 
 ```bash
-yq -p toml -oy '
-  .apps
-  | to_entries
-  | map(select((.value.profiles // [])[] == "hacker"))
-  | .[].key
-' apps.toml
+yq -p toml -oy '.macos.apps[]' profiles/hacker.toml
+yq -p toml -oy '.linux.apps[]' profiles/hacker.toml
 ```
 
 ### List app + type in a profile
 
 ```bash
-yq -p toml -oy '
-  .apps
-  | to_entries
-  | map(select((.value.profiles // [])[] == "developer"))
-  | map({"app": .key, "type": .value.type})
-' apps.toml
+for app in $(yq -p toml -oy '.macos.apps[]' profiles/developer.toml); do
+  printf "%s (%s)\n" "$app" "$(yq -p toml -oy ".apps.\"$app\".type" apps.toml)"
+done
 ```
 
 ### List apps grouped by type
