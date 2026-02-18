@@ -1,8 +1,34 @@
 version = 1
 
-[macos]
-apps = ["ghostty", "google-chrome", "raycast", "raycast-config", "font-jetbrains-mono-nerd-font", "starship", "eza", "bat", "fzf", "sheldon", "mole", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "mise-config"]
+# TERMINALS
+[macos.terminals]
+apps = ["ghostty"]
 
-[linux]
-apps = ["starship", "eza", "bat", "fzf", "sheldon-linux", "git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config"]
+# BROWSERS
+[macos.browsers]
+apps = ["google-chrome"]
+
+# CONFIG
+[macos.config]
+apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "mise-config"]
+
+# PRODUCTIVITY
+[macos.productivity]
+apps = ["raycast"]
+
+# FONTS
+[macos.fonts]
+apps = ["font-jetbrains-mono-nerd-font"]
+
+# CLI
+[macos.cli]
+apps = ["starship", "eza", "bat", "fzf", "sheldon", "mole"]
+
+# CONFIG
+[linux.config]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config"]
+
+# CLI
+[linux.cli]
+apps = ["starship", "eza", "bat", "fzf", "sheldon-linux"]
 

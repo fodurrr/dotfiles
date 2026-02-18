@@ -74,7 +74,17 @@ get_profile_apps_for_platform() {
         return 1
     fi
 
-    yq -p toml -oy ".${platform}.apps[]" "$profile_file" 2>/dev/null || true
+    local legacy_apps
+    legacy_apps=$(yq -p toml -oy ".${platform}.apps[]" "$profile_file" 2>/dev/null || true)
+    if [[ -n "$legacy_apps" ]]; then
+        echo "$legacy_apps"
+        return 0
+    fi
+
+    # Category-grouped format:
+    # [macos.<group>]
+    # apps = ["app-key"]
+    yq -p toml -oy ".${platform} | to_entries | map(select(.value.apps != null)) | .[].value.apps[]" "$profile_file" 2>/dev/null || true
 }
 
 validate_profile_apps_for_platform() {
