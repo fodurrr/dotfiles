@@ -625,6 +625,22 @@ profiles = ["hacker", "server"]
 platform = ["macos", "linux"]
 description = "Terminal Git UI"
 
+[apps.tailscale]
+type = "brew"
+category = "cli"
+profiles = ["developer", "hacker", "server"]
+platform = ["macos", "linux"]
+linux_name = "tailscale"
+description = "Zero-config mesh VPN"
+
+[apps.restic]
+type = "brew"
+category = "cli"
+profiles = ["developer", "hacker", "server"]
+platform = ["macos", "linux"]
+linux_name = "restic"
+description = "Fast, secure, deduplicating backup program"
+
 [apps.mole]
 type = "brew"
 tap = "tw93/tap"
