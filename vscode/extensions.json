@@ -1,0 +1,176 @@
+{
+  // =============================================================================
+  // VS Code Extension Manifest — xpando-agents workspace
+  // =============================================================================
+  // This file controls workspace extension recommendations.
+  //
+  // How it works:
+  //   - "recommendations": VS Code suggests installing these when opening workspace
+  //   - "unwantedRecommendations": VS Code warns if these are enabled
+  //   - Comments: used below for uninstalled extensions (historical reference)
+  //
+  // NOTE: This file does NOT auto-enable/disable extensions. It's a suggestion
+  // system. Use "Extensions: Show Recommended Extensions" in command palette
+  // to see the effect.
+  // =============================================================================
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // CATEGORY 1: ACTIVE — Keep enabled
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  "recommendations": [
+    // --- Elixir / Phoenix ---
+    "jakebecker.elixir-ls",               // ElixirLS — LSP, formatting, diagnostics
+    "phoenixframework.phoenix",            // Phoenix framework support
+    "msaraiva.surface",                    // Surface / LiveView templates
+
+    // --- Rust ---
+    "rust-lang.rust-analyzer",             // Rust LSP — essential
+
+    // --- Vue / Nuxt ---
+    "vue.volar",                           // Vue language support (Volar)
+    "bradlc.vscode-tailwindcss",           // Tailwind CSS IntelliSense
+    "hollowtree.vue-snippets",             // Vue snippets
+
+    // --- Frontend (enable for specific projects) ---
+    "antfu.unocss",                        // UnoCSS — enable when using UnoCSS
+    "antfu.iconify",                       // Icon preview in code
+
+    // --- AI Tools ---
+    "anthropic.claude-code",               // Claude Code
+    "openai.chatgpt",                      // OpenAI / ChatGPT
+    "google.gemini-cli-vscode-ide-companion", // Gemini CLI companion
+
+    // --- Theme / Icons ---
+    "catppuccin.catppuccin-vsc",           // Catppuccin Mocha theme
+    "pkief.material-icon-theme",           // Material file/folder icons
+
+    // --- Git / GitHub ---
+    "github.vscode-pull-request-github",   // GitHub PRs and Issues
+
+    // --- Linting / Formatting ---
+    "dbaeumer.vscode-eslint",              // ESLint
+    "editorconfig.editorconfig",           // EditorConfig support
+    "sibiraj-s.vscode-scss-formatter",     // SCSS formatter
+
+    // --- Languages / Syntax ---
+    "be5invis.toml",                       // TOML (Cargo.toml, config files)
+    "bierner.markdown-mermaid",            // Mermaid diagrams in Markdown
+    "bierner.markdown-shiki",              // Markdown code block highlighting
+    "unifiedjs.vscode-mdx",               // MDX support
+
+    // --- Remote Development ---
+    "ms-vscode-remote.remote-containers",  // Dev Containers (OrbStack/Docker)
+    "ms-vscode-remote.remote-ssh",         // Remote SSH
+    "ms-vscode-remote.remote-ssh-edit",    // Remote SSH file editing
+    "ms-vscode.remote-explorer",           // Remote explorer panel
+    "ms-vscode.remote-server",             // Remote server
+
+    // --- Utilities ---
+    "humao.rest-client",                   // REST API testing
+    "naumovs.color-highlight",             // Color value preview
+    "mikestead.dotenv",                    // .env file syntax
+    "vincaslt.highlight-matching-tag"      // Matching HTML tag highlight
+  ],
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // CATEGORY 2: KEEP INSTALLED BUT DISABLED — situational or per-workspace
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  "unwantedRecommendations": [
+    // --- AI (disabled, keep for evaluation) ---
+    "github.copilot-chat",                 // Copilot — disabled, re-enable if needed
+    "kilocode.kilo-code",                  // Kilo Code — disabled, evaluating
+    "augment.vscode-augment",              // Augment — disabled, evaluating
+
+    // --- Product Icons ---
+    "antfu.icons-carbon",                  // Carbon product icons — keep installed, not active
+
+    // --- Linting (disable per-workspace) ---
+    "streetsidesoftware.code-spell-checker", // Spell checker — useful but noisy
+    "usernamehw.errorlens",                // Inline errors — great but can be loud
+
+    // --- Frontend (enable for specific projects) ---
+    "antfu.slidev",                        // Slidev presentations
+
+    // --- Python (occasional use) ---
+    "ms-python.python",                    // Python language support
+    "ms-python.vscode-pylance",            // Python type checking
+
+    // --- Windows / WSL (for Windows dev sessions) ---
+    "ms-vscode-remote.remote-wsl",         // WSL integration
+    "ms-vscode-remote.vscode-remote-extensionpack", // Remote extension pack
+    "ms-vscode.powershell",               // PowerShell
+
+    // --- Utilities (situational) ---
+    "pflannery.vscode-versionlens",        // Package version lens
+    "ritwickdey.liveserver",               // Live reload dev server
+    "jock.svg",                            // SVG preview
+    "ctcuff.font-preview",                 // Font file preview
+    "wix.vscode-import-cost"               // Bundle size display
+  ]
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // CATEGORY 3: HISTORICAL — Uninstalled (reference for re-install if needed)
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Reinstall any with: code --install-extension <id>
+  //
+  // --- Redundant Elixir formatters (elixir-ls handles formatting) ---
+  //   animus-coop.vscode-elixir-mix-formatter  — Mix format command wrapper
+  //   saratravi.elixir-formatter               — Elixir code formatter on save
+  //
+  // --- Themes (replaced by Catppuccin Mocha) ---
+  //   dracula-theme.theme-dracula              — Dark purple-toned color theme
+  //   antfu.theme-vitesse                      — Minimal dark/light theme by Anthony Fu
+  //   max-ss.cyberpunk                         — Neon-styled cyberpunk color theme
+  //   sdras.night-owl                          — Dark theme for night coders by Sarah Drasner
+  //
+  // --- Icon themes (replaced by Material Icon Theme) ---
+  //   catppuccin.catppuccin-vsc-icons          — Pastel-colored file/folder icons
+  //   vscode-icons-team.vscode-icons           — Rich file/folder icon set with framework detection
+  //   file-icons.file-icons                    — Minimal file-type icons from Atom editor
+  //   beardedbear.beardedicons                 — Vibrant colorful file/folder icons
+  //
+  // --- React (not using currently) ---
+  //   dsznajder.es7-react-js-snippets          — ES7+ React/Redux/React-Native snippets
+  //   infeng.vscode-react-typescript            — React TypeScript component scaffolding
+  //   ofhumanbondage.react-proptypes-intellisense — PropTypes autocomplete for React components
+  //
+  // --- Jupyter (interactive notebooks) ---
+  //   ms-toolsai.jupyter                       — Jupyter notebook editor and runner
+  //   ms-toolsai.jupyter-keymap                — Jupyter-style keyboard shortcuts
+  //   ms-toolsai.jupyter-renderers             — Rich output renderers (plots, HTML, images)
+  //   ms-toolsai.vscode-jupyter-cell-tags      — Cell tagging for notebook organization
+  //   ms-toolsai.vscode-jupyter-slideshow      — Turn notebooks into slideshows
+  //
+  // --- Data / API ---
+  //   graphql.vscode-graphql                   — GraphQL LSP: autocomplete, validation, go-to-definition
+  //   graphql.vscode-graphql-syntax            — GraphQL syntax highlighting in tagged templates
+  //   mtxr.sqltools                            — SQL client with query runner and connection manager
+  //   mtxr.sqltools-driver-sqlite              — SQLite driver for SQLTools
+  //   lokalise.i18n-ally                       — i18n key management, inline translation preview
+  //
+  // --- Git / GitHub (broken) ---
+  //   antfu.open-in-github-button              — Status bar button to open file in GitHub (broken in v0.1.5)
+  //   fabiospampinato.vscode-open-in-github    — Open current file in GitHub (duplicate)
+  //
+  // --- Niche / rarely used ---
+  //   antfu.browse-lite                        — Embedded browser preview inside VS Code
+  //   antfu.where-am-i                         — Shows current file path in status bar
+  //   antfu.smart-clicks                       — Smart double-click text selection by context
+  //   antfu.vite                               — Vite dev server integration and HMR status
+  //   devzstudio.emoji-snippets                — Emoji autocomplete via shortcodes
+  //   drknoxy.eslint-disable-snippets          — Quick snippets for eslint-disable comments
+  //   funkyremi.vscode-google-translate        — Translate selected text via Google Translate
+  //   jeffjorczak.auto-translate-json          — Auto-translate JSON i18n files to other languages
+  //   mpontus.tab-cycle                        — Cycle through open tabs with keyboard
+  //   richie5um2.vscode-sort-json              — Sort JSON object keys alphabetically
+  //   unional.vscode-sort-package-json         — Sort package.json fields per convention
+  //   xabikos.javascriptsnippets               — Basic ES6 JavaScript code snippets
+  //   amodio.tsl-problem-matcher               — TypeScript build task problem matcher
+  //   ms-edgedevtools.vscode-edge-devtools     — Microsoft Edge DevTools inside VS Code
+  //   firefox-devtools.vscode-firefox-debug    — Debug web apps running in Firefox
+  //   gencer.html-slim-scss-css-class-completion — CSS class autocomplete from stylesheets
+  //   christian-kohler.npm-intellisense        — Autocomplete npm module imports
+  // ─────────────────────────────────────────────────────────────────────────────
+}
