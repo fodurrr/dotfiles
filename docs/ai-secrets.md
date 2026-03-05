@@ -41,7 +41,7 @@ AUGMENT_API_URL=https://d15.api.augmentcode.com
 ```bash
 mkdir -p ~/.config/secrets
 chmod 700 ~/.config/secrets
-cp /Users/fodurrr/dev/dotfiles/.env.ai.example ~/.config/secrets/ai.env
+cp ~/dev/dotfiles/.env.ai.example ~/.config/secrets/ai.env
 chmod 600 ~/.config/secrets/ai.env
 ```
 
@@ -85,8 +85,8 @@ launchctl getenv AUGMENT_API_URL
 MCP preflight (routing + auth):
 
 ```bash
-elixir /Users/fodurrr/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPClient.list_servers()'
-elixir /Users/fodurrr/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPTools.AugmentContextEngine.codebase_retrieval()'
+elixir ~/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPClient.list_servers()'
+elixir ~/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPTools.AugmentContextEngine.codebase_retrieval()'
 ```
 
 ## Caveat

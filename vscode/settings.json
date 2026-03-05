@@ -243,7 +243,7 @@
   // AI Tools
   // ─────────────────────────────────────────────────────────────────────────────
   "claudeCode.preferredLocation": "panel",
-  "geminicodeassist.project": "empyrean-rigging-c4vhz",
+  // "geminicodeassist.project": "set-locally-via-workspace-settings",
 
   // ─────────────────────────────────────────────────────────────────────────────
   // GitHub Integration
