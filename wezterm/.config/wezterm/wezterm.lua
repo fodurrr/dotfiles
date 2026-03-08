@@ -60,6 +60,8 @@ config.window_padding = {
 config.default_cursor_style = "SteadyBlock"
 
 -- Window
+config.window_background_opacity = 0.88
+config.macos_window_background_blur = 20
 config.window_decorations = "TITLE|RESIZE"
 config.window_close_confirmation = "NeverPrompt"
 config.adjust_window_size_when_changing_font_size = false
