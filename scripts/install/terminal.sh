@@ -43,7 +43,7 @@ configure_terminal() {
             else
                 reimport=false
                 if [[ "$INTERACTIVE" == true ]]; then
-                    if command -v gum &> /dev/null; then
+                    if command -v gum >/dev/null 2>&1; then
                         if gum confirm "Re-import Terminal profile to apply updates? (Opens Terminal once)"; then
                             reimport=true
                         fi
