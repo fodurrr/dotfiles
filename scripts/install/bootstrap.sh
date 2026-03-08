@@ -321,10 +321,11 @@ run_bootstrap() {
     esac
 
     # Install TPM (Tmux Plugin Manager) if not present
-    if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    if [[ ! -d "$HOME/.config/tmux/plugins/tpm" ]]; then
         log_info "Installing TPM (Tmux Plugin Manager)..."
-        git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-        log_success "TPM installed. After tmux starts, press Ctrl+A then Shift+I to install plugins."
+        mkdir -p "$HOME/.config/tmux/plugins"
+        git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/plugins/tpm"
+        log_success "TPM installed (plugins will be installed after stow layer)"
     else
         log_info "TPM already installed"
     fi

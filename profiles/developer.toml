@@ -2,7 +2,8 @@ version = 1
 
 # TERMINALS
 [macos.terminals]
-apps = ["ghostty", "warp"]
+# apps = ["ghostty", "warp"]  # Ghostty commented out: crash issues on macOS Tahoe
+apps = ["wezterm", "warp"]
 
 # EDITORS
 [macos.editors]
@@ -18,7 +19,8 @@ apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop"
 
 # CONFIG
 [macos.config]
-apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "zed-config", "mise-config", "helix-config", "cheatsheet-config", "keyboard-layout-config"]
+# "ghostty-config" commented out — see terminals section
+apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "wezterm-config", "terminal-config", "zed-config", "mise-config", "helix-config", "cheatsheet-config", "keyboard-layout-config"]
 
 # PRODUCTIVITY
 [macos.productivity]

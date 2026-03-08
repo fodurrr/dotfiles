@@ -5,7 +5,7 @@
 check_clean_safety() {
     CLEAN_SAFE=true
     if [[ "$CLEAN_MODE" == true && "$CLEAN_SAFE" == true ]]; then
-        if ! command -v yq &> /dev/null; then
+        if ! command -v yq >/dev/null 2>&1; then
             log_warning "yq not found; skipping clean mode to avoid accidental removals"
             CLEAN_SAFE=false
         elif [[ ! -s "$APPS_CONFIG" ]]; then

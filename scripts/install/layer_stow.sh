@@ -61,4 +61,14 @@ run_layer_stow() {
             return 1
         fi
     fi
+
+    # Install/update TPM plugins after tmux config is in place
+    if app_selected_for_install "tmux-config"; then
+        if [[ -x "$HOME/.config/tmux/plugins/tpm/bin/install_plugins" ]]; then
+            log_info "Installing tmux plugins via TPM..."
+            "$HOME/.config/tmux/plugins/tpm/bin/clean_plugins" >/dev/null 2>&1 || true
+            "$HOME/.config/tmux/plugins/tpm/bin/install_plugins" >/dev/null 2>&1 || true
+            log_success "Tmux plugins installed"
+        fi
+    fi
 }

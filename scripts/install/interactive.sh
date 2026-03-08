@@ -33,7 +33,7 @@ append_list_line() {
 }
 
 confirm_continue() {
-    if command -v gum &> /dev/null; then
+    if command -v gum >/dev/null 2>&1; then
         gum confirm "Continue?" || exit 0
     else
         read -p "Continue? (y/n) " -n 1 -r
@@ -280,7 +280,7 @@ run_alacarte_selection() {
         CLEAN_MODE=false
     fi
 
-    if ! command -v gum &> /dev/null; then
+    if ! command -v gum >/dev/null 2>&1; then
         echo "gum is required for a la carte mode. Please run bootstrap first."
         exit 1
     fi
@@ -349,7 +349,7 @@ run_profiles_selection() {
         AVAILABLE_PROFILES+=("$line")
     done < <(get_profiles)
 
-    if command -v gum &> /dev/null; then
+    if command -v gum >/dev/null 2>&1; then
         while IFS= read -r line; do
             [[ -n "$line" ]] && SELECTED_PROFILES+=("$line")
         done < <(gum choose --no-limit \
@@ -414,7 +414,7 @@ run_profile_selection() {
 
     if [[ "$INTERACTIVE" == true && ${#SELECTED_PROFILES[@]} -eq 0 ]]; then
         local mode
-        if command -v gum &> /dev/null; then
+        if command -v gum >/dev/null 2>&1; then
             mode=$(gum choose --limit=1 \
                 --header "Choose installation mode:" \
                 --cursor-prefix "○ " \

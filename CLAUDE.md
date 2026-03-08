@@ -56,7 +56,7 @@ Use `yq` with TOML input:
 
 ```bash
 yq -p toml -oy '.apps.ghostty.type' apps.toml
-yq -p toml -oy '.macos.apps[]' profiles/developer.toml
+yq -p toml -oy '.macos | to_entries | map(select(.value.apps != null)) | .[].value.apps[]' profiles/developer.toml
 ```
 
 ### Target Environment
