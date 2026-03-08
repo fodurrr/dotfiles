@@ -15,4 +15,4 @@ if command -v aerospace >/dev/null 2>&1 && [[ -f "${HOME}/.config/aerospace/aero
 fi
 
 wezterm --config 'initial_cols=109' --config 'initial_rows=50' \
-    start --position 'active:2000,135' -- ~/.config/cheatsheet/render-cheatsheet.sh "$CHEATSHEET_MODE"
+    start --always-new-process --position 'active:2000,135' -- ~/.config/cheatsheet/render-cheatsheet.sh "$CHEATSHEET_MODE"
