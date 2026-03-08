@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Display Cheatsheet
+# Render Cheatsheet
 # =============================================================================
 # Self-focusing: finds own Aerospace window ID via parent PID, brings to front.
 # Aerospace on-window-detected rule handles floating.

@@ -19,10 +19,10 @@
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│ 1. Aerospace: exec-and-forget show-cheatsheet.sh         │
+│ 1. Aerospace: exec-and-forget launch-cheatsheet.sh       │
 │    └── Runs the launcher script in a detached process    │
 │                                                          │
-│ 2. show-cheatsheet.sh:                                   │
+│ 2. launch-cheatsheet.sh:                                 │
 │    a. Snapshots existing wezterm-gui window IDs          │
 │    b. Launches WezTerm with initial_cols=109, rows=50    │
 │    c. Polls for new wezterm-gui window ID (before/after) │
@@ -33,7 +33,7 @@
 │    └── Matches app-name "wezterm-gui" → layout floating  │
 │    (fires automatically when the new window appears)     │
 │                                                          │
-│ 4. display-cheatsheet.sh (inside the WezTerm window):    │
+│ 4. render-cheatsheet.sh (inside the WezTerm window):     │
 │    a. Sets window title to "Cheatsheet"                  │
 │    b. Detects profile (pgrep AeroSpace → hacker/dev)     │
 │    c. Renders cheatsheet with ANSI colors via sed        │
@@ -47,8 +47,8 @@
 
 | File | Purpose |
 |------|---------|
-| `cheatsheet/.config/cheatsheet/show-cheatsheet.sh` | Launcher: window detection, focus, centering |
-| `cheatsheet/.config/cheatsheet/display-cheatsheet.sh` | Content: profile detection, render, less viewer |
+| `cheatsheet/.config/cheatsheet/launch-cheatsheet.sh` | Launcher: start the cheatsheet window and choose mode |
+| `cheatsheet/.config/cheatsheet/render-cheatsheet.sh` | Content: focus, choose cheatsheet file, render via less |
 | `cheatsheet/.config/cheatsheet/keybinds-hacker.md` | Hacker profile cheatsheet (Aerospace, Yazi, Tmux) |
 | `cheatsheet/.config/cheatsheet/keybinds-developer.md` | Developer profile cheatsheet (simpler) |
 | `aerospace/.config/aerospace/aerospace.toml` | `alt+?` binding + auto-float rule for wezterm-gui |
@@ -83,7 +83,7 @@ Potential fixes to investigate:
 
 ### Key Discovery
 
-The display script running INSIDE the WezTerm window can find its own Aerospace window ID using its parent PID, then focus itself. This eliminates the need for `show-cheatsheet.sh` entirely.
+The render script running INSIDE the WezTerm window can find its own Aerospace window ID using its parent PID, then focus itself. This eliminates the need for `launch-cheatsheet.sh` entirely.
 
 ### How It Works
 
@@ -106,13 +106,13 @@ aerospace focus --window-id $WIN_ID
 │ 1. Aerospace binding (alt+?):                            │
 │    exec-and-forget wezterm --config 'initial_cols=109'   │
 │      --config 'initial_rows=50' start --                 │
-│      ~/.config/cheatsheet/display-cheatsheet.sh          │
+│      ~/.config/cheatsheet/render-cheatsheet.sh           │
 │                                                          │
 │ 2. Aerospace on-window-detected rule:                    │
 │    Matches "wezterm-gui" → layout floating               │
 │    (window is floating from birth, correct size)         │
 │                                                          │
-│ 3. display-cheatsheet.sh (inside the window):            │
+│ 3. render-cheatsheet.sh (inside the window):             │
 │    a. sleep 1 (wait for window to be ready)              │
 │    b. Find own Aerospace window ID via parent PID        │
 │    c. aerospace focus --window-id (bring to front)       │
@@ -126,21 +126,21 @@ aerospace focus --window-id $WIN_ID
 
 | Component | Old (Current) | New (Simplified) |
 |-----------|--------------|-----------------|
-| `show-cheatsheet.sh` | 70+ lines: window ID detection loop, AppleScript centering | **Not needed** — inline WezTerm launch in Aerospace binding |
-| `display-cheatsheet.sh` | Just renders content | Adds 4 lines: find own window ID, focus self |
-| Aerospace `alt+?` binding | `exec-and-forget show-cheatsheet.sh` | `exec-and-forget wezterm ... start -- display-cheatsheet.sh` |
-| SketchyBar click | `show-cheatsheet.sh` | Same inline wezterm command (or tiny wrapper) |
+| `launch-cheatsheet.sh` | 70+ lines: window ID detection loop, AppleScript centering | **Not needed** — inline WezTerm launch in Aerospace binding |
+| `render-cheatsheet.sh` | Just renders content | Adds 4 lines: find own window ID, focus self |
+| Aerospace `alt+?` binding | `exec-and-forget launch-cheatsheet.sh` | `exec-and-forget wezterm ... start -- render-cheatsheet.sh` |
+| SketchyBar click | `launch-cheatsheet.sh` | Same inline wezterm command (or tiny wrapper) |
 | Aerospace rule | `layout floating` | `layout floating` (unchanged) |
 | AppleScript | Used for centering (unreliable) | **Removed entirely** |
 | Vertical centering | Broken | Not solved yet, but no longer blocked by AppleScript issues |
 
 ### Files Affected
 
-- **Remove:** `cheatsheet/.config/cheatsheet/show-cheatsheet.sh` (no longer needed)
-- **Modify:** `cheatsheet/.config/cheatsheet/display-cheatsheet.sh` (add self-focus)
+- **Remove:** `cheatsheet/.config/cheatsheet/launch-cheatsheet.sh` (no longer needed)
+- **Modify:** `cheatsheet/.config/cheatsheet/render-cheatsheet.sh` (add self-focus)
 - **Modify:** `aerospace/.config/aerospace/aerospace.toml` (inline wezterm launch in binding)
 - **Modify:** `sketchybar/.config/sketchybar/items/help.sh` (inline wezterm launch in click_script)
 
 ### Note on SketchyBar
 
-SketchyBar `click_script` can run the same inline command, or we keep a minimal `show-cheatsheet.sh` as a one-liner wrapper so both Aerospace and SketchyBar call the same thing. Wrapper approach is cleaner to avoid duplicating the wezterm command.
+SketchyBar `click_script` can run the same inline command, or we keep a minimal `launch-cheatsheet.sh` as a one-liner wrapper so both Aerospace and SketchyBar call the same thing. Wrapper approach is cleaner to avoid duplicating the wezterm command.
