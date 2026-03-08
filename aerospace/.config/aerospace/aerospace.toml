@@ -87,7 +87,7 @@ alt-shift-5 = 'move-node-to-workspace 5'
 alt-shift-space = 'layout floating tiling'
 
 # --- Cheatsheet (alt+?) ---
-alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh tiled'
+alt-shift-slash = 'exec-and-forget ~/.config/cheatsheet/show-cheatsheet.sh'
 
 # --- Keyboard Layout Viewer (Voyager) ---
 alt-semicolon = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.sh'
@@ -96,4 +96,8 @@ alt-shift-semicolon = 'exec-and-forget ~/.config/keyboard-layout/show-keyboard.s
 # =============================================================================
 # Window Rules
 # =============================================================================
-# (Cheatsheet window floats itself via aerospace command in display script)
+# Auto-float windows launched via "wezterm start" (used for cheatsheet, keyboard viewer)
+# Note: "wezterm start" registers as "wezterm-gui", while "open -a WezTerm" registers as "WezTerm"
+[[on-window-detected]]
+if.app-name-regex-substring = 'wezterm-gui'
+run = 'layout floating'

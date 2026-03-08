@@ -17,4 +17,4 @@ sketchybar --add item help center \
                  icon.padding_right=8 \
                  label.drawing=off \
                  background.drawing=off \
-                 click_script="if [[ \$MODIFIER == 'ctrl' ]]; then ~/.config/cheatsheet/show-cheatsheet.sh; else ~/.config/cheatsheet/show-cheatsheet.sh tiled; fi"
+                 click_script="~/.config/cheatsheet/show-cheatsheet.sh"

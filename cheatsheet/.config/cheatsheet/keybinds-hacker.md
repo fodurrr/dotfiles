@@ -1,4 +1,4 @@
-[1;35m# Keyboard Shortcuts Cheatsheet[0m                                                            Press [1;33mq[0m to close
+[1;35m# Keyboard Shortcuts Cheatsheet[0m                                                           Press [1;33mq[0m to quit
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
 │  [1;36mAEROSPACE[0m (Window Manager)                         │  [1;36mWEZTERM[0m (Terminal)                                 │
