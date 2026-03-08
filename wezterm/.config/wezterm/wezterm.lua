@@ -60,7 +60,7 @@ config.window_padding = {
 config.default_cursor_style = "SteadyBlock"
 
 -- Window
-config.window_decorations = "RESIZE"
+config.window_decorations = "TITLE|RESIZE"
 config.window_close_confirmation = "NeverPrompt"
 config.adjust_window_size_when_changing_font_size = false
 config.max_fps = 165 -- Match your 165Hz monitor
