@@ -107,6 +107,9 @@ config.keys = {
   -- Command palette & quick select
   { key = "p", mods = "CMD|SHIFT", action = act.ActivateCommandPalette },
   { key = "u", mods = "CMD|SHIFT", action = act.QuickSelect },
+
+  -- Shift+Enter → newline in Claude Code (CSI u encoding for modified Enter)
+  { key = "Enter", mods = "SHIFT", action = act.SendString("\x1b[13;2u") },
 }
 
 -- =============================================================================
