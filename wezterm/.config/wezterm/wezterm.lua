@@ -45,8 +45,8 @@ config.colors = {
 }
 
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = 17.0 -- Bumped from 16: WezTerm renders ~1pt smaller than Ghostty
-config.line_height = 1.05 -- Slight boost to match Ghostty's spacing
+config.font_size = 16.0
+config.line_height = 1
 
 -- Padding
 config.window_padding = {
