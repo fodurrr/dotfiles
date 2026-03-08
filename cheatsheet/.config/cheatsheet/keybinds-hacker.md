@@ -16,6 +16,29 @@
 └─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
+│  [1;36mYAZI[0m (File Manager)                                │  [1;36mTMUX[0m (Multiplexer)  Prefix = [1;33mCtrl+a[0m                │
+├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
+│  [1;33mh/j/k/l[0m     Navigate (vim-style)                   │  [1;33mprefix + v[0m        Split pane right                 │
+│  [1;33mEnter[0m       Open file/folder                       │  [1;33mprefix + s[0m        Split pane down                  │
+│  [1;33mq[0m           Quit                                   │  [1;33mprefix + hjkl[0m     Navigate panes                   │
+│  [1;33m~[0m           Go to home directory                   │  [1;33mprefix + HJKL[0m     Resize panes                     │
+│  [1;33m.[0m           Toggle hidden files                    │  [1;33mprefix + z[0m        Toggle pane zoom                 │
+│  [1;33m/[0m           Search files                           │  [1;33mprefix + S[0m        Toggle sync panes                │
+│  [1;33my/p[0m         Yank (copy) / Paste file               │  [1;33mprefix + r[0m        Reload config                    │
+│  [1;33md/D[0m         Delete (trash) / Permanent delete      │  [1;33mprefix + [[0m        Enter copy mode (vi keys)        │
+│  [1;33mr[0m           Rename file                            │  [1;33mprefix + c[0m        New window                       │
+│  [1;33ma/A[0m         Create file / Create directory         │  [1;33mprefix + n/p[0m      Next / Previous window           │
+│  [1;33mSpace[0m       Select file                            │  [1;33mprefix + &[0m        Kill window                      │
+│  [1;33mTab[0m         Switch to other pane                   │  [1;33mprefix + x[0m        Kill pane                        │
+│  [1;33mz[0m           Jump via zoxide (fuzzy cd)             │  [1;33mprefix + $[0m        Rename session                   │
+│  [1;33mZ[0m           Jump via fzf                           │  [1;33mprefix + ,[0m        Rename window                    │
+│  [1;33mV[0m           Visual mode (select range)             │  [1;33mprefix + Ctrl+s/r[0m  Save / Restore session          │
+│  [1;33mCtrl+z[0m      Suspend yazi (fg to resume)            │  [1;33mprefix + I[0m        Install plugins (TPM)            │
+│  [1;33m:[0m           Command mode                           │  [1;33mprefix + U[0m        Update plugins (TPM)             │
+│  [1;33mg + key[0m     Go-to (ga=downloads, gc=config...)     │  [1;33mexit[0m / [1;33mprefix + d[0m  Exit / Detach session           │
+└─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
 │  [1;36mHELIX MODES[0m  (selection-first editing)             │  [1;36mHELIX MOTIONS[0m                                      │
 ├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
 │  [1;33mEsc[0m         Normal mode                            │  [1;33mh/j/k/l[0m     Left / Down / Up / Right               │
@@ -31,37 +54,20 @@
 └─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
-│  [1;36mYAZI[0m (File Manager)                                │  [1;36mZSH[0m (Shell)                                        │
+│  [1;36mZED[0m (Editor - Vim Mode)                            │  [1;36mZSH[0m (Shell)                                        │
 ├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
-│  [1;33mh/j/k/l[0m     Navigate (vim-style)                   │  [1;33mCtrl + r[0m      Fuzzy search history (fzf)           │
-│  [1;33mEnter[0m       Open file/folder                       │  [1;33mCtrl + t[0m      Fuzzy file finder                    │
-│  [1;33mq[0m           Quit                                   │  [1;33malt + c[0m       Fuzzy cd into directory              │
-│  [1;33m~[0m           Go to home directory                   │  [1;33mTab[0m           Autocomplete (fzf-tab)               │
-│  [1;33m.[0m           Toggle hidden files                    │  [1;33mCtrl + a/e[0m    Beginning / End of line              │
-│  [1;33m/[0m           Search files                           │  [1;33mCtrl + w[0m      Delete word backward                 │
-│  [1;33my/p[0m         Yank (copy) / Paste file               │  [1;33mCtrl + u/k[0m    Delete to beginning / end            │
-│  [1;33md/D[0m         Delete (trash) / Permanent delete      │  [1;33mCtrl + l[0m      Clear screen                         │
-│  [1;33mr[0m           Rename file                            │  [1;33m!![0m            Repeat last command                  │
-│  [1;33ma/A[0m         Create file / Create directory         │  [1;33m!$[0m            Last argument of prev command        │
-│  [1;33mSpace[0m       Select file                            │                                                     │
-│  [1;33mTab[0m         Switch to other pane                   │                                                     │
-└─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
-│  [1;36mZED[0m (Editor - Vim Mode)                            │  [1;36mTMUX[0m (Multiplexer)  Prefix = [1;33mCtrl+a[0m                │
-├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
-│  [1;33mjk[0m              Exit insert mode (custom)          │  [1;33mprefix + v[0m        Split pane right                 │
-│  [1;33mgd / gD[0m         Go to definition / declaration     │  [1;33mprefix + s[0m        Split pane down                  │
-│  [1;33mgy / gs[0m         Go to type / symbol                │  [1;33mprefix + hjkl[0m     Navigate panes                   │
-│  [1;33mctrl + hjkl[0m     Navigate panes                     │  [1;33mprefix + HJKL[0m     Resize panes                     │
-│  [1;33mss / sv[0m         Split right / down                 │  [1;33mprefix + z[0m        Toggle pane zoom                 │
-│  [1;33mShift + h/l[0m     Previous / next buffer             │  [1;33mprefix + d[0m        Detach session                   │
-│  [1;33mShift + q[0m       Close buffer                       │  [1;33mprefix + r[0m        Reload config                    │
-│  [1;33mspace space[0m     File finder                        │  [1;33mprefix + [[0m        Enter copy mode (vi keys)        │
-│  [1;33mspace e[0m         Toggle project panel               │  [1;33mprefix + c[0m        New window                       │
-│  [1;33mys / cs / ds[0m    Surround add/change/delete         │  [1;33mprefix + n/p[0m      Next / Previous window           │
-│  [1;33mgc / gcc[0m        Comment (visual / line)            │  [1;33mprefix + &[0m        Kill window                      │
-│  [1;33m]d / [d[0m         Next / prev diagnostic             │  [1;33mprefix + x[0m        Kill pane                        │
+│  [1;33mjk[0m              Exit insert mode (custom)          │  [1;33mCtrl + r[0m      Fuzzy search history (fzf)           │
+│  [1;33mgd / gD[0m         Go to definition / declaration     │  [1;33mCtrl + t[0m      Fuzzy file finder                    │
+│  [1;33mgy / gs[0m         Go to type / symbol                │  [1;33malt + c[0m       Fuzzy cd into directory              │
+│  [1;33mctrl + hjkl[0m     Navigate panes                     │  [1;33mTab[0m           Autocomplete (fzf-tab)               │
+│  [1;33mss / sv[0m         Split right / down                 │  [1;33mCtrl + a/e[0m    Beginning / End of line              │
+│  [1;33mShift + h/l[0m     Previous / next buffer             │  [1;33mCtrl + w[0m      Delete word backward                 │
+│  [1;33mShift + q[0m       Close buffer                       │  [1;33mCtrl + u/k[0m    Delete to beginning / end            │
+│  [1;33mspace space[0m     File finder                        │  [1;33mCtrl + l[0m      Clear screen                         │
+│  [1;33mspace e[0m         Toggle project panel               │  [1;33m!![0m            Repeat last command                  │
+│  [1;33mys / cs / ds[0m    Surround add/change/delete         │  [1;33m!$[0m            Last argument of prev command        │
+│  [1;33mgc / gcc[0m        Comment (visual / line)            │                                                     │
+│  [1;33m]d / [d[0m         Next / prev diagnostic             │                                                     │
 │  [1;33mgl / ga[0m         Select next / all occurrences      │                                                     │
 │  [1;33mctrl+x ctrl+a[0m   Inline AI assistant                │                                                     │
 └─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
