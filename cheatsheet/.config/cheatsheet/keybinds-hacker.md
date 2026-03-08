@@ -1,18 +1,23 @@
 [1;35m# Keyboard Shortcuts Cheatsheet[0m                                                            Press [1;33mq[0m to close
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
-│  [1;36mAEROSPACE[0m (Window Manager)                         │  [1;36mGHOSTTY[0m (Terminal)                                 │
+│  [1;36mAEROSPACE[0m (Window Manager)                         │  [1;36mWEZTERM[0m (Terminal)                                 │
 ├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
-│  [1;33malt + h/j/k/l[0m       Focus left/down/up/right       │  [1;33mcmd + t[0m           New tab                          │
-│  [1;33malt + shift + hjkl[0m  Move window direction          │  [1;33mcmd + n[0m           New window                       │
-│  [1;33malt + 1-5[0m           Switch to workspace 1-5        │  [1;33mcmd + w[0m           Close tab/pane                   │
-│  [1;33malt + shift + 1-5[0m   Move window to workspace       │  [1;33mcmd + shift + [][0m  Previous/next tab                │
-│  [1;33malt + f[0m             Toggle fullscreen              │  [1;33mcmd + d[0m           Split right                      │
-│  [1;33malt + /[0m             Toggle tile direction          │  [1;33mcmd + shift + d[0m   Split down                       │
-│  [1;33malt + ,[0m             Toggle accordion layout        │  [1;33mcmd + [][0m          Navigate splits                  │
-│  [1;33malt + shift + space[0m Toggle floating/tiling         │  [1;33mcmd + k[0m           Clear screen                     │
-│  [1;33malt + -/=[0m           Resize smaller/larger          │  [1;33mcmd + ,[0m           Open config                      │
-│  [1;33malt + ?[0m             Show this cheatsheet           │                                                     │
+│  [1;33malt + h/j/k/l[0m       Focus left/down/up/right       │  [1;33mcmd + n[0m           New window                       │
+│  [1;33malt + shift + hjkl[0m  Move window direction          │  [1;33malt + enter[0m       Toggle fullscreen                │
+│  [1;33malt + 1-5[0m           Switch to workspace 1-5        │  [1;33mcmd + t[0m           New tab                          │
+│  [1;33malt + shift + 1-5[0m   Move window to workspace       │  [1;33mcmd + w[0m           Close tab/pane                   │
+│  [1;33malt + f[0m             Toggle fullscreen              │  [1;33mcmd + shift + [][0m  Previous/next tab                │
+│  [1;33malt + /[0m             Toggle tile direction          │  [1;33mcmd + d[0m           Split right                      │
+│  [1;33malt + ,[0m             Toggle accordion layout        │  [1;33mcmd + shift + d[0m   Split down                       │
+│  [1;33malt + shift + space[0m Toggle floating/tiling         │  [1;33mcmd+shift+arrows[0m  Navigate splits                  │
+│  [1;33malt + -/=[0m           Resize smaller/larger          │  [1;33mctrl + shift + z[0m  Zoom pane (toggle)               │
+│  [1;33malt + t[0m             Open WezTerm                   │  [1;33mcmd + k[0m           Clear scrollback                 │
+│  [1;33malt + b[0m             Open Chrome                    │  [1;33mcmd + f[0m           Search                           │
+│  [1;33malt + e[0m             Open VS Code                   │  [1;33mcmd + left/right[0m  Beginning / End of line          │
+│  [1;33malt + o[0m             Open Obsidian                  │  [1;33mcmd + up/down[0m     Scroll to top / bottom           │
+│  [1;33malt + ;[0m             Show keyboard layout           │  [1;33mcmd + shift + u[0m   Quick select (URLs, paths)       │
+│  [1;33malt + ?[0m             Show this cheatsheet           │  [1;33mcmd + shift + p[0m   Command palette                  │
 └─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐

@@ -41,7 +41,7 @@ outer.bottom = 0
 # =============================================================================
 [mode.main.binding]
 # --- Main App Shortcuts ---
-alt-t = 'exec-and-forget open -a Ghostty'
+alt-t = 'exec-and-forget open -a WezTerm'
 alt-b = 'exec-and-forget open -a "Google Chrome"'
 alt-e = 'exec-and-forget open -a "Visual Studio Code"'
 alt-o = 'exec-and-forget open -a Obsidian'

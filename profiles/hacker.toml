@@ -2,7 +2,8 @@ version = 1
 
 # TERMINALS
 [macos.terminals]
-apps = ["ghostty"]
+# apps = ["ghostty"]  # Commented out: Ghostty has crash issues on macOS Tahoe
+apps = ["wezterm"]
 
 # EDITORS
 [macos.editors]
@@ -26,7 +27,8 @@ apps = ["sketchybar", "sketchybar-system-stats"]
 
 # CONFIG
 [macos.config]
-apps = ["sketchybar-config", "raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "zed-config", "mise-config", "aerospace-config", "hammerspoon-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+# "ghostty-config" commented out — see terminals section
+apps = ["sketchybar-config", "raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "wezterm-config", "terminal-config", "zed-config", "mise-config", "aerospace-config", "hammerspoon-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
 
 # PRODUCTIVITY
 [macos.productivity]

@@ -2,7 +2,8 @@ version = 1
 
 # TERMINALS
 [macos.terminals]
-apps = ["ghostty"]
+# apps = ["ghostty"]  # Commented out: Ghostty has crash issues on macOS Tahoe
+apps = ["wezterm"]
 
 # BROWSERS
 [macos.browsers]
@@ -14,7 +15,8 @@ apps = ["claude-desktop", "chatgpt-desktop"]
 
 # CONFIG
 [macos.config]
-apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "ghostty-config", "terminal-config", "mise-config"]
+# "ghostty-config" commented out — see terminals section
+apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "wezterm-config", "terminal-config", "mise-config"]
 
 # PRODUCTIVITY
 [macos.productivity]

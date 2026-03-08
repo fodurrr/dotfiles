@@ -1,18 +1,26 @@
 [1;35m# Keyboard Shortcuts Cheatsheet[0m                                                            Press [1;33mq[0m to close
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
-│  [1;36mGHOSTTY[0m (Terminal)                                 │  [1;36mZSH[0m (Shell)                                        │
+│  [1;36mWEZTERM[0m (Terminal)                                 │  [1;36mZSH[0m (Shell)                                        │
 ├─────────────────────────────────────────────────────┼─────────────────────────────────────────────────────┤
-│  [1;33mcmd + t[0m           New tab                          │  [1;33mCtrl + r[0m      Fuzzy search history (fzf)           │
-│  [1;33mcmd + n[0m           New window                       │  [1;33mCtrl + t[0m      Fuzzy file finder                    │
-│  [1;33mcmd + w[0m           Close tab/pane                   │  [1;33malt + c[0m       Fuzzy cd into directory              │
-│  [1;33mcmd + shift + [][0m  Previous/next tab                │  [1;33mTab[0m           Autocomplete (fzf-tab)               │
-│  [1;33mcmd + d[0m           Split right                      │  [1;33mCtrl + a/e[0m    Beginning / End of line              │
-│  [1;33mcmd + shift + d[0m   Split down                       │  [1;33mCtrl + w[0m      Delete word backward                 │
-│  [1;33mcmd + [][0m          Navigate splits                  │  [1;33mCtrl + u/k[0m    Delete to beginning / end            │
-│  [1;33mcmd + k[0m           Clear screen                     │  [1;33mCtrl + l[0m      Clear screen                         │
-│  [1;33mcmd + ,[0m           Open config                      │  [1;33m!![0m            Repeat last command                  │
-│                                                     │  [1;33m!$[0m            Last argument of prev command        │
+│  [1;33mcmd + n[0m           New window                       │  [1;33mCtrl + r[0m      Fuzzy search history (fzf)           │
+│  [1;33malt + enter[0m       Toggle fullscreen                │  [1;33mCtrl + t[0m      Fuzzy file finder                    │
+│  [1;33mcmd + =/- /0[0m      Font size +/-/reset              │  [1;33malt + c[0m       Fuzzy cd into directory              │
+│  [1;33mcmd + t[0m           New tab                          │  [1;33mTab[0m           Autocomplete (fzf-tab)               │
+│  [1;33mcmd + w[0m           Close tab/pane                   │  [1;33mCtrl + a/e[0m    Beginning / End of line              │
+│  [1;33mcmd + shift + [][0m  Previous/next tab                │  [1;33mCtrl + w[0m      Delete word backward                 │
+│  [1;33mcmd + 1-9[0m         Switch to tab 1-9                │  [1;33mCtrl + u/k[0m    Delete to beginning / end            │
+│  [1;33mcmd + d[0m           Split right                      │  [1;33mCtrl + l[0m      Clear screen                         │
+│  [1;33mcmd + shift + d[0m   Split down                       │  [1;33m!![0m            Repeat last command                  │
+│  [1;33mcmd+shift+arrows[0m  Navigate splits                  │  [1;33m!$[0m            Last argument of prev command        │
+│  [1;33mctrl + shift + z[0m  Zoom pane (toggle)               │                                                     │
+│  [1;33mcmd + k[0m           Clear scrollback                 │                                                     │
+│  [1;33mcmd + f[0m           Search                           │                                                     │
+│  [1;33mcmd + left/right[0m  Beginning / End of line          │                                                     │
+│  [1;33mcmd + up/down[0m     Scroll to top / bottom           │                                                     │
+│  [1;33mcmd + shift + u[0m   Quick select (URLs, paths)       │                                                     │
+│  [1;33mctrl+shift+x[0m      Copy mode (vim-like select)      │                                                     │
+│  [1;33mcmd + shift + p[0m   Command palette                  │                                                     │
 └─────────────────────────────────────────────────────┴─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┬─────────────────────────────────────────────────────┐
