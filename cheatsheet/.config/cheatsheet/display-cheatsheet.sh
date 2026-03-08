@@ -25,7 +25,6 @@ done
 
 CONFIG_DIR="${HOME}/.config/cheatsheet"
 CHEATSHEET_MODE="${1:-developer}"
-LESSKEY_SRC=""
 
 case "$CHEATSHEET_MODE" in
     hacker)
@@ -38,20 +37,8 @@ esac
 
 [[ ! -f "$CHEATSHEET_FILE" ]] && CHEATSHEET_FILE="${CONFIG_DIR}/keybinds-hacker.md"
 
-LESSKEY_SRC=$(mktemp "${TMPDIR:-/tmp}/cheatsheet-lesskey.XXXXXX" 2>/dev/null || printf '')
-if [[ -n "$LESSKEY_SRC" ]]; then
-    printf '%s\n' '#command' '\e quit' > "$LESSKEY_SRC"
-    trap 'rm -f "$LESSKEY_SRC"' EXIT
-fi
-
 sed -e 's/\[0m/\x1b[0m/g' \
     -e 's/\[1;33m/\x1b[1;33m/g' \
     -e 's/\[1;35m/\x1b[1;35m/g' \
     -e 's/\[1;36m/\x1b[1;36m/g' \
-    "$CHEATSHEET_FILE" | {
-        if [[ -n "$LESSKEY_SRC" ]]; then
-            LESSKEYIN="$LESSKEY_SRC" less -R
-        else
-            less -R
-        fi
-    }
+    "$CHEATSHEET_FILE" | less -R
