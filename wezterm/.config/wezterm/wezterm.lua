@@ -113,6 +113,31 @@ config.keys = {
 }
 
 -- =============================================================================
+-- Hyperlinks — Cmd+Click to open URLs in browser
+-- =============================================================================
+config.mouse_bindings = {
+  -- Cmd+Click to open links
+  {
+    event = { Up = { streak = 1, button = "Left" } },
+    mods = "CMD",
+    action = act.OpenLinkAtMouseCursor,
+  },
+  -- Right-click: copy if text selected, paste if not
+  {
+    event = { Up = { streak = 1, button = "Right" } },
+    mods = "NONE",
+    action = wezterm.action_callback(function(window, pane)
+      local sel = window:get_selection_text_for_pane(pane)
+      if sel and sel ~= "" then
+        window:perform_action(act.CopyTo("ClipboardAndPrimarySelection"), pane)
+      else
+        window:perform_action(act.PasteFrom("Clipboard"), pane)
+      end
+    end),
+  },
+}
+
+-- =============================================================================
 -- Input
 -- =============================================================================
 config.send_composed_key_when_left_alt_is_pressed = true
