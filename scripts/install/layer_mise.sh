@@ -75,6 +75,10 @@ run_layer_mise() {
         return 1
     fi
 
+    # Always prune old versions (removes versions not referenced by any config)
+    echo "Pruning old mise versions..."
+    mise prune -y 2>/dev/null || true
+
     if [[ "$CLEAN_MODE" == true ]]; then
         echo "Cleaning up mise tools not in selected profiles..."
 
@@ -107,9 +111,5 @@ run_layer_mise() {
 ${tool}|-"
             fi
         done
-
-        # Prune old versions
-        echo "Pruning old mise runtimes..."
-        mise prune -y
     fi
 }
