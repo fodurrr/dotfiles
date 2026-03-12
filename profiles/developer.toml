@@ -44,7 +44,7 @@ apps = ["font-jetbrains-mono-nerd-font"]
 
 # CLI
 [macos.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "pitchfork", "tailscale", "restic", "mole"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "pitchfork", "hcloud", "tailscale", "restic", "mole"]
 
 # RUNTIMES
 [macos.runtimes]
@@ -64,7 +64,7 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "pitchfork", "tailscale", "restic"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "pitchfork", "hcloud", "tailscale", "restic"]
 
 # RUNTIMES
 [linux.runtimes]

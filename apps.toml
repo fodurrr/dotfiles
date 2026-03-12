@@ -99,7 +99,9 @@ description = "Microsoft web browser"
 # ─────────────────────────────────────────────────────────────────────────────
 # AI TOOLS
 # ─────────────────────────────────────────────────────────────────────────────
-# Daily/Developer users: Desktop GUI apps
+# Claude: Desktop GUI + CLI are separate installs; both may be needed.
+# claude-desktop = macOS GUI app (Homebrew cask "claude")
+# claude-cli     = cross-platform CLI tool (mise "claude")
 [apps.claude-desktop]
 type = "cask"
 name = "claude"
@@ -131,12 +133,11 @@ category = "ai"
 platform = ["macos"]
 description = "OpenCode AI assistant (GUI)"
 
-# Hacker users: CLI tools only
+# CLI AI tools (used by both developer and hacker profiles)
 [apps.claude-cli]
 type = "mise"
 name = "claude"
 bin = "claude"
-enforce_single_source = true
 version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
@@ -146,7 +147,6 @@ description = "Claude AI assistant (CLI)"
 type = "mise"
 name = "opencode"
 bin = "opencode"
-enforce_single_source = true
 version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
@@ -156,7 +156,6 @@ description = "OpenCode AI assistant (CLI)"
 type = "mise"
 name = "codex"
 bin = "codex"
-enforce_single_source = true
 version = "latest"
 category = "ai"
 platform = ["linux"]
@@ -553,6 +552,13 @@ type = "mise"
 category = "cli"
 platform = ["macos", "linux"]
 description = "Terminal Git UI"
+
+[apps.hcloud]
+type = "mise"
+version = "latest"
+category = "cli"
+platform = ["macos", "linux"]
+description = "Hetzner Cloud CLI"
 
 [apps.tailscale]
 type = "brew"

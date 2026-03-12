@@ -5,6 +5,7 @@
 # Track installed apps to avoid duplicates (for dependency resolution)
 # Using string-based tracking for bash 3.2 compatibility (macOS default)
 INSTALLED_APPS=""
+FAILED_APPS=""
 MISE_REGISTRY_KEYS=""
 MISE_REGISTRY_LOADED=false
 
@@ -207,11 +208,14 @@ validate_mise_single_source() {
 install_mise_app() {
     local app_key="$1"
 
-    # Skip if already processed this session (pipe delimiters prevent partial matches)
+    # Skip if already processed successfully (pipe delimiters prevent partial matches)
     [[ "$INSTALLED_APPS" == *"|$app_key|"* ]] && return 0
+    # Don't retry known failures
+    [[ "$FAILED_APPS" == *"|$app_key|"* ]] && return 1
 
     if ! command -v mise >/dev/null 2>&1; then
         log_error "mise is not installed but required for $app_key"
+        FAILED_APPS="${FAILED_APPS}|${app_key}|"
         return 1
     fi
 
@@ -221,12 +225,12 @@ install_mise_app() {
     if [[ -n "$dep" ]]; then
         if ! install_mise_app "$dep"; then
             log_error "Failed dependency '$dep' required by '$app_key'"
+            FAILED_APPS="${FAILED_APPS}|${app_key}|"
             return 1
         fi
+        # Refresh PATH so dependency binaries are available for build
+        eval "$(mise hook-env -s bash 2>/dev/null)" || true
     fi
-
-    # Mark as processed
-    INSTALLED_APPS="${INSTALLED_APPS}|${app_key}|"
 
     # Get app details
     local name
@@ -238,6 +242,7 @@ install_mise_app() {
     if ! mise_registry_has_tool "$name"; then
         log_error "Mise registry does not contain tool: $name (app: $app_key)"
         log_error "Choose a package-manager install source for this app instead of type=mise"
+        FAILED_APPS="${FAILED_APPS}|${app_key}|"
         return 1
     fi
 
@@ -250,11 +255,13 @@ install_mise_app() {
             log_info "Refreshing $name@latest (currently $installed_version)..."
             should_install=true
         elif [[ "$version" == "lts" || "$version" == "stable" ]]; then
-            # For "lts" or "stable", if any version is installed, keep current behavior.
-            add_to_summary SKIPPED "$name" "$app_key"
-            return 0
+            # Always attempt lts/stable so upgrades are picked up.
+            # mise install is idempotent — if already current, it returns quickly.
+            log_info "Refreshing $name@$version (currently $installed_version)..."
+            should_install=true
         elif [[ "$installed_version" == "$version"* ]]; then
             # Prefix match: "3.14.2" starts with "3.14" -> skip.
+            INSTALLED_APPS="${INSTALLED_APPS}|${app_key}|"
             add_to_summary SKIPPED "$name" "$app_key"
             return 0
         else
@@ -267,24 +274,60 @@ install_mise_app() {
     fi
 
     if [[ "$should_install" != true ]]; then
+        INSTALLED_APPS="${INSTALLED_APPS}|${app_key}|"
         return 0
     fi
 
     # Capture both stdout and stderr to show errors on failure.
     local install_output
     if install_output=$(mise install "$name@$version" 2>&1); then
+        # Mark as successfully processed AFTER install succeeds
+        INSTALLED_APPS="${INSTALLED_APPS}|${app_key}|"
         local post_install_version
         post_install_version=$(get_mise_installed_version "$name")
         record_mise_install_summary "$app_key" "$name" "$installed_version" "$post_install_version"
         return 0
     else
         log_error "Failed to install $name"
+        FAILED_APPS="${FAILED_APPS}|${app_key}|"
         # Show first line of error to help debugging.
         local error_line
         error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
         [[ -n "$error_line" ]] && echo "      $error_line"
         return 1
     fi
+}
+
+# Add a mise tool to config file if not already added (tracks via added_tools string)
+# Usage: add_mise_tool_to_config <app_key> <config_file>
+# Requires MISE_CONFIG_ADDED_TOOLS to be initialized as "|"
+MISE_CONFIG_ADDED_TOOLS="|"
+
+add_mise_tool_to_config() {
+    local app_key="$1"
+    local config_file="$2"
+
+    # Skip if already added
+    [[ "$MISE_CONFIG_ADDED_TOOLS" == *"|$app_key|"* ]] && return 0
+
+    local type
+    type=$(get_app_prop "$app_key" "type")
+    [[ "$type" != "mise" ]] && return 0
+
+    # Resolve dependencies first (ensures erlang appears before elixir, etc.)
+    local dep
+    dep=$(get_app_prop "$app_key" "depends_on")
+    if [[ -n "$dep" ]]; then
+        add_mise_tool_to_config "$dep" "$config_file"
+    fi
+
+    local name
+    name=$(get_mise_app_tool_name "$app_key")
+    local version
+    version=$(get_app_prop "$app_key" "version")
+    [[ -z "$version" ]] && version="latest"
+    echo "$name = \"$version\"" >> "$config_file"
+    MISE_CONFIG_ADDED_TOOLS="${MISE_CONFIG_ADDED_TOOLS}${app_key}|"
 }
 
 # Generate mise config based on selected profiles
@@ -308,19 +351,12 @@ generate_mise_config() {
 EOF_MISE
 
     # Add tools from apps.toml that match selected profiles and type=mise
+    # Dependencies are resolved recursively (e.g., elixir depends_on erlang)
+    MISE_CONFIG_ADDED_TOOLS="|"
     local app_key
     for app_key in $(get_all_apps); do
         if app_selected_for_install "$app_key"; then
-            local type
-            type=$(get_app_prop "$app_key" "type")
-            if [[ "$type" == "mise" ]]; then
-                local name
-                name=$(get_mise_app_tool_name "$app_key")
-                local version
-                version=$(get_app_prop "$app_key" "version")
-                [[ -z "$version" ]] && version="latest"
-                echo "$name = \"$version\"" >> "$config_file"
-            fi
+            add_mise_tool_to_config "$app_key" "$config_file"
         fi
     done
 

@@ -10,6 +10,7 @@ run_layer_stow() {
 
     cd "$DOTFILES_DIR"
 
+    local stow_had_errors=false
     local app_key
     for app_key in $(get_all_apps); do
         if app_selected_for_install "$app_key"; then
@@ -21,8 +22,8 @@ run_layer_stow() {
                 if [[ -d "$package" ]]; then
                     log_success "Linking $package config..."
                     if ! stow_enforce "$package"; then
-                        log_error "Failed to link stow package: $package"
-                        return 1
+                        log_error "Failed to link stow package: $package (continuing)"
+                        stow_had_errors=true
                     fi
                 else
                     log_warning "Stow package directory not found: $package/"
@@ -58,7 +59,7 @@ run_layer_stow() {
         if [[ ! -r "$HOME/.zshrc" ]]; then
             log_error "zsh config expected but missing: $HOME/.zshrc"
             log_error "Re-run install after resolving stow conflicts for zsh package"
-            return 1
+            stow_had_errors=true
         fi
     fi
 
@@ -70,5 +71,9 @@ run_layer_stow() {
             "$HOME/.config/tmux/plugins/tpm/bin/install_plugins" >/dev/null 2>&1 || true
             log_success "Tmux plugins installed"
         fi
+    fi
+
+    if [[ "$stow_had_errors" == true ]]; then
+        return 1
     fi
 }

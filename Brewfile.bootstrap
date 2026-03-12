@@ -17,6 +17,12 @@ brew "sheldon"   # Zsh plugin manager
 brew "yq"        # TOML/YAML/JSON parser (reads apps.toml)
 brew "gum"       # Interactive CLI menus (profile selection)
 
+# --- Build Dependencies (required for compiling runtimes via mise) ---
+brew "autoconf"  # Erlang/OTP build dependency
+brew "openssl@3" # Erlang, Python, Ruby build dependency
+brew "wxwidgets" # Erlang wx module (optional but avoids build warnings)
+brew "pkg-config" # Build tool for locating libraries
+
 # --- Utilities ---
 brew "mas"       # Mac App Store CLI (for Layer 4)
 brew "sevenzip"  # Archive tool

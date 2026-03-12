@@ -135,12 +135,13 @@ run_layer_homebrew() {
                 ;;
             missing|unknown)
                 log_success "Installing $name..."
+                local cask_install_ok=false
                 if [[ "$name" == "stretchly" ]]; then
-                    brew install --cask --no-quarantine "$name"
+                    brew install --cask --no-quarantine "$name" && cask_install_ok=true
                 else
-                    brew install --cask "$name"
+                    brew install --cask "$name" && cask_install_ok=true
                 fi
-                if [[ $? -eq 0 ]]; then
+                if [[ "$cask_install_ok" == true ]]; then
                     add_to_summary INSTALLED "$name" "$app_key"
                     local service
                     service=$(get_app_prop "$app_key" "service")

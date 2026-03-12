@@ -14,7 +14,7 @@ apps = ["font-jetbrains-mono-nerd-font"]
 
 # CLI
 [macos.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "hcloud", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
 
 # EDITORS
 [linux.editors]
@@ -26,5 +26,5 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "hcloud", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
 

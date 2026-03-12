@@ -115,19 +115,22 @@ fi
 run_alacarte_removals
 
 # Platform-aware layer selection
+# NOTE: Each layer is wrapped with || to prevent set -e from killing the script.
+# This ensures stow ALWAYS runs (so .zshrc gets linked) even if earlier layers fail.
+INSTALL_HAD_ERRORS=false
 PLATFORM=$(detect_platform)
 if [[ "$PLATFORM" == "macos" ]]; then
-    run_layer_homebrew
+    run_layer_homebrew || { log_warning "Homebrew layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
 elif [[ "$PLATFORM" == "linux" ]]; then
-    run_layer_linux
+    run_layer_linux || { log_warning "Linux package layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
 else
     log_warning "Unsupported platform '$PLATFORM'; skipping package layer"
 fi
 
 generate_mise_config
-run_layer_stow
-run_layer_mise
-run_layer_curl
+run_layer_stow || { log_warning "Stow layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+run_layer_mise || { log_warning "Mise layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+run_layer_curl || { log_warning "Curl layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
 configure_raycast
 configure_terminal
 show_summary_and_reload
