@@ -102,11 +102,7 @@ run_layer_homebrew() {
             managed)
                 if brew outdated --cask 2>/dev/null | grep -q "^${name}"; then
                     log_info "$name outdated, upgrading..."
-                    if [[ "$name" == "stretchly" ]]; then
-                        brew upgrade --cask --no-quarantine "$name" || log_warning "Failed to upgrade $name"
-                    else
-                        brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
-                    fi
+                    brew upgrade --cask "$name" || log_warning "Failed to upgrade $name"
                     add_to_summary INSTALLED "$name" "$app_key"
                 else
                     add_to_summary SKIPPED "$name" "$app_key"
@@ -136,11 +132,7 @@ run_layer_homebrew() {
             missing|unknown)
                 log_success "Installing $name..."
                 local cask_install_ok=false
-                if [[ "$name" == "stretchly" ]]; then
-                    brew install --cask --no-quarantine "$name" && cask_install_ok=true
-                else
-                    brew install --cask "$name" && cask_install_ok=true
-                fi
+                brew install --cask "$name" && cask_install_ok=true
                 if [[ "$cask_install_ok" == true ]]; then
                     add_to_summary INSTALLED "$name" "$app_key"
                     local service
