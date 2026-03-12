@@ -32,7 +32,7 @@ apps = ["sketchybar-config", "raycast-config", "git-config", "zsh-config", "shel
 
 # PRODUCTIVITY
 [macos.productivity]
-apps = ["raycast", "aqua-voice", "keycastr", "bettershot", "kap", "stretchly"]
+apps = ["raycast", "aqua-voice", "keycastr", "bettershot", "kap"]
 
 # DISPLAY
 [macos.display]

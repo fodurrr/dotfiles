@@ -292,12 +292,6 @@ category = "productivity"
 platform = ["macos"]
 description = "Open-source screen recorder"
 
-[apps.stretchly]
-type = "cask"
-category = "productivity"
-platform = ["macos"]
-description = "Break reminder and wellness app"
-
 # Alternative dictation tools - uncomment if preferred over Aqua Voice
 # [apps.superwhisper]
 # type = "cask"

@@ -24,7 +24,7 @@ apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starshi
 
 # PRODUCTIVITY
 [macos.productivity]
-apps = ["raycast", "obsidian", "tana", "aqua-voice", "keycastr", "bettershot", "kap", "stretchly"]
+apps = ["raycast", "obsidian", "tana", "aqua-voice", "keycastr", "bettershot", "kap"]
 
 # DISPLAY
 [macos.display]

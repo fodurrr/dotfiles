@@ -20,7 +20,7 @@ apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starshi
 
 # PRODUCTIVITY
 [macos.productivity]
-apps = ["raycast", "obsidian", "bitwarden", "bettershot", "kap", "stretchly"]
+apps = ["raycast", "obsidian", "bitwarden", "bettershot", "kap"]
 
 # CLOUD STORAGE
 [macos.cloud_storage]

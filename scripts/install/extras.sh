@@ -104,11 +104,7 @@ run_extras_mode() {
                 tap=$(get_app_prop "$app_key" "tap")
                 [[ -n "$tap" ]] && brew tap "$tap" 2>/dev/null
                 log_success "Installing $name (cask)..."
-                if [[ "$name" == "stretchly" ]]; then
-                    brew install --cask --no-quarantine "$name"
-                else
-                    brew install --cask "$name"
-                fi
+                brew install --cask "$name"
                 if [[ $? -eq 0 ]]; then
                     add_to_summary INSTALLED "$name" "$app_key"
                     # Start service if configured
