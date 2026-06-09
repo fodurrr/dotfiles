@@ -175,6 +175,13 @@ category = "ai"
 platform = ["macos"]
 description = "Codex adapter for ACP-compatible clients (Zed integration)"
 
+[apps.codex-xpando]
+type = "curl"
+bin = "codex-xpando"
+category = "ai"
+platform = ["macos", "linux"]
+description = "Codex launcher preserving current cwd with generated ~/dev/xpando writable roots"
+
 [apps.gemini-cli]
 type = "mise"
 bin = "gemini"

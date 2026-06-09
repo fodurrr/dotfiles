@@ -18,4 +18,4 @@ network=(
 
 sketchybar --add item network right \
     --set network "${network[@]}" \
-    --subscribe network wifi_change system_woke
+    --subscribe network wifi_change system_woke network_change

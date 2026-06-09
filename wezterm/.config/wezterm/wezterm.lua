@@ -110,6 +110,11 @@ config.keys = {
 
   -- Shift+Enter → newline in Claude Code (CSI u encoding for modified Enter)
   { key = "Enter", mods = "SHIFT", action = act.SendString("\x1b[13;2u") },
+
+  -- Let Pi receive Ctrl+V directly for clipboard image paste.
+  -- Cmd+V remains WezTerm/macOS text paste.
+  { key = "V", mods = "CTRL", action = act.DisableDefaultAssignment },
+
 }
 
 -- =============================================================================

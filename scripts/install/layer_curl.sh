@@ -75,9 +75,30 @@ install_sheldon_linux_binary() {
     return 0
 }
 
+install_codex_xpando_launcher() {
+    local source_file="$DOTFILES_DIR/scripts/local-bin/codex-xpando"
+    local bin_dir="$HOME/.local/bin"
+
+    if [[ ! -f "$source_file" ]]; then
+        log_error "codex-xpando launcher source missing: $source_file"
+        return 1
+    fi
+
+    mkdir -p "$bin_dir"
+    if ! cp "$source_file" "$bin_dir/codex-xpando"; then
+        log_error "Failed to copy codex-xpando launcher to $bin_dir"
+        return 1
+    fi
+    chmod +x "$bin_dir/codex-xpando"
+    export PATH="$bin_dir:$PATH"
+}
+
 run_curl_installer() {
     local app_key="$1"
     case "$app_key" in
+        codex-xpando)
+            install_codex_xpando_launcher
+            ;;
         sheldon-linux)
             install_sheldon_linux_binary
             ;;
@@ -133,6 +154,12 @@ run_layer_curl() {
             if [[ "$type" == "curl" ]]; then
                 CURL_TOOLS_FOUND=true
                 case "$app_key" in
+                    codex-xpando)
+                        if ! install_or_update_curl_tool "$app_key" "codex-xpando" "codex-xpando"; then
+                            failed_count=$((failed_count + 1))
+                            failed_tools="${failed_tools} codex-xpando"
+                        fi
+                        ;;
                     sheldon-linux)
                         if ! install_or_update_curl_tool "$app_key" "sheldon" "sheldon"; then
                             failed_count=$((failed_count + 1))

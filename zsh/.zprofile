@@ -13,3 +13,6 @@ command -v mise &>/dev/null && eval "$(mise activate zsh)"
 # Pitchfork (dev daemon supervisor — auto-start/stop pitchfork.toml daemons on cd)
 # Reference: xpando-standards/process/pitchfork-process-supervision.md (AI Layer Phase 7c)
 command -v pitchfork &>/dev/null && eval "$(pitchfork activate zsh)"
+
+# Hermes Agent — ensure ~/.local/bin is on PATH
+export PATH="$HOME/.local/bin:$PATH"

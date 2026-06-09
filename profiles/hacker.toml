@@ -7,7 +7,7 @@ apps = ["wezterm"]
 
 # EDITORS
 [macos.editors]
-apps = ["zed", "visual-studio-code", "antigravity", "helix"]
+apps = ["zed", "visual-studio-code","helix"]
 
 # BROWSERS
 [macos.browsers]
@@ -15,7 +15,7 @@ apps = ["firefox"]
 
 # AI
 [macos.ai]
-apps = ["codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "codex-cli-macos", "codex-acp", "gemini-cli"]
+apps = ["codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "codex-cli-macos", "codex-acp", "codex-xpando", "gemini-cli"]
 
 # WINDOW MANAGEMENT
 [macos.window_management]
@@ -40,11 +40,11 @@ apps = ["betterdisplay"]
 
 # SECURITY
 [macos.security]
-apps = ["sandvault"]
+# apps = ["sandvault"]
 
 # UTILITIES
 [macos.utilities]
-apps = ["keymapp", "thaw"]
+apps = ["keymapp"]
 
 # FONTS
 [macos.fonts]
@@ -64,7 +64,7 @@ apps = ["helix"]
 
 # AI
 [linux.ai]
-apps = ["claude-cli", "opencode-cli", "codex-cli", "gemini-cli"]
+apps = ["claude-cli", "opencode-cli", "codex-cli", "codex-xpando", "gemini-cli"]
 
 # CONFIG
 [linux.config]
@@ -77,4 +77,3 @@ apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh",
 # RUNTIMES
 [linux.runtimes]
 apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir"]
-

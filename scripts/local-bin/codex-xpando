@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+xpando_root="${CODEX_XPANDO_ROOT:-$HOME/dev/xpando}"
+
+toml_quote() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  print -r -- "\"$value\""
+}
+
+writable_roots="["
+separator=""
+
+if [[ -d "$xpando_root" ]]; then
+  for dir in "$xpando_root" "$xpando_root"/*(/N); do
+    writable_roots+="${separator}$(toml_quote "$dir")"
+    separator=", "
+  done
+fi
+writable_roots+="]"
+
+exec codex \
+  --cd "$PWD" \
+  --sandbox workspace-write \
+  -c "sandbox_workspace_write.writable_roots=$writable_roots" \
+  --ask-for-approval on-request \
+  "$@"

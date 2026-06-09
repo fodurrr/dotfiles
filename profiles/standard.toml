@@ -15,12 +15,12 @@ apps = ["claude-desktop", "chatgpt-desktop"]
 
 # CONFIG
 [macos.config]
-# "ghostty-config" commented out — see terminals section
-apps = ["raycast-config", "git-config", "zsh-config", "sheldon-config", "starship-config", "wezterm-config", "terminal-config", "mise-config"]
+# "raycast-config","ghostty-config" commented out — see terminals section
+apps = [ "git-config", "zsh-config", "sheldon-config", "starship-config", "wezterm-config", "terminal-config", "mise-config"]
 
 # PRODUCTIVITY
 [macos.productivity]
-apps = ["raycast", "obsidian", "bitwarden", "bettershot", "kap"]
+apps = ["obsidian", "bitwarden", "bettershot", "kap"]
 
 # CLOUD STORAGE
 [macos.cloud_storage]
@@ -61,4 +61,3 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 # CLI
 [linux.cli]
 apps = ["starship", "eza", "bat", "fzf", "sheldon-linux"]
-
