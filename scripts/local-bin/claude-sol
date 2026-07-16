@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# claude-sol — run the native Claude Code harness through claude-code-proxy.
+#
+# Direct Anthropic bypass: plain `claude`
+# OpenAI subscription route: `claude-sol`
+#
+# The process-scoped environment below does not modify ~/.claude/settings.json,
+# the parent shell, or the native Claude login.
+set -euo pipefail
+
+CLAUDE_SOL_VERSION="1.0.0"
+PROXY_URL="${CLAUDE_SOL_PROXY_URL:-http://127.0.0.1:18765}"
+PROXY_BIN="${CLAUDE_CODE_PROXY_BIN:-}"
+CLAUDE_BIN="${CLAUDE_BIN:-}"
+
+case "${1:-}" in
+    -v|--version)
+        printf 'claude-sol %s\n' "$CLAUDE_SOL_VERSION"
+        exit 0
+        ;;
+esac
+
+if [[ -z "$PROXY_BIN" ]]; then
+    PROXY_BIN="$(command -v claude-code-proxy 2>/dev/null || true)"
+fi
+
+if [[ -z "$PROXY_BIN" ]]; then
+    printf '%s\n' \
+        "claude-sol: claude-code-proxy is not installed." \
+        "Install it with: brew install raine/claude-code-proxy/claude-code-proxy" >&2
+    exit 1
+fi
+
+if ! "$PROXY_BIN" codex auth status >/dev/null 2>&1; then
+    printf '%s\n' \
+        "claude-sol: no valid OpenAI Codex login was found." \
+        "Authenticate with: claude-code-proxy codex auth login" >&2
+    exit 1
+fi
+
+if ! /usr/bin/curl --fail --silent --max-time 1 "$PROXY_URL/healthz" >/dev/null; then
+    printf '%s\n' \
+        "claude-sol: the local proxy is not running at $PROXY_URL." \
+        "Start it with: claude-code-proxy serve" >&2
+    exit 1
+fi
+
+if [[ -z "$CLAUDE_BIN" ]]; then
+    CLAUDE_BIN="$(command -v claude 2>/dev/null || true)"
+fi
+
+if [[ -z "$CLAUDE_BIN" ]]; then
+    printf '%s\n' "claude-sol: the native Claude Code executable was not found." >&2
+    exit 1
+fi
+
+exec /usr/bin/env \
+    -u ANTHROPIC_API_KEY \
+    ANTHROPIC_BASE_URL="$PROXY_URL" \
+    ANTHROPIC_AUTH_TOKEN=unused \
+    ANTHROPIC_MODEL='gpt-5.6-sol[1m]' \
+    ANTHROPIC_DEFAULT_OPUS_MODEL='gpt-5.6-sol[1m]' \
+    ANTHROPIC_DEFAULT_SONNET_MODEL='gpt-5.6-terra[1m]' \
+    ANTHROPIC_DEFAULT_HAIKU_MODEL='gpt-5.6-luna[1m]' \
+    CLAUDE_CODE_AUTO_COMPACT_WINDOW=272000 \
+    CLAUDE_CODE_EFFORT_LEVEL=high \
+    CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
+    CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1 \
+    CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1 \
+    "$CLAUDE_BIN" "$@"
