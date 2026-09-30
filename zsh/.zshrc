@@ -4,11 +4,13 @@
 # Keep PATH unique while preserving first-entry precedence.
 typeset -U path PATH
 
-# Ensure Homebrew and standard paths are first.
+# Ensure hardened stubs resolve first, then Homebrew.
+# /usr/local/bin MUST precede /opt/homebrew/bin so Automic Vault stubs
+# (e.g. /usr/local/bin/brew) win over the real Homebrew binaries.
 path=(
+    /usr/local/bin
     /opt/homebrew/bin
     /opt/homebrew/sbin
-    /usr/local/bin
     "$HOME/.local/bin"
     $path
 )
@@ -123,11 +125,6 @@ command -v sheldon &>/dev/null && eval "$(sheldon source)" || echo "⚠️  shel
 # =============================================================================
 # 4. Tool Initializations
 # =============================================================================
-# Pitchfork (dev daemon supervisor — auto-start/stop pitchfork.toml daemons on cd)
-# Reference: xpando-standards/process/pitchfork-process-supervision.md (AI Layer Phase 7c)
-# Must also live in ~/.zprofile so non-interactive login shells see it.
-command -v pitchfork &>/dev/null && eval "$(pitchfork activate zsh)" || echo "⚠️  pitchfork not found" >&2
-
 # Starship Prompt
 command -v starship &>/dev/null && eval "$(starship init zsh)" || echo "⚠️  starship not found" >&2
 
@@ -218,3 +215,6 @@ export PATH="$PATH:/Users/fodurrr/.lmstudio/bin"
 
 # Hermes Agent — ensure ~/.local/bin is on PATH
 export PATH="$HOME/.local/bin:$PATH"
+
+# Global AI agent defaults (2026-09-18).
+[[ -r "$HOME/.config/ai-agent-defaults.zsh" ]] && source "$HOME/.config/ai-agent-defaults.zsh"
