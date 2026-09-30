@@ -145,7 +145,10 @@ export FZF_DEFAULT_OPTS=" \
 # 5. Aliases
 # =============================================================================
 # File System (using eza instead of ls)
-if command -v eza &>/dev/null; then
+# Only when output goes to a terminal: agent shells (Claude Code, Codex) snapshot
+# these aliases from a shell whose output is not a terminal, and `eza --git`
+# hung there for hours (2026-09-30). A shell started without a terminal keeps ls.
+if command -v eza &>/dev/null && [[ -t 1 ]]; then
     alias ls='eza --icons --git'
     alias l='eza --icons --git'
     alias la='eza --long --all --header --icons --git'
