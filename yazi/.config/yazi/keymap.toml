@@ -1,0 +1,6 @@
+# Personal Google Drive shortcut on macOS: g, then Shift+D.
+[[mgr.prepend_keymap]]
+on = ["g", "D"]
+run = "cd ~/Library/CloudStorage/GoogleDrive-fodurrr@gmail.com"
+desc = "Open personal Google Drive"
+for = "macos"
