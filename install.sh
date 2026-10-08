@@ -98,6 +98,7 @@ source "$DOTFILES_DIR/scripts/install/layer_linux.sh"
 source "$DOTFILES_DIR/scripts/install/layer_stow.sh"
 source "$DOTFILES_DIR/scripts/install/layer_mise.sh"
 source "$DOTFILES_DIR/scripts/install/layer_curl.sh"
+source "$DOTFILES_DIR/scripts/install/layer_linux_extra.sh"
 source "$DOTFILES_DIR/scripts/install/raycast.sh"
 source "$DOTFILES_DIR/scripts/install/terminal.sh"
 source "$DOTFILES_DIR/scripts/install/summary.sh"
@@ -135,6 +136,9 @@ generate_mise_config
 run_layer_stow || { log_warning "Stow layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
 run_layer_mise || { log_warning "Mise layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
 run_layer_curl || { log_warning "Curl layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+if [[ "$PLATFORM" == "linux" ]]; then
+    run_layer_linux_extra || { log_warning "Linux extra layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+fi
 configure_raycast
 configure_terminal
 show_summary_and_reload

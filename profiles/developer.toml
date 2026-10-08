@@ -59,16 +59,20 @@ apps = ["helix"]
 
 # AI
 [linux.ai]
-apps = ["claude-cli", "opencode-cli", "pi-cli", "codex-cli", "codex-xpando", "gemini-cli"]
+apps = ["claude-cli", "codex-cli", "pi-cli", "opencode-cli", "gemini-cli", "grok-cli", "codex-xpando", "herdr"]
 
 # CONFIG
 [linux.config]
-apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "helix-config", "cheatsheet-config", "keyboard-layout-config"]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+
+# FONTS
+[linux.fonts]
+apps = ["jetbrains-mono-nerd-font-linux"]
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "hcloud", "tailscale", "restic"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp"]
 
 # RUNTIMES
 [linux.runtimes]
-apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir"]
+apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "dexter"]

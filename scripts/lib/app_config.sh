@@ -229,7 +229,7 @@ is_installable_app() {
     local type
     type=$(get_app_prop "$app_key" "type")
     case "$type" in
-        cask|brew|mise|curl) return 0 ;;
+        cask|brew|mise|curl|font) return 0 ;;
         *) return 1 ;;
     esac
 }

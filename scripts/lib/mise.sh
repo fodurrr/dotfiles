@@ -239,7 +239,22 @@ install_mise_app() {
     version=$(get_app_prop "$app_key" "version")
     [[ -z "$version" ]] && version="latest"
 
-    if ! mise_registry_has_tool "$name"; then
+    # Tools outside the mise registry: either an asdf-style plugin (plugin_url)
+    # or an explicit backend prefix in the name (for example "aqua:owner/repo").
+    local plugin_url
+    plugin_url=$(get_app_prop "$app_key" "plugin_url")
+    if [[ -n "$plugin_url" ]]; then
+        if ! mise plugins ls 2>/dev/null | grep -Fxq "$name"; then
+            log_info "Adding mise plugin $name ($plugin_url)..."
+            if ! mise plugins install "$name" "$plugin_url" >/dev/null 2>&1; then
+                log_error "Failed to add mise plugin for $name"
+                FAILED_APPS="${FAILED_APPS}|${app_key}|"
+                return 1
+            fi
+        fi
+    fi
+
+    if [[ -z "$plugin_url" && "$name" != *:* ]] && ! mise_registry_has_tool "$name"; then
         log_error "Mise registry does not contain tool: $name (app: $app_key)"
         log_error "Choose a package-manager install source for this app instead of type=mise"
         FAILED_APPS="${FAILED_APPS}|${app_key}|"
@@ -326,7 +341,7 @@ add_mise_tool_to_config() {
     local version
     version=$(get_app_prop "$app_key" "version")
     [[ -z "$version" ]] && version="latest"
-    echo "$name = \"$version\"" >> "$config_file"
+    echo "\"$name\" = \"$version\"" >> "$config_file"
     MISE_CONFIG_ADDED_TOOLS="${MISE_CONFIG_ADDED_TOOLS}${app_key}|"
 }
 

@@ -406,10 +406,10 @@ test_curl_registry_scope() {
         fi
     done
 
-    if [[ "$curl_count" -eq 1 && "$curl_keys" == "sheldon-linux" ]]; then
-        pass "only sheldon-linux should be configured as curl app"
+    if [[ "$curl_count" -eq 2 && "$curl_keys" == "codex-xpando, sheldon-linux" ]]; then
+        pass "only codex-xpando and sheldon-linux should be configured as curl apps"
     else
-        fail "only sheldon-linux should be configured as curl app (found: ${curl_keys:-none})"
+        fail "only codex-xpando and sheldon-linux should be configured as curl apps (found: ${curl_keys:-none})"
     fi
 }
 

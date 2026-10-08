@@ -156,7 +156,7 @@ description = "OpenCode AI assistant (CLI)"
 type = "mise"
 name = "pi"
 bin = "pi"
-version = "0.79.10"
+version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
 description = "Pi AI coding assistant (CLI)"
@@ -759,3 +759,79 @@ package = "keyboard-layout"
 category = "config"
 platform = ["macos", "linux"]
 description = "Voyager keyboard layout viewer"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ADDITIONAL CLI TOOLS (mise)
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.uv]
+type = "mise"
+version = "latest"
+category = "cli"
+platform = ["macos", "linux"]
+description = "Fast Python package and project manager"
+
+[apps.yt-dlp]
+type = "mise"
+version = "latest"
+category = "cli"
+platform = ["macos", "linux"]
+description = "Video and audio downloader"
+
+[apps.ffmpeg]
+type = "brew"
+category = "cli"
+platform = ["macos", "linux"]
+linux_name = "ffmpeg"
+description = "Audio and video converter"
+
+[apps.tea]
+type = "mise"
+name = "aqua:gitea.com/gitea/tea"
+bin = "tea"
+version = "0.15.0"
+category = "cli"
+platform = ["macos", "linux"]
+description = "Forgejo and Gitea CLI"
+
+[apps.infisical]
+type = "mise"
+version = "latest"
+category = "cli"
+platform = ["macos", "linux"]
+description = "Infisical secrets CLI"
+
+[apps.herdr]
+type = "mise"
+version = "0.9.3"
+category = "ai"
+platform = ["macos", "linux"]
+description = "Agent session server"
+
+[apps.grok-cli]
+type = "mise"
+name = "grok"
+bin = "grok"
+version = "latest"
+category = "ai"
+platform = ["linux"]
+description = "Grok CLI"
+
+[apps.dexter]
+type = "mise"
+version = "latest"
+plugin_url = "https://github.com/remoteoss/dexter.git"
+category = "runtimes"
+platform = ["macos", "linux"]
+depends_on = "elixir"
+description = "Elixir language server (Dexter LSP)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LINUX FONTS
+# ─────────────────────────────────────────────────────────────────────────────
+# type = "font": nerd_font = release asset name from ryanoasis/nerd-fonts
+[apps.jetbrains-mono-nerd-font-linux]
+type = "font"
+nerd_font = "JetBrainsMono"
+category = "fonts"
+platform = ["linux"]
+description = "Developer font with icons (user font directory)"
