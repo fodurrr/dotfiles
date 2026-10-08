@@ -81,6 +81,7 @@ install_linux_apt_repo_app() {
     list_name=$(get_app_prop "$app_key" "apt_list")
     packages=$(get_app_prop "$app_key" "linux_apt")
     [[ -z "$list_name" ]] && list_name="$app_key"
+    key_url=$(linux_extra_expand "$key_url")
 
     if [[ -z "$key_url" || -z "$keyring" || -z "$source_line" || -z "$packages" ]]; then
         log_error "apt-repo app '$app_key' needs apt_key_url, apt_keyring, apt_source and linux_apt"
