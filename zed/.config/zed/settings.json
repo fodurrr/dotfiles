@@ -28,7 +28,7 @@
   // Use object format for proper light/dark mode support
   "theme": {
     "mode": "dark",
-    "dark": "Catppuccin Mocha - No Italics",
+    "dark": "Ayu Dark",
     "light": "One Light",
   },
   "icon_theme": "Catppuccin Mocha",

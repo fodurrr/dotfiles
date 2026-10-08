@@ -152,6 +152,15 @@ category = "ai"
 platform = ["macos", "linux"]
 description = "OpenCode AI assistant (CLI)"
 
+[apps.pi-cli]
+type = "mise"
+name = "pi"
+bin = "pi"
+version = "0.79.10"
+category = "ai"
+platform = ["macos", "linux"]
+description = "Pi AI coding assistant (CLI)"
+
 [apps.codex-cli]
 type = "mise"
 name = "codex"
@@ -513,14 +522,6 @@ type = "mise"
 category = "cli"
 platform = ["macos", "linux"]
 description = "GitHub CLI"
-
-[apps.pitchfork]
-type = "mise"
-name = "pitchfork"
-version = "latest"
-category = "cli"
-platform = ["macos", "linux"]
-description = "Mise registry utility for release and changelog workflows"
 
 [apps.tmux]
 type = "mise"

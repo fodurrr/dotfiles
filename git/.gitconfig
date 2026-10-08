@@ -9,7 +9,6 @@
     # Fix filename casing issues on macOS
     ignorecase = false
     # Global hooks path - protects main branches from direct commits
-    hooksPath = ~/.config/git/hooks
 
 [init]
     defaultBranch = main
@@ -58,3 +57,6 @@
     # Optional: Uncomment ONE of the following for enhanced setups:
     # For 1Password: program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
     # For macOS ssh-agent verification: allowedSignersFile = ~/.ssh/allowed_signers
+[url "ssh://git@forgejo/"]
+[url "ssh://git@forgejo/xpando/nucleus.git"]
+	insteadOf = https://git.xpando.ai/xpando/nucleus.git

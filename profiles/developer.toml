@@ -15,7 +15,7 @@ apps = ["firefox", "google-chrome"]
 
 # AI
 [macos.ai]
-apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "codex-cli-macos", "codex-acp", "gemini-cli"]
+apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "pi-cli", "codex-cli-macos", "codex-acp", "gemini-cli"]
 
 # CONFIG
 [macos.config]
@@ -47,7 +47,7 @@ apps = ["font-jetbrains-mono-nerd-font"]
 
 # CLI
 [macos.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "pitchfork", "hcloud", "tailscale", "restic", "mole"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "hcloud", "tailscale", "restic", "mole"]
 
 # RUNTIMES
 [macos.runtimes]
@@ -59,7 +59,7 @@ apps = ["helix"]
 
 # AI
 [linux.ai]
-apps = ["claude-cli", "opencode-cli", "codex-cli", "codex-xpando", "gemini-cli"]
+apps = ["claude-cli", "opencode-cli", "pi-cli", "codex-cli", "codex-xpando", "gemini-cli"]
 
 # CONFIG
 [linux.config]
@@ -67,7 +67,7 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "pitchfork", "hcloud", "tailscale", "restic"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "hcloud", "tailscale", "restic"]
 
 # RUNTIMES
 [linux.runtimes]

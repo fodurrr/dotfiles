@@ -18,3 +18,5 @@ local ok_wifi, _ = pcall(require, "wifi_ethernet_toggle")
 if not ok_wifi then
   hs.alert.show("Failed to load wifi_ethernet_toggle.lua")
 end
+
+

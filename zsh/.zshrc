@@ -123,11 +123,6 @@ command -v sheldon &>/dev/null && eval "$(sheldon source)" || echo "⚠️  shel
 # =============================================================================
 # 4. Tool Initializations
 # =============================================================================
-# Pitchfork (dev daemon supervisor — auto-start/stop pitchfork.toml daemons on cd)
-# Reference: xpando-standards/process/pitchfork-process-supervision.md (AI Layer Phase 7c)
-# Must also live in ~/.zprofile so non-interactive login shells see it.
-command -v pitchfork &>/dev/null && eval "$(pitchfork activate zsh)" || echo "⚠️  pitchfork not found" >&2
-
 # Starship Prompt
 command -v starship &>/dev/null && eval "$(starship init zsh)" || echo "⚠️  starship not found" >&2
 
