@@ -616,7 +616,7 @@ description = "Fast JavaScript runtime"
 
 [apps.pnpm]
 type = "mise"
-version = "10.28"
+version = "10.28.2"
 category = "runtimes"
 platform = ["macos", "linux"]
 depends_on = "node"
