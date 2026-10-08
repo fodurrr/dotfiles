@@ -263,7 +263,7 @@ run_bootstrap_linux() {
                 ca-certificates curl git jq stow zsh yq \
                 build-essential autoconf automake bison pkg-config patch \
                 libssl-dev zlib1g-dev libreadline-dev libyaml-dev libffi-dev \
-                libgdbm-dev libncurses5-dev libxml2-dev libxslt1-dev \
+                libgdbm-dev libncurses-dev libxml2-dev libxslt1-dev \
                 libsqlite3-dev tk-dev xz-utils
             ;;
         dnf)

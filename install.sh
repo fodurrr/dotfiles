@@ -55,6 +55,10 @@ cleanup() {
         echo "  Installation failed. Check the errors above."
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
+        # Unattended runs (--yes, SSH without a terminal) must exit, not wait.
+        if [[ "$YES_MODE" == true || ! -t 0 ]]; then
+            exit "$exit_code"
+        fi
         echo "Press [ENTER] to reload the shell anyway..."
         read
         exec zsh -l

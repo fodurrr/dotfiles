@@ -175,7 +175,11 @@ alias gco='git checkout'
 alias yazi='command yazi'
 
 # Other aliases
-alias iplocal="ipconfig getifaddr en0"
+if [[ "$OSTYPE" == darwin* ]]; then
+    alias iplocal="ipconfig getifaddr en0"
+else
+    alias iplocal="hostname -I | awk '{print \$1}'"
+fi
 alias ipexternal="curl -s ifconfig.me"
 
 alias zconfig="zed ~/.zshrc"
@@ -209,7 +213,7 @@ if command -v sv &>/dev/null; then
 fi
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/fodurrr/.lmstudio/bin"
+[[ -d "$HOME/.lmstudio/bin" ]] && export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
 

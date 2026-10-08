@@ -16,4 +16,5 @@ export PATH="$HOME/.local/bin:$PATH"
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew (macOS only; Linux uses apt/dnf and has no brew)
+[[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"

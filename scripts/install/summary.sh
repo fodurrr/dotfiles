@@ -187,6 +187,11 @@ show_summary_and_reload() {
         read -r
     fi
 
+    if [[ ! -t 0 ]]; then
+        log_info "No terminal attached; skipping shell reload"
+        return 0
+    fi
+
     if command -v zsh >/dev/null 2>&1; then
         exec zsh -l
     fi
