@@ -438,7 +438,10 @@ test_mise_registry_entries() {
         tool_name=$(get_app_prop "$app_key" "name")
         [[ -z "$tool_name" ]] && tool_name="$app_key"
 
-        if echo "$registry_keys" | grep -Fxq "$tool_name"; then
+        # Plugin-backed tools and backend-prefixed names live outside the registry.
+        if [[ -n "$(get_app_prop "$app_key" "plugin_url")" || "$tool_name" == *:* ]]; then
+            pass "tool '$tool_name' uses an explicit mise source"
+        elif echo "$registry_keys" | grep -Fxq "$tool_name"; then
             pass "mise registry contains tool '$tool_name'"
         else
             fail "mise registry is missing tool '$tool_name' (app: $app_key)"
