@@ -938,6 +938,30 @@ platform = ["linux"]
 linux_name = "postgresql-client"
 description = "PostgreSQL command-line client (psql)"
 
+[apps.postgresql-17-linux]
+type = "apt-repo"
+apt_key_url = "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+apt_keyring = "postgresql-pgdg.asc"
+apt_key_fingerprint = "B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+apt_source = "deb [arch={arch} signed-by={keyring}] https://apt.postgresql.org/pub/repos/apt {codename}-pgdg main"
+apt_list = "pgdg"
+linux_apt = "postgresql-17"
+category = "databases"
+platform = ["linux"]
+description = "PostgreSQL 17 server from the official PostgreSQL apt repository (matches production)"
+
+[apps.pgadmin4-linux]
+type = "apt-repo"
+apt_key_url = "https://www.pgadmin.org/static/packages_pgadmin_org.pub"
+apt_keyring = "pgadmin4.asc"
+apt_key_fingerprint = "E8697E2EEF76C02D3A6332778881B2A8210976F2"
+apt_source = "deb [arch={arch} signed-by={keyring}] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/{codename} pgadmin4 main"
+apt_list = "pgadmin4"
+linux_apt = "pgadmin4-desktop"
+category = "databases"
+platform = ["linux"]
+description = "pgAdmin 4 desktop app (no web server mode)"
+
 [apps.vlc-linux]
 type = "brew"
 category = "media"

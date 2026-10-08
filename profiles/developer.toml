@@ -81,6 +81,10 @@ apps = ["obsidian-linux", "bitwarden-linux"]
 [linux.containers]
 apps = ["docker-linux"]
 
+# DATABASES
+[linux.databases]
+apps = ["postgresql-17-linux", "pgadmin4-linux"]
+
 # MEDIA AND COMMUNICATION
 [linux.media]
 apps = ["spotify-linux", "telegram-linux", "discord-linux", "vlc-linux"]
