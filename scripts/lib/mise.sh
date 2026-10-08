@@ -171,8 +171,10 @@ validate_mise_single_source() {
         return 1
     fi
 
+    # mise shims are mise-owned launchers for the same install, not a second source.
+    local shims_dir="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims/"
     local command_paths
-    command_paths=$(collect_unique_command_paths "$command_name")
+    command_paths=$(collect_unique_command_paths "$command_name" | grep -vF "$shims_dir" || true)
     if [[ -z "$command_paths" ]]; then
         log_error "Single-source enforcement failed for $tool_name: '$command_name' not found on PATH"
         return 1
