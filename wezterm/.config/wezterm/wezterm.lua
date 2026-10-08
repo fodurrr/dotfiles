@@ -1,13 +1,20 @@
 -- =============================================================================
 -- WezTerm Configuration
 -- =============================================================================
--- Appearance and behavior only. All keybindings are WezTerm defaults.
+-- Appearance and behavior. A few keybindings override WezTerm defaults.
 -- Works standalone (tabs + splits) or as a rendering layer for tmux.
 -- =============================================================================
 
 local wezterm = require("wezterm")
 local act = wezterm.action
 local config = wezterm.config_builder()
+
+-- Modifier keys per platform. macOS uses Cmd. Linux uses Ctrl+Shift, the
+-- terminal convention there, because the desktop owns most Super shortcuts.
+local is_macos = wezterm.target_triple:find("darwin") ~= nil
+local MOD = is_macos and "CMD" or "CTRL|SHIFT"
+local MOD_ALT = is_macos and "CMD|SHIFT" or "CTRL|ALT"
+local LINK_MOD = is_macos and "CMD" or "CTRL"
 
 -- =============================================================================
 -- Appearance
@@ -92,21 +99,21 @@ config.inactive_pane_hsb = {
 -- =============================================================================
 config.keys = {
   -- Splits
-  { key = "d", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-  { key = "d", mods = "CMD|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  { key = "d", mods = MOD, action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  { key = "d", mods = MOD_ALT, action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
   -- Navigate splits
-  { key = "LeftArrow", mods = "CMD|SHIFT", action = act.ActivatePaneDirection("Left") },
-  { key = "RightArrow", mods = "CMD|SHIFT", action = act.ActivatePaneDirection("Right") },
-  { key = "UpArrow", mods = "CMD|SHIFT", action = act.ActivatePaneDirection("Up") },
-  { key = "DownArrow", mods = "CMD|SHIFT", action = act.ActivatePaneDirection("Down") },
+  { key = "LeftArrow", mods = MOD_ALT, action = act.ActivatePaneDirection("Left") },
+  { key = "RightArrow", mods = MOD_ALT, action = act.ActivatePaneDirection("Right") },
+  { key = "UpArrow", mods = MOD_ALT, action = act.ActivatePaneDirection("Up") },
+  { key = "DownArrow", mods = MOD_ALT, action = act.ActivatePaneDirection("Down") },
 
   -- Close current pane (not tab) — matches Ghostty Cmd+W behavior
-  { key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
+  { key = "w", mods = MOD, action = act.CloseCurrentPane({ confirm = false }) },
 
   -- Command palette & quick select
-  { key = "p", mods = "CMD|SHIFT", action = act.ActivateCommandPalette },
-  { key = "u", mods = "CMD|SHIFT", action = act.QuickSelect },
+  { key = "p", mods = MOD_ALT, action = act.ActivateCommandPalette },
+  { key = "u", mods = MOD_ALT, action = act.QuickSelect },
 
   -- Shift+Enter → newline in Claude Code (CSI u encoding for modified Enter)
   { key = "Enter", mods = "SHIFT", action = act.SendString("\x1b[13;2u") },
@@ -124,7 +131,7 @@ config.mouse_bindings = {
   -- Cmd+Click to open links
   {
     event = { Up = { streak = 1, button = "Left" } },
-    mods = "CMD",
+    mods = LINK_MOD,
     action = act.OpenLinkAtMouseCursor,
   },
   -- Right-click: copy if text selected, paste if not

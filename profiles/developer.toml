@@ -53,17 +53,37 @@ apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "hclo
 [macos.runtimes]
 apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir"]
 
+# TERMINALS
+[linux.terminals]
+apps = ["wezterm-linux"]
+
 # EDITORS
 [linux.editors]
-apps = ["helix"]
+apps = ["visual-studio-code-linux", "helix"]
+
+# BROWSERS
+[linux.browsers]
+apps = ["google-chrome-linux"]
 
 # AI
 [linux.ai]
-apps = ["claude-cli", "codex-cli", "pi-cli", "opencode-cli", "gemini-cli", "grok-cli", "codex-xpando", "herdr"]
+apps = ["claude-desktop-linux", "codex-desktop-linux", "t3-code-linux", "hermes-agent", "claude-cli", "codex-cli", "pi-cli", "opencode-cli", "gemini-cli", "grok-cli", "codex-xpando", "herdr"]
 
 # CONFIG
 [linux.config]
-apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "wezterm-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config", "keyboard-layout-config"]
+
+# PRODUCTIVITY
+[linux.productivity]
+apps = ["obsidian-linux", "bitwarden-linux"]
+
+# CONTAINERS
+[linux.containers]
+apps = ["docker-linux"]
+
+# MEDIA AND COMMUNICATION
+[linux.media]
+apps = ["spotify-linux", "telegram-linux", "discord-linux", "vlc-linux"]
 
 # FONTS
 [linux.fonts]
@@ -71,7 +91,7 @@ apps = ["jetbrains-mono-nerd-font-linux"]
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]
 
 # RUNTIMES
 [linux.runtimes]

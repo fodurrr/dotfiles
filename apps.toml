@@ -681,7 +681,7 @@ description = "Ghostty terminal config"
 type = "stow"
 package = "wezterm"
 category = "config"
-platform = ["macos"]
+platform = ["macos", "linux"]
 config_for = "wezterm"
 description = "WezTerm terminal config"
 
@@ -835,3 +835,133 @@ nerd_font = "JetBrainsMono"
 category = "fonts"
 platform = ["linux"]
 description = "Developer font with icons (user font directory)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LINUX DESKTOP APPS (Debian/Ubuntu; see scripts/install/layer_linux_extra.sh)
+# ─────────────────────────────────────────────────────────────────────────────
+[apps.wezterm-linux]
+type = "apt-repo"
+apt_key_url = "https://apt.fury.io/wez/gpg.key"
+apt_keyring = "wezterm-fury.gpg"
+apt_key_dearmor = true
+apt_source = "deb [signed-by={keyring}] https://apt.fury.io/wez/ * *"
+apt_list = "wezterm"
+linux_apt = "wezterm-nightly"
+category = "terminals"
+platform = ["linux"]
+description = "GPU-accelerated terminal (nightly channel, as on macOS)"
+
+[apps.visual-studio-code-linux]
+type = "deb"
+deb_url = "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+category = "editors"
+platform = ["linux"]
+description = "Extensible code editor (package registers the Microsoft apt source)"
+
+[apps.google-chrome-linux]
+type = "deb"
+deb_url = "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+category = "browsers"
+platform = ["linux"]
+description = "Google Chrome (package registers the Google apt source)"
+
+[apps.claude-desktop-linux]
+type = "apt-repo"
+apt_key_url = "https://downloads.claude.ai/claude-desktop/key.asc"
+apt_keyring = "claude-desktop-archive-keyring.asc"
+apt_key_fingerprint = "31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE"
+apt_source = "deb [arch=amd64,arm64 signed-by={keyring}] https://downloads.claude.ai/claude-desktop/apt/stable stable main"
+apt_list = "claude-desktop"
+linux_apt = "claude-desktop"
+category = "ai"
+platform = ["linux"]
+description = "Claude desktop app (Linux beta)"
+
+[apps.codex-desktop-linux]
+type = "deb"
+deb_url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_{arch}.deb"
+category = "ai"
+platform = ["linux"]
+description = "OpenAI desktop app with Codex (Linux preview)"
+
+[apps.t3-code-linux]
+type = "deb"
+github_repo = "pingdotgg/t3code"
+github_tag_regex = "nightly"
+deb_asset_regex = "^T3-Code-.*-{arch}\\.deb$"
+category = "ai"
+platform = ["linux"]
+description = "T3 Code desktop (nightly channel, as on macOS)"
+
+[apps.hermes-agent]
+type = "script"
+install_url = "https://hermes-agent.nousresearch.com/install.sh"
+install_args = "--skip-setup"
+bin = "hermes"
+category = "ai"
+platform = ["linux"]
+description = "Hermes Agent (official installer into ~/.hermes)"
+
+[apps.obsidian-linux]
+type = "deb"
+github_repo = "obsidianmd/obsidian-releases"
+deb_asset_regex = "^obsidian_.*_{arch}\\.deb$"
+category = "productivity"
+platform = ["linux"]
+description = "Markdown knowledge base"
+
+[apps.bitwarden-linux]
+type = "deb"
+github_repo = "bitwarden/clients"
+github_tag_regex = "^desktop-v[0-9.]+$"
+deb_asset_regex = "^Bitwarden-.*-{arch}\\.deb$"
+category = "productivity"
+platform = ["linux"]
+description = "Password manager"
+
+[apps.docker-linux]
+type = "apt-repo"
+apt_key_url = "https://download.docker.com/linux/{distro}/gpg"
+apt_keyring = "docker.gpg"
+apt_key_dearmor = true
+apt_source = "deb [arch={arch} signed-by={keyring}] https://download.docker.com/linux/{distro} {codename} stable"
+apt_list = "docker"
+linux_apt = "docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+category = "containers"
+platform = ["linux"]
+description = "Docker Engine with buildx and compose"
+
+[apps.postgresql-client]
+type = "brew"
+category = "cli"
+platform = ["linux"]
+linux_name = "postgresql-client"
+description = "PostgreSQL command-line client (psql)"
+
+[apps.vlc-linux]
+type = "brew"
+category = "media"
+platform = ["linux"]
+linux_name = "vlc"
+description = "Media player"
+
+[apps.spotify-linux]
+type = "snap"
+snap_name = "spotify"
+category = "media"
+platform = ["linux"]
+description = "Music streaming"
+
+[apps.telegram-linux]
+type = "snap"
+snap_name = "telegram-desktop"
+category = "communication"
+platform = ["linux"]
+description = "Telegram messenger"
+
+[apps.discord-linux]
+type = "snap"
+snap_name = "discord"
+category = "communication"
+platform = ["linux"]
+description = "Discord chat"
