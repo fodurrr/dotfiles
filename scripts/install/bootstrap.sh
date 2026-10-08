@@ -12,6 +12,13 @@ bootstrap_require_sudo() {
         exit 1
     fi
 
+    # Passwordless sudo: `sudo -v` still asks for a password when any sudoers
+    # entry for the user lacks NOPASSWD (for example the default %sudo group),
+    # so accept a working non-interactive sudo first.
+    if sudo -n true >/dev/null 2>&1; then
+        return 0
+    fi
+
     if ! sudo -v >/dev/null 2>&1; then
         log_error "Failed to obtain sudo credentials"
         exit 1
