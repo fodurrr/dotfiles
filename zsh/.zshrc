@@ -4,11 +4,13 @@
 # Keep PATH unique while preserving first-entry precedence.
 typeset -U path PATH
 
-# Ensure Homebrew and standard paths are first.
+# Ensure hardened stubs resolve first, then Homebrew.
+# /usr/local/bin MUST precede /opt/homebrew/bin so Automic Vault stubs
+# (e.g. /usr/local/bin/brew) win over the real Homebrew binaries.
 path=(
+    /usr/local/bin
     /opt/homebrew/bin
     /opt/homebrew/sbin
-    /usr/local/bin
     "$HOME/.local/bin"
     $path
 )
@@ -140,7 +142,10 @@ export FZF_DEFAULT_OPTS=" \
 # 5. Aliases
 # =============================================================================
 # File System (using eza instead of ls)
-if command -v eza &>/dev/null; then
+# Only when output goes to a terminal: agent shells (Claude Code, Codex) snapshot
+# these aliases from a shell whose output is not a terminal, and `eza --git`
+# hung there for hours (2026-09-30). A shell started without a terminal keeps ls.
+if command -v eza &>/dev/null && [[ -t 1 ]]; then
     alias ls='eza --icons --git'
     alias l='eza --icons --git'
     alias la='eza --long --all --header --icons --git'
@@ -210,3 +215,6 @@ export PATH="$PATH:/Users/fodurrr/.lmstudio/bin"
 
 # Hermes Agent — ensure ~/.local/bin is on PATH
 export PATH="$HOME/.local/bin:$PATH"
+
+# Global AI agent defaults (2026-09-18).
+[[ -r "$HOME/.config/ai-agent-defaults.zsh" ]] && source "$HOME/.config/ai-agent-defaults.zsh"
