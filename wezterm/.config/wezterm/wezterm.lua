@@ -161,6 +161,17 @@ config.send_composed_key_when_right_alt_is_pressed = false
 config.native_macos_fullscreen_mode = true
 
 -- =============================================================================
+-- Linux
+-- =============================================================================
+if not is_macos then
+  -- GNOME on Wayland draws no title bar for WezTerm, so the window cannot be
+  -- moved, resized or closed with the mouse. Under XWayland the desktop draws
+  -- its normal title bar with all window buttons.
+  config.enable_wayland = false
+  config.default_cursor_style = "BlinkingBlock"
+end
+
+-- =============================================================================
 -- Performance (WebGPU → Metal on macOS)
 -- =============================================================================
 config.front_end = "WebGpu"
