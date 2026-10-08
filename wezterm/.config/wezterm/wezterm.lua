@@ -10,10 +10,10 @@ local act = wezterm.action
 local config = wezterm.config_builder()
 
 -- Modifier keys per platform. macOS uses Cmd. Linux uses Ctrl+Shift, the
--- terminal convention there, because the desktop owns most Super shortcuts.
+-- terminal convention there; the desktop owns Super and Ctrl+Alt+arrows.
 local is_macos = wezterm.target_triple:find("darwin") ~= nil
 local MOD = is_macos and "CMD" or "CTRL|SHIFT"
-local MOD_ALT = is_macos and "CMD|SHIFT" or "CTRL|ALT"
+local MOD_ALT = is_macos and "CMD|SHIFT" or "ALT|SHIFT"
 local LINK_MOD = is_macos and "CMD" or "CTRL"
 
 -- =============================================================================
