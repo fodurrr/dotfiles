@@ -130,7 +130,7 @@ CLI tool decision order:
 
 Ownership rule:
 1. A command must have one owner per platform/profile combination.
-2. If a command is cask-owned on macOS (for example `codex`), do not also assign a strict mise owner for macOS.
+2. A CLI that the mise registry offers is a mise app on every platform; a Homebrew cask owns only the desktop app (for example `codex-app`).
 
 ## Stow and Config Ownership
 

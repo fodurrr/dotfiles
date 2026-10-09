@@ -240,17 +240,11 @@ find ~ -name "*.bak" -type f 2>/dev/null
 Layer 3 fails for strict AI CLI tools (`claude`, `opencode`, `gemini`, and Linux `codex`) when a command resolves to multiple sources or the first path is not the expected mise install path.
 
 Ownership model:
-- macOS `codex` CLI: Homebrew cask (`codex`)
+- `codex`, `grok`, `claude`, `opencode`, `gemini` CLIs: `mise` on macOS and Linux
 - macOS Codex desktop app: Homebrew cask (`codex-app`)
-- Linux `codex` CLI: `mise`
-- `claude`, `opencode`, `gemini`: `mise`
 
 ```bash
-# macOS Codex ownership check
-which -a codex
-brew info --cask codex codex-app
-
-# Linux Codex ownership check
+# Codex ownership check: the first path must be the mise shim
 which -a codex
 mise current codex
 
