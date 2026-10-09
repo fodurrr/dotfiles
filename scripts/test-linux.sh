@@ -386,6 +386,16 @@ test_tea_source_config() {
     assert_true "mise config generator should write backend options" is_grep_match 'mise_options' "$DOTFILES_DIR/scripts/lib/mise.sh"
 }
 
+test_linux_desktop_setup() {
+    print_header "Linux Desktop Setup"
+    assert_true "screens command should exist and be executable" test -x "$DOTFILES_DIR/desktop-linux/.local/bin/screens"
+    assert_true "paperwm-toggle command should exist and be executable" test -x "$DOTFILES_DIR/desktop-linux/.local/bin/paperwm-toggle"
+    assert_true "voxtype config should use hold-to-talk on F9" is_grep_match '^key = "F9"' "$DOTFILES_DIR/voxtype/.config/voxtype/config.toml"
+    assert_true "voxtype config should paste with shift+insert" is_grep_match '^paste_keys = "shift\+insert"' "$DOTFILES_DIR/voxtype/.config/voxtype/config.toml"
+    assert_true "gnome-shortcut should be an installable app type" is_installable_app gnome-shortcut-screens-tv
+    assert_true "linux extra layer should handle gnome-shortcut entries" is_grep_match 'install_linux_gnome_shortcut_app' "$DOTFILES_DIR/scripts/install/layer_linux_extra.sh"
+}
+
 test_curl_registry_scope() {
     print_header "Curl Registry Scope"
 
@@ -548,6 +558,7 @@ main() {
     test_sheldon_source_config
     test_mise_release_age_excludes
     test_tea_source_config
+    test_linux_desktop_setup
     test_curl_registry_scope
     test_mise_registry_entries
     test_bootstrap_linux_path

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Switch between PaperWM (scrolling columns) and Ubuntu Tiling Assistant (fixed columns).
+# Both stay installed; only one is active at a time.
+P=paperwm@paperwm.github.com
+T=tiling-assistant@ubuntu.com
+case "${1:-toggle}" in
+  on)  gnome-extensions disable "$T"; gnome-extensions enable "$P" ;;
+  off) gnome-extensions disable "$P"; gnome-extensions enable "$T" ;;
+  toggle)
+    if gnome-extensions list --enabled | grep -qx "$P"; then "$0" off; else "$0" on; fi; exit ;;
+  *) echo "usage: paperwm-toggle [on|off|toggle]"; exit 2 ;;
+esac
+echo "PaperWM: $(gnome-extensions list --enabled | grep -qx "$P" && echo on || echo off) | Tiling Assistant: $(gnome-extensions list --enabled | grep -qx "$T" && echo on || echo off)"

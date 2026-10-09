@@ -26,6 +26,8 @@
 #
 #   type = "snap"      snap_name, snap_classic
 #   type = "gsettings" gsettings_schema, gsettings_key, gsettings_value
+#   type = "gnome-shortcut"  shortcut_id, shortcut_command, shortcut_binding
+#                            (a leading ~/ in the command becomes $HOME)
 #
 #   type = "font"      nerd_font = release asset name from ryanoasis/nerd-fonts
 # =============================================================================
@@ -345,6 +347,65 @@ install_linux_gsettings_app() {
 }
 
 # -----------------------------------------------------------------------------
+# gnome-shortcut (custom keyboard shortcut that runs a command)
+# -----------------------------------------------------------------------------
+install_linux_gnome_shortcut_app() {
+    local app_key="$1"
+    local display_name
+    display_name=$(get_app_display_name "$app_key")
+
+    local id command binding
+    id=$(get_app_prop "$app_key" "shortcut_id")
+    command=$(get_app_prop "$app_key" "shortcut_command")
+    binding=$(get_app_prop "$app_key" "shortcut_binding")
+    if [[ -z "$id" || -z "$command" || -z "$binding" ]]; then
+        log_error "$display_name needs shortcut_id, shortcut_command and shortcut_binding"
+        return 1
+    fi
+    command="${command/#\~\//$HOME/}"
+
+    local list_schema="org.gnome.settings-daemon.plugins.media-keys"
+    local path="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/$id/"
+    local entry_schema="$list_schema.custom-keybinding:$path"
+    if ! command -v gsettings >/dev/null 2>&1 || ! gsettings list-keys "$list_schema" 2>/dev/null | grep -qx "custom-keybindings"; then
+        log_info "Skipping $display_name (GNOME custom shortcuts are not available)"
+        add_to_summary SKIPPED "$display_name" "$app_key"
+        return 0
+    fi
+
+    local list changed=false
+    list=$(gsettings get "$list_schema" custom-keybindings)
+    if [[ "$list" != *"'$path'"* ]]; then
+        if [[ "$list" == "@as []" || "$list" == "[]" ]]; then
+            list="['$path']"
+        else
+            list="${list%]}, '$path']"
+        fi
+        gsettings set "$list_schema" custom-keybindings "$list" || return 1
+        changed=true
+    fi
+
+    local key want
+    for key in name command binding; do
+        case "$key" in
+            name) want="$display_name" ;;
+            command) want="$command" ;;
+            binding) want="$binding" ;;
+        esac
+        if [[ "$(gsettings get "$entry_schema" "$key" 2>/dev/null)" != "'$want'" ]]; then
+            gsettings set "$entry_schema" "$key" "$want" || return 1
+            changed=true
+        fi
+    done
+
+    if [[ "$changed" == true ]]; then
+        add_to_summary INSTALLED "$display_name" "$app_key"
+    else
+        add_to_summary SKIPPED "$display_name" "$app_key"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # font
 # -----------------------------------------------------------------------------
 install_linux_nerd_font() {
@@ -413,6 +474,7 @@ run_layer_linux_extra() {
             script) install_linux_script_app "$app_key" || failed="$failed $app_key" ;;
             snap)   install_linux_snap_app "$app_key" || failed="$failed $app_key" ;;
             gsettings) install_linux_gsettings_app "$app_key" || failed="$failed $app_key" ;;
+            gnome-shortcut) install_linux_gnome_shortcut_app "$app_key" || failed="$failed $app_key" ;;
             font)   install_linux_nerd_font "$app_key" || failed="$failed $app_key" ;;
         esac
     done

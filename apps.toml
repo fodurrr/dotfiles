@@ -991,6 +991,83 @@ category = "desktop"
 platform = ["linux"]
 description = "Screenshot tool on Super+Shift+S, for keyboards with no Print key"
 
+[apps.desktop-commands-linux]
+type = "stow"
+package = "desktop-linux"
+category = "config"
+platform = ["linux"]
+description = "Commands screens (monitor, TV or both) and paperwm-toggle in ~/.local/bin"
+
+[apps.gnome-shortcut-screens-monitor]
+type = "gnome-shortcut"
+name = "Screens: monitor only"
+shortcut_id = "screens-monitor"
+shortcut_command = "~/.local/bin/screens monitor"
+shortcut_binding = "<Super><Alt>1"
+category = "desktop"
+platform = ["linux"]
+description = "Super+Alt+1: only the monitor is active"
+
+[apps.gnome-shortcut-screens-tv]
+type = "gnome-shortcut"
+name = "Screens: TV only"
+shortcut_id = "screens-tv"
+shortcut_command = "~/.local/bin/screens tv"
+shortcut_binding = "<Super><Alt>2"
+category = "desktop"
+platform = ["linux"]
+description = "Super+Alt+2: only the TV is active"
+
+[apps.gnome-shortcut-screens-both]
+type = "gnome-shortcut"
+name = "Screens: both"
+shortcut_id = "screens-both"
+shortcut_command = "~/.local/bin/screens both"
+shortcut_binding = "<Super><Alt>3"
+category = "desktop"
+platform = ["linux"]
+description = "Super+Alt+3: monitor and TV are both active"
+
+[apps.voxtype-linux]
+type = "deb"
+github_repo = "peteonrails/voxtype"
+deb_asset_regex = "^voxtype_.*_{arch}\\.deb$"
+category = "desktop"
+platform = ["linux"]
+description = "Voxtype dictation (hold F9 to talk); manual steps in docs/linux-support.md"
+
+[apps.voxtype-config]
+type = "stow"
+package = "voxtype"
+category = "config"
+platform = ["linux"]
+config_for = "voxtype-linux"
+description = "Voxtype config: Parakeet v3, hold F9, paste with Shift+Insert"
+
+[apps.ydotool]
+type = "brew"
+category = "desktop"
+platform = ["linux"]
+linux_name = "ydotool"
+description = "Types and pastes for Voxtype on Wayland (uinput)"
+
+[apps.wl-clipboard]
+type = "brew"
+category = "desktop"
+platform = ["linux"]
+linux_name = "wl-clipboard"
+description = "Wayland clipboard commands, used by Voxtype"
+
+[apps.gnome-shortcut-voxtype-toggle]
+type = "gnome-shortcut"
+name = "Voxtype dictation (Super+/)"
+shortcut_id = "voxtype-super-slash"
+shortcut_command = "/usr/bin/voxtype record toggle"
+shortcut_binding = "<Super>slash"
+category = "desktop"
+platform = ["linux"]
+description = "Super+/: start and stop dictation"
+
 [apps.spotify-linux]
 type = "snap"
 snap_name = "spotify"

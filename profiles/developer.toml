@@ -91,7 +91,7 @@ apps = ["spotify-linux", "telegram-linux", "discord-linux", "vlc-linux"]
 
 # DESKTOP PREFERENCES
 [linux.desktop]
-apps = ["bibata-cursor-linux", "gnome-cursor-yellow", "gnome-screenshot-shortcut"]
+apps = ["bibata-cursor-linux", "gnome-cursor-yellow", "gnome-screenshot-shortcut", "desktop-commands-linux", "gnome-shortcut-screens-monitor", "gnome-shortcut-screens-tv", "gnome-shortcut-screens-both", "voxtype-linux", "voxtype-config", "ydotool", "wl-clipboard", "gnome-shortcut-voxtype-toggle"]
 
 # FONTS
 [linux.fonts]

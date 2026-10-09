@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Choose which screens are active: the 49-inch monitor, the TV, or both.
+# Windows on a screen that is switched off here move to the remaining screen.
+# Not persistent: after a restart GNOME uses its saved layout (both screens).
+GDCTL=(/usr/bin/python3 /usr/bin/gdctl set)
+MON=(--logical-monitor --primary --monitor DP-1 --mode 5120x1440@165.000 --scale 1.25)
+TV=(--monitor HDMI-1 --mode 3840x2160@60.000 --scale 2.5)
+case "${1:-}" in
+  monitor) "${GDCTL[@]}" ${2:+$2} "${MON[@]}" ;;
+  tv)      "${GDCTL[@]}" ${2:+$2} --logical-monitor --primary "${TV[@]}" ;;
+  both)    "${GDCTL[@]}" ${2:+$2} "${MON[@]}" --x 0 --y 0 --logical-monitor "${TV[@]}" --right-of DP-1 ;;
+  *) echo "usage: screens monitor|tv|both"; exit 2 ;;
+esac

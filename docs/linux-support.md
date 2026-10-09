@@ -126,6 +126,54 @@ linux_apt = "package-name-on-apt"
 linux_dnf = "package-name-on-dnf"
 ```
 
+## Desktop: Screens, Dictation, PaperWM
+
+Part of the `developer` profile on Linux. The commands are stow links into `desktop-linux/`; the shortcuts are `gnome-shortcut` entries in `apps.toml`.
+
+### Screens
+
+Ubuntu cannot detect a monitor's power button: the screen stays "connected", so windows stay on it. The `screens` command chooses the active screens, and windows move to what remains.
+
+| Key | Command | Result |
+|---|---|---|
+| Super+Alt+1 | `screens monitor` | only the 49-inch monitor (DP-1) |
+| Super+Alt+2 | `screens tv` | only the TV (HDMI-1) |
+| Super+Alt+3 | `screens both` | both, monitor left of the TV |
+
+The choice is not persistent: after a restart both screens are on. The connector names, modes and scales are written in `desktop-linux/.local/bin/screens`; change them there for other hardware. The command calls GNOME's `gdctl` with `/usr/bin/python3`, because the mise Python has no `gi` module.
+
+### Dictation (Voxtype)
+
+Hold **F9** to talk; on release the text is pasted at the cursor. **Super+/** starts and stops a recording as a toggle. The config is the stow package `voxtype/`.
+
+The installer installs the `.deb`, `ydotool` and `wl-clipboard` and links the config. These steps stay manual, once per machine:
+
+```bash
+sudo voxtype setup onnx --enable
+sudo voxtype setup gpu --disable
+voxtype setup --download --model parakeet-tdt-0.6b-v3-int8 --activate
+systemctl --user enable --now voxtype.service ydotool.service
+sudo usermod -aG input "$USER"
+```
+
+Then **restart the machine**. A logout is not enough when user lingering is on (it is, for the herdr service): the user service manager keeps the old groups. The `input` group lets programs of this user read all keyboard input and type; that is what hold-to-talk and paste need.
+
+Facts behind the config:
+
+- `setup gpu --disable` selects the ONNX AVX-512 build. `setup onnx --enable` alone picks MIGraphX on an AMD graphics chip, which is not meant for integrated graphics.
+- Paste mode with `shift+insert`: GNOME has no virtual-keyboard protocol, so `wtype` cannot work; `ydotool` types US keycodes only, so paste is the layout-independent route.
+- The OSD (waveform) is off: it needs layer-shell, which GNOME lacks. A notification at recording start replaces it. On Niri the OSD can be switched on.
+
+### PaperWM
+
+Scrolling columns inside GNOME, as a trial before Niri. Install once, then log in again:
+
+```bash
+gnome-extensions install --force paperwm@paperwm.github.com.shell-extension.zip
+```
+
+The zip comes from <https://extensions.gnome.org/extension/6099/paperwm/>. Switch with `paperwm-toggle on` and `paperwm-toggle off`; `off` re-enables Ubuntu Tiling Assistant. Only one of the two is active at a time.
+
 ## herdr Server Service
 
 `systemd/user/herdr.service` runs the herdr server as a systemd user service. It is not a stow package: systemd rejects a unit file that stow links with a relative path. The installer does not enable it. Enable it once per machine with systemd's own link method:
