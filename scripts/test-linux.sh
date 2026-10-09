@@ -170,10 +170,18 @@ test_ai_cli_single_source_fields() {
             fail "$app_key should define bin"
         fi
 
-        if [[ "$app_enforce" == "true" ]]; then
-            pass "$app_key should enforce single-source command ownership"
+        # claude, opencode and codex coexist with their desktop apps, so only
+        # gemini-cli enforces single-source command ownership.
+        if [[ "$app_key" == "gemini-cli" ]]; then
+            if [[ "$app_enforce" == "true" ]]; then
+                pass "$app_key should enforce single-source command ownership"
+            else
+                fail "$app_key should enforce single-source command ownership"
+            fi
+        elif [[ "$app_enforce" != "true" ]]; then
+            pass "$app_key should not enforce single-source command ownership"
         else
-            fail "$app_key should enforce single-source command ownership"
+            fail "$app_key should not enforce single-source command ownership"
         fi
     done
 }
