@@ -81,7 +81,6 @@
     // --- AI (disabled, keep for evaluation) ---
     "github.copilot-chat",                 // Copilot — disabled, re-enable if needed
     "kilocode.kilo-code",                  // Kilo Code — disabled, evaluating
-    "augment.vscode-augment",              // Augment — disabled, evaluating
 
     // --- Product Icons ---
     "antfu.icons-carbon",                  // Carbon product icons — keep installed, not active

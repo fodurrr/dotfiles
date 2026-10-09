@@ -23,10 +23,6 @@
     # Automatically set upstream branch on push (Huge time saver!)
     autoSetupRemote = true
 
-[credential]
-    # Use macOS Keychain to store passwords/tokens
-    helper = osxkeychain
-
 [rerere]
     # "Reuse Recorded Resolution" - Remembers how you fixed a merge conflict
     # so you don't have to fix the same one twice.

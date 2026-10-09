@@ -183,9 +183,6 @@ Store machine-local AI auth outside repositories:
 - loaded automatically by `.zshrc`
 - synced to launchd for GUI tools from login shell or manually with:
   - `ai-env-sync`
-- required Augment vars:
-  - `AUGMENT_API_TOKEN` (secret)
-  - `AUGMENT_API_URL` (tenant base URL, non-secret)
 
 Quick setup:
 
@@ -197,16 +194,6 @@ chmod 600 ~/.config/secrets/ai.env
 zed ~/.config/secrets/ai.env
 source ~/.zshrc
 ai-env-sync
-```
-
-Preflight:
-
-```bash
-printenv AUGMENT_API_TOKEN AUGMENT_API_URL
-launchctl getenv AUGMENT_API_TOKEN
-launchctl getenv AUGMENT_API_URL
-elixir ~/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPClient.list_servers()'
-elixir ~/dev/xpando-agents/mcp_tools/mcp_eval.exs 'MCPTools.AugmentContextEngine.codebase_retrieval()'
 ```
 
 ## Troubleshooting

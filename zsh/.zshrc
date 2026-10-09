@@ -84,16 +84,8 @@ sync_ai_env_to_launchctl() {
     command -v launchctl &>/dev/null || return 0
 
     local key value
-    local -a managed_keys=(
-        AUGMENT_API_TOKEN
-        AUGMENT_API_URL
-        AUGMENT_MCP_CONTEXT_ENGINE_AUTHORIZATION
-        AUGMENT_MCP_CONTEXT_ENGINE_URL
-        AUGMENT_MCP_CONTEXT_ENGINE_HEADERS_JSON
-        AUGMENT_MCP_CONTEXT_ENGINE_APP_ID
-        AUGMENT_MCP_CONTEXT_ENGINE_DEPLOYMENT_URL
-        AUGMENT_MCP_CONTEXT_ENGINE_TRANSPORT
-    )
+    # Variable names from ai.env that GUI apps need; none at present.
+    local -a managed_keys=()
 
     for key in "${managed_keys[@]}"; do
         value="${(P)key}"

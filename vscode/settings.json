@@ -120,7 +120,7 @@
   "terminal.integrated.profiles.windows": {
     "WSL Shell": { "path": "C:\\Windows\\sysnative\\wsl.exe" }
   },
-  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.defaultProfile.linux": "zsh",
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Git & SCM
