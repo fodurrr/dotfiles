@@ -391,7 +391,7 @@ test_linux_desktop_setup() {
     assert_true "screens command should exist and be executable" test -x "$DOTFILES_DIR/desktop-linux/.local/bin/screens"
     assert_true "paperwm-toggle command should exist and be executable" test -x "$DOTFILES_DIR/desktop-linux/.local/bin/paperwm-toggle"
     assert_true "voxtype config should use hold-to-talk on F9" is_grep_match '^key = "F9"' "$DOTFILES_DIR/voxtype/.config/voxtype/config.toml"
-    assert_true "voxtype config should paste with shift+insert" is_grep_match '^paste_keys = "shift\+insert"' "$DOTFILES_DIR/voxtype/.config/voxtype/config.toml"
+    assert_true "voxtype config should paste with shift+insert" is_grep_match '^paste_keys = "shift.insert"' "$DOTFILES_DIR/voxtype/.config/voxtype/config.toml"
     assert_true "gnome-shortcut should be an installable app type" is_installable_app gnome-shortcut-screens-tv
     assert_true "linux extra layer should handle gnome-shortcut entries" is_grep_match 'install_linux_gnome_shortcut_app' "$DOTFILES_DIR/scripts/install/layer_linux_extra.sh"
 }
