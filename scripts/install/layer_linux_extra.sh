@@ -25,6 +25,7 @@
 #       install_url, install_args, bin
 #
 #   type = "snap"      snap_name, snap_classic
+#   type = "gsettings" gsettings_schema, gsettings_key, gsettings_value
 #
 #   type = "font"      nerd_font = release asset name from ryanoasis/nerd-fonts
 # =============================================================================
@@ -307,6 +308,43 @@ install_linux_snap_app() {
 }
 
 # -----------------------------------------------------------------------------
+# gsettings (GNOME desktop preferences)
+# -----------------------------------------------------------------------------
+install_linux_gsettings_app() {
+    local app_key="$1"
+    local display_name
+    display_name=$(get_app_display_name "$app_key")
+
+    local schema key value
+    schema=$(get_app_prop "$app_key" "gsettings_schema")
+    key=$(get_app_prop "$app_key" "gsettings_key")
+    value=$(get_app_prop "$app_key" "gsettings_value")
+    if [[ -z "$schema" || -z "$key" || -z "$value" ]]; then
+        log_error "$display_name needs gsettings_schema, gsettings_key and gsettings_value"
+        return 1
+    fi
+
+    # Not a GNOME desktop, or the schema is absent: nothing to set.
+    if ! command -v gsettings >/dev/null 2>&1 || ! gsettings list-keys "$schema" 2>/dev/null | grep -qx "$key"; then
+        log_info "Skipping $display_name (gsettings key $schema $key is not available)"
+        add_to_summary SKIPPED "$display_name" "$app_key"
+        return 0
+    fi
+
+    if [[ "$(gsettings get "$schema" "$key" 2>/dev/null)" == "$value" ]]; then
+        add_to_summary SKIPPED "$display_name" "$app_key"
+        return 0
+    fi
+
+    log_success "Setting $display_name..."
+    if ! gsettings set "$schema" "$key" "$value"; then
+        log_error "Failed to set $schema $key"
+        return 1
+    fi
+    add_to_summary INSTALLED "$display_name" "$app_key"
+}
+
+# -----------------------------------------------------------------------------
 # font
 # -----------------------------------------------------------------------------
 install_linux_nerd_font() {
@@ -374,6 +412,7 @@ run_layer_linux_extra() {
                 ;;
             script) install_linux_script_app "$app_key" || failed="$failed $app_key" ;;
             snap)   install_linux_snap_app "$app_key" || failed="$failed $app_key" ;;
+            gsettings) install_linux_gsettings_app "$app_key" || failed="$failed $app_key" ;;
             font)   install_linux_nerd_font "$app_key" || failed="$failed $app_key" ;;
         esac
     done

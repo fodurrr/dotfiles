@@ -965,6 +965,32 @@ platform = ["linux"]
 linux_name = "vlc"
 description = "Media player"
 
+[apps.bibata-cursor-linux]
+type = "brew"
+category = "desktop"
+platform = ["linux"]
+linux_name = "bibata-cursor-theme"
+description = "Bibata mouse cursor theme (includes the yellow Amber variant)"
+
+[apps.gnome-cursor-yellow]
+type = "gsettings"
+gsettings_schema = "org.gnome.desktop.interface"
+gsettings_key = "cursor-theme"
+gsettings_value = "'Bibata-Modern-Amber'"
+category = "desktop"
+platform = ["linux"]
+depends_on = "bibata-cursor-linux"
+description = "Yellow-filled mouse pointer"
+
+[apps.gnome-screenshot-shortcut]
+type = "gsettings"
+gsettings_schema = "org.gnome.shell.keybindings"
+gsettings_key = "show-screenshot-ui"
+gsettings_value = "['Print', '<Shift><Super>s']"
+category = "desktop"
+platform = ["linux"]
+description = "Screenshot tool on Super+Shift+S, for keyboards with no Print key"
+
 [apps.spotify-linux]
 type = "snap"
 snap_name = "spotify"

@@ -89,6 +89,10 @@ apps = ["postgresql-17-linux", "pgadmin4-linux"]
 [linux.media]
 apps = ["spotify-linux", "telegram-linux", "discord-linux", "vlc-linux"]
 
+# DESKTOP PREFERENCES
+[linux.desktop]
+apps = ["bibata-cursor-linux", "gnome-cursor-yellow", "gnome-screenshot-shortcut"]
+
 # FONTS
 [linux.fonts]
 apps = ["jetbrains-mono-nerd-font-linux"]
