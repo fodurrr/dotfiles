@@ -36,7 +36,7 @@ Apps are installed from `apps.toml` by type:
 - Layer 1: Homebrew (`cask`, `brew`)
 - Layer 2: Stow (`stow`)
 - Layer 3: Mise (`mise`)
-- Layer 5: Curl fallback (`curl`), reserved for exceptional cases (currently `sheldon-linux` on Linux)
+- Layer 5: Curl fallback (`curl`), reserved for exceptional cases (currently the `codex-xpando` launcher)
 
 ## Install Modes
 
@@ -115,7 +115,7 @@ yq -p toml -oy '
 - `brew`: CLI formulae where Homebrew is preferred
 - `mise`: default for CLIs and runtimes
 - `stow`: configuration symlink packages
-- `curl`: exceptional fallback only (currently `sheldon-linux` on Linux)
+- `curl`: exceptional fallback only (currently the `codex-xpando` launcher)
 - `defaults`: macOS defaults automation
 
 Selected cask metadata:

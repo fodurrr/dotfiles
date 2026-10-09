@@ -46,11 +46,7 @@ remove_alacarte_app() {
             ;;
         curl)
             log_warning "Removing $name (curl)..."
-            local bin_name
-            case "$app_key" in
-                sheldon-linux) bin_name="sheldon" ;;
-                *) bin_name="$name" ;;
-            esac
+            local bin_name="$name"
             local bin_path
             bin_path=$(command -v "$bin_name" 2>/dev/null || true)
             if [[ -n "$bin_path" ]]; then

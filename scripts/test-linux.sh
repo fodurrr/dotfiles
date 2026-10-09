@@ -384,10 +384,10 @@ test_sheldon_source_config() {
         fail "brew sheldon should be macOS-only"
     fi
 
-    if [[ "$sheldon_linux_type" == "curl" ]]; then
-        pass "sheldon-linux app should exist as curl tool"
+    if [[ "$sheldon_linux_type" == "mise" && "$(get_app_prop sheldon-linux name)" == "sheldon" ]]; then
+        pass "sheldon-linux app should install sheldon through mise"
     else
-        fail "sheldon-linux app should exist as curl tool"
+        fail "sheldon-linux app should install sheldon through mise"
     fi
 
     assert_true "sheldon-linux should be Linux-supported" is_app_supported sheldon-linux linux
@@ -414,10 +414,10 @@ test_curl_registry_scope() {
         fi
     done
 
-    if [[ "$curl_count" -eq 2 && "$curl_keys" == "codex-xpando, sheldon-linux" ]]; then
-        pass "only codex-xpando and sheldon-linux should be configured as curl apps"
+    if [[ "$curl_count" -eq 1 && "$curl_keys" == "codex-xpando" ]]; then
+        pass "only codex-xpando should be configured as a curl app"
     else
-        fail "only codex-xpando and sheldon-linux should be configured as curl apps (found: ${curl_keys:-none})"
+        fail "only codex-xpando should be configured as a curl app (found: ${curl_keys:-none})"
     fi
 }
 
@@ -486,8 +486,7 @@ test_curl_layer_linux_tools() {
     local curl_layer_file="$DOTFILES_DIR/scripts/install/layer_curl.sh"
     assert_false "curl layer should not include claude-cli installer path" is_grep_match 'claude-cli)' "$curl_layer_file"
     assert_false "curl layer should not include opencode-cli installer path" is_grep_match 'opencode-cli)' "$curl_layer_file"
-    assert_true "curl layer should support sheldon-linux installer" is_grep_match 'sheldon-linux' "$curl_layer_file"
-    assert_true "curl layer should include sheldon binary installer" is_grep_match 'install_sheldon_linux_binary' "$curl_layer_file"
+    assert_false "curl layer should not include a sheldon installer path" is_grep_match 'sheldon' "$curl_layer_file"
     assert_true "curl layer should fail when selected curl tools fail" is_grep_match 'Curl layer failed for selected tools' "$curl_layer_file"
 }
 

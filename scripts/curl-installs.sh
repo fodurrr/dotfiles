@@ -9,7 +9,7 @@
 # - Exceptional curl fallbacks are handled by install.sh layer routing.
 #
 # Current exceptional fallback:
-# - sheldon-linux (Linux only), handled by scripts/install/layer_curl.sh
+# - codex-xpando launcher, handled by scripts/install/layer_curl.sh
 # =============================================================================
 
 set -euo pipefail

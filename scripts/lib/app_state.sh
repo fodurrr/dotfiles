@@ -145,10 +145,7 @@ is_app_installed() {
             [[ -n "$status" ]] && [[ "$status" != *"(missing)"* ]]
             ;;
         curl)
-            case "$app_key" in
-                sheldon-linux) command -v sheldon >/dev/null 2>&1 ;;
-                *) return 1 ;;
-            esac
+            return 1
             ;;
         stow)
             return 0

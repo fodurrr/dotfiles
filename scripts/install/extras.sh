@@ -152,15 +152,8 @@ run_extras_mode() {
                 install_mise_app "$app_key"
                 ;;
             curl)
-                case "$app_key" in
-                    sheldon-linux)
-                        install_or_update_curl_tool "$app_key" "sheldon" "sheldon"
-                        ;;
-                    *)
-                        log_warning "Unknown curl installer selected in extras mode: $app_key"
-                        add_to_summary SKIPPED "$name" "$app_key"
-                        ;;
-                esac
+                log_warning "Unknown curl installer selected in extras mode: $app_key"
+                add_to_summary SKIPPED "$name" "$app_key"
                 ;;
         esac
     done

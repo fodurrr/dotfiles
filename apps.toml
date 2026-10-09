@@ -506,10 +506,12 @@ platform = ["macos"]
 description = "Fast shell plugin manager"
 
 [apps.sheldon-linux]
-type = "curl"
+type = "mise"
+name = "sheldon"
+bin = "sheldon"
 category = "cli"
 platform = ["linux"]
-description = "Fast shell plugin manager (Linux binary install)"
+description = "Fast shell plugin manager (Linux, through mise)"
 
 [apps.jq]
 type = "mise"

@@ -9,72 +9,6 @@ get_curl_tool_version() {
     fi
 }
 
-install_sheldon_linux_binary() {
-    if [[ "$(get_current_platform)" != "linux" ]]; then
-        log_error "sheldon-linux installer is only supported on Linux"
-        return 1
-    fi
-
-    local arch
-    case "$(uname -m)" in
-        x86_64) arch="x86_64" ;;
-        aarch64|arm64) arch="aarch64" ;;
-        armv7l) arch="armv7" ;;
-        *)
-            log_error "Unsupported Linux architecture for sheldon: $(uname -m)"
-            return 1
-            ;;
-    esac
-
-    local api_url="https://api.github.com/repos/rossmacarthur/sheldon/releases/latest"
-    local asset_url
-    asset_url=$(curl -fsSL "$api_url" 2>/dev/null | grep -Eo "https://[^\\\"]*sheldon-[0-9.]+-${arch}-unknown-linux-musl\\.tar\\.gz" | head -1)
-    if [[ -z "$asset_url" ]]; then
-        log_error "Could not resolve sheldon release asset for architecture: $arch"
-        return 1
-    fi
-
-    local tmp_dir
-    tmp_dir=$(mktemp -d)
-    if [[ ! -d "$tmp_dir" ]]; then
-        log_error "Failed to create temp directory for sheldon installation"
-        return 1
-    fi
-
-    local archive="$tmp_dir/sheldon.tar.gz"
-    if ! curl -fsSL "$asset_url" -o "$archive"; then
-        rm -rf "$tmp_dir"
-        log_error "Failed to download sheldon release archive"
-        return 1
-    fi
-
-    if ! tar -xzf "$archive" -C "$tmp_dir"; then
-        rm -rf "$tmp_dir"
-        log_error "Failed to extract sheldon release archive"
-        return 1
-    fi
-
-    local sheldon_bin
-    sheldon_bin=$(find "$tmp_dir" -type f -name sheldon 2>/dev/null | head -1)
-    if [[ -z "$sheldon_bin" ]]; then
-        rm -rf "$tmp_dir"
-        log_error "sheldon binary not found in downloaded archive"
-        return 1
-    fi
-
-    local bin_dir="$HOME/.local/bin"
-    mkdir -p "$bin_dir"
-    if ! cp "$sheldon_bin" "$bin_dir/sheldon"; then
-        rm -rf "$tmp_dir"
-        log_error "Failed to copy sheldon binary to $bin_dir"
-        return 1
-    fi
-    chmod +x "$bin_dir/sheldon"
-    export PATH="$bin_dir:$PATH"
-    rm -rf "$tmp_dir"
-    return 0
-}
-
 install_codex_xpando_launcher() {
     local source_file="$DOTFILES_DIR/scripts/local-bin/codex-xpando"
     local bin_dir="$HOME/.local/bin"
@@ -98,9 +32,6 @@ run_curl_installer() {
     case "$app_key" in
         codex-xpando)
             install_codex_xpando_launcher
-            ;;
-        sheldon-linux)
-            install_sheldon_linux_binary
             ;;
         *)
             return 1
@@ -158,12 +89,6 @@ run_layer_curl() {
                         if ! install_or_update_curl_tool "$app_key" "codex-xpando" "codex-xpando"; then
                             failed_count=$((failed_count + 1))
                             failed_tools="${failed_tools} codex-xpando"
-                        fi
-                        ;;
-                    sheldon-linux)
-                        if ! install_or_update_curl_tool "$app_key" "sheldon" "sheldon"; then
-                            failed_count=$((failed_count + 1))
-                            failed_tools="${failed_tools} sheldon"
                         fi
                         ;;
                     *)

@@ -115,7 +115,7 @@ Use this decision path:
 
 1. Runtime or CLI: prefer `mise`.
 2. GUI app: use Homebrew `cask`.
-3. Use `curl` only for explicit exceptional cases (currently `sheldon-linux` on Linux).
+3. Use `curl` only for explicit exceptional cases (currently the `codex-xpando` launcher).
 
 Command ownership rule:
 1. Keep one command owner per platform/profile.
