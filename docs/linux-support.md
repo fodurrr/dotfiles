@@ -125,3 +125,14 @@ Use distro overrides only when names differ:
 linux_apt = "package-name-on-apt"
 linux_dnf = "package-name-on-dnf"
 ```
+
+## herdr Server Service
+
+`systemd/user/herdr.service` runs the herdr server as a systemd user service. It is not a stow package: systemd rejects a unit file that stow links with a relative path. The installer does not enable it. Enable it once per machine with systemd's own link method:
+
+```bash
+systemctl --user enable --now "$HOME/dev/dotfiles/systemd/user/herdr.service"
+loginctl enable-linger "$USER"
+```
+
+Lingering starts the service at boot, before login. Check with `herdr status` and `systemctl --user is-enabled herdr.service`.
