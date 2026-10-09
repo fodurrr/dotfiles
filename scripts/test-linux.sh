@@ -132,8 +132,8 @@ test_platform_filtering() {
 
 test_linux_package_mapping() {
     print_header "Linux Package Mapping"
-    assert_true "btop should map to Linux package for apt" test -n "$(get_linux_package_name btop apt)"
-    assert_true "btop should map to Linux package for dnf" test -n "$(get_linux_package_name btop dnf)"
+    assert_true "btop should be installed through mise" test "$(get_app_prop btop type)" = "mise"
+    assert_true "restic should be installed through mise" test "$(get_app_prop restic type)" = "mise"
     assert_true "ncdu should map to Linux package for apt" test -n "$(get_linux_package_name ncdu apt)"
     assert_true "ncdu should map to Linux package for dnf" test -n "$(get_linux_package_name ncdu dnf)"
     assert_false "codex-acp should not be Linux-supported app" is_app_supported codex-acp linux
@@ -189,13 +189,11 @@ test_ai_cli_single_source_fields() {
 test_codex_owner_split() {
     print_header "Codex Owner Split"
 
-    local codex_desktop_name codex_desktop_kind codex_cli_platform codex_cli_macos_type codex_cli_macos_kind codex_cli_macos_platform
+    local codex_desktop_name codex_desktop_kind codex_cli_platform codex_cli_type
     codex_desktop_name=$(get_app_prop codex-desktop name)
     codex_desktop_kind=$(get_app_prop codex-desktop kind)
     codex_cli_platform=$(get_app_platform codex-cli)
-    codex_cli_macos_type=$(get_app_prop codex-cli-macos type)
-    codex_cli_macos_kind=$(get_app_prop codex-cli-macos kind)
-    codex_cli_macos_platform=$(get_app_platform codex-cli-macos)
+    codex_cli_type=$(get_app_prop codex-cli type)
 
     if [[ "$codex_desktop_name" == "codex-app" ]]; then
         pass "codex-desktop should target codex-app cask"
@@ -209,16 +207,16 @@ test_codex_owner_split() {
         fail "codex-desktop should be marked kind=desktop"
     fi
 
-    if list_has_token "$codex_cli_platform" "linux" && ! list_has_token "$codex_cli_platform" "macos"; then
-        pass "codex-cli should be Linux-only mise"
+    if [[ "$codex_cli_type" == "mise" ]] && list_has_token "$codex_cli_platform" "linux" && list_has_token "$codex_cli_platform" "macos"; then
+        pass "codex-cli should be a mise app on macOS and Linux"
     else
-        fail "codex-cli should be Linux-only mise"
+        fail "codex-cli should be a mise app on macOS and Linux"
     fi
 
-    if [[ "$codex_cli_macos_type" == "cask" && "$codex_cli_macos_kind" == "cli" && "$codex_cli_macos_platform" == "macos" ]]; then
-        pass "codex-cli-macos should be macOS cask CLI owner"
+    if [[ -z "$(get_app_prop codex-cli-macos type)" ]]; then
+        pass "codex-cli-macos cask entry should not exist"
     else
-        fail "codex-cli-macos should be macOS cask CLI owner"
+        fail "codex-cli-macos cask entry should not exist"
     fi
 }
 
@@ -367,30 +365,10 @@ test_no_cli_owner_overlap() {
 
 test_sheldon_source_config() {
     print_header "Sheldon Tool Configuration"
-    local sheldon_type sheldon_platform sheldon_linux_type
-    sheldon_type=$(get_app_prop sheldon type)
-    sheldon_platform=$(get_app_prop sheldon platform)
-    sheldon_linux_type=$(get_app_prop sheldon-linux type)
-
-    if [[ "$sheldon_type" == "brew" ]]; then
-        pass "sheldon app should exist in apps.toml as brew tool"
-    else
-        fail "sheldon app should exist in apps.toml as brew tool"
-    fi
-
-    if echo "$sheldon_platform" | grep -q "macos" && ! echo "$sheldon_platform" | grep -q "linux"; then
-        pass "brew sheldon should be macOS-only"
-    else
-        fail "brew sheldon should be macOS-only"
-    fi
-
-    if [[ "$sheldon_linux_type" == "mise" && "$(get_app_prop sheldon-linux name)" == "sheldon" ]]; then
-        pass "sheldon-linux app should install sheldon through mise"
-    else
-        fail "sheldon-linux app should install sheldon through mise"
-    fi
-
-    assert_true "sheldon-linux should be Linux-supported" is_app_supported sheldon-linux linux
+    assert_true "sheldon should be installed through mise" test "$(get_app_prop sheldon type)" = "mise"
+    assert_true "sheldon should be macOS-supported" is_app_supported sheldon macos
+    assert_true "sheldon should be Linux-supported" is_app_supported sheldon linux
+    assert_true "sheldon-linux entry should not exist" test -z "$(get_app_prop sheldon-linux type)"
 }
 
 test_curl_registry_scope() {

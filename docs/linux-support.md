@@ -52,7 +52,7 @@ For selected mapped Linux packages, reruns now re-apply package manager installs
 
 If a selected mapped package install/upgrade fails, the Linux layer exits non-zero.
 
-`sheldon` is not available in the default Ubuntu/Fedora repositories. On Linux it is installed through mise by the `sheldon-linux` entry (`type = "mise"`, `name = "sheldon"`). macOS keeps the Homebrew `sheldon` entry.
+`sheldon` is not available in the default Ubuntu/Fedora repositories. It is installed through mise on macOS and Linux by the `sheldon` entry.
 
 ## GUI Apps on Linux
 
@@ -102,7 +102,7 @@ This validates:
 
 - platform filtering (`ghostty` false on Linux, `starship` true)
 - Linux package mapping presence
-- `sheldon` strategy split: Homebrew on macOS, mise on Linux
+- `sheldon`, `btop`, `restic` and the Codex CLI are mise apps on both platforms
 - Linux bootstrap branch behavior (no `brew` calls in Linux bootstrap function)
 - macOS-only guardrails for post-install steps
 - summary fallback behavior when gum is missing

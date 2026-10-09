@@ -60,4 +60,4 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "fzf", "sheldon-linux"]
+apps = ["starship", "eza", "bat", "fzf", "sheldon"]

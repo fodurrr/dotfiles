@@ -15,7 +15,7 @@ apps = ["firefox", "google-chrome"]
 
 # AI
 [macos.ai]
-apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "pi-cli", "codex-cli-macos", "codex-acp", "gemini-cli"]
+apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "pi-cli", "codex-cli", "grok-cli", "codex-acp", "gemini-cli"]
 
 # CONFIG
 [macos.config]
@@ -95,7 +95,7 @@ apps = ["jetbrains-mono-nerd-font-linux"]
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon-linux", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]
 
 # RUNTIMES
 [linux.runtimes]

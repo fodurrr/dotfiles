@@ -167,16 +167,8 @@ name = "codex"
 bin = "codex"
 version = "latest"
 category = "ai"
-platform = ["linux"]
-description = "OpenAI Codex assistant (CLI, Linux via mise)"
-
-[apps.codex-cli-macos]
-type = "cask"
-name = "codex"
-kind = "cli"
-category = "ai"
-platform = ["macos"]
-description = "OpenAI Codex assistant (CLI via Homebrew cask)"
+platform = ["macos", "linux"]
+description = "OpenAI Codex assistant (CLI)"
 
 [apps.codex-acp]
 type = "brew"
@@ -500,18 +492,10 @@ platform = ["macos", "linux"]
 description = "Fuzzy finder"
 
 [apps.sheldon]
-type = "brew"
-category = "cli"
-platform = ["macos"]
-description = "Fast shell plugin manager"
-
-[apps.sheldon-linux]
 type = "mise"
-name = "sheldon"
-bin = "sheldon"
 category = "cli"
-platform = ["linux"]
-description = "Fast shell plugin manager (Linux, through mise)"
+platform = ["macos", "linux"]
+description = "Fast shell plugin manager"
 
 [apps.jq]
 type = "mise"
@@ -538,10 +522,9 @@ platform = ["macos", "linux"]
 description = "Terminal file manager"
 
 [apps.btop]
-type = "brew"
+type = "mise"
 category = "cli"
 platform = ["macos", "linux"]
-linux_name = "btop"
 description = "Resource monitor"
 
 [apps.ncdu]
@@ -572,10 +555,9 @@ linux_name = "tailscale"
 description = "Zero-config mesh VPN"
 
 [apps.restic]
-type = "brew"
+type = "mise"
 category = "cli"
 platform = ["macos", "linux"]
-linux_name = "restic"
 description = "Fast, secure, deduplicating backup program"
 
 [apps.mole]
@@ -815,7 +797,7 @@ name = "grok"
 bin = "grok"
 version = "latest"
 category = "ai"
-platform = ["linux"]
+platform = ["macos", "linux"]
 description = "Grok CLI"
 
 [apps.dexter]
