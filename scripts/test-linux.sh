@@ -372,6 +372,12 @@ test_sheldon_source_config() {
     assert_true "sheldon-linux entry should not exist" test -z "$(get_app_prop sheldon-linux type)"
 }
 
+test_mise_release_age_excludes() {
+    print_header "Mise Release Age Exceptions"
+    local mise_lib="$DOTFILES_DIR/scripts/lib/mise.sh"
+    assert_true "generated mise config should exempt the AI CLIs from the release delay" is_grep_match 'minimum_release_age_excludes = \["claude", "codex", "grok", "opencode", "pi"\]' "$mise_lib"
+}
+
 test_curl_registry_scope() {
     print_header "Curl Registry Scope"
 
@@ -532,6 +538,7 @@ main() {
     test_cask_kind_metadata
     test_no_cli_owner_overlap
     test_sheldon_source_config
+    test_mise_release_age_excludes
     test_curl_registry_scope
     test_mise_registry_entries
     test_bootstrap_linux_path

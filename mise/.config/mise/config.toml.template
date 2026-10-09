@@ -22,3 +22,4 @@
 [settings]
 log_level = "info"
 experimental = true
+minimum_release_age_excludes = ["claude", "codex", "grok", "opencode", "pi"]

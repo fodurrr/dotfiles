@@ -383,6 +383,9 @@ EOF_MISE
 [settings]
 log_level = "info"
 experimental = true
+# AI CLIs skip the default 24-hour release delay so the newest version is
+# available at once. Everything else keeps the delay.
+minimum_release_age_excludes = ["claude", "codex", "grok", "opencode", "pi"]
 EOF_MISE
 
     log_success "Generated mise config with $(grep -c '=' "$config_file" 2>/dev/null || echo 0) tools"
