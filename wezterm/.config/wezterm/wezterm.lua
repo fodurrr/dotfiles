@@ -118,11 +118,20 @@ config.keys = {
   -- Shift+Enter → newline in Claude Code (CSI u encoding for modified Enter)
   { key = "Enter", mods = "SHIFT", action = act.SendString("\x1b[13;2u") },
 
+}
+
+if is_macos then
   -- Let Pi receive Ctrl+V directly for clipboard image paste.
   -- Cmd+V remains WezTerm/macOS text paste.
-  { key = "V", mods = "CTRL", action = act.DisableDefaultAssignment },
-
-}
+  table.insert(config.keys, { key = "V", mods = "CTRL", action = act.DisableDefaultAssignment })
+else
+  -- Linux: Ctrl+Shift+V pastes and Shift+Insert pastes the clipboard too.
+  -- Plain Ctrl+V still goes to the program inside (Pi image paste).
+  -- The macOS rule above must not run here: WezTerm reads key "V" + CTRL as
+  -- Ctrl+Shift+V, so it would switch the Linux paste shortcut off.
+  table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
+  table.insert(config.keys, { key = "Insert", mods = "SHIFT", action = act.PasteFrom("Clipboard") })
+end
 
 -- =============================================================================
 -- Hyperlinks — Cmd+Click to open URLs in browser
