@@ -343,7 +343,14 @@ add_mise_tool_to_config() {
     local version
     version=$(get_app_prop "$app_key" "version")
     [[ -z "$version" ]] && version="latest"
-    echo "\"$name\" = \"$version\"" >> "$config_file"
+    local mise_options
+    mise_options=$(get_app_prop "$app_key" "mise_options")
+    if [[ -n "$mise_options" ]]; then
+        # Backend options (for example a custom api_url) need the inline table form.
+        echo "\"$name\" = { version = \"$version\", $mise_options }" >> "$config_file"
+    else
+        echo "\"$name\" = \"$version\"" >> "$config_file"
+    fi
     MISE_CONFIG_ADDED_TOOLS="${MISE_CONFIG_ADDED_TOOLS}${app_key}|"
 }
 

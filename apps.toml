@@ -9,6 +9,7 @@
 #   tap         = homebrew tap (optional, for casks from taps)
 #   version     = version string (optional, for mise tools)
 #   bin         = command name for command ownership/collision checks (optional)
+#   mise_options = extra backend options for the generated mise config, as inline TOML (optional)
 #   enforce_single_source = fail install if command resolves to multiple sources (optional, for mise tools)
 #   kind        = "desktop" | "cli" (optional, for casks)
 #   category    = grouping for documentation
@@ -778,9 +779,12 @@ description = "Audio and video converter"
 
 [apps.tea]
 type = "mise"
-name = "aqua:gitea.com/gitea/tea"
+# tea releases live on gitea.com, not GitHub. The forgejo backend reads them
+# through the Gitea API, so "latest" works and mise prints no aqua warnings.
+name = "forgejo:gitea/tea"
 bin = "tea"
-version = "0.15.0"
+version = "latest"
+mise_options = 'api_url = "https://gitea.com/api/v1"'
 category = "cli"
 platform = ["macos", "linux"]
 description = "Forgejo and Gitea CLI"
