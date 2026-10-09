@@ -127,12 +127,13 @@ test_platform_filtering() {
     print_header "Platform Filtering"
     assert_false "ghostty should not be supported on Linux" is_app_supported ghostty linux
     assert_true "starship should be supported on Linux" is_app_supported starship linux
-    assert_true "btop should be selected for Linux in hacker profile when profile matches" is_app_supported btop linux
+    assert_true "btop-linux should be selected for Linux in hacker profile when profile matches" is_app_supported btop-linux linux
 }
 
 test_linux_package_mapping() {
     print_header "Linux Package Mapping"
-    assert_true "btop should be installed through mise" test "$(get_app_prop btop type)" = "mise"
+    assert_true "btop-linux should be installed through mise" test "$(get_app_prop btop-linux type)" = "mise"
+    assert_true "btop should stay a macOS Homebrew app (mise has no macOS build)" test "$(get_app_prop btop type)" = "brew"
     assert_true "restic should be installed through mise" test "$(get_app_prop restic type)" = "mise"
     assert_true "ncdu should map to Linux package for apt" test -n "$(get_linux_package_name ncdu apt)"
     assert_true "ncdu should map to Linux package for dnf" test -n "$(get_linux_package_name ncdu dnf)"

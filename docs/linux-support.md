@@ -102,7 +102,7 @@ This validates:
 
 - platform filtering (`ghostty` false on Linux, `starship` true)
 - Linux package mapping presence
-- `sheldon`, `btop`, `restic` and the Codex CLI are mise apps on both platforms
+- `sheldon`, `restic` and the Codex CLI are mise apps on both platforms; `btop` is mise on Linux (`btop-linux`) and Homebrew on macOS, because mise has no macOS build
 - Linux bootstrap branch behavior (no `brew` calls in Linux bootstrap function)
 - macOS-only guardrails for post-install steps
 - summary fallback behavior when gum is missing

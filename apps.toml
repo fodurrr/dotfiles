@@ -522,10 +522,18 @@ platform = ["macos", "linux"]
 description = "Terminal file manager"
 
 [apps.btop]
-type = "mise"
+type = "brew"
 category = "cli"
-platform = ["macos", "linux"]
+platform = ["macos"]
 description = "Resource monitor"
+
+[apps.btop-linux]
+type = "mise"
+name = "btop"
+bin = "btop"
+category = "cli"
+platform = ["linux"]
+description = "Resource monitor (mise has no macOS build)"
 
 [apps.ncdu]
 type = "brew"

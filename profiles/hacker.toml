@@ -72,7 +72,7 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 
 # CLI
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tmux", "yazi", "btop", "ncdu", "lazygit", "tailscale", "restic"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tmux", "yazi", "btop-linux", "ncdu", "lazygit", "tailscale", "restic"]
 
 # RUNTIMES
 [linux.runtimes]
