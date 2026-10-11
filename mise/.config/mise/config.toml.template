@@ -23,3 +23,7 @@
 log_level = "info"
 experimental = true
 minimum_release_age_excludes = ["claude", "codex", "grok", "opencode", "pi"]
+# mise upgrades every global tool in the background, checked every 24 hours,
+# and updates itself daily. Exact versions never move. Needs mise 2026.10.7.
+tool_update.global_auto = true
+self_update.auto = "1d"
