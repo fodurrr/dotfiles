@@ -136,9 +136,11 @@ Ubuntu cannot detect a monitor's power button: the screen stays "connected", so 
 
 | Key | Command | Result |
 |---|---|---|
-| Super+Alt+1 | `screens monitor` | only the 49-inch monitor (DP-1) |
-| Super+Alt+2 | `screens tv` | only the TV (HDMI-1) |
-| Super+Alt+3 | `screens both` | both, monitor left of the TV |
+| Ctrl+Alt+M | `screens monitor` | only the 49-inch monitor (DP-1) |
+| Ctrl+Alt+T | `screens tv` | only the TV (HDMI-1) |
+| Ctrl+Alt+B | `screens both` | both, monitor left of the TV |
+
+Ctrl+Alt+T is Ubuntu's key for opening a terminal. The entry `gnome-terminal-shortcut-off` clears that key so the TV shortcut can use it.
 
 The choice is not persistent: after a restart both screens are on. The connector names, modes and scales are written in `desktop-linux/.local/bin/screens`; change them there for other hardware. The command calls GNOME's `gdctl` with `/usr/bin/python3`, because the mise Python has no `gi` module.
 

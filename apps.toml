@@ -998,35 +998,44 @@ category = "config"
 platform = ["linux"]
 description = "Commands screens (monitor, TV or both) and paperwm-toggle in ~/.local/bin"
 
+[apps.gnome-terminal-shortcut-off]
+type = "gsettings"
+gsettings_schema = "org.gnome.settings-daemon.plugins.media-keys"
+gsettings_key = "terminal"
+gsettings_value = "[]"
+category = "desktop"
+platform = ["linux"]
+description = "Frees Ctrl+Alt+T (Ubuntu's open-terminal key) for the TV shortcut"
+
 [apps.gnome-shortcut-screens-monitor]
 type = "gnome-shortcut"
 name = "Screens: monitor only"
 shortcut_id = "screens-monitor"
 shortcut_command = "~/.local/bin/screens monitor"
-shortcut_binding = "<Super><Alt>1"
+shortcut_binding = "<Control><Alt>m"
 category = "desktop"
 platform = ["linux"]
-description = "Super+Alt+1: only the monitor is active"
+description = "Ctrl+Alt+M: only the monitor is active"
 
 [apps.gnome-shortcut-screens-tv]
 type = "gnome-shortcut"
 name = "Screens: TV only"
 shortcut_id = "screens-tv"
 shortcut_command = "~/.local/bin/screens tv"
-shortcut_binding = "<Super><Alt>2"
+shortcut_binding = "<Control><Alt>t"
 category = "desktop"
 platform = ["linux"]
-description = "Super+Alt+2: only the TV is active"
+description = "Ctrl+Alt+T: only the TV is active"
 
 [apps.gnome-shortcut-screens-both]
 type = "gnome-shortcut"
 name = "Screens: both"
 shortcut_id = "screens-both"
 shortcut_command = "~/.local/bin/screens both"
-shortcut_binding = "<Super><Alt>3"
+shortcut_binding = "<Control><Alt>b"
 category = "desktop"
 platform = ["linux"]
-description = "Super+Alt+3: monitor and TV are both active"
+description = "Ctrl+Alt+B: monitor and TV are both active"
 
 [apps.voxtype-linux]
 type = "deb"
