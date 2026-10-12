@@ -144,6 +144,18 @@ Ctrl+Alt+T is Ubuntu's key for opening a terminal. The entry `gnome-terminal-sho
 
 The choice is not persistent: after a restart both screens are on. The connector names, modes and scales are written in `desktop-linux/.local/bin/screens`; change them there for other hardware. The command calls GNOME's `gdctl` with `/usr/bin/python3`, because the mise Python has no `gi` module.
 
+### Keyboard and mouse (Logi Bolt)
+
+A Bluetooth keyboard cannot work in the boot menu, and on a machine that also starts Windows the two systems overwrite each other's Bluetooth pairing. A Logi Bolt USB receiver avoids both: the pairing is stored in the receiver, so one Easy-Switch key works in the boot menu, in Ubuntu and in Windows with no extra software.
+
+The installer installs `solaar`. It is needed only to pair a device, once per receiver:
+
+```bash
+solaar pair
+```
+
+Hold the Easy-Switch key for 3 seconds, type the shown code on the keyboard and press Enter. `solaar show` lists the paired devices; its `Change Host` field tells which Easy-Switch slot is active.
+
 ### Dictation (Voxtype)
 
 Hold **F9** to talk; on release the text is pasted at the cursor. **Super+/** starts and stops a recording as a toggle. The config is the stow package `voxtype/`.

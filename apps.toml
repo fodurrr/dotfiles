@@ -1067,6 +1067,13 @@ platform = ["linux"]
 linux_name = "wl-clipboard"
 description = "Wayland clipboard commands, used by Voxtype"
 
+[apps.solaar]
+type = "brew"
+category = "desktop"
+platform = ["linux"]
+linux_name = "solaar"
+description = "Pairs Logitech devices to a Logi Bolt receiver (solaar pair)"
+
 [apps.gnome-shortcut-voxtype-toggle]
 type = "gnome-shortcut"
 name = "Voxtype dictation (Super+/)"
