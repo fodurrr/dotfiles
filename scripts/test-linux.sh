@@ -378,6 +378,7 @@ test_mise_release_age_excludes() {
     assert_true "generated mise config should exempt the AI CLIs from the release delay" is_grep_match 'minimum_release_age_excludes = \["claude", "codex", "grok", "opencode", "pi"\]' "$mise_lib"
     assert_true "generated mise config should turn on background tool updates" is_grep_match 'tool_update.global_auto = true' "$mise_lib"
     assert_true "generated mise config should turn on the daily mise self-update" is_grep_match 'self_update.auto = "1d"' "$mise_lib"
+    assert_true "generated mise config should state the Ubuntu release for prebuilt Erlang" is_grep_match 'erlang.precompiled_os = "ubuntu-24.04"' "$mise_lib"
 }
 
 test_tea_source_config() {

@@ -397,6 +397,10 @@ minimum_release_age_excludes = ["claude", "codex", "grok", "opencode", "pi"]
 # and updates itself daily. Exact versions never move. Needs mise 2026.10.7.
 tool_update.global_auto = true
 self_update.auto = "1d"
+# Linux: use the prebuilt Erlang for Ubuntu 24.04. This is the build that
+# `mise lock` on macOS records for Linux, so `mise install` keeps that
+# record in a project's mise.lock. Ubuntu 26.04 is not detected by itself.
+erlang.precompiled_os = "ubuntu-24.04"
 EOF_MISE
 
     log_success "Generated mise config with $(grep -c '=' "$config_file" 2>/dev/null || echo 0) tools"
