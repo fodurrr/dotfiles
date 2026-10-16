@@ -141,6 +141,10 @@ ensure_linux_zsh_default_shell() {
 }
 
 show_summary_and_reload() {
+    if ! ensure_linux_zsh_default_shell; then
+        record_install_failure "Login shell" "Could not configure zsh as the login shell"
+    fi
+    INSTALL_SUMMARY_SHOWN=true
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  Installation Summary"
@@ -160,7 +164,7 @@ show_summary_and_reload() {
     fi
 
     if [[ -n "$SUMMARY_SKIPPED" ]]; then
-        echo -e "  ${BLUE}Already Installed${NC}"
+        echo -e "  ${BLUE}Unchanged or skipped${NC}"
         echo ""
         print_summary_table "$SUMMARY_SKIPPED" "ℹ" "Skipped"
     fi
@@ -171,11 +175,19 @@ show_summary_and_reload() {
         print_summary_table "$SUMMARY_REMOVED" "⚠" "Removed"
     fi
 
-    if [[ -z "$SUMMARY_INSTALLED" && -z "$SUMMARY_SKIPPED" && -z "$SUMMARY_REMOVED" ]]; then
+    if [[ -z "$SUMMARY_INSTALLED" && -z "$SUMMARY_SKIPPED" && -z "$SUMMARY_REMOVED" && -z "${SUMMARY_FAILED:-}" ]]; then
         echo "  No changes made"
     fi
 
-    ensure_linux_zsh_default_shell
+    if [[ -n "${SUMMARY_FAILED:-}" ]]; then
+        echo "  Failed items (installation continued)"
+        print_summary_table "$SUMMARY_FAILED" "✗" "Failed"
+    fi
+    if [[ "${INSTALL_HAD_ERRORS:-false}" == true ]]; then
+        log_error "Installation finished with errors. Successful items remain installed."
+        log_error "Review the failed items above and rerun after correcting them. Log: ${LOG_FILE:-install.log}"
+        return 1
+    fi
 
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

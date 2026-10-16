@@ -145,6 +145,7 @@ platform = ["macos", "linux"]
 description = "Claude AI assistant (CLI)"
 
 [apps.opencode-cli]
+depends_on = "node"
 type = "mise"
 name = "opencode"
 bin = "opencode"
@@ -557,6 +558,8 @@ platform = ["macos", "linux"]
 description = "Hetzner Cloud CLI"
 
 [apps.tailscale]
+linux_repository = "tailscale"
+linux_service = "tailscaled"
 type = "brew"
 category = "cli"
 platform = ["macos", "linux"]

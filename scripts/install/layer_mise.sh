@@ -21,6 +21,7 @@ run_layer_mise() {
             type=$(get_app_prop "$app_key" "type")
             if [[ "$type" == "mise" ]]; then
                 if ! install_mise_app "$app_key"; then
+                    record_install_failure "$app_key" "Mise tool or prerequisite failed; see log"
                     local failed_name
                     failed_name=$(get_app_prop "$app_key" "name")
                     [[ -z "$failed_name" ]] && failed_name="$app_key"
@@ -59,6 +60,7 @@ run_layer_mise() {
         fi
 
         if ! validate_mise_single_source "$app_key"; then
+            record_install_failure "$app_key" "Command ownership validation failed"
             local failed_name
             failed_name=$(get_app_prop "$app_key" "name")
             [[ -z "$failed_name" ]] && failed_name="$app_key"

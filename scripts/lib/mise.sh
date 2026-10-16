@@ -311,6 +311,7 @@ install_mise_app() {
         local error_line
         error_line=$(echo "$install_output" | grep -i "error\|failed\|not found" | head -1)
         [[ -n "$error_line" ]] && echo "      $error_line"
+        record_install_failure "$app_key" "${error_line:-mise install $name@$version failed}"
         return 1
     fi
 }
@@ -403,5 +404,5 @@ self_update.auto = "1d"
 erlang.precompiled_os = "ubuntu-24.04"
 EOF_MISE
 
-    log_success "Generated mise config with $(grep -c '=' "$config_file" 2>/dev/null || echo 0) tools"
+    log_success "Generated mise config with $(yq -p toml -oy '.tools | length' "$config_file") tools"
 }

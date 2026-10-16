@@ -43,6 +43,10 @@ PROFILES_DIR="$DOTFILES_DIR/profiles"
 SUMMARY_INSTALLED=""
 SUMMARY_SKIPPED=""
 SUMMARY_REMOVED=""
+SUMMARY_FAILED=""
+FAILED_SUMMARY_KEYS="|"
+INSTALL_HAD_ERRORS=false
+INSTALL_SUMMARY_SHOWN=false
 
 # =============================================================================
 # Error Handler
@@ -50,6 +54,7 @@ SUMMARY_REMOVED=""
 cleanup() {
     local exit_code=$?
     if [[ $exit_code -ne 0 ]]; then
+        [[ "$INSTALL_SUMMARY_SHOWN" == true ]] && exit "$exit_code"
         echo ""
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "  Installation failed. Check the errors above."
@@ -120,25 +125,24 @@ fi
 run_alacarte_removals
 
 # Platform-aware layer selection
-# NOTE: Each layer is wrapped with || to prevent set -e from killing the script.
+# Each layer runs inside a guarded step so errors do not abort later layers.
 # This ensures stow ALWAYS runs (so .zshrc gets linked) even if earlier layers fail.
-INSTALL_HAD_ERRORS=false
 PLATFORM=$(detect_platform)
 if [[ "$PLATFORM" == "macos" ]]; then
-    run_layer_homebrew || { log_warning "Homebrew layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+    run_install_step "Homebrew packages" run_layer_homebrew
 elif [[ "$PLATFORM" == "linux" ]]; then
-    run_layer_linux || { log_warning "Linux package layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+    run_install_step "Linux packages" run_layer_linux
 else
-    log_warning "Unsupported platform '$PLATFORM'; skipping package layer"
+    record_install_failure "Platform" "Unsupported platform: $PLATFORM"
 fi
 
-generate_mise_config
-run_layer_stow || { log_warning "Stow layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
-run_layer_mise || { log_warning "Mise layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
-run_layer_curl || { log_warning "Curl layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+run_install_step "Mise configuration" generate_mise_config
+run_install_step "Stow configuration" run_layer_stow
+run_install_step "Mise tools" run_layer_mise
+run_install_step "Local launchers" run_layer_curl
 if [[ "$PLATFORM" == "linux" ]]; then
-    run_layer_linux_extra || { log_warning "Linux extra layer completed with errors (continuing)"; INSTALL_HAD_ERRORS=true; }
+    run_install_step "Linux desktop apps" run_layer_linux_extra
 fi
-configure_raycast
-configure_terminal
+run_install_step "Raycast configuration" configure_raycast
+run_install_step "Terminal configuration" configure_terminal
 show_summary_and_reload

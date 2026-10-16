@@ -107,6 +107,9 @@ run_layer_curl() {
     fi
 
     if [[ "$failed_count" -gt 0 ]]; then
+        for app_key in $failed_tools; do
+            record_install_failure "$app_key" "Local launcher installation failed; see log"
+        done
         log_error "Curl layer failed for selected tools:${failed_tools}"
         return 1
     fi

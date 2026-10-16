@@ -76,11 +76,31 @@ If a selected mapped package install/upgrade fails, the Linux layer exits non-ze
 4. Mise layer
 5. Curl layer
 
-Selected profile tool failures are treated as fatal in strict mode:
+Selected app failures are recorded while the remaining apps and layers continue:
 
 - stow link failures
 - selected mise tool install failures
 - selected mapped Linux package install/upgrade failures
+
+The final summary lists failed items separately from unchanged or skipped items.
+After all independent steps finish, errors produce exit status 1 and the installer
+returns to the calling shell without launching a replacement shell. Successful
+installs remain in place. Bootstrap prerequisites (sudo, package manager, parser)
+are still required before the profile can be interpreted safely.
+
+Tailscale's Linux entry provisions its official Ubuntu/Debian or Fedora repository
+before installing the package, then enables `tailscaled`. Account authentication
+remains a manual `sudo tailscale up` step. Other distributions report a failure.
+
+The `clevo` profile is a saved developer-profile variant for the P170EM laptop.
+It omits the GEEKOM monitor commands/shortcuts and Voxtype configuration. Its older
+CPU lacks AVX2/AVX-512; do not apply the GEEKOM dictation binary selection to it.
+The profile is an explicit snapshot; compare it with `developer` when updating apps.
+
+Agent CLIs Claude, Codex, OpenCode, Pi, Gemini, Grok and herdr are managed by mise.
+OpenCode declares Node as an installation dependency; Node uses the `lts` version.
+Hermes Agent uses its vendor installer and isolated runtime. `codex-xpando` is a
+local launcher copied from `scripts/local-bin`, not a second Codex installation.
 
 ### Linux Shell Finalization
 
@@ -92,10 +112,11 @@ After install summary, Linux flow ensures zsh is the login shell:
 
 ## Validation
 
-Run Linux-focused assertions:
+Run Linux-focused assertions and mocked failure/continuation regressions:
 
 ```bash
 ./scripts/test-linux.sh
+./scripts/test-install-results.sh
 ```
 
 This validates:

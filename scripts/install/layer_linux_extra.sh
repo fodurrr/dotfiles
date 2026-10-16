@@ -480,6 +480,9 @@ run_layer_linux_extra() {
     done
 
     if [[ -n "$failed" ]]; then
+        for app_key in $failed; do
+            record_install_failure "$app_key" "Linux app installation failed; see log"
+        done
         log_error "Linux extra layer failed for:$failed"
         return 1
     fi

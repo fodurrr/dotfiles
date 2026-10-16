@@ -65,3 +65,31 @@ ${name},${status_symbol} ${status_text},${desc}"
     fi
     echo ""
 }
+
+# Keep errors separate from unchanged or unsupported entries. Never abort a layer.
+record_install_failure() {
+    local name="$1" reason="$2"
+    INSTALL_HAD_ERRORS=true
+    [[ "${FAILED_SUMMARY_KEYS:-|}" == *"|$name|"* ]] && return 0
+    FAILED_SUMMARY_KEYS="${FAILED_SUMMARY_KEYS:-|}${name}|"
+    reason="${reason//$'\n'/ }"
+    reason="${reason//|/;}"
+    local record="${name}|${reason}"
+    SUMMARY_FAILED="${SUMMARY_FAILED:+${SUMMARY_FAILED}
+}${record}"
+}
+
+# All independent phases run even when an earlier one failed.
+run_install_step() {
+    local label="$1" before="${SUMMARY_FAILED:-}"
+    shift
+    if "$@"; then
+        return 0
+    fi
+    INSTALL_HAD_ERRORS=true
+    if [[ "${SUMMARY_FAILED:-}" == "$before" ]]; then
+        record_install_failure "$label" "Step failed; see the installation log above"
+    fi
+    log_warning "$label completed with errors; continuing"
+    return 0
+}

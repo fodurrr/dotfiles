@@ -23,10 +23,12 @@ run_layer_stow() {
                     log_success "Linking $package config..."
                     if ! stow_enforce "$package"; then
                         log_error "Failed to link stow package: $package (continuing)"
+                        record_install_failure "$app_key" "Could not link config package: $package"
                         stow_had_errors=true
                     fi
                 else
-                    log_warning "Stow package directory not found: $package/"
+                    record_install_failure "$app_key" "Stow package directory not found: $package/"
+                    stow_had_errors=true
                 fi
             fi
         fi
