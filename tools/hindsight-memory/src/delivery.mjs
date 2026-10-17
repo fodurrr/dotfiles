@@ -46,9 +46,16 @@ export async function worker(store,{now=Date.now,fetchImpl=fetch,random=Math.ran
         try {
           const profile=await request(job,'GET','/profile',null,{fetchImpl,timeout:Math.min(LIMITS.request,deadline-now())});
           if(!store.validClaim(claim,now()))break;
+          if(profile.status===429 || (profile.status>=500 && profile.status<600)){
+            store.updateJob(claim,job.id,{next:backoff(job.attempts+1,profile.retryAfter,now(),random),reason:`bank-check-http-${profile.status}`},now());
+            continue;
+          }
           if(profile.status!==200 || profile.data?.bank_id!==job.bank){store.updateJob(claim,job.id,{state:'failed',reason:'existing-bank-not-confirmed'},now());continue;}
-        }catch{
-          if(store.validClaim(claim,now()))store.updateJob(claim,job.id,{next:backoff(job.attempts+1,null,now(),random),reason:'bank-check-unavailable'},now());
+        }catch(error){
+          if(store.validClaim(claim,now())){
+            if(['invalid-api-json','response-too-large'].includes(error.code))store.updateJob(claim,job.id,{state:'failed',reason:'bank-check-schema-conflict'},now());
+            else store.updateJob(claim,job.id,{next:backoff(job.attempts+1,null,now(),random),reason:'bank-check-unavailable'},now());
+          }
           break;
         }
       }

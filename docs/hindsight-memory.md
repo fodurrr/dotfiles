@@ -65,8 +65,9 @@ hindsight-memory activation-preview
 ```
 
 The example file must stay outside Git. The secret value never enters this JSON.
-There is no default endpoint, bank, person or enabled adapter. The local core
-accepts HTTPS, or loopback HTTP for explicit local deployments and isolated tests.
+There is no default endpoint, bank, person or enabled adapter. The local core accepts HTTPS. Cleartext HTTP permits only literal `127.0.0.1`
+or `[::1]` for explicit local deployments and isolated tests. Named hosts,
+including `localhost`, require HTTPS.
 It rejects URL credentials, query strings, redirects and path prefixes.
 
 The eventual activation workflow also needs separate host approval and native hook/plugin trust. The current candidate refuses this command with `native-caller-binding-unqualified`:
@@ -168,7 +169,9 @@ of those environments.
 A read-only bank-profile check must confirm the existing bank before a retain
 POST. It never calls bank creation/configuration, seeding, reflect or imports.
 The bank-profile endpoint is pinned to the inspected API schema. A missing bank
-fails safely instead of relying on the server's lazy creation behavior.
+fails safely instead of relying on the server's lazy creation behavior. Profile
+HTTP 429 and 5xx responses retry within the same attempt, age and backoff limits;
+auth, missing-bank and invalid-schema responses remain terminal.
 
 A submitted operation is not completed extraction. Lost acknowledgements trigger
 reconciliation using the same operation UUID. A missing/expired operation becomes
@@ -191,6 +194,8 @@ A deliberate `action:"resubmit"` requires
 `acknowledge_duplicate_extraction:true`. It preserves UUID and bytes but may
 repeat extraction if server operation history expired. It resets only the
 explicit automatic recovery cycle; it never creates a new request identity.
+Recovery holds the worker process mutex through its state transaction. An expired
+lease cannot authorize recovery while a paused worker still holds that mutex.
 No automatic recovery weakens this boundary.
 
 ## Deactivation, rollback and updates

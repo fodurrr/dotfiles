@@ -178,14 +178,19 @@ export class Store {
   recover(input,now=Date.now()) {
     if (!/^[a-f0-9-]{36}$/.test(input?.operation_id || '') || !['reconcile','resubmit'].includes(input.action)) fail('invalid-recovery');
     if(input.action==='resubmit' && input.acknowledge_duplicate_extraction!==true) fail('recovery-needs-duplicate-risk-acknowledgement');
-    return this.transaction(()=>{
+    // Match worker lock order: hold the process-lifetime mutex before opening
+    // the main-state transaction. A probe or an expired timestamp leaves a race
+    // with a paused worker or a new claimant. Keep the mutex until commit.
+    const releaseMutex=this.workerMutex();
+    if(!releaseMutex)fail('wait-for-worker-before-recovery');
+    try{return this.transaction(()=>{
       const a=this.active(); const job=this.db.prepare('SELECT * FROM jobs WHERE id=?').get(input.operation_id);
       if(!job || job.generation!==a.id || !job.body || !['failed','queued','submitted'].includes(job.state)) fail('job-not-recoverable');
       const lease=this.db.prepare('SELECT expires FROM worker WHERE id=1').get();
       if(lease && lease.expires>now) fail('wait-for-worker-before-recovery');
       this.db.prepare('UPDATE jobs SET state=?,attempts=0,polls=0,next=?,uncertain=?,reason=?,recovery=? WHERE id=?').run(input.action==='reconcile'?'submitted':'queued',now,input.action==='reconcile'?1:0,'explicit-recovery',now,job.id);
       return {status:'recovery-queued',operation_id:job.id,action:input.action};
-    });
+    });}finally{releaseMutex();}
   }
   nextDue() {return this.db.prepare("SELECT min(next) due FROM jobs JOIN activations ON jobs.generation=activations.id WHERE activations.active=1 AND jobs.state IN ('queued','submitted')").get()?.due;}
   recallOnce(key,now = Date.now()) {

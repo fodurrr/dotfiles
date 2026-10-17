@@ -54,7 +54,7 @@ export function validateConfig(value) {
   if (value?.schema_version !== 1 || typeof value.endpoint !== 'string' || typeof value.bank !== 'string' || !/^[a-zA-Z0-9_.-]{1,128}$/.test(value.bank)) fail('invalid-config');
   let url; try { url = new URL(value.endpoint); } catch { fail('invalid-endpoint'); }
   if (url.username || url.password || url.search || url.hash || url.pathname !== '/') fail('invalid-endpoint');
-  if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['127.0.0.1', '[::1]', 'localhost'].includes(url.hostname))) fail('insecure-endpoint');
+  if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['127.0.0.1', '[::1]'].includes(url.hostname))) fail('insecure-endpoint');
   if (!path.isAbsolute(value.secret_file || '') || !Array.isArray(value.adapters) || !value.adapters.length || value.adapters.some(v => !/^[a-z0-9-]{1,40}$/.test(v)) || value.capture !== true) fail('invalid-config');
   const endpoint = url.origin;
   return {schema_version: 1, endpoint, bank: value.bank, secret_file: value.secret_file, adapters: [...new Set(value.adapters)], agent_commands: value.agent_commands && typeof value.agent_commands==='object' && !Array.isArray(value.agent_commands)?value.agent_commands:{}, agent_versions: value.agent_versions && typeof value.agent_versions === 'object' && !Array.isArray(value.agent_versions) ? value.agent_versions : {}, capture: true};
