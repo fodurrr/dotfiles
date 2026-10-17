@@ -14,7 +14,7 @@ export class Store {
     // Sidecars are never trusted or followed. DELETE journalling bounds one rollback journal.
     for (const suffix of ['-journal','-wal','-shm']) if (fs.existsSync(this.file + suffix)) privatePath(this.file + suffix);
     if (!exists) { const fd = fs.openSync(this.file, fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_RDWR, 0o600); fs.closeSync(fd); }
-    this.db = new DatabaseSync(this.file, {readOnly, timeout:50});
+    this.db = new DatabaseSync(this.file, {readOnly, timeout:500});
     this.readOnly = readOnly;
     if(this.db.prepare('PRAGMA page_size').get().page_size!==4096){this.db.close();fail('unsupported-sqlite-page-size');}
     if (exists) {
@@ -22,7 +22,13 @@ export class Store {
       catch (error) { this.db.close(); throw error; }
     }
     if (!readOnly) {
-      this.db.exec('PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON; PRAGMA max_page_count=14336;');
+      // Connection-local durability and limits apply on every connection. Schema
+      // DDL and the version insert run only when initializing a new database;
+      // ordinary hooks and unsuccessful worker wakes must not request write locks.
+      this.db.exec('PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON; PRAGMA max_page_count=14336;');
+      if (this.db.prepare('PRAGMA journal_mode').get().journal_mode !== 'delete') fail('unsupported-sqlite-journal-mode');
+      if (!exists) {
+        this.transaction(() => {
       this.db.exec(`CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,value TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS activations(id TEXT PRIMARY KEY,created INTEGER NOT NULL,config TEXT NOT NULL,destination TEXT NOT NULL,active INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS sessions(key TEXT PRIMARY KEY,generation TEXT NOT NULL,agent TEXT NOT NULL,session TEXT NOT NULL,owner TEXT NOT NULL,cursor TEXT,prefix TEXT NOT NULL,count INTEGER NOT NULL,dirty INTEGER NOT NULL DEFAULT 0);
@@ -31,10 +37,10 @@ export class Store {
         CREATE TABLE IF NOT EXISTS worker(id INTEGER PRIMARY KEY CHECK(id=1),token TEXT NOT NULL,expires INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS staged(session_key TEXT PRIMARY KEY,turn_id TEXT NOT NULL,prompt TEXT NOT NULL,created INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS recalls(key TEXT PRIMARY KEY,created INTEGER NOT NULL,in_flight_until INTEGER NOT NULL);`);
-      const version = this.db.prepare("SELECT value FROM meta WHERE key='schema'").get();
-      if (version && version.value !== '1') fail('unsupported-state-schema');
-      this.db.prepare("INSERT OR IGNORE INTO meta VALUES('schema','1')").run();
-    } else if (this.db.prepare("SELECT value FROM meta WHERE key='schema'").get()?.value !== '1') fail('unsupported-state-schema');
+          this.db.prepare("INSERT INTO meta VALUES('schema','1')").run();
+        });
+      }
+    }
   }
   close() { this.db.close(); }
   transaction(fn) {

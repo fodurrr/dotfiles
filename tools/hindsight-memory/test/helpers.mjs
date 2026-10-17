@@ -3,8 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 import {paths,privateDir,validateConfig} from '../src/config.mjs';
 import {Store} from '../src/state.mjs';
-export function fixture(t,limits={}) {
-  const home=fs.mkdtempSync(path.join(os.tmpdir(),'hindsight-fixture-'));fs.chmodSync(home,0o700);
+export function fixture(t,limits={}, {temporaryRoot=os.tmpdir()}={}) {
+  const home=fs.mkdtempSync(path.join(temporaryRoot,'hindsight-fixture-'));fs.chmodSync(home,0o700);
   const p=paths({HOME:home});privateDir(p.config);const secret=path.join(p.config,'secret');fs.writeFileSync(secret,'synthetic-secret',{mode:0o600});
   const config=validateConfig({schema_version:1,endpoint:'http://127.0.0.1:1',bank:'synthetic',secret_file:secret,adapters:['fixture'],capture:true});
   const store=new Store(p,{limits});store.activate(config,1000);

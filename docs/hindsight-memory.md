@@ -4,7 +4,7 @@ The optional `hindsight-memory` profile prepares a standalone personal-memory
 component. It does not activate capture. Existing Hindsight memories remain on
 the configured external server. This repository does not create or upgrade it.
 
-Implementation is under review. Publication, main merge and live rollout require
+Implementation is under review. **Every automatic adapter currently refuses activation** because actual native caller binding remains unqualified. Publication, main merge and live rollout require
 separate approval. The commands below describe the later workflow; they were not
 run against the operator's home or memory bank during implementation.
 
@@ -69,7 +69,7 @@ There is no default endpoint, bank, person or enabled adapter. The local core
 accepts HTTPS, or loopback HTTP for explicit local deployments and isolated tests.
 It rejects URL credentials, query strings, redirects and path prefixes.
 
-After separate host approval and native hook/plugin trust:
+The eventual activation workflow also needs separate host approval and native hook/plugin trust. The current candidate refuses this command with `native-caller-binding-unqualified`:
 
 ```sh
 hindsight-memory activate
@@ -101,7 +101,7 @@ endpoint, operation UUID and request bytes.
 | Hermes | Investigated installed provider path | In-memory executor precedes durable provider admission; safe handover also required |
 | Desktop, T3, Zed | Separate routes | Actual provider, native lifecycle and exclusive capture owner unqualified |
 
-Activation probes the explicit agent executable with `--version` and records its identity. Native bridges reject a changed selected executable or retargeted alias before admission. Codex also checks the actual transcript version. **Claude, Pi and OpenCode activation is refused** until actual native caller binding is qualified. Another installed binary can otherwise load the same global config. Their implemented source/fixture adapters remain available for isolated qualification; they are not active supported routes. Unsupported adapters, mismatched detected versions and unqualified versions fail activation. Existing OpenCode `opencode.jsonc` also refuses activation until its coexistence behavior is qualified. They do not become
+The qualification helper probes an explicit agent executable with `--version` and records its identity. Production activation stops before this probe until caller binding is qualified. Native bridges reject a changed selected executable or retargeted alias before admission. Codex checks its transcript creator version and source. A resumed session preserves that original header, so it cannot establish the current invoking application or version. **All automatic adapter activation is refused** until actual native caller binding is qualified. Another installed binary can otherwise load the same global config. Their implemented source/fixture adapters remain available for isolated qualification; they are not active supported routes. Unsupported adapters, mismatched detected versions and unqualified versions fail activation. Existing OpenCode `opencode.jsonc` also refuses activation until its coexistence behavior is qualified. They do not become
 successful skips. These unresolved routes remain work-item obligations. CLI
 support does not establish desktop or T3 support. The component does not install
 Hermes, an agent suite or company tooling merely to prepare memory.
@@ -140,13 +140,13 @@ claims remain attributed claims. Recalled text is labeled untrusted context and
 cannot authorize tools or change current instructions.
 
 Admission commits all chunks, message identities and the cursor in one SQLite
-transaction. A failed or full admission commits none. Each request has a stable
+transaction. A failed or full admission commits none. Short ordinary writer contention waits instead of forcing a 50 ms rejection. Sustained contention still returns `state-busy-admission-not-confirmed`; it never reports acceptance or moves the cursor. Constructor initialization does not rewrite schema metadata on every hook. The disk-backed 30-turn source-fixture stress test counts every rejection. Whole bridge tail latency can exceed 100 ms while preserving acceptance under contention; it is reported separately from direct admission. Each request has a stable
 UUID and unique message/chunk document ID. Accepted bytes stay immutable across
 retries. Completed payloads are removed locally; replay evidence remains.
 
 | Limit | Implemented behavior |
 |---|---|
-| Local admission | 100 ms measurement target; truthful failure overrides timing |
+| Local admission | 100 ms measurement target; SQLite can wait up to 500 ms per contended lock; truthful failure overrides timing |
 | Recall | Direct request once per turn; 1.5-second core deadline budget, including local work after CLI process start |
 | Recall output | 256 KiB HTTP response; at most 1,000 UTF-8 bytes including injected labels/provenance |
 | Native bridge | 1.5-second total recall invocation deadline across child startup, local work and HTTP; outer application event overhead is measured separately |

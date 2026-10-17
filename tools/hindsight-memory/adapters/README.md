@@ -39,10 +39,10 @@ admission. Failed delivery remains the core's responsibility.
 ## Source and fixture qualification
 
 The inspected versions are exact source/fixture allowlists. An update needs requalification.
-Production activation currently permits only Codex CLI because its actual transcript
-version and execution source can be checked. Claude, Pi and OpenCode activation
-is blocked until actual native caller binding is proven; selected executable
-identity alone cannot prove which binary loaded a global hook or plugin.
+Production activation currently refuses every adapter until actual native caller
+binding is proven. Selected executable identity alone cannot prove which binary
+loaded a global hook or plugin. Codex resume keeps the creator header unchanged;
+its recorded CLI version/source does not prove the current invoking route.
 The generic installer must discover the actual selected executable's version.
 An installed version number alone cannot establish the route used by a desktop.
 
@@ -72,8 +72,9 @@ are pinned to inspected protocol sources. They ignore tool and reasoning records
 Missing/truncated/incomplete old boundaries, rollback and compaction markers refuse
 capture. They never fall back to uploading an entire transcript. The core checks
 prefix identities and text before extracting a new suffix. Source values `vscode`,
-`exec`, unknown strings and subagent objects are refused. This prevents a shared
-global hooks file from silently certifying Desktop or T3 execution.
+`exec`, unknown strings and subagent objects are refused. These checks constrain creator provenance only. The native recorder reuses the
+header on resume, so they cannot certify the current Desktop, T3 or CLI invoker.
+Activation therefore remains blocked pending actual caller binding.
 
 Pi calls `before_agent_start` before it persists the new user. Recall therefore
 runs during `context`, where a persisted native user entry must match the prompt.

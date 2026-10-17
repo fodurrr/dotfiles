@@ -87,7 +87,11 @@ export function makeInvoker(descriptor, run = spawnSync) {
       stdio: ['pipe', 'pipe', 'pipe'],
     });
     if(command==='recall' && performance.now()-started>=1500)return {schema_version:1,status:'recall-unavailable',context:''};
-    if (result.error || result.status !== 0) throw new AdapterError('local_admission_failed');
+    if (result.error || result.status !== 0) {
+      let failed;try{failed=JSON.parse(result.stdout);}catch{}
+      if(failed?.schema_version===1 && failed.status==='failed' && failed.reason==='state-busy-admission-not-confirmed')throw new AdapterError('state_busy_admission_not_confirmed');
+      throw new AdapterError('local_admission_failed');
+    }
     let parsed;
     try { parsed = JSON.parse(result.stdout); } catch { throw new AdapterError('invalid_core_result'); }
     requireValue(parsed.schema_version === 1 && typeof parsed.status === 'string', 'invalid_core_result');

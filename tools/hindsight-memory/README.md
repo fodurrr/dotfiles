@@ -1,6 +1,9 @@
 # Personal Hindsight memory component
 
-This private local component prepares independently installable artifacts. It uses
+This private local component prepares independently installable artifacts.
+**All automatic adapter activation currently refuses** with
+`native-caller-binding-unqualified`. Adapters remain isolated source/fixture
+qualification artifacts until actual invoking applications can be bound safely. It uses
 Node 24.15 or newer within Node 24, including `node:sqlite`. It needs no npm
 packages, company tooling, source checkout, shell initialization or resident service.
 
@@ -19,8 +22,8 @@ appear in process arguments.
 |---|---|
 | `prepare` | Copy a content-addressed release and fixed-runtime launcher; no hooks or activation |
 | `configure` | Explicit schema-1 endpoint, bank, private secret-file reference, adapters and exact `agent_versions` |
-| `activation-preview` | List selected qualified artifacts and required native trust; no changes |
-| `activate` | Install only owned adapter artifacts and record consent; native/live verification remains separate |
+| `activation-preview` | List source/fixture artifacts, native caller blocker and required trust; no changes |
+| `activate` | Refuse with `native-caller-binding-unqualified`; no production adapter currently passes this gate |
 | `status`, `inspect`, `doctor` | Read-only safe counts and state; no network, repair or retry |
 | `session` | Enroll a native session with `{agent,session,owner,baseline}`; baseline is never retained |
 | `session-status` | Return registered cursor identity and count, never conversation text |
@@ -46,6 +49,7 @@ clients, secret loading or queues.
 ```sh
 node --disable-warning=ExperimentalWarning --test test/*.test.mjs
 node --disable-warning=ExperimentalWarning test/benchmark.mjs
+node --disable-warning=ExperimentalWarning test/benchmark-native.mjs
 ```
 
 Tests use synthetic users, temporary homes and loopback HTTP only. They do not
@@ -53,3 +57,9 @@ start upstream applications or change the operator's configuration. The benchmar
 measures direct durable admission and a separate Node/Store/admission/exit process.
 It excludes native application startup and network extraction. It reports the filesystem type. On the inspected host, `/tmp` is tmpfs; those results do not measure physical-disk fsync. Use an explicitly chosen private disk-backed temporary root, such as `TMPDIR=/var/tmp`, for disk timing. Fixture success
 is not live host qualification or proof of macOS filesystem behavior.
+
+The native benchmark explicitly wires only a synthetic source fixture after
+asserting production activation is blocked. It records every attempted sample,
+including rejections. It measures 30 growing 5.1 KiB turns through two local Node
+processes with normal background delivery and a loopback fake API. It defaults to
+a private `/var/tmp` fixture. This does not certify an actual native caller.

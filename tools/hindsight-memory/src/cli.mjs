@@ -95,7 +95,7 @@ function activationPlans(config,{qualify=false}={}) {
   const installation=JSON.parse(readPrivate(path.join(p.data,'installation.json')));
   const plans=[];
   for(const adapter of config.adapters) {
-    if(qualify && adapter!=='codex-cli')fail('native-caller-binding-unqualified');
+    if(qualify)fail('native-caller-binding-unqualified');
     if(adapter.startsWith('opencode-') && fs.existsSync(path.join(process.env.XDG_CONFIG_HOME || path.join(p.home,'.config'),'opencode/opencode.jsonc')))fail('opencode-jsonc-coexistence-unqualified');
     const descriptorPath=path.join(p.config,'adapters',`${adapter}.json`);
     const owner=hash(JSON.stringify([os.hostname(),config.endpoint,config.bank,adapter]));
@@ -106,33 +106,35 @@ function activationPlans(config,{qualify=false}={}) {
   }
   return plans;
 }
-export async function main(command=process.argv[2]) {
+export async function main(command=process.argv[2],{wakeImpl=wake}={}) {
   qualifyRuntime();
   if(command==='prepare') return prepare();
   verifyInstalledRuntime();
   if(['status','inspect','doctor'].includes(command)) return status({offset:process.argv[3]===undefined?0:Number(process.argv[3])});
-  if(command==='activation-preview'){const plans=activationPlans(loadConfig(p));return {status:'activation-pending',adapters:plans.map(plan=>({id:plan.id,version:plan.version,qualification:plan.qualification,files:plan.files.map(file=>file.path),json_files:plan.jsonPatches.map(patch=>patch.path),prerequisites:plan.prerequisites,activation_blocker:plan.id==='codex-cli'?null:'native-caller-binding-unqualified'})),active:false};}
+  if(command==='activation-preview'){const plans=activationPlans(loadConfig(p));return {status:'activation-pending',adapters:plans.map(plan=>({id:plan.id,version:plan.version,qualification:plan.qualification,files:plan.files.map(file=>file.path),json_files:plan.jsonPatches.map(patch=>patch.path),prerequisites:plan.prerequisites,activation_blocker:'native-caller-binding-unqualified'})),active:false};}
   if(command==='configure') {const value=await input();const config=validateConfig(value);return withMutationLock(p,()=>{credential(config);if(fs.existsSync(path.join(p.state,'state.sqlite'))){const current=new Store(p,{readOnly:true});try{if(current.status().active)fail('deactivate-before-configure');}finally{current.close();}}if(fs.existsSync(path.join(p.config,'config.json')) && fs.existsSync(path.join(p.config,'ownership.json'))){const old=loadConfig(p);if(JSON.stringify([...old.adapters].sort())!==JSON.stringify([...config.adapters].sort()) && JSON.parse(readPrivate(path.join(p.config,'ownership.json'))).records.length)fail('rollback-before-adapter-selection-change');}writePrivate(path.join(p.config,'config.json'),JSON.stringify(config));return {status:'configured',configured:true,active:false};});}
+  const localStart=performance.now();
   const store=new Store(p);
   try {
     if(command==='activate')return withMutationLock(p,()=>{const config=loadConfig(p);credential(config);const existing=store.db.prepare('SELECT config FROM activations WHERE active=1').get();if(existing && existing.config!==JSON.stringify(config))fail('deactivate-before-config-change');const plans=activationPlans(config,{qualify:true});store.deactivate();applyArtifacts(p,plans,{locked:true});return {status:'active',active:true,generation:store.activate(config),capture_verified:false,qualification:'source-and-fixture-only'};});
     if(command==='deactivate')return withMutationLock(p,()=>store.deactivate());
     if(command==='rollback')return withMutationLock(p,()=>{const suspended=store.deactivate();const result=rollbackArtifacts(p,{locked:true});return {...result,suspension:suspended};});
-    if(command==='session') {const result=register(store,await input());return {...result,wake:wake()};}
+    if(command==='session') {const result=register(store,await input());return {...result,wake:wakeImpl()};}
     if(command==='session-status') {const value=await input();envelope(value);const row=store.getSession(value);return {status:'registered',previous:row.cursor,count:row.count};}
-    if(['capture','capture-transcript'].includes(command)) {const started=performance.now();const result=capture(store,await input(),{transcript:command==='capture-transcript',host:os.hostname()});return {...result,admission_ms:Number((performance.now()-started).toFixed(3)),wake:result.status==='queued'?wake():'unneeded'};}
+    if(['capture','capture-transcript'].includes(command)) {const started=localStart;const result=capture(store,await input(),{transcript:command==='capture-transcript',host:os.hostname()});return {...result,admission_ms:Number((performance.now()-started).toFixed(3)),wake:result.status==='queued'?wakeImpl():'unneeded'};}
     if(command==='stage-turn')return stageTurn(store,await input());
-    if(command==='complete-turn'){const result=completeTurn(store,await input(),{host:os.hostname()});return {...result,wake:result.status==='queued'?wake():'unneeded'};}
+    if(command==='complete-turn'){const result=completeTurn(store,await input(),{host:os.hostname()});return {...result,wake:result.status==='queued'?wakeImpl():'unneeded'};}
     if(command==='abort-turn')return abortTurn(store,await input());
-    if(command==='worker') return await worker(store);
+    if(command==='worker') return await worker(store,{budget:Math.max(1,60000-performance.now())});
     if(command==='recall'){const value=await input();return await recall(store,value,{budget:Math.max(1,Math.min(1500-performance.now(),typeof value.recall_deadline_utc_ms==='number'?value.recall_deadline_utc_ms-Date.now():1500))});}
-    if(command==='retry') return {...store.recover(await input()),wake:wake()};
+    if(command==='retry') return {...store.recover(await input()),wake:wakeImpl()};
     fail('unknown-command');
   } finally {store.close();}
 }
+export function safeFailure(error){return {schema_version:1,status:'failed',reason:error.code==='ERR_SQLITE_ERROR' && [5,6].includes(error.errcode)?'state-busy-admission-not-confirmed':typeof error.code==='string' && /^[a-z][a-z0-9_-]{1,80}$/.test(error.code)?error.code.replaceAll('_','-'):'local-operation-failed'};}
 if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   main().then(result=>process.stdout.write(JSON.stringify({schema_version:1,...result})+'\n')).catch(error=>{
     // Native errors can include URLs, paths, JSON and payloads. Never print them.
-    process.stdout.write(JSON.stringify({schema_version:1,status:'failed',reason:typeof error.code==='string' && /^[a-z][a-z0-9_-]{1,80}$/.test(error.code)?error.code.replaceAll('_','-'):'local-operation-failed'})+'\n');process.exitCode=1;
+    process.stdout.write(JSON.stringify(safeFailure(error))+'\n');process.exitCode=1;
   });
 }
