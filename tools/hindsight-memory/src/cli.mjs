@@ -74,12 +74,12 @@ function prepareUnlocked() {
   return {...status(),version};
 }
 export function prepare() {return withMutationLock(p,prepareUnlocked);}
-function status() {
+function status({offset=0}={}) {
   const installed=fs.existsSync(path.join(p.data,'installation.json')); const configured=fs.existsSync(path.join(p.config,'config.json'));
   if(configured) loadConfig(p);
   let state={active:false,counts:{}};
-  if(fs.existsSync(path.join(p.state,'state.sqlite'))) {const store=new Store(p,{readOnly:true});try {state=store.status();}finally {store.close();}}
-  if(fs.existsSync(path.join(p.config,'ownership.json')) && JSON.parse(readPrivate(path.join(p.config,'ownership.json'))).state==='applying')return {schema_version:1,status:'partial',installed,configured,active:false,reason:'partial-artifacts-need-manual-recovery'};
+  if(fs.existsSync(path.join(p.state,'state.sqlite'))) {const store=new Store(p,{readOnly:true});try {state=store.status(Date.now(),{offset});}finally {store.close();}}
+  if(fs.existsSync(path.join(p.config,'ownership.json')) && JSON.parse(readPrivate(path.join(p.config,'ownership.json'))).state==='applying')return {...state,schema_version:1,status:'partial',installed,configured,consent_active:state.active,active:false,reason:'partial-artifacts-need-manual-recovery'};
   return {schema_version:1,capture_verified:false,status:state.active?'active':configured?'configured':installed?'activation-pending':'missing',installed,configured,...state};
 }
 async function input() {
@@ -110,7 +110,7 @@ export async function main(command=process.argv[2]) {
   qualifyRuntime();
   if(command==='prepare') return prepare();
   verifyInstalledRuntime();
-  if(['status','inspect','doctor'].includes(command)) return status();
+  if(['status','inspect','doctor'].includes(command)) return status({offset:process.argv[3]===undefined?0:Number(process.argv[3])});
   if(command==='activation-preview'){const plans=activationPlans(loadConfig(p));return {status:'activation-pending',adapters:plans.map(plan=>({id:plan.id,version:plan.version,qualification:plan.qualification,files:plan.files.map(file=>file.path),json_files:plan.jsonPatches.map(patch=>patch.path),prerequisites:plan.prerequisites,activation_blocker:plan.id==='codex-cli'?null:'native-caller-binding-unqualified'})),active:false};}
   if(command==='configure') {const value=await input();const config=validateConfig(value);return withMutationLock(p,()=>{credential(config);if(fs.existsSync(path.join(p.state,'state.sqlite'))){const current=new Store(p,{readOnly:true});try{if(current.status().active)fail('deactivate-before-configure');}finally{current.close();}}if(fs.existsSync(path.join(p.config,'config.json')) && fs.existsSync(path.join(p.config,'ownership.json'))){const old=loadConfig(p);if(JSON.stringify([...old.adapters].sort())!==JSON.stringify([...config.adapters].sort()) && JSON.parse(readPrivate(path.join(p.config,'ownership.json'))).records.length)fail('rollback-before-adapter-selection-change');}writePrivate(path.join(p.config,'config.json'),JSON.stringify(config));return {status:'configured',configured:true,active:false};});}
   const store=new Store(p);

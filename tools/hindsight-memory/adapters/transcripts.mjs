@@ -18,6 +18,15 @@ export function claudeTranscript(rows, session) {
   return unique(result);
 }
 
+export function codexRoute(rows,session,expectedVersion) {
+  const headers=rows.filter(row=>row.type==='session_meta');
+  requireValue(headers.length===1,'missing_session_boundary');
+  const header=headers[0].payload;
+  requireValue(header?.id===session,'session_mismatch');
+  requireValue(header.source==='cli','execution_route_unqualified');
+  requireValue(header.cli_version===expectedVersion,'unqualified_agent_version');
+}
+
 export function codexTranscript(rows, session, stop = null, expectedVersion = null) {
   const result = [];
   let turn = null;

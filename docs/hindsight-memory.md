@@ -161,7 +161,7 @@ retries. Completed payloads are removed locally; replay evidence remains.
 SQLite uses FULL synchronous DELETE journalling. Its page ceiling and conservative
 headroom reserve room for a rollback journal. Completed receipts and session
 watermarks are never silently deleted to regain capacity. State growth eventually
-stops admission visibly. Actual ENOSPC, macOS durability and slow storage remain
+stops admission visibly. The default benchmark uses `os.tmpdir()`. GEEKOM `/tmp` is tmpfs, so those numbers exclude physical-disk fsync latency. A disk-backed private `/var/tmp` fixture must be measured separately. Actual ENOSPC, macOS durability and slow storage remain
 separate qualification; Linux crash and SQLite page-limit fixtures are not proof
 of those environments.
 
@@ -176,7 +176,7 @@ visible unresolved work; it is not blindly resubmitted. An offline request that
 may never have reached the server can therefore require explicit recovery.
 Submission success alone does not prove exactly-once processing.
 
-`status` reports safe counts. It does not display transcript text or secrets.
+`status` reports safe counts and at most ten pending operation IDs, states and reason codes. `hindsight-memory status 10` reads the next page. It never includes request bodies, destination URLs or secret-file paths. It does not display transcript text or secrets.
 `doctor` and `inspect` are also read-only. They do not retry, repair or contact
 memory. A queue cannot preserve unlimited later conversation during an indefinite
 outage. Accepted jobs survive; later rejected turns are reported as not captured.

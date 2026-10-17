@@ -251,3 +251,10 @@ test('Descriptor/transcript reads reject permissive descriptors and symlinks in 
     symlinkSync(root, join(root, 'alias')); assert.throws(() => readTranscript(join(root, 'alias', 'descriptor.json')));
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+test('Codex prompt recall rechecks actual native route/version before any core call',()=>{
+ const d={...descriptor,agentVersion:'0.163.0'};const input={...baseHook,hook_event_name:'UserPromptSubmit',turn_id:'new',prompt:'new prompt'};
+ for(const payload of [{id:'s',source:'desktop',cli_version:'0.163.0'},{id:'s',source:'cli',cli_version:'0.162.0'},{id:'other',source:'cli',cli_version:'0.163.0'}]){
+  const {calls,invoke}=recorder();assert.throws(()=>handleHook('codex-cli',input,d,invoke,()=>jsonl([{type:'session_meta',payload}])));assert.equal(calls.length,0);
+ }
+ const {calls,invoke}=recorder();handleHook('codex-cli',input,d,invoke,()=>jsonl(codexRows));assert.deepEqual(calls.map(call=>call.command),['session-status','recall']);
+});

@@ -51,5 +51,5 @@ node --disable-warning=ExperimentalWarning test/benchmark.mjs
 Tests use synthetic users, temporary homes and loopback HTTP only. They do not
 start upstream applications or change the operator's configuration. The benchmark
 measures direct durable admission and a separate Node/Store/admission/exit process.
-It excludes native application startup and network extraction. Fixture success
+It excludes native application startup and network extraction. It reports the filesystem type. On the inspected host, `/tmp` is tmpfs; those results do not measure physical-disk fsync. Use an explicitly chosen private disk-backed temporary root, such as `TMPDIR=/var/tmp`, for disk timing. Fixture success
 is not live host qualification or proof of macOS filesystem behavior.

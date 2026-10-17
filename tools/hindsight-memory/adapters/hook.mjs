@@ -1,6 +1,6 @@
 import { pathToFileURL } from 'node:url';
 import { AdapterError, diagnostic, envelope, jsonLines, makeInvoker, readBounded, readPrivateJson, readTranscript, requireValue } from './common.mjs';
-import { claudeTranscript, codexTranscript } from './transcripts.mjs';
+import { claudeTranscript, codexTranscript, codexRoute } from './transcripts.mjs';
 
 export const HOOK_VERSIONS = Object.freeze({
   'claude-code': ['2.1.302'],
@@ -39,6 +39,8 @@ export function handleHook(agent, input, descriptor, invoke = makeInvoker(descri
     return {};
   }
   if (event === 'UserPromptSubmit') {
+    requireValue(typeof input.transcript_path==='string','missing_transcript');
+    codexRoute(jsonLines(read(input.transcript_path)),input.session_id,descriptor.agentVersion);
     requireValue(typeof input.prompt === 'string', 'missing_prompt');
     const state = invoke('session-status', base);
     requireValue(state.status === 'registered', 'session_not_registered');

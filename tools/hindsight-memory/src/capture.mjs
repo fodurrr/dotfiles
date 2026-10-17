@@ -38,7 +38,10 @@ export function stageTurn(store,input,now=Date.now()) {
  turnEnvelope(input);if(typeof input.prompt!=='string' || Buffer.byteLength(input.prompt)>1024*1024)fail('invalid-prompt');
  const prompt=redact(input.prompt);store.capacity(Buffer.byteLength(prompt));
  return store.transaction(()=>{
-  const row=store.getSession(input);const prior=store.db.prepare('SELECT * FROM staged WHERE session_key=?').get(row.key);
+  const row=store.getSession(input);
+  const accepted=store.db.prepare('SELECT digest FROM messages WHERE session_key=? AND id=?').get(row.key,input.turn_id+':user');
+  if(accepted){const normalized=normalize([{id:input.turn_id+':user',role:'user',text:prompt,completed:true}])[0];if(accepted.digest!==hash(JSON.stringify(normalized)))fail('completed-turn-identity-conflict');return {status:'staged',accepted:0,completed:true};}
+  const prior=store.db.prepare('SELECT * FROM staged WHERE session_key=?').get(row.key);
   if(prior){if(prior.turn_id===input.turn_id && prior.prompt===prompt)return {status:'staged',accepted:0};fail('pending-turn-conflict');}
   const used=store.db.prepare('SELECT count(*) n,coalesce(sum(length(CAST(prompt AS BLOB))),0) bytes FROM staged').get();
   if(used.n>=1000 || used.bytes+Buffer.byteLength(prompt)>64*1024*1024)fail('staging-capacity');
@@ -50,8 +53,8 @@ export function completeTurn(store,input,{now=Date.now(),host='local'}={}) {
  return store.transaction(()=>{
   const row=store.getSession(input);const staged=store.db.prepare('SELECT * FROM staged WHERE session_key=? AND turn_id=?').get(row.key,input.turn_id);
   if(!staged) {
-   const already=store.db.prepare('SELECT id FROM messages WHERE session_key=? AND id=?').get(row.key,input.turn_id+':assistant');
-   if(already)return {status:'duplicate',accepted:0};fail('turn-not-staged');
+   const already=store.db.prepare('SELECT digest FROM messages WHERE session_key=? AND id=?').get(row.key,input.turn_id+':assistant');
+   if(already){const normalized=normalize([{id:input.turn_id+':assistant',role:'assistant',text:input.text,completed:true}])[0];if(already.digest!==hash(JSON.stringify(normalized)))fail('completed-turn-identity-conflict');return {status:'duplicate',accepted:0};}fail('turn-not-staged');
   }
   const result=capture(store,{...input,previous:row.cursor,messages:[{id:input.turn_id+':user',role:'user',text:staged.prompt,completed:true},{id:input.turn_id+':assistant',role:'assistant',text:input.text,completed:true}]},{inside:true,now,host});
   store.db.prepare('DELETE FROM staged WHERE session_key=?').run(row.key);return result;
