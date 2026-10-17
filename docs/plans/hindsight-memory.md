@@ -1,7 +1,7 @@
 # Standalone personal Hindsight memory
 
 ```work-item
-{"current":"2026-10-17: Native current-caller investigation is complete and saved. No inspected route can yet be unblocked. Codex hooks receive inherited environment without current route identity; resume prefers saved source. Claude 2.1.302 computes prompt origin but omits it from inspected hook payload builders. Pi metadata can be overridden; OpenCode identifies execution-server metadata, not its frontend. Two temporary Node-only counterexamples confirm selected-file and disk-versus-loaded-code gaps. Runtime code and blanket activation refusal remain unchanged. Prior Grok SHIP/PASS applies only to the frozen isolated implementation. No publication, main merge or live rollout.","decisions":[{"date":"2026-10-17","decision":"Approve standalone component, adapters, installer safeguards, tests and review; publication, main merge and live rollout require separate approval. Measure the 100 ms target honestly.","id":"isolated-implementation-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 200,000-token ceiling for exact Grok 4.7 review, supported fixes and local save. Publication, main merge and live rollout remain separate approvals.","id":"grok-packet-ceiling-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 205,000 estimated-token ceiling for the same Grok 4.7 remediation review, local saving and Nucleus coordination. Publication, main merge and live rollout still require separate approval.","id":"grok-remediation-ceiling-approved","owner":"Peter"}],"deliverable":"An approved standalone design, then separately authorized implementation and isolated verification of a reusable client component, agent adapters and optional Dotfiles profile; publication and live rollout remain separate approvals.","evidence":[{"command":"/home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --disable-warning=ExperimentalWarning --test tools/hindsight-memory/test/*.test.mjs","repository":".","result":"pass; 91 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"},{"command":"cd tools/hindsight-memory && /home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --test test/review-remediation.test.mjs","repository":".","result":"pass; 18 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"}],"exit":["Peter approves the revised independent implementation before code changes.","Every transferred obligation has a verified outcome or explicit owner-approved scope disposition.","Standalone runtime and installer pass isolated tests with no company dependencies.","Required independent ExitGate passes before Completed; main merge and live actions retain separate approval."],"id":"hindsight-memory","inputs":[{"availability":"available","category":"objective","freshness":"Verified direct human approval in this Dotfiles chat on 2026-10-17; later scope supersedes prior planning-only authority.","locator":"Nucleus chat 01a12fb1-16b4-7082-b244-f48a800ce904, human turns 01a14b82-9c39-7312-a3d7-0851fef110d7 and 01a14b85-3143-7123-bba1-2067cb839287, verified through read_thread on 2026-10-17. Direct Dotfiles human instruction on 2026-10-17: approve isolated component, adapters, installer safeguards, tests and review; publication, main merge and live rollout remain separate.","owner":"Peter","required_at":"start","role":"Moves full ownership to Dotfiles and authorizes isolated implementation and review. The existing immutable audit remains evidence, not a runtime dependency.","source_kind":"instruction"},{"availability":"available","category":"evidence","owner":"Nucleus audit author","path":"plans/shared-personal-memory.md","repository":"/home/fodurrr/dev/xpando/nucleus","required_at":"start","revision":"40fe44ee7657cae6f8b436c4ea7b14610bf06e0c","role":"Complete immutable audit, artifact digest, findings, host matrix, limits, tests, self-review and unresolved obligations; ownership-specific architecture is superseded.","track":"committed"},{"availability":"available","category":"governing","owner":"Peter","path":"AGENTS.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Dotfiles repository workflow, host boundaries, ownership and checks.","track":"committed"},{"availability":"available","category":"evidence","owner":"Dotfiles maintainer","path":"docs/plans/hindsight-memory.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Previous plan and installer/host audit; Nucleus release gate and narrow implementation approval are superseded.","track":"committed"}],"inspection_triggers":[],"next":"Use the saved evidence to design one isolated Pi direct-CLI launch qualification experiment, preserving mise as the sole agent-runtime owner. Prove invocation-scoped extension loading, actual entrypoint/package identity, session attachment and child-tool refusal before changing production activation. A launcher changes workflow and must be presented concretely before implementation. Keep Codex, Claude and OpenCode route obligations explicit; do not infer caller identity from headers, optional schema fields or server metadata. No new provider review is needed for this documentation-only investigation. Publication, main merge and live rollout retain separate approval.","objective":"Provide optional personal Hindsight memory for general macOS and Linux machine setup, independently of Nucleus, Xpando tooling and repository membership.","owner":"Peter","relationships":[],"risks":[{"detail":"Stock cursor replacement and whole-branch retention can upload history; missing state must fail closed.","id":"historical-capture","owner":"Dotfiles safe-capture task"},{"detail":"Installed/MCP/CLI presence does not establish desktop, T3, Gemini or Hermes completion coverage.","id":"support-claims","owner":"Dotfiles adapter-coverage task"},{"detail":"Finite storage and imperfect redaction need visible rejection, durable accepted jobs, permission checks and honest limits.","id":"secrets-and-queue","owner":"Dotfiles reliable-delivery and privacy-rollback tasks"},{"detail":"Preserve personal/company isolation, unrelated auth/hooks/settings, runtime ownership and network routes.","id":"ownership","owner":"Dotfiles privacy-rollback and installer-integration tasks"},{"detail":"A substantial reusable local runtime is proposed explicitly; do not hide it as installer glue or publish a product without approval.","id":"runtime-scope","owner":"Peter and Dotfiles standalone-runtime task"}],"schema_version":2,"scope":{"excluded":["Publication or push of implementation, main merge, host installation or live rollout without separate approval.","Nucleus or Xpando runtime dependencies, company-bank sharing, new provider abstraction or memory service.","Historical imports, Git ingestion, surveys, bulk files, secret files and hidden reasoning capture.","Unapproved package/product publication, new repository or resident service.","Server upgrade/recreation, backup changes, credential rotation, reboot, live memory writes or deployment to Adam."],"included":["Preserve all relevant Nucleus audit findings and unresolved obligations in this sole canonical plan.","Implement and verify the approved independently installable local Hindsight component, native adapters and optional Dotfiles profile in isolated fixtures.","Implement safe capture, durable bounded delivery, private state, ownership-aware preparation and rollback, and installer runtime-preservation guards.","Qualify supported routes and keep unresolved host/adapter coverage obligations explicit.","Measure local admission and whole-process startup; run tests, normal review and prepare the independent ExitGate; make local checkpoints."]},"state":"Active","tasks":[{"actor":"Dotfiles supervisor and Peter","depends_on":[],"done_when":"Peter approves a concrete independent runtime/adapter/installer scope; no old approval is reused.","id":"proposal-approval","result":"Peter explicitly approved isolated implementation, adapters, installer safeguards, tests and review in the Dotfiles chat on 2026-10-17. Publication, main merge and live rollout remain unapproved.","state":"completed","work":"Present and revise the standalone proposal, preserve the transfer, and obtain explicit approval of the expanded implementation."},{"actor":"Dotfiles implementation owner","depends_on":["proposal-approval"],"done_when":"Runtime works with company tooling and source checkouts absent; qualified Node/storage APIs, private installation and upgrade behavior are verified.","id":"standalone-runtime","result":"Implemented private standalone Node 24 component and owned installation. Isolated tests and Grok 4.7 advisory remediation pass at a704108. Full host qualification and ExitGate remain open.","state":"open","work":"Qualify upstream reuse and implement only the approved independently installable local component and versioned interface."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Old/resumed/forked/corrupt-cursor sentinels never reach the API; accepted chunks and cursor advance atomically; unknown state stops capture.","id":"safe-capture","result":"Atomic admission, prefix checks and staged turns retain the passing isolated code review. New source inspection shows Claude 2.1.302 hook builders omit computed original-prompt source; schema-only filtering cannot qualify it. Runtime/caller and prompt-origin checks are separate obligations. All native activation remains blocked.","state":"open","work":"Enforce activation and message boundaries, atomic admission, single-writer ownership and exclusion of historical/file/Git content."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Crash/restart/capacity/uncertain-ack/stale-worker tests pass; accepted work persists within all documented budgets.","id":"reliable-delivery","result":"Immutable outbox, bounded retries and kernel-held recovery ownership pass 91 tests, independent loopback/SIGSTOP acceptance and Grok 4.7 remediation review at a704108. No actual ENOSPC, power-loss, macOS or live-service proof.","state":"open","work":"Implement bounded durable admission, retry/poll accounting, stable operation identities and visible failure."},{"actor":"Dotfiles implementation owner","depends_on":["safe-capture","reliable-delivery"],"done_when":"Each route has explicit support evidence or an unresolved blocker; unsupported classification does not silently satisfy the coverage requirement.","id":"adapter-coverage","result":"Read-only caller investigation saved on 2026-10-17. Codex dispatcher lacks current-route marker and resume retains history source. Claude 2.1.302 omits optional prompt-source data in inspected builders. Pi VERSION/mode and OpenCode server metadata do not alone bind current caller. All production activation stays blocked. Proposed next bounded investigation: Pi direct-CLI invocation scope; other route obligations remain open.","state":"open","work":"Qualify each installed native agent, desktop/provider and remote route, including Hermes handover and pre-admission gaps."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Permission, redaction, destination-isolation, pending-job, in-flight-delivery and intervening-edit tests pass without deleting memories or state.","id":"privacy-rollback","result":"Private state, redaction, ownership-aware rollback and literal-loopback-only HTTP pass independent security review and Grok 4.7 remediation at a704108. Native caller binding and live qualification remain open.","state":"open","work":"Protect local secrets/state, safe diagnostics, untrusted recall, existing configuration and ownership-aware rollback."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"macOS/Linux profile and failure tests pass; preparation does not activate capture or require company tooling; addon/clean modes cannot prune unrelated runtimes.","id":"installer-integration","result":"Implemented optional profile and prepare-only layer, pre-bootstrap runtime-preservation guards and failure-safe status. Linux isolated fixtures pass; macOS host remains unqualified.","state":"open","work":"Add the optional profile, explicit prerequisites, safe preparation layer, status handling and runtime-preservation guards."},{"actor":"Dotfiles supervisor and independent reviewer","depends_on":["safe-capture","reliable-delivery","adapter-coverage","privacy-rollback","installer-integration"],"done_when":"Evidence identifies exact artifacts and tested versions; all accepted obligations pass or Peter explicitly changes scope; no live acceptance is inferred.","id":"verification-review","result":"Candidate a704108 passes 18 focused and 91 full tests; independent full suite 91/91 plus loopback/SIGSTOP checks pass. Grok 4.7/high remediation returned valid SHIP/PASS with zero findings within approved 205,000 ceiling. This advisory review does not replace full ExitGate. All native activation and remaining qualifications remain open.","state":"open","work":"Run isolated component/adapter/installer tests, repository checks, self-review and required independent ExitGate."},{"actor":"Peter and Dotfiles supervisor","depends_on":["verification-review"],"done_when":"Only separately approved actions execute; per-host activation and end-to-end evidence are recorded; no deployment to Adam is inferred.","id":"publication-rollout","state":"open","work":"Present exact publication/main/host-update/activation commands and quota-consuming checks for separate approval."}],"title":"Standalone personal Hindsight memory","verification":{"exit_passed":false,"status":"Grok 4.7/high advisory remediation: COMPLETED, valid_verdict, SHIP, PASS, zero findings, 9m05s, exit 0; candidate a704108c175508a8d01cef26f17d83f45a3190da. Original three supported findings are resolved. Packet 202,497 estimated tokens within approved 205,000. Report .opencode/adversarial-review-reports/20261017T221124Z-1942828-12098.md and lineage retained privately. Existing builder 18/18 focused and 91/91 full tests, independent 91/91 full tests and loopback/SIGSTOP acceptance pass. No code changed during review; no repeat suite needed. Native activation, full route/macOS/live qualification and full ExitGate remain open."}}
+{"current":"2026-10-17: Revised isolated Pi launch experiment designed and saved after source, acceptance, security and self-review. Target is the installed Linux Pi 1.3.0 ELF. First native phase is a confined --help factory-load probe with a one-use supervised process check; native sessions and capture are excluded. Synthetic session tests remain a separate evidence class. No experiment implementation or native execution occurred. Production activation stays blocked. Publication, main merge and live rollout remain unapproved.","decisions":[{"date":"2026-10-17","decision":"Approve standalone component, adapters, installer safeguards, tests and review; publication, main merge and live rollout require separate approval. Measure the 100 ms target honestly.","id":"isolated-implementation-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 200,000-token ceiling for exact Grok 4.7 review, supported fixes and local save. Publication, main merge and live rollout remain separate approvals.","id":"grok-packet-ceiling-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 205,000 estimated-token ceiling for the same Grok 4.7 remediation review, local saving and Nucleus coordination. Publication, main merge and live rollout still require separate approval.","id":"grok-remediation-ceiling-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve designing and locally saving the isolated Pi launch experiment. This turn is design-only; publication, main merge and live rollout require explicit approval. Present the revised bounded experiment before implementation or native execution.","id":"pi-launch-experiment-design-approved","owner":"Peter"}],"deliverable":"An approved standalone design, then separately authorized implementation and isolated verification of a reusable client component, agent adapters and optional Dotfiles profile; publication and live rollout remain separate approvals.","evidence":[{"command":"/home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --disable-warning=ExperimentalWarning --test tools/hindsight-memory/test/*.test.mjs","repository":".","result":"pass; 91 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"},{"command":"cd tools/hindsight-memory && /home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --test test/review-remediation.test.mjs","repository":".","result":"pass; 18 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"}],"exit":["Peter approves the revised independent implementation before code changes.","Every transferred obligation has a verified outcome or explicit owner-approved scope disposition.","Standalone runtime and installer pass isolated tests with no company dependencies.","Required independent ExitGate passes before Completed; main merge and live actions retain separate approval."],"id":"hindsight-memory","inputs":[{"availability":"available","category":"objective","freshness":"Verified direct human approval in this Dotfiles chat on 2026-10-17; later scope supersedes prior planning-only authority.","locator":"Nucleus chat 01a12fb1-16b4-7082-b244-f48a800ce904, human turns 01a14b82-9c39-7312-a3d7-0851fef110d7 and 01a14b85-3143-7123-bba1-2067cb839287, verified through read_thread on 2026-10-17. Direct Dotfiles human instruction on 2026-10-17: approve isolated component, adapters, installer safeguards, tests and review; publication, main merge and live rollout remain separate.","owner":"Peter","required_at":"start","role":"Moves full ownership to Dotfiles and authorizes isolated implementation and review. The existing immutable audit remains evidence, not a runtime dependency.","source_kind":"instruction"},{"availability":"available","category":"evidence","owner":"Nucleus audit author","path":"plans/shared-personal-memory.md","repository":"/home/fodurrr/dev/xpando/nucleus","required_at":"start","revision":"40fe44ee7657cae6f8b436c4ea7b14610bf06e0c","role":"Complete immutable audit, artifact digest, findings, host matrix, limits, tests, self-review and unresolved obligations; ownership-specific architecture is superseded.","track":"committed"},{"availability":"available","category":"governing","owner":"Peter","path":"AGENTS.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Dotfiles repository workflow, host boundaries, ownership and checks.","track":"committed"},{"availability":"available","category":"evidence","owner":"Dotfiles maintainer","path":"docs/plans/hindsight-memory.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Previous plan and installer/host audit; Nucleus release gate and narrow implementation approval are superseded.","track":"committed"}],"inspection_triggers":[],"next":"Obtain approval for the concrete Isolated Pi launch experiment section before implementing or running it: repository-only harness, synthetic fixtures, confinement preflight, bounded native --help probes, local review and saved findings. Stop if namespace isolation or Bun FD3 support fails. A passing load probe does not authorize native conversation, production activation or session/capture claims. Keep all other coverage obligations open. Publication, main merge and live rollout require separate approval.","objective":"Provide optional personal Hindsight memory for general macOS and Linux machine setup, independently of Nucleus, Xpando tooling and repository membership.","owner":"Peter","relationships":[],"risks":[{"detail":"Stock cursor replacement and whole-branch retention can upload history; missing state must fail closed.","id":"historical-capture","owner":"Dotfiles safe-capture task"},{"detail":"Installed/MCP/CLI presence does not establish desktop, T3, Gemini or Hermes completion coverage.","id":"support-claims","owner":"Dotfiles adapter-coverage task"},{"detail":"Finite storage and imperfect redaction need visible rejection, durable accepted jobs, permission checks and honest limits.","id":"secrets-and-queue","owner":"Dotfiles reliable-delivery and privacy-rollback tasks"},{"detail":"Preserve personal/company isolation, unrelated auth/hooks/settings, runtime ownership and network routes.","id":"ownership","owner":"Dotfiles privacy-rollback and installer-integration tasks"},{"detail":"A substantial reusable local runtime is proposed explicitly; do not hide it as installer glue or publish a product without approval.","id":"runtime-scope","owner":"Peter and Dotfiles standalone-runtime task"}],"schema_version":2,"scope":{"excluded":["Publication or push of implementation, main merge, host installation or live rollout without separate approval.","Nucleus or Xpando runtime dependencies, company-bank sharing, new provider abstraction or memory service.","Historical imports, Git ingestion, surveys, bulk files, secret files and hidden reasoning capture.","Unapproved package/product publication, new repository or resident service.","Server upgrade/recreation, backup changes, credential rotation, reboot, live memory writes or deployment to Adam."],"included":["Preserve all relevant Nucleus audit findings and unresolved obligations in this sole canonical plan.","Implement and verify the approved independently installable local Hindsight component, native adapters and optional Dotfiles profile in isolated fixtures.","Implement safe capture, durable bounded delivery, private state, ownership-aware preparation and rollback, and installer runtime-preservation guards.","Qualify supported routes and keep unresolved host/adapter coverage obligations explicit.","Measure local admission and whole-process startup; run tests, normal review and prepare the independent ExitGate; make local checkpoints."]},"state":"Active","tasks":[{"actor":"Dotfiles supervisor and Peter","depends_on":[],"done_when":"Peter approves a concrete independent runtime/adapter/installer scope; no old approval is reused.","id":"proposal-approval","result":"Peter explicitly approved isolated implementation, adapters, installer safeguards, tests and review in the Dotfiles chat on 2026-10-17. Publication, main merge and live rollout remain unapproved.","state":"completed","work":"Present and revise the standalone proposal, preserve the transfer, and obtain explicit approval of the expanded implementation."},{"actor":"Dotfiles implementation owner","depends_on":["proposal-approval"],"done_when":"Runtime works with company tooling and source checkouts absent; qualified Node/storage APIs, private installation and upgrade behavior are verified.","id":"standalone-runtime","result":"Implemented private standalone Node 24 component and owned installation. Isolated tests and Grok 4.7 advisory remediation pass at a704108. Full host qualification and ExitGate remain open.","state":"open","work":"Qualify upstream reuse and implement only the approved independently installable local component and versioned interface."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Old/resumed/forked/corrupt-cursor sentinels never reach the API; accepted chunks and cursor advance atomically; unknown state stops capture.","id":"safe-capture","result":"Atomic admission, prefix checks and staged turns retain the passing isolated code review. New source inspection shows Claude 2.1.302 hook builders omit computed original-prompt source; schema-only filtering cannot qualify it. Runtime/caller and prompt-origin checks are separate obligations. All native activation remains blocked.","state":"open","work":"Enforce activation and message boundaries, atomic admission, single-writer ownership and exclusion of historical/file/Git content."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Crash/restart/capacity/uncertain-ack/stale-worker tests pass; accepted work persists within all documented budgets.","id":"reliable-delivery","result":"Immutable outbox, bounded retries and kernel-held recovery ownership pass 91 tests, independent loopback/SIGSTOP acceptance and Grok 4.7 remediation review at a704108. No actual ENOSPC, power-loss, macOS or live-service proof.","state":"open","work":"Implement bounded durable admission, retry/poll accounting, stable operation identities and visible failure."},{"actor":"Dotfiles implementation owner","depends_on":["safe-capture","reliable-delivery"],"done_when":"Each route has explicit support evidence or an unresolved blocker; unsupported classification does not silently satisfy the coverage requirement.","id":"adapter-coverage","result":"Native caller findings remain saved. Revised Pi launch experiment designed on 2026-10-17: exact installed Linux Pi 1.3.0 ELF, isolated --help factory load, one-use supervisor channel, actual running-process checks and synthetic session fixtures. No implementation or native execution yet. Native session, original-prompt and completed-turn qualification remain separate. All production activation stays blocked; other route obligations remain open.","state":"open","work":"Qualify each installed native agent, desktop/provider and remote route, including Hermes handover and pre-admission gaps."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Permission, redaction, destination-isolation, pending-job, in-flight-delivery and intervening-edit tests pass without deleting memories or state.","id":"privacy-rollback","result":"Private state, redaction, ownership-aware rollback and literal-loopback-only HTTP pass independent security review and Grok 4.7 remediation at a704108. Native caller binding and live qualification remain open.","state":"open","work":"Protect local secrets/state, safe diagnostics, untrusted recall, existing configuration and ownership-aware rollback."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"macOS/Linux profile and failure tests pass; preparation does not activate capture or require company tooling; addon/clean modes cannot prune unrelated runtimes.","id":"installer-integration","result":"Implemented optional profile and prepare-only layer, pre-bootstrap runtime-preservation guards and failure-safe status. Linux isolated fixtures pass; macOS host remains unqualified.","state":"open","work":"Add the optional profile, explicit prerequisites, safe preparation layer, status handling and runtime-preservation guards."},{"actor":"Dotfiles supervisor and independent reviewer","depends_on":["safe-capture","reliable-delivery","adapter-coverage","privacy-rollback","installer-integration"],"done_when":"Evidence identifies exact artifacts and tested versions; all accepted obligations pass or Peter explicitly changes scope; no live acceptance is inferred.","id":"verification-review","result":"Candidate a704108 passes 18 focused and 91 full tests; independent full suite 91/91 plus loopback/SIGSTOP checks pass. Grok 4.7/high remediation returned valid SHIP/PASS with zero findings within approved 205,000 ceiling. This advisory review does not replace full ExitGate. All native activation and remaining qualifications remain open.","state":"open","work":"Run isolated component/adapter/installer tests, repository checks, self-review and required independent ExitGate."},{"actor":"Peter and Dotfiles supervisor","depends_on":["verification-review"],"done_when":"Only separately approved actions execute; per-host activation and end-to-end evidence are recorded; no deployment to Adam is inferred.","id":"publication-rollout","state":"open","work":"Present exact publication/main/host-update/activation commands and quota-consuming checks for separate approval."}],"title":"Standalone personal Hindsight memory","verification":{"exit_passed":false,"status":"Grok 4.7/high advisory remediation: COMPLETED, valid_verdict, SHIP, PASS, zero findings, 9m05s, exit 0; candidate a704108c175508a8d01cef26f17d83f45a3190da. Original three supported findings are resolved. Packet 202,497 estimated tokens within approved 205,000. Report .opencode/adversarial-review-reports/20261017T221124Z-1942828-12098.md and lineage retained privately. Existing builder 18/18 focused and 91/91 full tests, independent 91/91 full tests and loopback/SIGSTOP acceptance pass. No code changed during review; no repeat suite needed. Native activation, full route/macOS/live qualification and full ExitGate remain open."}}
 ```
 
 
@@ -1237,3 +1237,266 @@ The full route matrix remains open, including Grok, Gemini, Hermes, desktop,
 T3 and Zed. This phase did not requalify those routes or erase earlier blockers.
 Nucleus receives the saved findings for coordination only; no Nucleus runtime
 contract or duplicated company-memory implementation is introduced.
+
+## Isolated Pi launch experiment
+
+Design saved on 2026-10-17. Peter authorized designing and saving this experiment.
+This section is the revised proposal, not an implementation or a test result.
+It belongs to adapter-coverage in this canonical work item.
+
+### Question and narrow result
+
+Can one explicit launch of the installed Linux Pi binary load only our probe,
+and bind that probe to the actual process that the experiment launched?
+
+The first native experiment ends after extension loading through --help.
+It does not start a conversation or establish native session attachment.
+Synthetic fixtures separately test a proposed session gate. Their results cannot
+qualify native callbacks, original user input, completed turns or capture.
+Production activation remains refused with native-caller-binding-unqualified.
+
+This is compatibility and intentional launch scoping under the trusted local-user
+model. It does not authenticate hostile software running as the same user.
+No marker, version label, ctx.mode or selected installed file alone grants scope.
+
+### Exact target and ownership
+
+The only native target is the GEEKOM Linux x86-64 compiled Pi 1.3.0 archive:
+
+- Executable: /home/fodurrr/.local/share/mise/installs/pi/1.3.0/pi/pi.
+- Observed size: 107174016 bytes.
+- SHA-256: c2415d6e6f7c67b0a55744c5ace5054936e252fcc3cf56ce087bc314061315ca.
+- Source reference: earendil-works/pi at 71023aec1546d6d677a65669c5665c0927ce0dd0.
+- Adjacent package.json declares @earendil-works/pi-coding-agent 1.3.0.
+  Sidecar SHA-256: 83c3bb7619f590c213cc96a24216eb29a819a3ef6dc548607cc037ed276e8dc5.
+  Its npm bin entry names dist/bundle/cli.js, which is not this archive's entrypoint.
+
+The source reference explains expected behavior. It is not a reproducible-build
+attestation linking every installed binary byte to that source commit.
+Recheck the executable digest and required resource manifest before any native run.
+Mismatch stops this experiment; never update the runtime to make the test pass.
+
+Mise remains the sole runtime owner. Bind the existing package read-only into
+the sandbox. Do not install or copy a second agent distribution. Node 24.22.0
+runs the experimental supervisor; Pi uses its own compiled Bun runtime.
+Node/npm Pi, Pi 1.1.0, macOS, RPC, SDK and other agents remain outside this proof.
+
+### Source findings that constrain the experiment
+
+--version exits before extension loading. --help exits after resource loading,
+which awaits each extension factory. Therefore an asynchronous factory probe can
+finish its bounded launch handshake without starting a native session.
+--no-extensions still permits explicit --extension paths.
+
+Those flags are not an isolation boundary. Resource loading resolves configured
+packages before filtering the resource types. Empty private directories, a clean
+environment and OS confinement must prevent ambient settings and package access.
+--offline is an additional safeguard, not proof that all networking is impossible.
+
+A no-prompt TUI session was considered and removed from this first experiment.
+Pi can emit session_start, but ctx.shutdown starts an asynchronous shutdown while
+initialization continues. This requires a separate lifecycle design and evidence.
+Do not silently add TUI startup when --help cannot demonstrate session binding.
+
+Pinned primary-source evidence, all at the Pi revision above:
+
+- [Bun and CLI entry](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/bun/cli.ts#L1-L4).
+- [Explicit extensions with discovery disabled](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/cli/args.ts#L326-L343).
+- [Package resolution before filtering](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/resource-loader.ts#L527-L532).
+- [Explicit prompt selection](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/resource-loader.ts#L646-L670).
+- [Help exit after loading](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/main.ts#L878-L884).
+- [Awaited extension factory](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/extensions/loader.ts#L613-L628).
+- [Native session-start emission](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/agent-session.ts#L3288-L3311).
+- [Asynchronous shutdown binding](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/modes/interactive/interactive-mode.ts#L2028-L2033).
+
+The [Bubblewrap reference](https://github.com/containers/bubblewrap/blob/main/README.md)
+explains that its argument list defines confinement. It supplies no automatic
+complete sandbox policy. The Linux [executable link](https://man7.org/linux/man-pages/man5/proc_pid_exe.5.html)
+and [process stat](https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html)
+references describe the process observations used here.
+
+### Files and explicit workflow proposed for implementation
+
+Keep all new executable work under tools/hindsight-memory/experiments/pi-launch/.
+Use a small runner, an inner supervisor, a probe extension and focused tests.
+Keep the experimental guard local to that directory. Inject a fake invoker into
+existing createPiAdapter only in synthetic tests; do not copy the adapter/core.
+Do not edit production activation, adapter installation, profiles or apps.toml.
+
+The proposed explicit entrypoint is:
+
+    /home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node tools/hindsight-memory/experiments/pi-launch/run.mjs
+
+That file does not exist yet. It accepts no arbitrary Pi arguments, endpoint,
+bank, token or provider settings. It runs bounded probes and exits.
+It is not a replacement for pi, a shell alias, a login hook or a resident service.
+The ordinary Pi command and global extension directories remain unchanged.
+
+### Isolation before any native execution
+
+1. Inspect the installed bwrap interface and build a fixed, reviewed sandbox
+   argument list. /usr/bin/bwrap exists, but namespace support has not been tested.
+   Preflight confinement and supervisor-death cleanup with a harmless helper.
+   Do this before starting Pi.
+   Unsupported namespaces or denied access stop the experiment. No sudo,
+   package installation, sysctl change or weaker fallback is allowed.
+2. Use private mount, PID and network namespaces, a fresh /proc, and a new session.
+   Keep the inner supervisor and Pi in the same PID namespace.
+   Do not expose host /proc, home directories, repository parents, /run sockets,
+   Docker, SSH-agent, D-Bus, display or provider sockets.
+3. Mount only the selected Pi package, exact supervisor runtime, reviewed probe
+   files and required system libraries read-only. Review each mount explicitly.
+   Supply empty writable HOME, agent directory, XDG directories, cwd and /tmp.
+   Their ancestor directories must contain no host project settings.
+   Only a private experiment output directory may be written on the host.
+4. Construct the environment from an allowlist. Set private HOME and
+   PI_CODING_AGENT_DIR, PI_CODING_AGENT_SESSION_DIR, fixed cwd, PI_OFFLINE=1,
+   PI_SKIP_VERSION_CHECK=1, PI_TELEMETRY=0 and minimal locale/PATH values.
+   Exclude inherited PI_PACKAGE_DIR, provider keys, proxies, loader injection
+   variables, telemetry configuration and user shell initialization.
+   Preserve the archive's binary-to-sidecar layout inside the sandbox.
+5. Close inherited file descriptors except bounded standard output/error,
+   /dev/null stdin and the explicit supervisor channel. Use no interactive TTY.
+   Prove namespace separation and inaccessible host sentinels before proceeding.
+   Do not test isolation by contacting a real provider or memory endpoint.
+
+Initial Pi argv inside that sandbox is fixed:
+
+    <exact-mounted-pi> --offline --no-approve --no-extensions --no-mcp --no-skills --no-prompt-templates --no-themes --no-context-files --no-tools --no-session --system-prompt fixture-only-system --append-system-prompt fixture-only-append --extension <read-only-probe.mjs> --help
+
+The placeholders are sandbox paths selected and logged by the runner.
+They are not PATH lookups or an instruction to execute this command unsandboxed.
+No initial prompt, @file, resume argument or SDK module import is allowed.
+The explicit prompt strings prevent separate SYSTEM.md/APPEND_SYSTEM.md lookup.
+Use empty controlled settings with telemetry disabled where supported.
+Observe startup writes in the disposable directories rather than assuming none.
+
+### Binding protocol to test, not an existing Pi contract
+
+The protocol is Dotfiles experiment plumbing. It introduces no Nucleus interface.
+The inner supervisor launches the exact ELF directly with shell:false.
+It creates a dedicated inherited duplex channel, proposed as descriptor 3.
+Bun support for that channel is a hypothesis to test; an unsupported channel
+ends the experiment. Do not fall back to an environment nonce or writable ticket.
+
+The supervisor owns a fresh random invocation ID, its own process identity,
+child PID and start time, expected executable identity, and a single-use claim.
+The probe sends bounded, schema-checked handshake data over that channel.
+After exec, the supervisor opens the actual direct child's /proc/<pid>/exe.
+It uses that open handle for fstat and hashing, then checks PID/start time again.
+It compares the running executable against the selected artifact before replying.
+PID and start time alone do not suffice because exec can retain both.
+
+The response names the expected current PID, start time, invocation and artifact.
+The probe derives its PID from process.pid and checks its own process against
+that response before acknowledging the observation.
+Compare the loaded host VERSION with the pinned sidecar as a consistency check.
+Both sides fail closed on missing /proc access, unknown fields, incomplete frames
+at EOF/deadline, oversized input, timeout, premature EOF, duplicate claim or mismatch.
+Normal stream fragmentation is allowed within the frame and deadline limits.
+After the probe confirms its validated acknowledgement, expect channel closure
+with a clean child exit. That expected closure is not a protocol failure.
+Only the outer runner can accept the final complete supervisor result; an
+unexpected supervisor death before that result fails the run.
+No claim can be reissued after supervisor restart or replayed into another launch.
+Do not rely on argv, process title, ctx.mode or an arbitrary ancestor as identity.
+
+Pin the probe, supervisor and relevant package resources as well as the ELF.
+Check their manifest before and after loading. A read-only mount does not freeze
+outside changes to the underlying files. Any observed change invalidates the run.
+This is a change detector under the trusted local-user model, not atomic loaded
+module attestation. The compiled ELF narrows the earlier Node module-cache gap;
+it does not prove every external resource immutable.
+
+The factory awaits that acknowledgement before reporting success and returning.
+The acknowledgement proves factory execution at that moment. It returns no
+lasting capability and grants no session or callback authority.
+--help then exits. Native probes do not import the memory core, invoke its CLI,
+register a production descriptor, request recall or admit any memory.
+The channel is per-run and disappears at exit; there is no listener service.
+
+For synthetic tests only, put the accepted scope in a closure around callbacks.
+Bind it to one explicitly fresh initial session. Check scope before each event,
+then allow only the expected session ID and fake operation sequence.
+Invalidate on new/resume/fork/reload, different session, runtime change or lost
+supervisor channel. Test exact native startup reason separately in later work.
+Do not claim instantaneous atomic revocation between a check and an operation.
+The current experiment has no real operation during that race.
+
+### Acceptance matrix and evidence labels
+
+| Case | Required observation | Evidence class |
+|---|---|---|
+| Confinement preflight | Separate namespaces; host sentinels and sockets inaccessible; only private outputs writable | Local sandbox test, before Pi |
+| Exact selected binary | One probe factory loads; one matching process claim; --help exits successfully | Actual isolated native load |
+| Ordinary launch without channel | Probe refuses scope; no successful claim | Actual isolated native negative |
+| Different current executable | Selected Pi metadata cannot authorize a Node fixture process | Synthetic process negative |
+| Nested child with inherited environment | Child cannot use parent's scope; wrong current PID refuses | Isolated child negative |
+| Explicit channel inheritance/replay | A nested child inheriting FD3 reports its own process.pid and is refused; duplicate/replayed claims invalidate the run | Channel/process negative |
+| Sidecar or package override | Controlled fixture mismatch refuses; ambient PI_PACKAGE_DIR never reaches Pi | Fixture plus launch-environment assertion |
+| Changed/deleted resources or executable | Drift invalidates the run; old process cannot qualify from new disk metadata | Disposable fixture; never mutate mise files |
+| Supervisor exit/timeout/partial response | Before acknowledgement, no accepted handshake; after acknowledgement, invalidate final result; bounded cleanup | Process/channel negative |
+| SDK claims TUI; wrong mode | No grant without the launched process identity; mode alone has no authority | Synthetic fixture, not SDK qualification |
+| Fresh session then changed lifecycle | Only intended fixture sequence passes; other sessions and reload/resume/fork/new reject | Synthetic callback fixture only |
+| Production safety regression | Existing activation still returns native-caller-binding-unqualified | Existing isolated CLI test |
+
+Every rejected fixture must show zero additional fake recall and admission calls
+from the rejected step. Reset counters or record deltas after a positive prefix.
+Every native probe, including the positive probe, must show zero real memory
+operations. An extension log alone does not prove the supervisor accepted it.
+Require matching supervisor records, exit status and complete bounded output.
+A handshake acknowledgement is an observation, not the final pass. Later duplicate
+claims, drift, unexpected supervisor death or output failure invalidate the run.
+Keep the earlier observation in the report; do not claim it never occurred.
+Missing output, skipped tests, timeouts and unavailable isolation are unproved
+results, never passing acceptance.
+
+Synthetic positive fixtures may count fake session, recall and capture calls.
+Label those counts as fixtures. No native user prompt or completed assistant
+turn is produced in this experiment. Original-prompt eligibility remains open.
+Do not weaken this distinction by fabricating an agent_end event inside Pi.
+
+Use a five-second handshake timeout, a twenty-second per-process deadline and
+a ten-minute overall experiment limit. Bound output to 256 KiB per process.
+Output overflow fails the run; truncation cannot yield a passing result.
+On timeout terminate only experiment-owned processes, then reap them.
+Record residual processes as failure. Never kill unrelated Pi sessions.
+These are test limits, not the 100 ms local-admission target.
+
+Save the exact candidate commit, executable/resource manifest, namespace checks,
+argv, allowed environment key names, counts, reason codes and cleanup result.
+Retain bounded private diagnostics outside version control. Commit the concise
+findings to this canonical item. Never record ambient environment values or keys.
+No new Grok review is part of this plan; previous review budgets are not reused.
+
+### Self-review and revisions
+
+| Weakness in the initial approach | Revision |
+|---|---|
+| A Node/npm launch assumption mismatched the installed archive | Target only the actual compiled ELF and adjacent resources |
+| Disable flags looked like sufficient isolation | Require OS confinement; package resolution happens before filtering |
+| A marker could reach child tools or a nested Pi | Use a supervisor-owned one-use channel plus actual current process checks |
+| A writable launch record could become self-issued scope | Remove file tickets; test inherited channel support and stop on failure |
+| PID/start time survive exec; disk files can change | Verify the running executable and resource manifest, and state race limits |
+| Session-start shutdown looked like a simple native smoke test | Remove TUI/session startup from this first experiment |
+| Synthetic callbacks could be presented as native coverage | Separate evidence classes; keep native session and prompt eligibility open |
+| Namespace support and inherited-FD behavior were assumed | Make both explicit preconditions, with no weaker fallback |
+
+The parent reviewed this plan and incorporated read-only source and acceptance
+reviews. Security review accepted the narrowed factory-load proposal with corrections:
+bounded acknowledgement, an opened executable handle, no lasting capability,
+post-acknowledgement invalidation, rejected-step counter deltas, explicit FD3
+child inheritance and output-overflow failure. These are normal plan reviews, not the independent ExitGate.
+
+### Approval and next boundary
+
+Implementation approval would authorize only the experimental files, focused
+synthetic tests, confinement preflight, bounded isolated --help probes, review,
+local findings and local commits described here. It would not authorize a native
+conversation, production caller binding, an installed launcher, publication,
+push, main merge, host rollout or live provider/memory calls.
+
+After an approved experiment, report whether process-scoped extension loading
+worked. If it failed, preserve the blocker and stop. If it passed, propose a
+separate no-provider native session experiment before changing activation.
+Keep all other route, macOS, durability and full ExitGate obligations open.
