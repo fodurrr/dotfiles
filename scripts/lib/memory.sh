@@ -134,6 +134,49 @@ memory_validate_result() {
     ' >/dev/null 2>&1
 }
 
+# Read metadata with the system utility, never a stat executable from PATH.
+# GNU and macOS stat use different format flags. All fields stay numeric.
+memory_system_stat() {
+    local target="$1" metadata
+    case "$(/usr/bin/uname -s 2>/dev/null)" in
+        Darwin) metadata=$(/usr/bin/stat -f '%u %Lp %l %z' "$target" 2>/dev/null) || return 1 ;;
+        Linux) metadata=$(/usr/bin/stat -c '%u %a %h %s' "$target" 2>/dev/null) || return 1 ;;
+        *) return 1 ;;
+    esac
+    IFS=' ' read -r MEMORY_STAT_UID MEMORY_STAT_MODE MEMORY_STAT_LINKS MEMORY_STAT_SIZE MEMORY_STAT_EXTRA <<< "$metadata"
+    case "$MEMORY_STAT_UID:$MEMORY_STAT_LINKS:$MEMORY_STAT_SIZE" in *[!0-9:]*|'') return 1 ;; esac
+    case "$MEMORY_STAT_MODE" in *[!0-7]*|'') return 1 ;; esac
+    [[ -n "$MEMORY_STAT_UID" && -n "$MEMORY_STAT_LINKS" && -n "$MEMORY_STAT_SIZE" && -z "$MEMORY_STAT_EXTRA" && ${#MEMORY_STAT_MODE} -le 6 ]] || return 1
+    MEMORY_STAT_BITS=$((8#$MEMORY_STAT_MODE))
+}
+
+# Match the component's owned-artifact policy before executing its launcher.
+# Readable/executable 0755 files/parents are valid; group/world writing is not.
+memory_safe_launcher() {
+    local launcher="$1" parent
+    case "$launcher" in /*) ;; *) return 1 ;; esac
+    case "$launcher" in */../*|*/./*) return 1 ;; esac
+    [[ -f "$launcher" && -x "$launcher" && -O "$launcher" && ! -L "$launcher" ]] || return 1
+    memory_system_stat "$launcher" || return 1
+    [[ "$MEMORY_STAT_UID" == "$EUID" && "$MEMORY_STAT_LINKS" == 1 && "$MEMORY_STAT_SIZE" -le 1048576 ]] || return 1
+    (( (MEMORY_STAT_BITS & 0022) == 0 )) || return 1
+    parent="${launcher%/*}"
+    while true; do
+        [[ -n "$parent" ]] || parent=/
+        [[ -d "$parent" && ! -L "$parent" ]] || return 1
+        memory_system_stat "$parent" || return 1
+        # Root-owned sticky temporary directories are the sole writable exception.
+        if [[ "$MEMORY_STAT_UID" == 0 ]] && (( MEMORY_STAT_BITS & 01000 )); then
+            :
+        else
+            [[ "$MEMORY_STAT_UID" == 0 || "$MEMORY_STAT_UID" == "$EUID" ]] || return 1
+            (( (MEMORY_STAT_BITS & 0022) == 0 )) || return 1
+        fi
+        [[ "$parent" != / ]] || break
+        parent="${parent%/*}"
+    done
+}
+
 memory_read_status() {
     MEMORY_STATUS_INSTALLED=false
     MEMORY_STATUS_CONFIGURED=false
@@ -144,7 +187,7 @@ memory_read_status() {
         MEMORY_STATUS_LABEL=missing
         return 0
     fi
-    [[ -f "$launcher" && -x "$launcher" && -O "$launcher" && ! -L "$launcher" ]] || return 1
+    memory_safe_launcher "$launcher" || return 1
     if ! result=$("$launcher" status 2>/dev/null); then
         return 1
     fi

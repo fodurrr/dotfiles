@@ -12,7 +12,7 @@ memory_resolve_node() {
     # Verify actual API availability, not the version printed by mise metadata.
     if ! "$candidate" --input-type=module -e '
         const [major, minor] = process.versions.node.split(".").map(Number);
-        if (major < 24 || (major === 24 && minor < 15)) process.exit(1);
+        if (major !== 24 || minor < 15) process.exit(1);
         const { DatabaseSync } = await import("node:sqlite");
         if (typeof DatabaseSync !== "function") process.exit(1);
     ' >/dev/null 2>&1; then
@@ -25,7 +25,7 @@ run_layer_memory() {
     memory_selection_requested || return 0
     local app_key=hindsight-memory result
     if ! memory_resolve_node; then
-        record_install_failure "$app_key" "Qualified mise Node >=24.15 with node:sqlite is unavailable; preparation did not run"
+        record_install_failure "$app_key" "Qualified mise Node >=24.15 and <25 with node:sqlite is unavailable; preparation did not run"
         return 1
     fi
     if [[ ! -f "$DOTFILES_DIR/tools/hindsight-memory/src/cli.mjs" ]]; then

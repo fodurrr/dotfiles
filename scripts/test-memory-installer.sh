@@ -135,12 +135,55 @@ check test "$MEMORY_STATUS_INSTALLED" = false
 cat > "$HOME/.local/bin/hindsight-memory" <<'SH'
 #!/bin/bash
 [[ "$1" == status ]] || exit 1
+touch "$HOME/launcher-ran"
 printf '%s\n' '{"schema_version":1,"status":"activation-pending","installed":true,"configured":false,"active":false}'
 SH
-chmod +x "$HOME/.local/bin/hindsight-memory"
+chmod 755 "$HOME/.local" "$HOME/.local/bin" "$HOME/.local/bin/hindsight-memory"
 check memory_read_status
 check test "$MEMORY_STATUS_LABEL" = activation-pending
 check is_app_installed hindsight-memory
+# Reject unsafe metadata before executing any launcher body.
+check test -e "$HOME/launcher-ran"
+rm "$HOME/launcher-ran"
+chmod 775 "$HOME/.local/bin/hindsight-memory"
+reject memory_read_status
+check test ! -e "$HOME/launcher-ran"
+chmod 755 "$HOME/.local/bin/hindsight-memory"
+chmod 775 "$HOME/.local/bin"
+reject memory_read_status
+check test ! -e "$HOME/launcher-ran"
+chmod 755 "$HOME/.local/bin"
+chmod 775 "$HOME/.local"
+reject memory_read_status
+check test ! -e "$HOME/launcher-ran"
+chmod 755 "$HOME/.local"
+ln "$HOME/.local/bin/hindsight-memory" "$HOME/launcher-hardlink"
+reject memory_read_status
+check test ! -e "$HOME/launcher-ran"
+rm "$HOME/launcher-hardlink"
+mv "$HOME/.local" "$HOME/.local-real"
+ln -s "$HOME/.local-real" "$HOME/.local"
+reject memory_read_status
+check test ! -e "$HOME/launcher-ran"
+rm "$HOME/.local"
+mv "$HOME/.local-real" "$HOME/.local"
+mv "$HOME/.local/bin/hindsight-memory" "$HOME/real-launcher"
+ln -s "$HOME/real-launcher" "$HOME/.local/bin/hindsight-memory"
+reject memory_read_status
+check test ! -e "$HOME/launcher-ran"
+rm "$HOME/.local/bin/hindsight-memory"
+mv "$HOME/real-launcher" "$HOME/.local/bin/hindsight-memory"
+# A command named stat in PATH must not run during permissions inspection.
+cat > "$HOME/path-bin/stat" <<'SH'
+#!/bin/bash
+touch "$HOME/path-stat-ran"
+exit 1
+SH
+chmod +x "$HOME/path-bin/stat"
+check memory_read_status
+check test ! -e "$HOME/path-stat-ran"
+check test -e "$HOME/launcher-ran"
+rm "$HOME/launcher-ran"
 # A binary on disk without a valid status is not readiness.
 printf '#!/bin/bash\necho "sensitive diagnostic"\n' > "$HOME/.local/bin/hindsight-memory"
 reject memory_read_status

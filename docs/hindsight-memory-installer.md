@@ -36,7 +36,7 @@ activation records or unrelated hooks.
 ## Runtime and result checks
 
 The preparation layer runs after mise and Linux extras. It resolves Node through
-`mise which node`, requires an absolute executable and checks Node 24.15 or newer
+`mise which node`, requires an absolute executable and checks Node 24.15 or newer within major 24
 plus `node:sqlite`. It never falls back to a random `node` on `PATH`.
 The component records and verifies the actual runtime used by its launcher.
 A later missing, pruned or replaced runtime requires requalification.
@@ -51,6 +51,10 @@ Independent later installer steps still run.
 `~/.local/bin/hindsight-memory`, using its read-only `status` command.
 It reports the validated state or `unavailable` when that state cannot be checked.
 It does not invoke a similarly named command from `PATH`.
+Before execution, it rejects symlinked launchers or ancestors, multiple hard links,
+and group/world-writable launchers or ancestors. Root-owned sticky temporary
+directories are allowed. Normal owned `0755` parents are accepted.
+Unsafe permissions cause an `unavailable` status; inspection does not change them.
 Raw component output and error details are not copied into `install.log`.
 No configuration values, conversation text or secret values belong in that log.
 
