@@ -185,7 +185,7 @@ When researching app behavior, inspect the installed version and prefer current 
 
 ## Documentation map
 
-- [Hindsight memory work item](docs/plans/hindsight-memory.md): Approved plan; wait for Nucleus's released contract before implementation
+- [Hindsight memory work item](docs/plans/hindsight-memory.md): Standalone Dotfiles proposal; revised implementation awaits approval
 - [README](README.md): machine choices, quick start and normal updates
 - [Profile system](docs/profile-system.md): selection and installer architecture
 - [Linux support](docs/linux-support.md): native packages and platform limits
