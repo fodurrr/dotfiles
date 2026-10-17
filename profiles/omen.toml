@@ -1,0 +1,27 @@
+version = 1
+
+# HP Omen: Ubuntu Server development host, controlled from GEEKOM over SSH.
+# Keep desktop applications and GEEKOM display/keyboard settings off this host.
+# T3 Code's server runtime is connected separately to match the GEEKOM build.
+# Provider authentication and background services require separate setup.
+
+[linux.editors]
+apps = ["helix"]
+
+[linux.ai]
+apps = ["hermes-agent", "claude-cli", "codex-cli", "pi-cli", "opencode-cli", "gemini-cli", "grok-cli", "codex-xpando", "herdr"]
+
+[linux.config]
+apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config"]
+
+[linux.containers]
+apps = ["docker-linux"]
+
+[linux.databases]
+apps = ["postgresql-17-linux"]
+
+[linux.cli]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop-linux", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]
+
+[linux.runtimes]
+apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "dexter"]
