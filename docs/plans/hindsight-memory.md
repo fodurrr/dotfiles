@@ -1,7 +1,7 @@
 # Standalone personal Hindsight memory
 
 ```work-item
-{"current":"2026-10-17: Grok 4.7/high remediation completed with valid SHIP, gate PASS and no remaining findings against frozen a704108c175508a8d01cef26f17d83f45a3190da. Packet 202,497 estimated tokens stayed within the approved 205,000 ceiling. Repairs are integrated locally at e8fbfef88a2bda95b5a73ab0f494303fb33f15ba; 91 component tests and independent acceptance pass. Report and lineage are retained locally. This is advisory isolated code readiness, not the full ExitGate. Native activation remains blocked; no publication, main merge or live rollout.","decisions":[{"date":"2026-10-17","decision":"Approve standalone component, adapters, installer safeguards, tests and review; publication, main merge and live rollout require separate approval. Measure the 100 ms target honestly.","id":"isolated-implementation-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 200,000-token ceiling for exact Grok 4.7 review, supported fixes and local save. Publication, main merge and live rollout remain separate approvals.","id":"grok-packet-ceiling-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 205,000 estimated-token ceiling for the same Grok 4.7 remediation review, local saving and Nucleus coordination. Publication, main merge and live rollout still require separate approval.","id":"grok-remediation-ceiling-approved","owner":"Peter"}],"deliverable":"An approved standalone design, then separately authorized implementation and isolated verification of a reusable client component, agent adapters and optional Dotfiles profile; publication and live rollout remain separate approvals.","evidence":[{"command":"/home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --disable-warning=ExperimentalWarning --test tools/hindsight-memory/test/*.test.mjs","repository":".","result":"pass; 91 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"},{"command":"cd tools/hindsight-memory && /home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --test test/review-remediation.test.mjs","repository":".","result":"pass; 18 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"}],"exit":["Peter approves the revised independent implementation before code changes.","Every transferred obligation has a verified outcome or explicit owner-approved scope disposition.","Standalone runtime and installer pass isolated tests with no company dependencies.","Required independent ExitGate passes before Completed; main merge and live actions retain separate approval."],"id":"hindsight-memory","inputs":[{"availability":"available","category":"objective","freshness":"Verified direct human approval in this Dotfiles chat on 2026-10-17; later scope supersedes prior planning-only authority.","locator":"Nucleus chat 01a12fb1-16b4-7082-b244-f48a800ce904, human turns 01a14b82-9c39-7312-a3d7-0851fef110d7 and 01a14b85-3143-7123-bba1-2067cb839287, verified through read_thread on 2026-10-17. Direct Dotfiles human instruction on 2026-10-17: approve isolated component, adapters, installer safeguards, tests and review; publication, main merge and live rollout remain separate.","owner":"Peter","required_at":"start","role":"Moves full ownership to Dotfiles and authorizes isolated implementation and review. The existing immutable audit remains evidence, not a runtime dependency.","source_kind":"instruction"},{"availability":"available","category":"evidence","owner":"Nucleus audit author","path":"plans/shared-personal-memory.md","repository":"/home/fodurrr/dev/xpando/nucleus","required_at":"start","revision":"40fe44ee7657cae6f8b436c4ea7b14610bf06e0c","role":"Complete immutable audit, artifact digest, findings, host matrix, limits, tests, self-review and unresolved obligations; ownership-specific architecture is superseded.","track":"committed"},{"availability":"available","category":"governing","owner":"Peter","path":"AGENTS.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Dotfiles repository workflow, host boundaries, ownership and checks.","track":"committed"},{"availability":"available","category":"evidence","owner":"Dotfiles maintainer","path":"docs/plans/hindsight-memory.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Previous plan and installer/host audit; Nucleus release gate and narrow implementation approval are superseded.","track":"committed"}],"inspection_triggers":[],"next":"The authorized Grok remediation review and local save are complete; do not run another review in this series. The next implementation obligation is actual current-caller binding for native adapters, followed by remaining route, macOS and live-service qualification. Preserve blocked activation until qualified. Full ExitGate remains required before Completed. Publication, main merge and live rollout still require Peter approval.","objective":"Provide optional personal Hindsight memory for general macOS and Linux machine setup, independently of Nucleus, Xpando tooling and repository membership.","owner":"Peter","relationships":[],"risks":[{"detail":"Stock cursor replacement and whole-branch retention can upload history; missing state must fail closed.","id":"historical-capture","owner":"Dotfiles safe-capture task"},{"detail":"Installed/MCP/CLI presence does not establish desktop, T3, Gemini or Hermes completion coverage.","id":"support-claims","owner":"Dotfiles adapter-coverage task"},{"detail":"Finite storage and imperfect redaction need visible rejection, durable accepted jobs, permission checks and honest limits.","id":"secrets-and-queue","owner":"Dotfiles reliable-delivery and privacy-rollback tasks"},{"detail":"Preserve personal/company isolation, unrelated auth/hooks/settings, runtime ownership and network routes.","id":"ownership","owner":"Dotfiles privacy-rollback and installer-integration tasks"},{"detail":"A substantial reusable local runtime is proposed explicitly; do not hide it as installer glue or publish a product without approval.","id":"runtime-scope","owner":"Peter and Dotfiles standalone-runtime task"}],"schema_version":2,"scope":{"excluded":["Publication or push of implementation, main merge, host installation or live rollout without separate approval.","Nucleus or Xpando runtime dependencies, company-bank sharing, new provider abstraction or memory service.","Historical imports, Git ingestion, surveys, bulk files, secret files and hidden reasoning capture.","Unapproved package/product publication, new repository or resident service.","Server upgrade/recreation, backup changes, credential rotation, reboot, live memory writes or deployment to Adam."],"included":["Preserve all relevant Nucleus audit findings and unresolved obligations in this sole canonical plan.","Implement and verify the approved independently installable local Hindsight component, native adapters and optional Dotfiles profile in isolated fixtures.","Implement safe capture, durable bounded delivery, private state, ownership-aware preparation and rollback, and installer runtime-preservation guards.","Qualify supported routes and keep unresolved host/adapter coverage obligations explicit.","Measure local admission and whole-process startup; run tests, normal review and prepare the independent ExitGate; make local checkpoints."]},"state":"Active","tasks":[{"actor":"Dotfiles supervisor and Peter","depends_on":[],"done_when":"Peter approves a concrete independent runtime/adapter/installer scope; no old approval is reused.","id":"proposal-approval","result":"Peter explicitly approved isolated implementation, adapters, installer safeguards, tests and review in the Dotfiles chat on 2026-10-17. Publication, main merge and live rollout remain unapproved.","state":"completed","work":"Present and revise the standalone proposal, preserve the transfer, and obtain explicit approval of the expanded implementation."},{"actor":"Dotfiles implementation owner","depends_on":["proposal-approval"],"done_when":"Runtime works with company tooling and source checkouts absent; qualified Node/storage APIs, private installation and upgrade behavior are verified.","id":"standalone-runtime","result":"Implemented private standalone Node 24 component and owned installation. Isolated tests and Grok 4.7 advisory remediation pass at a704108. Full host qualification and ExitGate remain open.","state":"open","work":"Qualify upstream reuse and implement only the approved independently installable local component and versioned interface."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Old/resumed/forked/corrupt-cursor sentinels never reach the API; accepted chunks and cursor advance atomically; unknown state stops capture.","id":"safe-capture","result":"Atomic new-message admission, transcript prefix checks and staged turns implemented. Grok advisory remediation passes. All native activation remains blocked because original session-creator metadata does not establish the current invoking client.","state":"open","work":"Enforce activation and message boundaries, atomic admission, single-writer ownership and exclusion of historical/file/Git content."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Crash/restart/capacity/uncertain-ack/stale-worker tests pass; accepted work persists within all documented budgets.","id":"reliable-delivery","result":"Immutable outbox, bounded retries and kernel-held recovery ownership pass 91 tests, independent loopback/SIGSTOP acceptance and Grok 4.7 remediation review at a704108. No actual ENOSPC, power-loss, macOS or live-service proof.","state":"open","work":"Implement bounded durable admission, retry/poll accounting, stable operation identities and visible failure."},{"actor":"Dotfiles implementation owner","depends_on":["safe-capture","reliable-delivery"],"done_when":"Each route has explicit support evidence or an unresolved blocker; unsupported classification does not silently satisfy the coverage requirement.","id":"adapter-coverage","result":"All native production activation remains blocked pending actual invoking-client binding. Codex resume preserves original creator metadata, so per-event header checks are insufficient. Source/fixture adapters exist; Grok/Gemini/Hermes/Desktop/T3/Zed obligations also remain open.","state":"open","work":"Qualify each installed native agent, desktop/provider and remote route, including Hermes handover and pre-admission gaps."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Permission, redaction, destination-isolation, pending-job, in-flight-delivery and intervening-edit tests pass without deleting memories or state.","id":"privacy-rollback","result":"Private state, redaction, ownership-aware rollback and literal-loopback-only HTTP pass independent security review and Grok 4.7 remediation at a704108. Native caller binding and live qualification remain open.","state":"open","work":"Protect local secrets/state, safe diagnostics, untrusted recall, existing configuration and ownership-aware rollback."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"macOS/Linux profile and failure tests pass; preparation does not activate capture or require company tooling; addon/clean modes cannot prune unrelated runtimes.","id":"installer-integration","result":"Implemented optional profile and prepare-only layer, pre-bootstrap runtime-preservation guards and failure-safe status. Linux isolated fixtures pass; macOS host remains unqualified.","state":"open","work":"Add the optional profile, explicit prerequisites, safe preparation layer, status handling and runtime-preservation guards."},{"actor":"Dotfiles supervisor and independent reviewer","depends_on":["safe-capture","reliable-delivery","adapter-coverage","privacy-rollback","installer-integration"],"done_when":"Evidence identifies exact artifacts and tested versions; all accepted obligations pass or Peter explicitly changes scope; no live acceptance is inferred.","id":"verification-review","result":"Candidate a704108 passes 18 focused and 91 full tests; independent full suite 91/91 plus loopback/SIGSTOP checks pass. Grok 4.7/high remediation returned valid SHIP/PASS with zero findings within approved 205,000 ceiling. This advisory review does not replace full ExitGate. All native activation and remaining qualifications remain open.","state":"open","work":"Run isolated component/adapter/installer tests, repository checks, self-review and required independent ExitGate."},{"actor":"Peter and Dotfiles supervisor","depends_on":["verification-review"],"done_when":"Only separately approved actions execute; per-host activation and end-to-end evidence are recorded; no deployment to Adam is inferred.","id":"publication-rollout","state":"open","work":"Present exact publication/main/host-update/activation commands and quota-consuming checks for separate approval."}],"title":"Standalone personal Hindsight memory","verification":{"exit_passed":false,"status":"Grok 4.7/high advisory remediation: COMPLETED, valid_verdict, SHIP, PASS, zero findings, 9m05s, exit 0; candidate a704108c175508a8d01cef26f17d83f45a3190da. Original three supported findings are resolved. Packet 202,497 estimated tokens within approved 205,000. Report .opencode/adversarial-review-reports/20261017T221124Z-1942828-12098.md and lineage retained privately. Existing builder 18/18 focused and 91/91 full tests, independent 91/91 full tests and loopback/SIGSTOP acceptance pass. No code changed during review; no repeat suite needed. Native activation, full route/macOS/live qualification and full ExitGate remain open."}}
+{"current":"2026-10-17: Native current-caller investigation is complete and saved. No inspected route can yet be unblocked. Codex hooks receive inherited environment without current route identity; resume prefers saved source. Claude 2.1.302 computes prompt origin but omits it from inspected hook payload builders. Pi metadata can be overridden; OpenCode identifies execution-server metadata, not its frontend. Two temporary Node-only counterexamples confirm selected-file and disk-versus-loaded-code gaps. Runtime code and blanket activation refusal remain unchanged. Prior Grok SHIP/PASS applies only to the frozen isolated implementation. No publication, main merge or live rollout.","decisions":[{"date":"2026-10-17","decision":"Approve standalone component, adapters, installer safeguards, tests and review; publication, main merge and live rollout require separate approval. Measure the 100 ms target honestly.","id":"isolated-implementation-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 200,000-token ceiling for exact Grok 4.7 review, supported fixes and local save. Publication, main merge and live rollout remain separate approvals.","id":"grok-packet-ceiling-approved","owner":"Peter"},{"date":"2026-10-17","decision":"Approve a 205,000 estimated-token ceiling for the same Grok 4.7 remediation review, local saving and Nucleus coordination. Publication, main merge and live rollout still require separate approval.","id":"grok-remediation-ceiling-approved","owner":"Peter"}],"deliverable":"An approved standalone design, then separately authorized implementation and isolated verification of a reusable client component, agent adapters and optional Dotfiles profile; publication and live rollout remain separate approvals.","evidence":[{"command":"/home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --disable-warning=ExperimentalWarning --test tools/hindsight-memory/test/*.test.mjs","repository":".","result":"pass; 91 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"},{"command":"cd tools/hindsight-memory && /home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --test test/review-remediation.test.mjs","repository":".","result":"pass; 18 tests, 0 failures","revision":"a704108c175508a8d01cef26f17d83f45a3190da","source_kind":"reproducible-check"}],"exit":["Peter approves the revised independent implementation before code changes.","Every transferred obligation has a verified outcome or explicit owner-approved scope disposition.","Standalone runtime and installer pass isolated tests with no company dependencies.","Required independent ExitGate passes before Completed; main merge and live actions retain separate approval."],"id":"hindsight-memory","inputs":[{"availability":"available","category":"objective","freshness":"Verified direct human approval in this Dotfiles chat on 2026-10-17; later scope supersedes prior planning-only authority.","locator":"Nucleus chat 01a12fb1-16b4-7082-b244-f48a800ce904, human turns 01a14b82-9c39-7312-a3d7-0851fef110d7 and 01a14b85-3143-7123-bba1-2067cb839287, verified through read_thread on 2026-10-17. Direct Dotfiles human instruction on 2026-10-17: approve isolated component, adapters, installer safeguards, tests and review; publication, main merge and live rollout remain separate.","owner":"Peter","required_at":"start","role":"Moves full ownership to Dotfiles and authorizes isolated implementation and review. The existing immutable audit remains evidence, not a runtime dependency.","source_kind":"instruction"},{"availability":"available","category":"evidence","owner":"Nucleus audit author","path":"plans/shared-personal-memory.md","repository":"/home/fodurrr/dev/xpando/nucleus","required_at":"start","revision":"40fe44ee7657cae6f8b436c4ea7b14610bf06e0c","role":"Complete immutable audit, artifact digest, findings, host matrix, limits, tests, self-review and unresolved obligations; ownership-specific architecture is superseded.","track":"committed"},{"availability":"available","category":"governing","owner":"Peter","path":"AGENTS.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Dotfiles repository workflow, host boundaries, ownership and checks.","track":"committed"},{"availability":"available","category":"evidence","owner":"Dotfiles maintainer","path":"docs/plans/hindsight-memory.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Previous plan and installer/host audit; Nucleus release gate and narrow implementation approval are superseded.","track":"committed"}],"inspection_triggers":[],"next":"Use the saved evidence to design one isolated Pi direct-CLI launch qualification experiment, preserving mise as the sole agent-runtime owner. Prove invocation-scoped extension loading, actual entrypoint/package identity, session attachment and child-tool refusal before changing production activation. A launcher changes workflow and must be presented concretely before implementation. Keep Codex, Claude and OpenCode route obligations explicit; do not infer caller identity from headers, optional schema fields or server metadata. No new provider review is needed for this documentation-only investigation. Publication, main merge and live rollout retain separate approval.","objective":"Provide optional personal Hindsight memory for general macOS and Linux machine setup, independently of Nucleus, Xpando tooling and repository membership.","owner":"Peter","relationships":[],"risks":[{"detail":"Stock cursor replacement and whole-branch retention can upload history; missing state must fail closed.","id":"historical-capture","owner":"Dotfiles safe-capture task"},{"detail":"Installed/MCP/CLI presence does not establish desktop, T3, Gemini or Hermes completion coverage.","id":"support-claims","owner":"Dotfiles adapter-coverage task"},{"detail":"Finite storage and imperfect redaction need visible rejection, durable accepted jobs, permission checks and honest limits.","id":"secrets-and-queue","owner":"Dotfiles reliable-delivery and privacy-rollback tasks"},{"detail":"Preserve personal/company isolation, unrelated auth/hooks/settings, runtime ownership and network routes.","id":"ownership","owner":"Dotfiles privacy-rollback and installer-integration tasks"},{"detail":"A substantial reusable local runtime is proposed explicitly; do not hide it as installer glue or publish a product without approval.","id":"runtime-scope","owner":"Peter and Dotfiles standalone-runtime task"}],"schema_version":2,"scope":{"excluded":["Publication or push of implementation, main merge, host installation or live rollout without separate approval.","Nucleus or Xpando runtime dependencies, company-bank sharing, new provider abstraction or memory service.","Historical imports, Git ingestion, surveys, bulk files, secret files and hidden reasoning capture.","Unapproved package/product publication, new repository or resident service.","Server upgrade/recreation, backup changes, credential rotation, reboot, live memory writes or deployment to Adam."],"included":["Preserve all relevant Nucleus audit findings and unresolved obligations in this sole canonical plan.","Implement and verify the approved independently installable local Hindsight component, native adapters and optional Dotfiles profile in isolated fixtures.","Implement safe capture, durable bounded delivery, private state, ownership-aware preparation and rollback, and installer runtime-preservation guards.","Qualify supported routes and keep unresolved host/adapter coverage obligations explicit.","Measure local admission and whole-process startup; run tests, normal review and prepare the independent ExitGate; make local checkpoints."]},"state":"Active","tasks":[{"actor":"Dotfiles supervisor and Peter","depends_on":[],"done_when":"Peter approves a concrete independent runtime/adapter/installer scope; no old approval is reused.","id":"proposal-approval","result":"Peter explicitly approved isolated implementation, adapters, installer safeguards, tests and review in the Dotfiles chat on 2026-10-17. Publication, main merge and live rollout remain unapproved.","state":"completed","work":"Present and revise the standalone proposal, preserve the transfer, and obtain explicit approval of the expanded implementation."},{"actor":"Dotfiles implementation owner","depends_on":["proposal-approval"],"done_when":"Runtime works with company tooling and source checkouts absent; qualified Node/storage APIs, private installation and upgrade behavior are verified.","id":"standalone-runtime","result":"Implemented private standalone Node 24 component and owned installation. Isolated tests and Grok 4.7 advisory remediation pass at a704108. Full host qualification and ExitGate remain open.","state":"open","work":"Qualify upstream reuse and implement only the approved independently installable local component and versioned interface."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Old/resumed/forked/corrupt-cursor sentinels never reach the API; accepted chunks and cursor advance atomically; unknown state stops capture.","id":"safe-capture","result":"Atomic admission, prefix checks and staged turns retain the passing isolated code review. New source inspection shows Claude 2.1.302 hook builders omit computed original-prompt source; schema-only filtering cannot qualify it. Runtime/caller and prompt-origin checks are separate obligations. All native activation remains blocked.","state":"open","work":"Enforce activation and message boundaries, atomic admission, single-writer ownership and exclusion of historical/file/Git content."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Crash/restart/capacity/uncertain-ack/stale-worker tests pass; accepted work persists within all documented budgets.","id":"reliable-delivery","result":"Immutable outbox, bounded retries and kernel-held recovery ownership pass 91 tests, independent loopback/SIGSTOP acceptance and Grok 4.7 remediation review at a704108. No actual ENOSPC, power-loss, macOS or live-service proof.","state":"open","work":"Implement bounded durable admission, retry/poll accounting, stable operation identities and visible failure."},{"actor":"Dotfiles implementation owner","depends_on":["safe-capture","reliable-delivery"],"done_when":"Each route has explicit support evidence or an unresolved blocker; unsupported classification does not silently satisfy the coverage requirement.","id":"adapter-coverage","result":"Read-only caller investigation saved on 2026-10-17. Codex dispatcher lacks current-route marker and resume retains history source. Claude 2.1.302 omits optional prompt-source data in inspected builders. Pi VERSION/mode and OpenCode server metadata do not alone bind current caller. All production activation stays blocked. Proposed next bounded investigation: Pi direct-CLI invocation scope; other route obligations remain open.","state":"open","work":"Qualify each installed native agent, desktop/provider and remote route, including Hermes handover and pre-admission gaps."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Permission, redaction, destination-isolation, pending-job, in-flight-delivery and intervening-edit tests pass without deleting memories or state.","id":"privacy-rollback","result":"Private state, redaction, ownership-aware rollback and literal-loopback-only HTTP pass independent security review and Grok 4.7 remediation at a704108. Native caller binding and live qualification remain open.","state":"open","work":"Protect local secrets/state, safe diagnostics, untrusted recall, existing configuration and ownership-aware rollback."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"macOS/Linux profile and failure tests pass; preparation does not activate capture or require company tooling; addon/clean modes cannot prune unrelated runtimes.","id":"installer-integration","result":"Implemented optional profile and prepare-only layer, pre-bootstrap runtime-preservation guards and failure-safe status. Linux isolated fixtures pass; macOS host remains unqualified.","state":"open","work":"Add the optional profile, explicit prerequisites, safe preparation layer, status handling and runtime-preservation guards."},{"actor":"Dotfiles supervisor and independent reviewer","depends_on":["safe-capture","reliable-delivery","adapter-coverage","privacy-rollback","installer-integration"],"done_when":"Evidence identifies exact artifacts and tested versions; all accepted obligations pass or Peter explicitly changes scope; no live acceptance is inferred.","id":"verification-review","result":"Candidate a704108 passes 18 focused and 91 full tests; independent full suite 91/91 plus loopback/SIGSTOP checks pass. Grok 4.7/high remediation returned valid SHIP/PASS with zero findings within approved 205,000 ceiling. This advisory review does not replace full ExitGate. All native activation and remaining qualifications remain open.","state":"open","work":"Run isolated component/adapter/installer tests, repository checks, self-review and required independent ExitGate."},{"actor":"Peter and Dotfiles supervisor","depends_on":["verification-review"],"done_when":"Only separately approved actions execute; per-host activation and end-to-end evidence are recorded; no deployment to Adam is inferred.","id":"publication-rollout","state":"open","work":"Present exact publication/main/host-update/activation commands and quota-consuming checks for separate approval."}],"title":"Standalone personal Hindsight memory","verification":{"exit_passed":false,"status":"Grok 4.7/high advisory remediation: COMPLETED, valid_verdict, SHIP, PASS, zero findings, 9m05s, exit 0; candidate a704108c175508a8d01cef26f17d83f45a3190da. Original three supported findings are resolved. Packet 202,497 estimated tokens within approved 205,000. Report .opencode/adversarial-review-reports/20261017T221124Z-1942828-12098.md and lineage retained privately. Existing builder 18/18 focused and 91/91 full tests, independent 91/91 full tests and loopback/SIGSTOP acceptance pass. No code changed during review; no repeat suite needed. Native activation, full route/macOS/live qualification and full ExitGate remain open."}}
 ```
 
 
@@ -1030,3 +1030,210 @@ remain unqualified. The full work-item ExitGate has not run or passed.
 The work item stays Active. Publication, main merge and live rollout still need
 Peter approval; none occurred. The next implementation obligation is native
 current-caller binding, not publication of an active integration.
+
+## Native current-caller investigation
+
+Peter authorized continued investigation and local saving on 2026-10-17.
+This phase inspected source and ran synthetic local observations only. It did not
+implement a binding, execute native agents, read private conversations, inspect
+credentials, install hooks or contact a memory service. Production activation
+still fails with native-caller-binding-unqualified at src/cli.mjs:98.
+
+Starting checkout: /home/fodurrr/dev/dotfiles, codex/hindsight-memory,
+21b0d2d4fa4908ce5f403521d04f65fcc193c288. GEEKOM/Linux; clean, 18 commits ahead
+and zero behind origin/codex/hindsight-memory after fetch. No active custom Git
+hooks were configured. No implementation file changed during this investigation.
+The 205,000-token review approval was not reused for another provider call.
+
+### What binding needs to establish
+
+Keep three questions separate: which execution host and version emitted the
+event; which currently attached session and launch consent cover it; and whether
+its user text is eligible original input. An installed-file probe answers none
+of those questions for a later global-hook invocation. A historical creator
+header answers a different question from current session attachment.
+
+This is compatibility and consent scoping under the existing local-user model.
+It is not a new requirement to authenticate hostile software running as the same
+user. Do not demand impossible universal attestation, but do reject ordinary
+mixed installations, SDK/GUI routes and inherited child-tool scope that the
+adapter has not qualified. A server may be compatible while its frontend remains
+unknown. Frontend equivalence must be proved before claiming broader coverage.
+
+### Current implementation and local observations
+
+At the starting commit, qualifyAgent in tools/hindsight-memory/src/qualification.mjs:5–17
+probes and records a selected file. makeInvoker in adapters/common.mjs:75–81
+checks that file and the Node runtime remain unchanged. It does not establish
+which application invoked the adapter. The production refusal contains this gap;
+these checks are useful update fences, not an already implemented caller binding.
+
+Two temporary Node 24.22.0 investigations passed their expected assertions:
+
+1. A private synthetic executable A returned version 1.2.3. A different Node
+   program B obtained A's descriptor and called makeInvoker with a mock core.
+   The installed-file checks accepted the mock session call while B was the
+   current program. No production activation, native binary or network ran.
+2. An imported synthetic JavaScript module retained its old exported version
+   after its on-disk source was replaced. Reading current package bytes after
+   loading therefore does not, by itself, identify the loaded code.
+
+These are two bounded observations, not native acceptance tests or a new full
+suite result. Temporary files were removed. Existing 91-test and Grok review
+results still describe the unchanged implementation. No benchmark was repeated.
+
+### Codex 0.162.0 and 0.163.0
+
+The hook payload has session and lifecycle fields, but no current executable,
+version or frontend identity. SessionStart.source means startup/resume/clear/
+compact/fork. The transcript source and version describe historical provenance.
+At 0.163.0, app-server resume supplies no replacement source, and core prefers
+source recovered from history. Its initialize client name is stored separately.
+
+The command dispatcher closes the environment ambiguity: Hooks::new snapshots
+host process environment. The Unix child starts with a cleared environment and
+receives that snapshot plus configured hook overrides. Reconfiguration reuses
+the snapshot. Plugin additions identify plugin locations. No reserved current
+CLI/Desktop/T3 marker is inserted in this inspected path. Hooks::new receives
+neither current session_source nor the initialize client name. Static hook env
+configuration is not a caller-specific dispatch contract.
+
+Immutable evidence at 0.163.0, commit 83086188ae0614bd882818ff1aa23f3194962012:
+
+- [Hook environment snapshot, registry.rs:70–100](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/hooks/src/registry.rs#L70-L100).
+- [Shell launch and environment, command_runner.rs:384–435](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/hooks/src/engine/command_runner.rs#L384-L435).
+- [Clean child environment, child_command.rs:72–101](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/utils/pty/src/child_command.rs#L72-L101).
+- [Hook construction, session.rs:1618–1632](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/src/session/session.rs#L1618-L1632).
+- [Separate client name, initialize_processor.rs:130–142](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/request_processors/initialize_processor.rs#L130-L142).
+- [History-source preference, thread_manager.rs:1166–1182](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/src/thread_manager.rs#L1166-L1182).
+- [App-server resume, thread_processor.rs:4200–4214](https://github.com/openai/codex/blob/83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/request_processors/thread_processor.rs#L4200-L4214).
+
+The 0.162.0 SessionStart schema was inspected at
+c1382380de69521303b416720a52f42d51af6248; the deeper dispatcher trace above is
+0.163.0 evidence, not an unperformed 0.162.0 trace. No native caller binding is
+established. Separate CODEX_HOME or a wrapper remains a new local proposal, not
+an existing supported current-caller field. External Desktop/T3 launch behavior
+was not tested.
+
+### Claude Code 2.1.302
+
+The exact installed binary remains the previously pinned artifact:
+/home/fodurrr/.local/share/mise/installs/claude/2.1.302/claude,
+SHA-256 60d7eb7f12fbb28a52533fe8be5884097403562aa02dc73991a021c7067e29a5.
+Only embedded source was read; Claude was not executed.
+
+Its common hook schema/input has no current PID, executable, version or app
+identity. CLAUDE_CODE_ENTRYPOINT labels CLI, SDK, IDE and Desktop paths, but is a
+mutable process environment label. Ordinary command hooks are shell mediated.
+Neither the label nor an assumed immediate parent PID is a qualified binding.
+The blanket refusal is src/cli.mjs:98; Claude Code is not a BLOCKED_ADAPTERS key.
+
+A material prompt-origin gap was found. The optional UserPromptSubmit.source
+schema at binary byte 236066151 names user, sdk, system and automated wakeups.
+Upstream GDn at 244507067 and Iat at 244507252 compute these distinctions.
+The bcr caller at 251434477 passes its computed label to xlt. However xlt at
+246279996 does not use that argument and emits no source field. Ebr at 246279710
+also omits it, including session-notice and poll-event paths. Common input ou at
+246286345 does not supply it; dispatch at 246350800 serializes it without adding
+source. Thus schema presence does not prove actual event delivery.
+
+Correction to the initial research hypothesis: a source===user predicate would
+reject the inspected missing-field payloads. Accepting a missing value would
+remove that protection. This version cannot be qualified by that optional field
+alone. Actual caller binding and eligible original-prompt provenance both remain
+open; neither may silently be inferred from a stable prompt_id.
+The [official hook reference](https://code.claude.com/docs/en/hooks) also describes
+shared terminal, IDE, Desktop and cloud surfaces, so interactive input alone
+would not distinguish those routes even if its origin field were populated.
+
+### Pi 1.1.0 and 1.3.0
+
+In embedded, bundled and source builds, the extension loader can supply the host's
+loaded package namespace through virtualModules. Unbundled Node uses filesystem
+aliases with moduleCache:false instead; qualify those loader modes independently.
+VERSION is read from package.json when config initializes. PI_PACKAGE_DIR can
+redirect that lookup, and binary archives include a package.json sidecar. Thus
+VERSION is useful consistency metadata, not independent executable identity.
+ctx.mode is also insufficient: SDK code can set the runner's mode.
+
+Evidence at 1.3.0 commit 71023aec1546d6d677a65669c5665c0927ce0dd0:
+[loader:69–124](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/extensions/loader.ts#L69-L124),
+[virtual modules:9–37](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/extensions/virtual-modules.ts#L9-L37),
+[package lookup:393–404](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/config.ts#L393-L404),
+[VERSION initialization:565–582](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/config.ts#L565-L582),
+and [runner mode:572–575](https://github.com/earendil-works/pi/blob/71023aec1546d6d677a65669c5665c0927ce0dd0/packages/coding-agent/src/core/extensions/runner.ts#L572-L575).
+Matching loader/config behavior was checked at 1.1.0 commit
+abe508e1b89912adde45528136c3221eb69acdd7. No upstream module was imported or
+native Pi session started.
+
+### OpenCode 1.18.35 and 2.0.32
+
+V1 plugins run with execution-server context. PluginInput has no direct host
+version field. Its supplied client can report the server's compiled version
+through health, which still does not identify the attached frontend. A local
+client can attach to another server. Do not call Installation.info merely to
+inspect a local version: its implementation also resolves the latest release.
+
+V1 evidence at 53d1eabb61e21162157817bf677da0a4ad3332e3:
+[PluginInput:56–75](https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/plugin/src/index.ts#L56-L75),
+[server client construction:143–168](https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/plugin/index.ts#L143-L168),
+and [server health:66–68](https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts#L66-L68).
+
+V2 ctx.app comes from current execution-host App.Metadata, preserved by the
+promise adapter. The ordinary CLI supplies compiled build metadata, but App.make
+accepts supplied metadata and SDK options expose it. Name/version alone therefore
+cannot prove the host is the CLI or identify its frontend. The server plugin
+entrypoint is separate from TUI/RPC entrypoints. Different client/server versions
+are supported with a warning, not necessarily refused.
+
+V2 evidence at 843a6c514e606b436a7fe713422ace0a93ad3d61:
+[host metadata:47–51](https://github.com/anomalyco/opencode/blob/843a6c514e606b436a7fe713422ace0a93ad3d61/packages/core/src/plugin/host.ts#L47-L51),
+[App.make:12–28](https://github.com/anomalyco/opencode/blob/843a6c514e606b436a7fe713422ace0a93ad3d61/packages/core/src/app.ts#L12-L28),
+[SDK metadata:18–41](https://github.com/anomalyco/opencode/blob/843a6c514e606b436a7fe713422ace0a93ad3d61/packages/sdk/src/internal/host.ts#L18-L41),
+and [remote version mismatch:25–39](https://github.com/anomalyco/opencode/blob/843a6c514e606b436a7fe713422ace0a93ad3d61/packages/cli/src/services/server-connection.ts#L25-L39).
+
+A qualified server route could establish capture ownership on that server without
+proving frontend identity. That is a separate support claim. Prove equivalent
+eligible-message behavior before covering multiple frontends; do not silently
+waive the existing desktop/provider obligations. No health endpoint was called.
+
+### Revised next experiment and rejected shortcuts
+
+Independent architecture review recommends one isolated Pi direct-CLI experiment
+if proceeding. Its in-process extension avoids shell ancestry as the first proof.
+The experiment should select an exact qualified entrypoint, arrange proven
+invocation-scoped extension loading, bind native session ownership to that launch,
+and reject unscoped global, SDK, unsupported-mode and inherited child-tool paths
+before any recall or capture. Recheck resume, extension reload and runtime changes.
+It is a proposed experiment, not a supported route or an activation change.
+
+An invocation marker expresses consent scope. A permanent marker or inherited
+nonce alone is insufficient: child tools may carry it. A matching version label,
+ctx.mode, process title, arbitrary ancestor or unchanged installed file is also
+insufficient. Node process.execPath identifies the running Node executable, not
+the JavaScript agent package; see the [Node process API](https://nodejs.org/api/process.html#processexecpath).
+Linux /proc/pid/exe and starttime can help investigate process identity, but have
+permission/lifetime limits and do not supply a portable session/route contract;
+see [exe](https://man7.org/linux/man-pages/man5/proc_pid_exe.5.html) and
+[stat](https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html). No macOS process
+verifier was tested or promised.
+
+A dedicated copied agent distribution was considered but is not the selected
+next step. It expands packaging and runtime ownership beyond a narrow bridge.
+Keep mise as the existing agent-runtime owner. First determine whether an exact
+launch and checks around loading can meet the stated boundaries without a second
+runtime installation. If they cannot, report the limit instead of inventing a
+second installer or claiming disk hashes prove loaded code. A new launcher also
+changes workflow; present that concrete change before implementation.
+
+Future acceptance must cover: installed A/current B; stale loaded code after
+updates; Pi sidecar or PI_PACKAGE_DIR mismatch; SDK presenting TUI mode; child
+and nested-agent inheritance; unscoped launch; resume/reconnect/reload; stale
+session ownership; ambiguous OpenCode frontend; and missing Claude prompt source.
+Every negative case must produce zero recall/admission calls. Keep eligibility
+and ownership tests separate from version consistency tests.
+
+The full route matrix remains open, including Grok, Gemini, Hermes, desktop,
+T3 and Zed. This phase did not requalify those routes or erase earlier blockers.
+Nucleus receives the saved findings for coordination only; no Nucleus runtime
+contract or duplicated company-memory implementation is introduced.
