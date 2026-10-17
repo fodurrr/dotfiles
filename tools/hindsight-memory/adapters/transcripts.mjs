@@ -18,7 +18,7 @@ export function claudeTranscript(rows, session) {
   return unique(result);
 }
 
-export function codexTranscript(rows, session, stop = null) {
+export function codexTranscript(rows, session, stop = null, expectedVersion = null) {
   const result = [];
   let turn = null;
   let sessionSeen = false;
@@ -32,7 +32,10 @@ export function codexTranscript(rows, session, stop = null) {
   for (const row of rows) {
     if (row.type === 'session_meta') {
       requireValue(row.payload?.id === session, 'session_mismatch');
-      requireValue(typeof row.payload.source !== 'object', 'subagent_route_unqualified');
+      if (expectedVersion !== null) requireValue(row.payload.cli_version === expectedVersion, 'unqualified_agent_version');
+      // The global hooks file may also be read by Desktop/T3/SDK runtimes.
+      // Installation scope cannot qualify their native execution routes.
+      requireValue(row.payload.source === 'cli', 'execution_route_unqualified');
       sessionSeen = true;
     }
     if (row.type !== 'event_msg') continue;
@@ -63,17 +66,27 @@ export function codexTranscript(rows, session, stop = null) {
   return unique(result);
 }
 
-export function piTranscript(entries) {
+export function piTranscript(entries, { strictPending = false } = {}) {
   const result = [];
+  let pendingUsers = [];
+  const seen = new Set();
   for (const entry of entries) {
     if (entry.type !== 'message') continue;
+    requireValue(!seen.has(entry.id), 'duplicate_native_id'); seen.add(entry.id);
     const m = entry.message;
     if (!['user', 'assistant'].includes(m?.role)) continue;
-    // Error/abort fragments and tool-only assistant steps are not final answers.
-    if (m.role === 'assistant' && !['stop', 'length'].includes(m.stopReason)) continue;
     const text = textOnly(m.content);
-    if (text) result.push(message(entry.id, m.role, text));
+    if (m.role === 'user') {
+      if (text) pendingUsers.push(message(entry.id, 'user', text));
+    } else if (['aborted', 'error', 'length'].includes(m.stopReason)) {
+      // A later successful turn must not sweep up an earlier cancelled user.
+      pendingUsers = [];
+    } else if (m.stopReason === 'stop') {
+      result.push(...pendingUsers); pendingUsers = [];
+      if (text) result.push(message(entry.id, 'assistant', text));
+    }
   }
+  if (strictPending) requireValue(pendingUsers.length === 0, 'incomplete_session_boundary');
   return unique(result);
 }
 

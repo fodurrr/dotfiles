@@ -51,4 +51,7 @@ export function createOpenCodeV2(descriptor, invoke = makeInvoker(descriptor), r
     },
   };
 }
-export function openCodeV2FromDescriptor(path) { return createOpenCodeV2(readPrivateJson(path)); }
+export function openCodeV2FromDescriptor(path) {
+  try { return createOpenCodeV2(readPrivateJson(path)); }
+  catch (error) { diagnostic(error); return { id: 'hindsight-memory', setup() {} }; }
+}

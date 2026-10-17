@@ -11,7 +11,7 @@ export const ADAPTER_VERSIONS = Object.freeze({
 
 export const BLOCKED_ADAPTERS = Object.freeze({
   gemini: 'AfterAgent receives finalRequest rather than a proven original prompt; recording synthetic user records lack origin markers. Native stable turn identity is unqualified.',
-  grok: 'Installed xAI CLI native completed-turn event, original prompt identity and durable session boundary are unqualified.',
+  grok: 'Installed 1.0.62 prompt hooks discard allowing stdout, so they cannot inject automatic recall; camelCase source/provenance and clipped final-text compatibility still need qualification.',
   hermes: 'Provider callbacks run through an in-memory background executor before durable admission; no proven synchronous native completion or new-only recovery interface.',
   'codex-desktop': 'Desktop hook trust, runtime path and native provider route require independent qualification.',
   'chatgpt-desktop': 'No qualified native conversation lifecycle capture interface; tools access does not establish automatic capture.',
@@ -33,7 +33,7 @@ export function adapterArtifacts({ adapter, version, runtime, cli, releaseDir, d
   if (HOOK_VERSIONS[adapter]) {
     const path = adapter === 'claude-code' ? join(home, '.claude', 'settings.json') : join(home, '.codex', 'hooks.json');
     const command = [runtime, join(releaseDir, 'adapters', 'hook.mjs'), adapter, descriptorPath].map(quote).join(' ');
-    for (const event of ['SessionStart', 'UserPromptSubmit', 'Stop']) {
+    for (const event of ['SessionStart', 'UserPromptSubmit', 'Stop', ...(adapter === 'claude-code' ? ['StopFailure'] : [])]) {
       const value = { hooks: [{ type: 'command', command, timeout: 10 }] };
       if (event === 'SessionStart') value.matcher = 'startup|resume|clear|fork|compact';
       jsonPatches.push({ path, arrayPath: ['hooks', event], value });

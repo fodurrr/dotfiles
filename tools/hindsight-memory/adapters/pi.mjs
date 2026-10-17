@@ -1,4 +1,4 @@
-import { diagnostic, envelope, makeInvoker, readPrivateJson, requireValue } from './common.mjs';
+import { diagnostic, envelope, makeInvoker, readPrivateJson, requireValue, textOnly } from './common.mjs';
 import { piTranscript } from './transcripts.mjs';
 
 export const PI_VERSIONS = ['1.1.0', '1.3.0'];
@@ -13,7 +13,7 @@ export function createPiAdapter(descriptor, invoke = makeInvoker(descriptor), re
     pi.on('session_start', safely(async (event, ctx) => {
       prompt = null; recalled = null;
       requireValue(['startup', 'reload', 'new', 'resume', 'fork'].includes(event.reason), 'unsupported_start_boundary');
-      const baseline = piTranscript(ctx.sessionManager.getBranch());
+      const baseline = piTranscript(ctx.sessionManager.getBranch(), { strictPending: true });
       invoke('session', { ...base(ctx), baseline, fresh: ['startup', 'new'].includes(event.reason) && baseline.length === 0 });
     }));
     pi.on('before_agent_start', safely(async (event, ctx) => {
@@ -22,8 +22,8 @@ export function createPiAdapter(descriptor, invoke = makeInvoker(descriptor), re
     }));
     pi.on('context', safely(async (event, ctx) => {
       if (typeof prompt !== 'string') return;
-      const branch = piTranscript(ctx.sessionManager.getBranch());
-      const user = branch.findLast(m => m.role === 'user');
+      const entry = ctx.sessionManager.getBranch().findLast(e => e.type === 'message' && e.message?.role === 'user');
+      const user = entry && { id: entry.id, text: textOnly(entry.message.content) };
       requireValue(user && user.text === prompt, 'missing_prompt_identity');
       const state = invoke('session-status', base(ctx));
       requireValue(state.status === 'registered', 'session_not_registered');
@@ -37,7 +37,7 @@ export function createPiAdapter(descriptor, invoke = makeInvoker(descriptor), re
     }));
     pi.on('agent_end', safely(async (event, ctx) => {
       const last = event.messages?.filter(m => m.role === 'assistant').at(-1);
-      requireValue(last && ['stop', 'length'].includes(last.stopReason), 'incomplete_turn_boundary');
+      requireValue(last?.stopReason === 'stop', 'incomplete_turn_boundary');
       invoke('capture-transcript', { ...base(ctx), messages: piTranscript(ctx.sessionManager.getBranch()) });
       prompt = null; recalled = null;
     }));
@@ -46,4 +46,10 @@ export function createPiAdapter(descriptor, invoke = makeInvoker(descriptor), re
   };
 }
 
-export function piFromDescriptor(path) { return createPiAdapter(readPrivateJson(path)); }
+export function piFromDescriptor(path) {
+  try { return createPiAdapter(readPrivateJson(path)); }
+  catch (error) {
+    diagnostic(error);
+    return function hindsightMemoryDisabled() {};
+  }
+}

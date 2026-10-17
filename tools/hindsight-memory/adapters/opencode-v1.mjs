@@ -44,4 +44,7 @@ export function createOpenCodeV1(descriptor, invoke = makeInvoker(descriptor), r
     };
   };
 }
-export function openCodeV1FromDescriptor(path) { return createOpenCodeV1(readPrivateJson(path)); }
+export function openCodeV1FromDescriptor(path) {
+  try { return createOpenCodeV1(readPrivateJson(path)); }
+  catch (error) { diagnostic(error); return async function hindsightMemoryDisabled() { return {}; }; }
+}

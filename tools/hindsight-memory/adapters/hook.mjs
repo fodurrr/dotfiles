@@ -28,7 +28,12 @@ export function handleHook(agent, input, descriptor, invoke = makeInvoker(descri
       return recalled.status === 'recalled' && typeof recalled.context === 'string'
         ? { hookSpecificOutput: { hookEventName: event, additionalContext: recalled.context } } : {};
     }
+    if (event === 'StopFailure') {
+      invoke('abort-turn', { ...base, turn_id: input.prompt_id });
+      return {};
+    }
     requireValue(event === 'Stop', 'unsupported_native_event');
+    requireValue(input.stop_hook_active !== true, 'stop_continuation_unqualified');
     requireValue(typeof input.last_assistant_message === 'string' && input.last_assistant_message.length > 0, 'incomplete_turn_boundary');
     invoke('complete-turn', { ...base, turn_id: input.prompt_id, text: input.last_assistant_message });
     return {};
@@ -49,7 +54,7 @@ export function handleHook(agent, input, descriptor, invoke = makeInvoker(descri
   const rows = jsonLines(read(input.transcript_path));
   const messages = agent === 'claude-code'
     ? claudeTranscript(rows, input.session_id)
-    : codexTranscript(rows, input.session_id, event === 'Stop' ? input : null);
+    : codexTranscript(rows, input.session_id, event === 'Stop' ? input : null, descriptor.agentVersion);
   if (event === 'SessionStart') {
     requireValue(['startup', 'resume', 'clear', 'fork'].includes(input.source), 'unsupported_start_boundary');
     invoke('session', { ...base, baseline: messages, fresh: ['startup', 'clear'].includes(input.source) && messages.length === 0 });
