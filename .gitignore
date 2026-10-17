@@ -27,3 +27,6 @@ install.log
 
 # Mise generated config (auto-generated)
 mise/.config/mise/config.toml
+
+# Private generated review reports and provider output
+.opencode/adversarial-review-reports/

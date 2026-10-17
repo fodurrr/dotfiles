@@ -1,209 +1,7 @@
 # Standalone personal Hindsight memory
 
 ```work-item
-{
-  "schema_version": 2,
-  "id": "hindsight-memory",
-  "title": "Standalone personal Hindsight memory",
-  "owner": "Peter",
-  "state": "Queued",
-  "objective": "Provide optional personal Hindsight memory for general macOS and Linux machine setup, independently of Nucleus, Xpando tooling and repository membership.",
-  "deliverable": "An approved standalone design, then separately authorized implementation and isolated verification of a reusable client component, agent adapters and optional Dotfiles profile; publication and live rollout remain separate approvals.",
-  "current": "2026-10-17: Peter moved full ownership to Dotfiles. The complete immutable Nucleus audit is preserved as an input. The old Nucleus-release monitor was deleted. This expanded design awaits Peter's approval; no implementation or live configuration has started.",
-  "next": "Present the revised standalone proposal and self-review to Peter. Wait for explicit approval before implementation. Send the committed successor task IDs to Nucleus for its Superseded transfer.",
-  "scope": {
-    "included": [
-      "Preserve all relevant Nucleus audit findings and unresolved obligations in this sole canonical plan.",
-      "Propose a reusable local Hindsight client component, optional profile, agent adapters, durable delivery, private state and safe rollback.",
-      "Plan all used supported routes on GEEKOM, Omen and Mini, including remote work and conversations outside repositories.",
-      "Plan verification, review and separate publication/rollout decisions."
-    ],
-    "excluded": [
-      "Implementation before renewed approval; prior consumer-only implementation approval is superseded.",
-      "Nucleus or Xpando runtime dependencies, company-bank sharing, new provider abstraction or memory service.",
-      "Historical imports, Git ingestion, surveys, bulk files, secret files and hidden reasoning capture.",
-      "Unapproved package/product publication, new repository, resident service, main merge or live deployment.",
-      "Server upgrade/recreation, backup changes, credential rotation, reboot or deployment to Adam."
-    ]
-  },
-  "inputs": [
-    {
-      "category": "objective",
-      "owner": "Peter",
-      "source_kind": "instruction",
-      "locator": "Nucleus chat 01a12fb1-16b4-7082-b244-f48a800ce904, human turns 01a14b82-9c39-7312-a3d7-0851fef110d7 and 01a14b85-3143-7123-bba1-2067cb839287, verified through read_thread on 2026-10-17.",
-      "role": "Moves ownership fully to Dotfiles; authorizes planning, transfer and plan commit/push only; revised proposal precedes implementation.",
-      "availability": "available",
-      "required_at": "start"
-    },
-    {
-      "category": "evidence",
-      "owner": "Nucleus audit author",
-      "repository": "/home/fodurrr/dev/xpando/nucleus",
-      "path": "plans/shared-personal-memory.md",
-      "revision": "40fe44ee7657cae6f8b436c4ea7b14610bf06e0c",
-      "track": "committed",
-      "role": "Complete immutable audit, artifact digest, findings, host matrix, limits, tests, self-review and unresolved obligations; ownership-specific architecture is superseded.",
-      "availability": "available",
-      "required_at": "start"
-    },
-    {
-      "category": "governing",
-      "owner": "Peter",
-      "repository": ".",
-      "path": "AGENTS.md",
-      "revision": "4c0a4d1d4248b1423e8675811b1a3726b00d2c24",
-      "track": "committed",
-      "role": "Dotfiles repository workflow, host boundaries, ownership and checks.",
-      "availability": "available",
-      "required_at": "start"
-    },
-    {
-      "category": "evidence",
-      "owner": "Dotfiles maintainer",
-      "repository": ".",
-      "path": "docs/plans/hindsight-memory.md",
-      "revision": "4c0a4d1d4248b1423e8675811b1a3726b00d2c24",
-      "track": "committed",
-      "role": "Previous plan and installer/host audit; Nucleus release gate and narrow implementation approval are superseded.",
-      "availability": "available",
-      "required_at": "start"
-    }
-  ],
-  "tasks": [
-    {
-      "id": "proposal-approval",
-      "actor": "Dotfiles supervisor and Peter",
-      "state": "open",
-      "depends_on": [],
-      "work": "Present and revise the standalone proposal, preserve the transfer, and obtain explicit approval of the expanded implementation.",
-      "done_when": "Peter approves a concrete independent runtime/adapter/installer scope; no old approval is reused."
-    },
-    {
-      "id": "standalone-runtime",
-      "actor": "Dotfiles implementation owner",
-      "state": "open",
-      "depends_on": [
-        "proposal-approval"
-      ],
-      "work": "Qualify upstream reuse and implement only the approved independently installable local component and versioned interface.",
-      "done_when": "Runtime works with company tooling and source checkouts absent; qualified Node/storage APIs, private installation and upgrade behavior are verified."
-    },
-    {
-      "id": "safe-capture",
-      "actor": "Dotfiles implementation owner",
-      "state": "open",
-      "depends_on": [
-        "standalone-runtime"
-      ],
-      "work": "Enforce activation and message boundaries, atomic admission, single-writer ownership and exclusion of historical/file/Git content.",
-      "done_when": "Old/resumed/forked/corrupt-cursor sentinels never reach the API; accepted chunks and cursor advance atomically; unknown state stops capture."
-    },
-    {
-      "id": "reliable-delivery",
-      "actor": "Dotfiles implementation owner",
-      "state": "open",
-      "depends_on": [
-        "standalone-runtime"
-      ],
-      "work": "Implement bounded durable admission, retry/poll accounting, stable operation identities and visible failure.",
-      "done_when": "Crash/restart/capacity/uncertain-ack/stale-worker tests pass; accepted work persists within all documented budgets."
-    },
-    {
-      "id": "adapter-coverage",
-      "actor": "Dotfiles implementation owner",
-      "state": "open",
-      "depends_on": [
-        "safe-capture",
-        "reliable-delivery"
-      ],
-      "work": "Qualify each installed native agent, desktop/provider and remote route, including Hermes handover and pre-admission gaps.",
-      "done_when": "Each route has explicit support evidence or an unresolved blocker; unsupported classification does not silently satisfy the coverage requirement."
-    },
-    {
-      "id": "privacy-rollback",
-      "actor": "Dotfiles implementation owner",
-      "state": "open",
-      "depends_on": [
-        "standalone-runtime"
-      ],
-      "work": "Protect local secrets/state, safe diagnostics, untrusted recall, existing configuration and ownership-aware rollback.",
-      "done_when": "Permission, redaction, destination-isolation, pending-job, in-flight-delivery and intervening-edit tests pass without deleting memories or state."
-    },
-    {
-      "id": "installer-integration",
-      "actor": "Dotfiles implementation owner",
-      "state": "open",
-      "depends_on": [
-        "standalone-runtime"
-      ],
-      "work": "Add the optional profile, explicit prerequisites, safe preparation layer, status handling and runtime-preservation guards.",
-      "done_when": "macOS/Linux profile and failure tests pass; preparation does not activate capture or require company tooling; addon/clean modes cannot prune unrelated runtimes."
-    },
-    {
-      "id": "verification-review",
-      "actor": "Dotfiles supervisor and independent reviewer",
-      "state": "open",
-      "depends_on": [
-        "safe-capture",
-        "reliable-delivery",
-        "adapter-coverage",
-        "privacy-rollback",
-        "installer-integration"
-      ],
-      "work": "Run isolated component/adapter/installer tests, repository checks, self-review and required independent ExitGate.",
-      "done_when": "Evidence identifies exact artifacts and tested versions; all accepted obligations pass or Peter explicitly changes scope; no live acceptance is inferred."
-    },
-    {
-      "id": "publication-rollout",
-      "actor": "Peter and Dotfiles supervisor",
-      "state": "open",
-      "depends_on": [
-        "verification-review"
-      ],
-      "work": "Present exact publication/main/host-update/activation commands and quota-consuming checks for separate approval.",
-      "done_when": "Only separately approved actions execute; per-host activation and end-to-end evidence are recorded; no deployment to Adam is inferred."
-    }
-  ],
-  "risks": [
-    {
-      "id": "historical-capture",
-      "owner": "Dotfiles safe-capture task",
-      "detail": "Stock cursor replacement and whole-branch retention can upload history; missing state must fail closed."
-    },
-    {
-      "id": "support-claims",
-      "owner": "Dotfiles adapter-coverage task",
-      "detail": "Installed/MCP/CLI presence does not establish desktop, T3, Gemini or Hermes completion coverage."
-    },
-    {
-      "id": "secrets-and-queue",
-      "owner": "Dotfiles reliable-delivery and privacy-rollback tasks",
-      "detail": "Finite storage and imperfect redaction need visible rejection, durable accepted jobs, permission checks and honest limits."
-    },
-    {
-      "id": "ownership",
-      "owner": "Dotfiles privacy-rollback and installer-integration tasks",
-      "detail": "Preserve personal/company isolation, unrelated auth/hooks/settings, runtime ownership and network routes."
-    },
-    {
-      "id": "runtime-scope",
-      "owner": "Peter and Dotfiles standalone-runtime task",
-      "detail": "A substantial reusable local runtime is proposed explicitly; do not hide it as installer glue or publish a product without approval."
-    }
-  ],
-  "exit": [
-    "Peter approves the revised independent implementation before code changes.",
-    "Every transferred obligation has a verified outcome or explicit owner-approved scope disposition.",
-    "Standalone runtime and installer pass isolated tests with no company dependencies.",
-    "Required independent ExitGate passes before Completed; main merge and live actions retain separate approval."
-  ],
-  "verification": {
-    "exit_passed": false,
-    "status": "Planning and evidence transfer only. Nucleus audit includes six isolated cursor-decision checks; no live capture acceptance. New runtime, adapters and proposed budgets remain unimplemented."
-  },
-  "relationships": []
-}
+{"current":"2026-10-17: Peter approved isolated implementation of the standalone component, adapters, installer safeguards, tests and review. Work is Active locally on codex/hindsight-memory with temporary homes and a fake API. Publication, main merge and live rollout remain unapproved. The 100 ms admission value is a measurement target, not a guarantee.","decisions":[{"date":"2026-10-17","decision":"Approve standalone component, adapters, installer safeguards, tests and review; publication, main merge and live rollout require separate approval. Measure the 100 ms target honestly.","id":"isolated-implementation-approved","owner":"Peter"}],"deliverable":"An approved standalone design, then separately authorized implementation and isolated verification of a reusable client component, agent adapters and optional Dotfiles profile; publication and live rollout remain separate approvals.","exit":["Peter approves the revised independent implementation before code changes.","Every transferred obligation has a verified outcome or explicit owner-approved scope disposition.","Standalone runtime and installer pass isolated tests with no company dependencies.","Required independent ExitGate passes before Completed; main merge and live actions retain separate approval."],"id":"hindsight-memory","inputs":[{"availability":"available","category":"objective","freshness":"Verified direct human approval in this Dotfiles chat on 2026-10-17; later scope supersedes prior planning-only authority.","locator":"Nucleus chat 01a12fb1-16b4-7082-b244-f48a800ce904, human turns 01a14b82-9c39-7312-a3d7-0851fef110d7 and 01a14b85-3143-7123-bba1-2067cb839287, verified through read_thread on 2026-10-17. Direct Dotfiles human instruction on 2026-10-17: approve isolated component, adapters, installer safeguards, tests and review; publication, main merge and live rollout remain separate.","owner":"Peter","required_at":"start","role":"Moves full ownership to Dotfiles and authorizes isolated implementation and review. The existing immutable audit remains evidence, not a runtime dependency.","source_kind":"instruction"},{"availability":"available","category":"evidence","owner":"Nucleus audit author","path":"plans/shared-personal-memory.md","repository":"/home/fodurrr/dev/xpando/nucleus","required_at":"start","revision":"40fe44ee7657cae6f8b436c4ea7b14610bf06e0c","role":"Complete immutable audit, artifact digest, findings, host matrix, limits, tests, self-review and unresolved obligations; ownership-specific architecture is superseded.","track":"committed"},{"availability":"available","category":"governing","owner":"Peter","path":"AGENTS.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Dotfiles repository workflow, host boundaries, ownership and checks.","track":"committed"},{"availability":"available","category":"evidence","owner":"Dotfiles maintainer","path":"docs/plans/hindsight-memory.md","repository":".","required_at":"start","revision":"4c0a4d1d4248b1423e8675811b1a3726b00d2c24","role":"Previous plan and installer/host audit; Nucleus release gate and narrow implementation approval are superseded.","track":"committed"}],"inspection_triggers":[],"next":"Complete and verify isolated core, adapters and installer safeguards; measure admission and total command time; perform normal review and prepare the independent ExitGate. No push, main merge, installation or live activation.","objective":"Provide optional personal Hindsight memory for general macOS and Linux machine setup, independently of Nucleus, Xpando tooling and repository membership.","owner":"Peter","relationships":[],"risks":[{"detail":"Stock cursor replacement and whole-branch retention can upload history; missing state must fail closed.","id":"historical-capture","owner":"Dotfiles safe-capture task"},{"detail":"Installed/MCP/CLI presence does not establish desktop, T3, Gemini or Hermes completion coverage.","id":"support-claims","owner":"Dotfiles adapter-coverage task"},{"detail":"Finite storage and imperfect redaction need visible rejection, durable accepted jobs, permission checks and honest limits.","id":"secrets-and-queue","owner":"Dotfiles reliable-delivery and privacy-rollback tasks"},{"detail":"Preserve personal/company isolation, unrelated auth/hooks/settings, runtime ownership and network routes.","id":"ownership","owner":"Dotfiles privacy-rollback and installer-integration tasks"},{"detail":"A substantial reusable local runtime is proposed explicitly; do not hide it as installer glue or publish a product without approval.","id":"runtime-scope","owner":"Peter and Dotfiles standalone-runtime task"}],"schema_version":2,"scope":{"excluded":["Publication or push of implementation, main merge, host installation or live rollout without separate approval.","Nucleus or Xpando runtime dependencies, company-bank sharing, new provider abstraction or memory service.","Historical imports, Git ingestion, surveys, bulk files, secret files and hidden reasoning capture.","Unapproved package/product publication, new repository or resident service.","Server upgrade/recreation, backup changes, credential rotation, reboot, live memory writes or deployment to Adam."],"included":["Preserve all relevant Nucleus audit findings and unresolved obligations in this sole canonical plan.","Implement and verify the approved independently installable local Hindsight component, native adapters and optional Dotfiles profile in isolated fixtures.","Implement safe capture, durable bounded delivery, private state, ownership-aware preparation and rollback, and installer runtime-preservation guards.","Qualify supported routes and keep unresolved host/adapter coverage obligations explicit.","Measure local admission and whole-process startup; run tests, normal review and prepare the independent ExitGate; make local checkpoints."]},"state":"Active","tasks":[{"actor":"Dotfiles supervisor and Peter","depends_on":[],"done_when":"Peter approves a concrete independent runtime/adapter/installer scope; no old approval is reused.","id":"proposal-approval","result":"Peter explicitly approved isolated implementation, adapters, installer safeguards, tests and review in the Dotfiles chat on 2026-10-17. Publication, main merge and live rollout remain unapproved.","state":"completed","work":"Present and revise the standalone proposal, preserve the transfer, and obtain explicit approval of the expanded implementation."},{"actor":"Dotfiles implementation owner","depends_on":["proposal-approval"],"done_when":"Runtime works with company tooling and source checkouts absent; qualified Node/storage APIs, private installation and upgrade behavior are verified.","id":"standalone-runtime","state":"open","work":"Qualify upstream reuse and implement only the approved independently installable local component and versioned interface."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Old/resumed/forked/corrupt-cursor sentinels never reach the API; accepted chunks and cursor advance atomically; unknown state stops capture.","id":"safe-capture","state":"open","work":"Enforce activation and message boundaries, atomic admission, single-writer ownership and exclusion of historical/file/Git content."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Crash/restart/capacity/uncertain-ack/stale-worker tests pass; accepted work persists within all documented budgets.","id":"reliable-delivery","state":"open","work":"Implement bounded durable admission, retry/poll accounting, stable operation identities and visible failure."},{"actor":"Dotfiles implementation owner","depends_on":["safe-capture","reliable-delivery"],"done_when":"Each route has explicit support evidence or an unresolved blocker; unsupported classification does not silently satisfy the coverage requirement.","id":"adapter-coverage","state":"open","work":"Qualify each installed native agent, desktop/provider and remote route, including Hermes handover and pre-admission gaps."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"Permission, redaction, destination-isolation, pending-job, in-flight-delivery and intervening-edit tests pass without deleting memories or state.","id":"privacy-rollback","state":"open","work":"Protect local secrets/state, safe diagnostics, untrusted recall, existing configuration and ownership-aware rollback."},{"actor":"Dotfiles implementation owner","depends_on":["standalone-runtime"],"done_when":"macOS/Linux profile and failure tests pass; preparation does not activate capture or require company tooling; addon/clean modes cannot prune unrelated runtimes.","id":"installer-integration","state":"open","work":"Add the optional profile, explicit prerequisites, safe preparation layer, status handling and runtime-preservation guards."},{"actor":"Dotfiles supervisor and independent reviewer","depends_on":["safe-capture","reliable-delivery","adapter-coverage","privacy-rollback","installer-integration"],"done_when":"Evidence identifies exact artifacts and tested versions; all accepted obligations pass or Peter explicitly changes scope; no live acceptance is inferred.","id":"verification-review","state":"open","work":"Run isolated component/adapter/installer tests, repository checks, self-review and required independent ExitGate."},{"actor":"Peter and Dotfiles supervisor","depends_on":["verification-review"],"done_when":"Only separately approved actions execute; per-host activation and end-to-end evidence are recorded; no deployment to Adam is inferred.","id":"publication-rollout","state":"open","work":"Present exact publication/main/host-update/activation commands and quota-consuming checks for separate approval."}],"title":"Standalone personal Hindsight memory","verification":{"exit_passed":false,"status":"Planning and evidence transfer only. Nucleus audit includes six isolated cursor-decision checks; no live capture acceptance. New runtime, adapters and proposed budgets remain unimplemented."}}
 ```
 
 
@@ -213,25 +11,32 @@ Personal memory is an optional general computer setup capability owned fully by
 Dotfiles. It must work without Nucleus, Xpando AI Layer, company repositories,
 company skills, Erlang or Elixir. Hindsight remains the external memory service.
 
-Peter's human instructions were verified in the Nucleus chat on 2026-10-17.
-He moved this work fully into Dotfiles and requested a revised plan before code.
-The previous consumer-only implementation approval does not cover this expanded
-design. The old released-Nucleus-contract gate is removed, not carried forward.
+Peter moved ownership fully to Dotfiles in the Nucleus chat on 2026-10-17.
+On 2026-10-17, he explicitly approved isolated implementation of the revised
+standalone component, adapters, installer safeguards, tests and review in the
+Dotfiles chat. This new approval replaces the earlier consumer-only boundary.
+The old released-Nucleus-contract gate is removed.
 
-The current authority covers plan revision, self-review, plan checks, plan
-commit/push and coordination. No implementation, installation, package publication,
-main merge, host update, activation, restart or live memory write is authorized.
+Authorized work includes repository code, isolated tests, local commits and
+review preparation. Tests use temporary homes and a fake API. Publication,
+push, main merge, host update, installation, activation, restart and live memory
+writes still require explicit approval. No deployment to Adam is authorized.
 
-Peter's example of his son Adam establishes portability, not deployment scope.
+Peter questioned whether the 100 ms local admission target is achievable.
+Measure durable admission and the entire command, including startup, separately.
+Report actual distributions and failure conditions; do not weaken durability to
+meet that target or present it as an achieved guarantee.
+
 Endpoint, bank, user identity and secret references are local choices.
-Peter's intended destination is the existing Mini server and bank fodurrr.
-A different user must supply a different explicit configuration. Creating a bank
-or server is not implicit in preparation. Separate bank names are not access
-control: any future multi-user deployment must verify server-side authorization.
+Peter's intended destination remains the existing Mini server and bank fodurrr.
+A different user must supply an explicit separate configuration. Creating a bank
+or server is not implicit in preparation. Bank names are not access control;
+any later multi-user deployment must verify server-side authorization.
 
-This is the sole canonical work item. Its portable JSON block supports obligation
-transfer only; it creates no plan-engine, Nucleus or runtime dependency.
-The implementation stays Queued pending Peter's revised-plan approval.
+This remains the sole canonical work item, listed in docs/PLAN.md. Its portable
+JSON block records obligation transfer and implementation progress. The work is
+Active under Peter's approval. This documentation creates no Nucleus runtime,
+company tooling or machine configuration dependency.
 
 ## Immutable evidence and transfer
 
@@ -735,9 +540,10 @@ available at the immutable audit anchor.
 
 ## Open decisions and approval request
 
-Recommended architecture: the independently installable Node client component
-described above, with tiny qualified native bridges and an existing Hindsight
-server. The additional local runtime is the principal scope/cost decision.
+Peter approved the standalone runtime, adapter qualification, installer safeguards,
+isolated tests and review on 2026-10-17. Implementation is proceeding locally.
+The 100 ms admission target must be measured, not enforced at the expense of
+durability. Native adapter startup and full command startup are separate measures.
 
 Qualification gates remain open: exact Node/SQLite durability support; Hermes
 complete-turn admission or safe recovery; Grok event compatibility; Codex desktop
@@ -746,15 +552,18 @@ idempotency/completion; and actual measured startup/recall overhead.
 
 If an existing upstream route cannot meet these checks, report the evidence.
 Do not relax the capture boundary, add a resident service, change the server or
-omit a required client silently. A larger reusable component, external package
-or upstream change needs a concrete new proposal.
+omit a required client silently. Any broader component or upstream change needs
+a concrete new proposal. Unsupported routes remain open obligations.
 
-Requested next approval is repository implementation and isolated verification
-of this standalone design. It would cover the component, adapter qualification,
-installer integration, documentation, checks, local checkpoints and review
-preparation. Any reviewer/provider spending remains subject to applicable approval.
-No live writes, installation, main merge or package/implementation publication
-are included in that request.
+The approved independent ExitGate is separate from native specialist review.
+Peter's explicit approval includes the required review described in the execution
+preview. Its inspected matrix orders xAI Grok 4.7 then Anthropic Opus 5.5 for
+OpenAI-authored work. Use that existing approval within the standard packet and
+attempt bounds; do not request the same review approval again. Validate the exact
+candidate and review request before dispatch. No independent request has run yet.
+
+Publication, push, main merge, host installation, activation and live memory writes
+remain outside this implementation approval.
 
 ## Later host rollout
 
@@ -781,10 +590,13 @@ activation, required restarts and harmless live test messages need exact approva
 
 - Dotfiles chat: 01a14b4d-fc38-73f1-b75b-692acceb85cc.
 - Nucleus chat: 01a12fb1-16b4-7082-b244-f48a800ce904, title Read nucleus task file.
+- Nucleus verified committed successor e7977cfa85034f947412a1b25d440334a0c6fc28.
+  Its agent confirmed Superseded closure 4281c73fe9f50f277a171542adfeda8f6a107d27
+  was pushed after its closure gates passed. Transfer evidence anchor:
+  1a73d74467008abc703eca4e9353cf23c31de58f. The original audit remains reachable.
 - Nucleus-release heartbeat wait-for-nucleus-memory-contract was deleted through
-  automation_update on 2026-10-17. No replacement background implementation monitor
-  is created while this revised design awaits approval.
-- Send the exact committed replacement and task IDs to Nucleus for its transfer.
-  Nucleus owns its Superseded disposition; this plan does not declare it closed.
-- Next action belongs to Peter: approve the expanded isolated implementation or
-  request revisions. Do not continue under the former consumer-only approval.
+  automation_update on 2026-10-17. No Nucleus runtime contract wait remains.
+- Peter approved isolated implementation in this chat on 2026-10-17. Nucleus was
+  notified of approval, timing qualification and subsequent test findings.
+- Continue isolated implementation and checks. Keep Nucleus informed of material
+  findings. Publication, main merge and live rollout require separate approval.
