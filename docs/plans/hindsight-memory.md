@@ -850,3 +850,29 @@ retry decision is therefore required; the larger-packet approval remains valid.
 Implementation remains682a519, with73 passing tests and30/30 disk-backed source-hook
 captures. All production adapter activation remains blocked pending current-caller
 binding. No publication, main merge, live rollout or live memory writes occurred.
+
+## Nucleus confirmation of launcher diagnosis
+
+On 2026-10-17, the Nucleus agent reported its completed read-only diagnosis in
+chat01a12fb1-16b4-7082-b244-f48a800ce904. It confirmed that the installed0.6.97
+launcher and canonical Nucleus launcher have identical bytes, SHA-256:
+cf139a788f1dbc0d3646a98301cc18ce3eaf5ebee24e557f80f46fb0a0d7ffc1.
+This is Nucleus's source-level attestation; Dotfiles separately reproduced the
+host-lifetime behavior with harmless local marker jobs.
+
+Linux uses plain nohup without a new OS session. Its child EXIT trap should write
+an exit-status file. Missing processes and status fit abrupt termination.
+Existing launcher tests keep their outer ExUnit host alive and do not cover
+survival after the outer command host returns. No matching OOM entry appeared in
+Nucleus's bounded accessible journal inspection; the exact signal remains unknown.
+
+Probe results are recorded only after probe_reviewer returns. Therefore the stale
+PREFLIGHT report does not prove that a small READY request never began. No completed
+probe, full packet transfer or accepted verdict is recorded. Preserve that distinction.
+
+Nucleus supports the proposed separate-session wrapper around the unchanged
+--background launcher, using the exact frozen candidate, Grok4.7/high and approved
+200,000-token ceiling. No retry, plugin edit or new implementation lane occurred.
+A permanent launcher correction needs host-lifetime regression coverage in its
+own tooling work. It does not reopen Nucleus's closed personal-memory ownership.
+The review retry still requires the operator decision already requested.
