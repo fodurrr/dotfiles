@@ -1,0 +1,12 @@
+[Unit]
+Description=Keep Tailscale destinations outside PIA policy routing
+Wants=tailscaled.service
+After=tailscaled.service piavpn.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pia-tailscale-routes
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -10,6 +10,11 @@ This repository supports Linux (Ubuntu, Debian, Fedora) with native package mana
 
 ## Supported Platforms
 
+Host-specific optional setup:
+
+- [GEEKOM PIA and qBittorrent](geekom-pia.md): `geekom-vpn` profile plus explicit local network configuration.
+- [SSD-backed temporary storage](linux-temp-storage.md): opt-in host preparation for GEEKOM and Omen.
+
 - Ubuntu 20.04+
 - Debian 11+
 - Fedora 35+

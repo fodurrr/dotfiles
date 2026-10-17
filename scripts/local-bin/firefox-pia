@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+if [[ "$(/opt/piavpn/bin/piactl get connectionstate 2>/dev/null)" != Connected ]]; then
+    command -v notify-send >/dev/null 2>&1 && notify-send 'Firefox' 'Connect Private Internet Access before opening Firefox.'
+    echo 'Firefox requires a connected PIA VPN.' >&2
+    exit 1
+fi
+exec /usr/lib/firefox/firefox "$@"

@@ -1,0 +1,10 @@
+#!/bin/bash
+# PIA's policy rules run before Tailscale's default priority 5270 rule.
+# Keep tailnet destinations on Tailscale's existing table 52.
+set -euo pipefail
+if ! ip rule show | grep -Eq '^40:.*to 100\.64\.0\.0/10 lookup 52'; then
+    ip rule add priority 40 to 100.64.0.0/10 lookup 52
+fi
+if ! ip -6 rule show | grep -Eq '^40:.*to fd7a:115c:a1e0::/48 lookup 52'; then
+    ip -6 rule add priority 40 to fd7a:115c:a1e0::/48 lookup 52
+fi

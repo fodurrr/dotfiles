@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+if [[ "$(/opt/piavpn/bin/piactl get connectionstate 2>/dev/null)" != Connected ]] || ! ip link show wgpia0 >/dev/null 2>&1; then
+    command -v notify-send >/dev/null 2>&1 && notify-send 'qBittorrent' 'Connect Private Internet Access before opening qBittorrent.'
+    echo 'qBittorrent requires a connected PIA VPN.' >&2
+    exit 1
+fi
+if ! grep -Fxq 'Session\Interface=wgpia0' "$HOME/.config/qBittorrent/qBittorrent.conf"; then
+    echo 'qBittorrent is not bound to wgpia0. Run scripts/configure-geekom-pia.sh.' >&2
+    exit 1
+fi
+exec /usr/bin/qbittorrent "$@"

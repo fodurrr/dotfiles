@@ -1,0 +1,11 @@
+version = 1
+
+# Opt-in GEEKOM desktop additions. Do not apply to Omen or server profiles.
+[linux.browsers]
+apps = ["firefox-linux"]
+
+[linux.media]
+apps = ["qbittorrent-linux"]
+
+[linux.security]
+apps = ["private-internet-access-linux"]

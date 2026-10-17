@@ -83,6 +83,9 @@ install_linux_apt_repo_app() {
     source_line=$(get_app_prop "$app_key" "apt_source")
     list_name=$(get_app_prop "$app_key" "apt_list")
     packages=$(get_app_prop "$app_key" "linux_apt")
+
+    local preferences
+    preferences=$(get_app_prop "$app_key" "apt_preferences")
     [[ -z "$list_name" ]] && list_name="$app_key"
     key_url=$(linux_extra_expand "$key_url")
 
@@ -135,14 +138,25 @@ install_linux_apt_repo_app() {
         LINUX_EXTRA_APT_UPDATED=false
     fi
 
+    if [[ -n "$preferences" ]]; then
+        if ! printf '%s\n' "$preferences" | linux_extra_sudo tee "/etc/apt/preferences.d/${list_name}" >/dev/null; then
+            log_error "Failed to write apt preferences for $display_name"
+            return 1
+        fi
+    fi
+
     if [[ "$LINUX_EXTRA_APT_UPDATED" != true ]]; then
         linux_extra_apt update || true
         LINUX_EXTRA_APT_UPDATED=true
     fi
 
     log_success "Ensuring $display_name is installed and up-to-date..."
+    local downgrade_option=""
+    if [[ "$(get_app_prop "$app_key" "apt_allow_downgrades")" == true ]]; then
+        downgrade_option="--allow-downgrades"
+    fi
     # shellcheck disable=SC2086
-    if ! linux_extra_apt install $packages; then
+    if ! linux_extra_apt install $downgrade_option $packages; then
         log_error "Failed to install $display_name ($packages)"
         return 1
     fi

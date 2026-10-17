@@ -968,6 +968,45 @@ platform = ["linux"]
 linux_name = "vlc"
 description = "Media player"
 
+[apps.qbittorrent-linux]
+type = "brew"
+category = "media"
+platform = ["linux"]
+linux_name = "qbittorrent"
+description = "qBittorrent desktop torrent client"
+
+[apps.private-internet-access-linux]
+type = "script"
+category = "security"
+platform = ["linux"]
+install_url = "https://installers.privateinternetaccess.com/download/pia-linux-3.8-08539.run"
+install_args = "--nox11 --noprogress"
+bin = "piactl"
+description = "Private Internet Access desktop VPN; account and split tunnel configured separately"
+
+[apps.firefox-linux]
+type = "apt-repo"
+category = "browsers"
+platform = ["linux"]
+apt_key_url = "https://packages.mozilla.org/apt/repo-signing-key.gpg"
+apt_keyring = "packages-mozilla.asc"
+apt_key_fingerprint = "35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3"
+apt_source = "deb [signed-by={keyring}] https://packages.mozilla.org/apt mozilla main"
+apt_list = "mozilla"
+# Ubuntu's Snap transition package has a higher version epoch than native Firefox.
+apt_allow_downgrades = true
+apt_preferences = """
+Package: firefox firefox-l10n-*
+Pin: origin packages.mozilla.org
+Pin-Priority: 1001
+
+Package: firefox
+Pin: release o=Ubuntu
+Pin-Priority: -1
+"""
+linux_apt = "firefox"
+description = "Native Mozilla Firefox; required for PIA app split tunneling instead of Snap"
+
 [apps.bibata-cursor-linux]
 type = "brew"
 category = "desktop"
