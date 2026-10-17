@@ -1040,6 +1040,15 @@ category = "config"
 platform = ["linux"]
 description = "Commands screens (monitor, TV or both) and paperwm-toggle in ~/.local/bin"
 
+[apps.tailscale-systray-linux]
+type = "stow"
+package = "tailscale-systray"
+category = "desktop"
+platform = ["linux"]
+depends_on = "tailscale"
+config_for = "tailscale"
+description = "Tailscale system tray applet at desktop login (freedesktop autostart)"
+
 [apps.gnome-terminal-shortcut-off]
 type = "gsettings"
 gsettings_schema = "org.gnome.settings-daemon.plugins.media-keys"

@@ -97,6 +97,12 @@ Tailscale's Linux entry provisions its official Ubuntu/Debian or Fedora reposito
 before installing the package, then enables `tailscaled`. Account authentication
 remains a manual `sudo tailscale up` step. Other distributions report a failure.
 
+GEEKOM's `developer` profile also selects `tailscale-systray-linux`. It stows only
+`~/.config/autostart/tailscale-systray.desktop`, equivalent to
+`tailscale configure systray --enable-startup=freedesktop`. The applet starts at
+desktop login. Start it immediately with `tailscale systray` if it is not already
+running. The headless `omen` and `server` profiles do not select this applet.
+
 The `clevo` profile is a saved developer-profile variant for the P170EM laptop.
 It omits the GEEKOM monitor commands/shortcuts and Voxtype configuration. Its older
 CPU lacks AVX2/AVX-512; do not apply the GEEKOM dictation binary selection to it.
