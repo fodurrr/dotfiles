@@ -289,3 +289,25 @@ alone does not undo live hooks. Removing profile membership is not deactivation.
 - Wait for the released contract. Read-only checks may identify readiness; do not
   install, activate, publish Nucleus packages or implement guessed interfaces while waiting.
 - If delivery is incomplete, report precise missing contract fields and keep this item waiting.
+
+### Nucleus audit update on 2026-10-17
+
+Nucleus sent its audit outcome under Peter's coordination authorization.
+Verified the committed proposal at
+`40fe44ee7657cae6f8b436c4ea7b14610bf06e0c:plans/shared-personal-memory.md`.
+This is proposal evidence, not a released contract or permission to implement.
+
+- Nucleus's exact coding-agents 0.8.1 audit reports whole-transcript replacement
+  when cursors are missing, dirty or pending data expires. Default seeding,
+  Git ingestion and surveys also conflict with the accepted capture boundary.
+- Its installed Hermes audit reports an unbounded in-memory queue. Async
+  retention alone does not satisfy bounded durable delivery.
+- Nucleus proposes explicit activation boundaries and one bounded durable
+  delivery path. Names, commands and limits remain proposals until released.
+- Mini 0.9.2 health/schema checks look suitable; live writes remain untested.
+- Nucleus records the approved Dotfiles plan at e52fb66 as its consumer dependency.
+
+Dotfiles keeps the existing release gate unchanged. Nucleus owns the fixes and
+their evidence; Dotfiles will not copy them or use proposed interfaces. The quiet
+hourly readiness check remains active. Main merge and live rollout still need
+Peter's separate approval.
