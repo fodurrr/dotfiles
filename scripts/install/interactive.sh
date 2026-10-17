@@ -52,6 +52,9 @@ build_installed_keys() {
         if ! is_app_supported "$app_key"; then
             continue
         fi
+        if [[ "$A_LA_CARTE_MODE" == true ]] && ! is_alacarte_app "$app_key"; then
+            continue
+        fi
         if is_app_installed "$app_key"; then
             INSTALLED_KEYS+=("$app_key")
         fi
@@ -195,7 +198,7 @@ build_alacarte_options() {
 
         # First pass: detect if group has apps
         for app_key in $(get_all_apps); do
-            if ! is_installable_app "$app_key"; then
+            if ! is_alacarte_app "$app_key"; then
                 continue
             fi
             if ! is_app_supported "$app_key"; then
@@ -228,7 +231,7 @@ build_alacarte_options() {
 
         # Add apps in this group (preserve apps.toml order)
         for app_key in $(get_all_apps); do
-            if ! is_installable_app "$app_key"; then
+            if ! is_alacarte_app "$app_key"; then
                 continue
             fi
             if ! is_app_supported "$app_key"; then
@@ -289,6 +292,7 @@ run_alacarte_selection() {
     echo "Scanning installed apps (this may take a minute)..."
 
     A_LA_CARTE_REMOVE=""
+    log_info "Personal memory is excluded here; select its profile and use owned rollback separately"
     build_alacarte_options
 
     echo ""

@@ -81,6 +81,7 @@ source "$DOTFILES_DIR/scripts/lib/app_config.sh"
 source "$DOTFILES_DIR/scripts/lib/app_state.sh"
 source "$DOTFILES_DIR/scripts/lib/stow.sh"
 source "$DOTFILES_DIR/scripts/lib/mise.sh"
+source "$DOTFILES_DIR/scripts/lib/memory.sh"
 source "$DOTFILES_DIR/scripts/lib/summary.sh"
 
 # =============================================================================
@@ -104,6 +105,7 @@ source "$DOTFILES_DIR/scripts/install/layer_stow.sh"
 source "$DOTFILES_DIR/scripts/install/layer_mise.sh"
 source "$DOTFILES_DIR/scripts/install/layer_curl.sh"
 source "$DOTFILES_DIR/scripts/install/layer_linux_extra.sh"
+source "$DOTFILES_DIR/scripts/install/layer_memory.sh"
 source "$DOTFILES_DIR/scripts/install/raycast.sh"
 source "$DOTFILES_DIR/scripts/install/terminal.sh"
 source "$DOTFILES_DIR/scripts/install/summary.sh"
@@ -112,9 +114,17 @@ source "$DOTFILES_DIR/scripts/install/summary.sh"
 # Run
 # =============================================================================
 parse_args "$@"
+# Inspect existing runtime state before bootstrap can change packages/configuration.
+# On a fresh host without yq, bootstrap may provide the parser for selection.
+MEMORY_PROFILE_SELECTION_DONE=false
+memory_prebootstrap_selection
 run_bootstrap
 run_profile_create_mode
-run_profile_selection
+if [[ "$MEMORY_PROFILE_SELECTION_DONE" != true ]]; then
+    run_profile_selection
+fi
+# Refuse unsafe memory selections before cleanup, package/config layers or pruning.
+check_memory_install_safety
 setup_logging
 check_clean_safety
 run_extras_mode
@@ -143,6 +153,7 @@ run_install_step "Local launchers" run_layer_curl
 if [[ "$PLATFORM" == "linux" ]]; then
     run_install_step "Linux desktop apps" run_layer_linux_extra
 fi
+run_install_step "Personal memory preparation" run_layer_memory
 run_install_step "Raycast configuration" configure_raycast
 run_install_step "Terminal configuration" configure_terminal
 show_summary_and_reload

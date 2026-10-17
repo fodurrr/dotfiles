@@ -144,6 +144,9 @@ is_app_installed() {
             status=$(mise list "$name" 2>/dev/null | head -1)
             [[ -n "$status" ]] && [[ "$status" != *"(missing)"* ]]
             ;;
+        memory)
+            memory_read_status && [[ "$MEMORY_STATUS_INSTALLED" == true ]]
+            ;;
         curl)
             return 1
             ;;

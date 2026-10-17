@@ -355,6 +355,18 @@ add_mise_tool_to_config() {
     MISE_CONFIG_ADDED_TOOLS="${MISE_CONFIG_ADDED_TOOLS}${app_key}|"
 }
 
+# Shared by generation and the read-only memory runtime-preservation preview.
+write_selected_mise_tools() {
+    local config_file="$1"
+    MISE_CONFIG_ADDED_TOOLS="|"
+    local app_key
+    for app_key in $(get_all_apps); do
+        if app_selected_for_install "$app_key"; then
+            add_mise_tool_to_config "$app_key" "$config_file"
+        fi
+    done
+}
+
 # Generate mise config based on selected profiles
 # This creates the config in the dotfiles repo, which then gets symlinked by stow
 generate_mise_config() {
@@ -377,13 +389,7 @@ EOF_MISE
 
     # Add tools from apps.toml that match selected profiles and type=mise
     # Dependencies are resolved recursively (e.g., elixir depends_on erlang)
-    MISE_CONFIG_ADDED_TOOLS="|"
-    local app_key
-    for app_key in $(get_all_apps); do
-        if app_selected_for_install "$app_key"; then
-            add_mise_tool_to_config "$app_key" "$config_file"
-        fi
-    done
+    write_selected_mise_tools "$config_file"
 
     # Settings
     cat >> "$config_file" << 'EOF_MISE'
