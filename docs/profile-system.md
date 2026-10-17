@@ -13,30 +13,33 @@ The installer uses profile files (`profiles/*.toml`) plus a centralized app regi
 
 ## Profiles
 
-Supported profiles:
+Discover available profiles with `./install.sh --list-profiles`.
+The [README machine table](../README.md#machine-profiles-and-branches) records the intended host selections.
+GEEKOM uses `developer` with optional `geekom-vpn`; Omen uses `omen`.
+The retired `clevo` profile remains available as a reference.
+Profiles choose app membership; use shared `main` for normal installation.
 
-- `minimal`
-- `standard`
-- `developer`
-- `hacker`
-- `server`
-
-Do not maintain static profile matrices in docs. Use dynamic queries below.
+Do not maintain duplicate app matrices in docs. Query the TOML files below.
 
 ## Installation Architecture
 
 ### Phase 1: Bootstrap
 
-Installs installer dependencies from `Brewfile.bootstrap` so phase 2 can run consistently.
+On macOS, installs Homebrew prerequisites from `Brewfile.bootstrap`.
+On Linux, installs native `apt`/`dnf` prerequisites and checks TOML-capable `yq`.
 
 ### Phase 2: App Layers
 
-Apps are installed from `apps.toml` by type:
+Apps are installed from `apps.toml` by type and platform:
 
-- Layer 1: Homebrew (`cask`, `brew`)
-- Layer 2: Stow (`stow`)
-- Layer 3: Mise (`mise`)
-- Layer 5: Curl fallback (`curl`), reserved for exceptional cases (currently the `codex-xpando` launcher)
+1. Homebrew (`cask`/`brew`) on macOS, or mapped native Linux packages (`brew` metadata).
+2. Generated mise configuration, then stable configuration files linked with Stow (`stow`).
+3. Mise tools (`mise`), then local launchers handled by the fallback layer (`curl`).
+4. Linux extras: `apt-repo`, `deb`, `script`, `snap`, `gsettings`, `gnome-shortcut` and `font`.
+5. Remaining platform configuration and the final summary.
+
+App/layer failures are recorded while later steps continue. The final summary returns nonzero if failures occurred.
+Bootstrap or invalid input can stop earlier. Successful installs remain installed.
 
 ## Install Modes
 
@@ -85,14 +88,14 @@ Apps are installed from `apps.toml` by type:
 ### List apps in a profile
 
 ```bash
-yq -p toml -oy '.macos.apps[]' profiles/hacker.toml
-yq -p toml -oy '.linux.apps[]' profiles/hacker.toml
+yq -p toml -oy '.macos | to_entries | map(select(.value.apps != null)) | .[].value.apps[]' profiles/hacker.toml
+yq -p toml -oy '.linux | to_entries | map(select(.value.apps != null)) | .[].value.apps[]' profiles/hacker.toml
 ```
 
 ### List app + type in a profile
 
 ```bash
-for app in $(yq -p toml -oy '.macos.apps[]' profiles/developer.toml); do
+for app in $(yq -p toml -oy '.macos | to_entries | map(select(.value.apps != null)) | .[].value.apps[]' profiles/developer.toml); do
   printf "%s (%s)\n" "$app" "$(yq -p toml -oy ".apps.\"$app\".type" apps.toml)"
 done
 ```
@@ -115,7 +118,8 @@ yq -p toml -oy '
 - `brew`: CLI formulae where Homebrew is preferred
 - `mise`: default for CLIs and runtimes
 - `stow`: configuration symlink packages
-- `curl`: exceptional fallback only (currently the `codex-xpando` launcher)
+- `curl`: exceptional local launcher handling (currently `codex-xpando`; its source is copied, not downloaded)
+- Linux native extras: vendor packages, scripts, Snap apps, GNOME preferences, shortcuts and fonts
 - `defaults`: macOS defaults automation
 
 Selected cask metadata:

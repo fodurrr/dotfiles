@@ -51,7 +51,7 @@ Linux package installs are driven by `apps.toml` metadata for `type = "brew"` en
 
 If an app is selected for Linux but has no mapping (or the package is unavailable), it is skipped with an explicit message.
 
-Selected Linux apps come from the active profile's `[linux].apps` list in `profiles/*.toml`.
+Selected Linux apps come from platform/category tables such as `[linux.cli]` in `profiles/*.toml`.
 
 For selected mapped Linux packages, reruns now re-apply package manager installs to pick up newer repository versions.
 
@@ -63,7 +63,8 @@ If a selected mapped package install/upgrade fails, the Linux layer exits non-ze
 
 - GUI apps are only automated when a native Linux package mapping exists.
 - macOS-only GUI apps are marked `platform = ["macos"]` and are skipped on Linux.
-- No Flatpak/Snap fallback is configured in this pass.
+- Explicit Linux entries support vendor apt repositories, `.deb` packages, scripts and Snap apps.
+- There is no general Flatpak fallback; apt-specific entries do not run on Fedora.
 
 ## Platform-Aware Layering
 

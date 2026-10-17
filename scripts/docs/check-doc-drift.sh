@@ -16,14 +16,11 @@ fail() {
   FAILED=1
 }
 
-check_claude_agents_mirror() {
-  local diff_output
-  diff_output="$(diff -u CLAUDE.md AGENTS.md 2>/dev/null)"
-  if [[ -z "$diff_output" ]]; then
-    pass 'CLAUDE.md and AGENTS.md are mirrored'
+check_claude_agents_import() {
+  if [[ -s AGENTS.md ]] && cmp -s CLAUDE.md <(printf '@AGENTS.md\n'); then
+    pass 'CLAUDE.md imports the canonical AGENTS.md only'
   else
-    fail 'CLAUDE.md and AGENTS.md are not mirrored'
-    printf '%s\n' "$diff_output" | sed -n '1,120p'
+    fail 'CLAUDE.md must contain only @AGENTS.md and AGENTS.md must exist'
   fi
 }
 
@@ -109,7 +106,7 @@ check_install_command_smoke() {
   fi
 }
 
-check_claude_agents_mirror
+check_claude_agents_import
 check_local_markdown_links
 check_stale_tokens
 check_install_command_smoke
