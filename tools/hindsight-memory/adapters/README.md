@@ -38,7 +38,11 @@ admission. Failed delivery remains the core's responsibility.
 
 ## Source and fixture qualification
 
-The inspected versions are exact allowlists. An update needs requalification.
+The inspected versions are exact source/fixture allowlists. An update needs requalification.
+Production activation currently permits only Codex CLI because its actual transcript
+version and execution source can be checked. Claude, Pi and OpenCode activation
+is blocked until actual native caller binding is proven; selected executable
+identity alone cannot prove which binary loaded a global hook or plugin.
 The generic installer must discover the actual selected executable's version.
 An installed version number alone cannot establish the route used by a desktop.
 
@@ -82,7 +86,7 @@ existing prefix check; registering another baseline cannot bypass it.
 
 OpenCode v1 and v2 are independent adapters. Their package names, plugin exports,
 configuration keys, event envelopes and message schemas differ. V1 uses global
-`opencode.json` key `plugin`; v2 uses `plugins`. Both accept local file URLs.
+`opencode.json` key `plugin`; v2 uses `plugins`. V1 accepts a local module file URL. V2 requires a local package directory URL with a `server.js` entry point; a module file is ignored by its native consumer.
 Existing sessions are not discovered or scanned. They remain off until a qualified
 native registration event. Forks remain refused. Compaction or context projection
 that changes the enrolled prefix stops capture. V2's event subscription is not a

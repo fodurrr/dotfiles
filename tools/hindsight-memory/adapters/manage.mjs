@@ -44,9 +44,16 @@ export function adapterArtifacts({ adapter, version, runtime, cli, releaseDir, d
   } else {
     const v2 = adapter === 'opencode-v2';
     const name = v2 ? 'openCodeV2FromDescriptor' : 'openCodeV1FromDescriptor';
-    const path = join(configHome, 'hindsight-memory', 'adapters', `${adapter}.mjs`);
-    files.push({ path, mode: 0o600, content: `import { ${name} } from ${JSON.stringify(moduleUrl(v2 ? 'opencode-v2.mjs' : 'opencode-v1.mjs'))};\nexport default ${name}(${JSON.stringify(descriptorPath)});\n` });
-    jsonPatches.push({ path: join(configHome, 'opencode', 'opencode.json'), arrayPath: [v2 ? 'plugins' : 'plugin'], value: pathToFileURL(path).href });
+    if(v2){
+      const directory=join(configHome,'hindsight-memory','adapters',adapter);
+      files.push({path:join(directory,'package.json'),mode:0o600,content:JSON.stringify({name:'hindsight-memory-opencode-v2',private:true,type:'module'})+'\n'});
+      files.push({path:join(directory,'server.js'),mode:0o600,content:`import { ${name} } from ${JSON.stringify(moduleUrl('opencode-v2.mjs'))};\nexport default ${name}(${JSON.stringify(descriptorPath)});\n`});
+      jsonPatches.push({path:join(configHome,'opencode','opencode.json'),arrayPath:['plugins'],value:pathToFileURL(directory).href});
+    }else{
+      const path = join(configHome, 'hindsight-memory', 'adapters', `${adapter}.mjs`);
+      files.push({ path, mode: 0o600, content: `import { ${name} } from ${JSON.stringify(moduleUrl('opencode-v1.mjs'))};\nexport default ${name}(${JSON.stringify(descriptorPath)});\n` });
+      jsonPatches.push({ path: join(configHome, 'opencode', 'opencode.json'), arrayPath: ['plugin'], value: pathToFileURL(path).href });
+    }
   }
   return { id: adapter, version, qualification: 'source-and-fixture-qualified',
     files, jsonPatches, prerequisites: ['explicit-activation', 'native-trust', 'fresh-or-explicitly-enrolled-session', 'exclusive-capture-owner'],

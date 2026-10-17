@@ -257,6 +257,11 @@ yq -p toml -oy '
 | `bash scripts/curl-installs.sh` | Placeholder entrypoint (no active manual curl installers) |
 | `source ~/.zshrc` | Reload shell after config/tool changes |
 
+## Optional personal memory
+
+The `hindsight-memory` profile prepares a standalone local component. Activation is separate.
+See [personal Hindsight memory](docs/hindsight-memory.md) for prerequisites, adapter qualification and rollback.
+
 ## Global AI Secrets
 
 Store machine-local AI auth outside repositories:

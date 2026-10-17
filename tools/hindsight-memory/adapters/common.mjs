@@ -1,6 +1,8 @@
+import {performance} from 'node:perf_hooks';
 import { spawnSync } from 'node:child_process';
-import { lstatSync, fstatSync, openSync, readSync, closeSync, constants } from 'node:fs';
-import { isAbsolute } from 'node:path';
+import { lstatSync, realpathSync, fstatSync, openSync, readSync, closeSync, constants } from 'node:fs';
+import {readPrivate} from '../src/config.mjs';
+import { isAbsolute, dirname } from 'node:path';
 
 export const MAX_TRANSCRIPT_BYTES = 8 * 1024 * 1024;
 export class AdapterError extends Error {
@@ -31,17 +33,16 @@ export function unique(messages) {
   requireValue(Buffer.byteLength(JSON.stringify(messages)) <= MAX_TRANSCRIPT_BYTES, 'transcript_limit');
   return messages;
 }
+export function safeParents(file) {
+  for(let parent=dirname(file);;parent=dirname(parent)){
+    const stat=lstatSync(parent);const sticky=stat.uid===0 && (stat.mode & 0o1000)!==0;
+    requireValue(stat.isDirectory() && !stat.isSymbolicLink() && [0,process.getuid()].includes(stat.uid) && (!(stat.mode & 0o022) || sticky),'unsafe_adapter_parent');
+    if(parent===dirname(parent))break;
+  }
+}
 export function readPrivateJson(path) {
   requireValue(isAbsolute(path), 'absolute_path_required');
-  const stat = lstatSync(path);
-  requireValue(stat.isFile() && !stat.isSymbolicLink() && stat.uid === process.getuid() && (stat.mode & 0o077) === 0, 'unsafe_adapter_descriptor');
-  requireValue(stat.size <= 16 * 1024, 'descriptor_limit');
-  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW);
-  try {
-    const actual = fstatSync(fd);
-    requireValue(actual.ino === stat.ino && actual.dev === stat.dev && actual.uid === process.getuid() && (actual.mode & 0o077) === 0, 'unsafe_adapter_descriptor');
-    return JSON.parse(readBounded(fd, 16 * 1024));
-  } finally { closeSync(fd); }
+  const text=readPrivate(path);requireValue(Buffer.byteLength(text)<=16*1024,'descriptor_limit');const descriptor=JSON.parse(text);requireValue(descriptor.agent_identity && descriptor.runtime_identity,'missing_native_qualification');return descriptor;
 }
 export function readBounded(fd, maximum) {
   const buffer = Buffer.alloc(maximum + 1);
@@ -56,14 +57,15 @@ export function readBounded(fd, maximum) {
 }
 export function readTranscript(path) {
   requireValue(isAbsolute(path), 'absolute_path_required');
+  safeParents(path);
   // No directory scans, relative paths or symlinked transcript files.
   const stat = lstatSync(path);
-  requireValue(stat.isFile() && !stat.isSymbolicLink() && stat.uid === process.getuid(), 'unsafe_transcript');
+  requireValue(stat.isFile() && !stat.isSymbolicLink() && stat.nlink===1 && stat.uid === process.getuid() && !(stat.mode & 0o022), 'unsafe_transcript');
   requireValue(stat.size <= MAX_TRANSCRIPT_BYTES, 'transcript_limit');
-  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW);
+  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
   try {
     const actual = fstatSync(fd);
-    requireValue(actual.ino === stat.ino && actual.dev === stat.dev && actual.uid === process.getuid(), 'unsafe_transcript');
+    requireValue(actual.isFile() && actual.ino === stat.ino && actual.dev === stat.dev && actual.nlink===1 && actual.uid === process.getuid() && !(actual.mode & 0o022), 'unsafe_transcript');
     return readBounded(fd, MAX_TRANSCRIPT_BYTES);
   } finally { closeSync(fd); }
 }
@@ -74,17 +76,24 @@ export function makeInvoker(descriptor, run = spawnSync) {
   requireValue(descriptor.schema_version === 1 && isAbsolute(descriptor.runtime) && isAbsolute(descriptor.cli), 'invalid_adapter_descriptor');
   identifier(descriptor.owner);
   return (command, input) => {
+    const started=performance.now();
+    if(descriptor.agent_identity){const expected=descriptor.agent_identity;requireValue(realpathSync(expected.requested)===expected.path,'agent_changed_requalify');safeParents(expected.requested);const actual=lstatSync(expected.path);requireValue(actual.isFile() && !actual.isSymbolicLink() && actual.dev===expected.dev && actual.ino===expected.ino && actual.size===expected.size && actual.mtimeMs===expected.mtimeMs,'agent_changed_requalify');}
+    if(descriptor.runtime_identity){const actual=lstatSync(descriptor.runtime);const expected=descriptor.runtime_identity;requireValue(actual.isFile() && !actual.isSymbolicLink() && actual.dev===expected.dev && actual.ino===expected.ino && actual.size===expected.size && actual.mtimeMs===expected.mtimeMs,'runtime_changed_requalify');}
+    const payload=JSON.stringify(command==='recall'?{...input,recall_deadline_utc_ms:Date.now()+1500}:input);
     const result = run(descriptor.runtime, [descriptor.cli, command], {
-      input: JSON.stringify(input), encoding: 'utf8', timeout: command === 'recall' ? 1800 : 5000,
+      input: payload, encoding: 'utf8', timeout: command === 'recall' ? Math.max(1,Math.floor(1500-(performance.now()-started))) : 5000,
       maxBuffer: 300 * 1024, shell: false, windowsHide: true,
       // No shell and no credential values in argv. Core validates runtime/config/state.
       stdio: ['pipe', 'pipe', 'pipe'],
     });
+    if(command==='recall' && performance.now()-started>=1500)return {schema_version:1,status:'recall-unavailable',context:''};
     if (result.error || result.status !== 0) throw new AdapterError('local_admission_failed');
     let parsed;
     try { parsed = JSON.parse(result.stdout); } catch { throw new AdapterError('invalid_core_result'); }
     requireValue(parsed.schema_version === 1 && typeof parsed.status === 'string', 'invalid_core_result');
     requireValue(!['failed', 'rejected', 'partial', 'unsupported'].includes(parsed.status), 'local_admission_failed');
+    const expected={session:['registered'],'session-status':['registered'],'capture-transcript':['queued','duplicate'],capture:['queued','duplicate'],'stage-turn':['staged'],'complete-turn':['queued','duplicate'],'abort-turn':['aborted'],recall:['recalled','recall-already-attempted','recall-unavailable','recall-output-budget']};
+    requireValue(expected[command]?.includes(parsed.status),'invalid_core_result');
     return parsed;
   };
 }

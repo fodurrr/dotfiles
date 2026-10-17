@@ -234,8 +234,9 @@ test('Bridge uses absolute recorded executable, JSON stdin, no shell or raw diag
 test('Descriptor/transcript reads reject permissive descriptors and symlinks in isolated temporary files', () => {
   const root = mkdtempSync(join(tmpdir(), 'hindsight-adapter-'));
   try {
-    const path = join(root, 'descriptor.json'); writeFileSync(path, JSON.stringify(descriptor), { mode: 0o600 });
-    assert.deepEqual(readPrivateJson(path), descriptor);
+    const qualified={...descriptor,agent_identity:{path:'/synthetic'},runtime_identity:{path:'/synthetic'}};
+    const path = join(root, 'descriptor.json'); writeFileSync(path, JSON.stringify(qualified), { mode: 0o600 });
+    assert.deepEqual(readPrivateJson(path), qualified);
     chmodSync(path, 0o644); assert.throws(() => readPrivateJson(path));
     chmodSync(path, 0o600); symlinkSync(path, join(root, 'link'));
     assert.throws(() => readPrivateJson(join(root, 'link')));
