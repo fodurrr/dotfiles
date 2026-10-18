@@ -1,9 +1,9 @@
 # Personal Hindsight memory component
 
 This private local component prepares independently installable artifacts.
-**All automatic adapter activation currently refuses** with
-`native-caller-binding-unqualified`. Adapters remain isolated source/fixture
-qualification artifacts until actual invoking applications can be bound safely. It uses
+**Only the pinned Linux Pi 1.3.0 sole-extension route is eligible for local activation**,
+with explicit generated capture-owner selection. Other automatic adapter routes
+remain blocked with `native-caller-binding-unqualified`. It uses
 Node 24.15 or newer within Node 24, including `node:sqlite`. It needs no npm
 packages, company tooling, source checkout, shell initialization or resident service.
 
@@ -22,8 +22,8 @@ appear in process arguments.
 |---|---|
 | `prepare` | Copy a content-addressed release and fixed-runtime launcher; no hooks or activation |
 | `configure` | Explicit schema-1 endpoint, bank, private secret-file reference, adapters and exact `agent_versions` |
-| `activation-preview` | List source/fixture artifacts, native caller blocker and required trust; no changes |
-| `activate` | Refuse with `native-caller-binding-unqualified`; no production adapter currently passes this gate |
+| `activation-preview` | Show eligibility, generated Pi capture owner, exact sole-extension launch and installed-writer uncertainty; no changes or selected executable invocation |
+| `activate` | Require pinned Linux Pi 1.3.0 alone, exact selected capture owner and the prepared release's own CLI; every other route remains blocked |
 | `status`, `inspect`, `doctor` | Read-only safe counts and state; no network, repair or retry |
 | `session` | Enroll a native session with `{agent,session,owner,baseline}`; baseline is never retained |
 | `session-status` | Return registered cursor identity and count, never conversation text |
