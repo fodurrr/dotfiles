@@ -13,7 +13,7 @@ export function sourceCheckout(location = HERE) {
   const git = args => execFileSync('/usr/bin/git', ['-C', location, ...args], { env: GIT_ENV, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 2000 }).trim();
   let root; try { root = git(['rev-parse', '--show-toplevel']); } catch { throw new Error('source-checkout-required'); }
   demand(realpathSync(location) === realpathSync(join(root, 'tools/hindsight-memory/experiments/pi-turn')), 'source-checkout-required');
-  return { root, commit: git(['rev-parse', 'HEAD']), dirty: Boolean(git(['status', '--porcelain', '--untracked-files=all', '--', 'tools/hindsight-memory'])) };
+  return { root, commit: git(['rev-parse', 'HEAD']), dirty: Boolean(git(['status', '--porcelain', '--untracked-files=all', '--', ':(top)tools/hindsight-memory'])) };
 }
 function privateDirectory(path) { mkdirSync(path, { mode: 0o700 }); chmodSync(path, 0o700); }
 async function ready(child) {

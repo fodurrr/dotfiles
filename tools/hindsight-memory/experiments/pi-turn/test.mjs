@@ -1,7 +1,8 @@
 // Own fixtures only. No test invokes or imports Pi, Bun or an upstream client.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { chmodSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ENV, PI_ARGS, TEXT, PYTHON, PYTHON_FILES, sandboxArgs } from './policy.mjs';
@@ -21,6 +22,21 @@ test('fixed native arguments and mounts preserve the sole bridge and private nam
 test('native mode requires an explicit CLI flag and cannot run from default test imports', async () => {
   await assert.rejects(runExperiment({ native: true }), /explicit-native-flag-required/);
   assert.match(sourceCheckout().commit, /^[a-f0-9]{40}$/);
+});
+test('native clean-source gate detects both changed component files and untracked experiment files from its nested directory', t => {
+  const root = mkdtempSync('/var/tmp/pi-turn-git-'); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const location = join(root, 'tools/hindsight-memory/experiments/pi-turn'); mkdirSync(location, { recursive: true });
+  const file = join(root, 'tools/hindsight-memory/fixture.txt'); writeFileSync(file, 'committed');
+  const env = { PATH: '/usr/bin:/bin', HOME: root, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null' };
+  const git = args => execFileSync('/usr/bin/git', ['-C', root, ...args], { env, stdio: 'ignore' });
+  git(['init', '--quiet']); git(['add', 'tools']);
+  git(['-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '--quiet', '-m', 'fixture']);
+  assert.equal(sourceCheckout(location).dirty, false);
+  writeFileSync(file, 'modified'); assert.equal(sourceCheckout(location).dirty, true);
+  writeFileSync(file, 'committed'); assert.equal(sourceCheckout(location).dirty, false);
+  const untracked = join(location, 'untracked'); writeFileSync(untracked, 'untracked');
+  assert.equal(sourceCheckout(location).dirty, true); rmSync(untracked);
+  assert.equal(sourceCheckout(location).dirty, false);
 });
 test('own fake OpenAI fixture emits bounded pinned text SSE and excludes history from second request', async t => {
   const services = await fixtureServices(); t.after(() => services.close());
