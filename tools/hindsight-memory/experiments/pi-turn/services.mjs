@@ -1,14 +1,14 @@
 import { createServer } from 'node:http';
 import { LIMIT, TEXT, QUALIFICATION_TEXT as Q, QUALIFICATION_REQUEST_LIMIT, demand } from './policy.mjs';
 export async function fixtureServices({ qualification = false } = {}) {
-  const evidence = { provider: [], recalls: [], retains: [], completed: [], profile: 0, health: 0, cancelledStreams: 0 };
-  let failure = null; let requests = 0;
+  const evidence = { provider: [], recalls: [], retains: [], completed: [], profile: 0, health: 0, cancelledStreams: 0, requests: 0 };
+  let failure = null;
   const fail = reason => { failure ??= reason; };
   const operations = new Map();
   const listen = async handler => {
     const server = createServer(async (req, res) => {
       try {
-        demand(++requests <= (qualification ? QUALIFICATION_REQUEST_LIMIT : LIMIT.requests), 'fake-request-limit');
+        demand(++evidence.requests <= (qualification ? QUALIFICATION_REQUEST_LIMIT : LIMIT.requests), 'fake-request-limit');
         if (req.method === 'GET' && req.url === '/health') { evidence.health++; res.end('{"healthy":true}'); return; }
         let bytes = 0; const chunks = [];
         for await (const chunk of req) { bytes += chunk.length; demand(bytes <= LIMIT.body, 'fake-body-limit'); chunks.push(chunk); }

@@ -51,8 +51,9 @@ test('qualification fixture holds exactly the cancellable stream and rejects ext
   for (const prompt of [Q.afterCancel, Q.switched, Q.resumed]) {
     const response = await send(prompt); assert.equal(response.status, 200); assert((await response.text()).includes(Q.answer));
   }
-  services.check(); assert.equal(services.evidence.provider.length, 5);
+  services.check(); assert.equal(services.evidence.provider.length, 5); assert.equal(services.evidence.requests, 5);
   const bad = await send(Q.resumed); assert.equal(bad.status, 400); assert.throws(services.check, /unexpected-provider-body/);
+  assert.equal(services.evidence.requests, 6);
 });
 test('native clean-source gate detects both changed component files and untracked experiment files from its nested directory', t => {
   const root = mkdtempSync('/var/tmp/pi-turn-git-'); t.after(() => rmSync(root, { recursive: true, force: true }));

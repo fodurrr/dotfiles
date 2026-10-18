@@ -115,7 +115,8 @@ export async function runQualification({ input, output, services, tty, waitFor, 
   const resumed = sessions().find(session => messages(session).some(entry => entry.message.role === 'user' && text(entry.message) === Q.resumed));
   demand(resumed?.path === cancelledSession.path, 'qualification-wrong-session-resumed');
   checkpoints.push({ phase: 'resumed', ...assertNoAdmission('qualification-consent-survived-resume') });
-  demand(services.evidence.provider.length === 5 && services.evidence.profile === 2 && services.evidence.completed.length === 2, 'qualification-service-count-mismatch');
+  demand(services.evidence.provider.length === 5 && services.evidence.profile === 2 && services.evidence.completed.length === 2 &&
+    services.evidence.health === 2 && services.evidence.requests === 15, 'qualification-service-count-mismatch');
   demand(readFileSync(plan.files[0].path, 'utf8') === plan.files[0].content, 'qualification-generated-bridge-changed');
   output.qualification = { checkpoints, secondWriterRefused: conflict, cancelledSession: cancelledSession.path, switchedSession: switchedSession.path,
     resumedSession: resumed.path, sessions: sessions(), noCallbackObservers: true };
