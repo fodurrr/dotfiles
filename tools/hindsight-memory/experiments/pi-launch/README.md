@@ -17,6 +17,17 @@ Use the exact Node runtime from a Git source checkout:
 The tests run synthetic callbacks and harmless sandbox helpers. They never execute Pi.
 The runner prints the private report path. Reports and diagnostics remain outside Git.
 Each directory uses mode 0700; report and diagnostic files use mode 0600.
+Host writes walk parent directories without following links. Existing symlinks,
+hardlinks and special entries are refused. Opened directory handles anchor atomic saves.
+Sandbox-created output names cannot redirect host writes outside the private directory.
+After reaping sandbox processes, the runner validates diagnostic leaves through no-follow
+file handles. Reports label missing or unsafe evidence. Never use `cat` on retained
+sandbox-created paths. Inspect them through the bounded reader:
+
+```bash
+/home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --input-type=module -e 'import {readEvidence} from "./tools/hindsight-memory/experiments/pi-launch/safe-output.mjs"; process.stdout.write(readEvidence(process.argv[1]).text)' /absolute/private/diagnostic-path
+```
+
 Failed preflights stop the run. There is no weaker confinement fallback.
 
 After review, the authorized native command is:
@@ -84,7 +95,8 @@ The factory awaits this exchange before returning.
 
 Fragmentation is allowed. Unknown fields, duplicate/replayed claims, partial EOF,
 missing channels, oversized input, deadlines and identity mismatches fail closed.
-Expected EOF after DONE is allowed. An ACK alone is never a final pass.
+Expected EOF after DONE is allowed. `ack` records a queued ACK; DONE confirms receipt.
+An ACK alone is never a final pass.
 Later protocol failure, output overflow, drift or supervisor death invalidates the run.
 Failure reports retain any earlier ACK/DONE observations.
 

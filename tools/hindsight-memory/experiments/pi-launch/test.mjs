@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { duplexPair } from 'node:stream';
-import { mkdtempSync, chmodSync, writeFileSync, readFileSync, rmSync, symlinkSync, unlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, chmodSync, writeFileSync, readFileSync, rmSync, symlinkSync, unlinkSync, linkSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import { join, dirname } from 'node:path';
@@ -15,6 +15,7 @@ import { probeChannel } from './transport.mjs';
 import { sessionGate } from './gate.mjs';
 import { sourceCheckout, runExperiment } from './run.mjs';
 import { createPiAdapter } from '../../adapters/pi.mjs';
+import { savePrivate, readEvidence } from './safe-output.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const expected = { pid: 101, start: '123', version: '1.3.0', invocation: 'a'.repeat(64), artifact: PIN.artifact };
@@ -50,6 +51,10 @@ test('synthetic protocol: failed executable verification and premature complete 
   const p = protocol(async () => { throw new Error('running-artifact-mismatch'); });
   await assert.rejects(p.protocol.receive(hello()), /running-artifact-mismatch/); assert.throws(() => p.protocol.finish()); assert.equal(p.sent.length, 0);
   const pending = protocol(); await pending.protocol.receive(hello()); assert.throws(() => pending.protocol.finish(), /incomplete-handshake/);
+});
+test('synthetic protocol: a failed ACK send is not reported as queued acknowledgement', async () => {
+  const p = claimProtocol({ expected, supervisor, verify: async () => {}, send: () => { throw new Error('stream-failed'); }, end: () => {} });
+  await assert.rejects(p.receive(hello()), /stream-failed/); assert.equal(p.observations.ack, false); assert.throws(() => p.finish());
 });
 test('synthetic framing: ordinary fragmentation and expected clean EOF work', async () => {
   const [a, b] = duplexPair(); const received = [];
@@ -106,6 +111,33 @@ test('copied preparation output cannot act as a source-checkout experiment', t =
   assert(sourceCheckout().commit.match(/^[a-f0-9]{40}$/));
   const temp = mkdtempSync('/var/tmp/pi-launch-not-git-'); t.after(() => rmSync(temp, { recursive: true, force: true }));
   assert.throws(() => sourceCheckout(temp), /experiment-requires-source-checkout/);
+});
+test('host output: simulated sandbox symlink cannot overwrite a private host victim or block the separate failed report', t => {
+  const root = mkdtempSync('/var/tmp/pi-launch-output-'); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const output = join(root, 'output'); mkdirSync(output, { mode: 0o700 });
+  const victim = join(root, 'host-victim'); writeFileSync(victim, 'HOST UNCHANGED', { mode: 0o600 });
+  symlinkSync(victim, join(output, 'supervisor.stdout'));
+  assert.throws(() => savePrivate(join(output, 'supervisor.stdout'), 'overwrite'), /unsafe-output-entry/);
+  assert.throws(() => readEvidence(join(output, 'supervisor.stdout')));
+  assert.equal(readFileSync(victim, 'utf8'), 'HOST UNCHANGED');
+  savePrivate(join(root, 'report.json'), { status: 'failed', reason: 'unsafe-output-entry' });
+  assert.equal(JSON.parse(readFileSync(join(root, 'report.json'))).status, 'failed');
+});
+test('host output: hardlinks, directories and symlinked parent directories are refused', t => {
+  const root = mkdtempSync('/var/tmp/pi-launch-output-types-'); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const victim = join(root, 'victim'); writeFileSync(victim, 'UNCHANGED', { mode: 0o600 });
+  linkSync(victim, join(root, 'linked')); assert.throws(() => savePrivate(join(root, 'linked'), 'bad'), /unsafe-output-entry/);
+  assert.throws(() => readEvidence(join(root, 'linked')), /unsafe-evidence-file/);
+  mkdirSync(join(root, 'directory'), { mode: 0o700 }); assert.throws(() => savePrivate(join(root, 'directory'), 'bad'), /unsafe-output-entry/);
+  symlinkSync(join(root, 'directory'), join(root, 'parent-link'));
+  assert.throws(() => savePrivate(join(root, 'parent-link', 'file'), 'bad'));
+  assert.throws(() => readEvidence(join(root, 'parent-link', 'file')));
+  assert.equal(readFileSync(victim, 'utf8'), 'UNCHANGED');
+  savePrivate(join(root, 'normal.json'), { status: 'initial' }); savePrivate(join(root, 'normal.json'), { status: 'updated' });
+  assert.equal(JSON.parse(readFileSync(join(root, 'normal.json'))).status, 'updated');
+  assert.equal(JSON.parse(readEvidence(join(root, 'normal.json')).text).status, 'updated');
+  writeFileSync(join(root, 'oversize'), Buffer.alloc(LIMIT.output + 1), { mode: 0o600 });
+  assert.throws(() => readEvidence(join(root, 'oversize')), /evidence-output-overflow/);
 });
 
 function sessionFixture({ accepted = true } = {}) {

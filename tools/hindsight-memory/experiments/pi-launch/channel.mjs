@@ -44,8 +44,8 @@ export function claimProtocol({ expected, supervisor, verify, send, end }) {
         demand(value.pid === expected.pid && value.start === expected.start && value.version === expected.version, 'caller-mismatch');
         observations.hello = true;
         await verify(); demand(state === 'verifying', 'duplicate-claim'); state = 'done';
-        observations.ack = true;
         send({ type: 'ACK', v: 1, pid: expected.pid, start: expected.start, invocation: expected.invocation, artifact: expected.artifact, supervisor });
+        observations.ack = true;
         return;
       }
       if (state === 'done') {

@@ -1,10 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, realpathSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, realpathSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ENV, FILES, LIBRARIES, LIMIT, PIN, demand, digestFile, manifest, sandboxArgs, verifyPins } from './policy.mjs';
 import { alive, boundedSpawn, finalResult, gone, ownedTree } from './processes.mjs';
+import { savePrivate as save, readEvidence } from './safe-output.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const GIT_ENV = { PATH: '/usr/bin:/bin', HOME: '/nonexistent', GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_OPTIONAL_LOCKS: '0' };
@@ -16,7 +17,6 @@ export function sourceCheckout(location = HERE) {
   const dirty = execFileSync('/usr/bin/git', ['-C', root, 'status', '--porcelain', '--untracked-files=all', '--', 'tools/hindsight-memory/experiments/pi-launch'], { env: GIT_ENV, encoding: 'utf8', timeout: 2000 }).trim();
   return { root, experimentDirty: Boolean(dirty), commit: execFileSync('/usr/bin/git', ['-C', root, 'rev-parse', 'HEAD'], { env: GIT_ENV, encoding: 'utf8', timeout: 2000 }).trim() };
 }
-function save(path, value) { writeFileSync(path, typeof value === 'string' ? value : `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600 }); }
 function privateDirectory(path) { mkdirSync(path, { recursive: true, mode: 0o700 }); chmodSync(path, 0o700); }
 async function ready(child, name, timeout = 5000) {
   return new Promise((resolveReady, reject) => {
@@ -130,7 +130,24 @@ export async function runExperiment({ preflightOnly = false } = {}) {
           report.fallbackCleanupReaped = await gone(residual);
         }
         active.delete(task);
-        if (result) { save(join(options.output, 'supervisor.stdout'), result.stdout); save(join(options.output, 'supervisor.stderr'), result.stderr); }
+        if (result) {
+          try {
+            demand(!residual.length || report.fallbackCleanupReaped, 'evidence-requires-reaped-processes');
+            save(join(options.output, 'supervisor.stdout'), result.stdout); save(join(options.output, 'supervisor.stderr'), result.stderr);
+            const names = ['supervisor.stdout', 'supervisor.stderr', ...(['positive', 'missing-channel', 'nested'].includes(mode) ? [`${mode}.stdout`, `${mode}.stderr`] : [])];
+            const files = []; let unsafe = false;
+            for (const name of names) {
+              try { const checked = readEvidence(join(options.output, name)); files.push({ name, safe: true, bytes: checked.bytes }); }
+              catch (error) {
+                files.push({ name, safe: false, reason: error.code === 'ENOENT' ? 'not-produced' : error.message });
+                if (value || error.code !== 'ENOENT') unsafe = true;
+              }
+            }
+            (report.diagnostics ??= []).push({ phase: name, files });
+            demand(!unsafe, 'unsafe-or-missing-diagnostic');
+          }
+          catch (error) { report.phases.push({ phase: name, status: 'failed', reason: error.message, evidence: 'host-output-save-refused' }); throw error; }
+        }
       }
     }
     await launch('preflight');
