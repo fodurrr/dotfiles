@@ -2152,6 +2152,6 @@ Independent normal preview review cleared the design after requiring exact total
 
 ### One justified corrected run
 
-The initial native invocation at `15adbff436d15bef15537bb73f9a442410289b9` failed `qualification-consent-not-observed` because `/new` reached early startup feedback before real submission was bound. Private report `/var/tmp/hindsight-pi-turn-naGmv1/report.json` preserves the failure. Exact ELF and generated bridge were observed; five preflights passed and PTY cleanup reaped. Service/admission totals were not saved and remain unknown.
+The initial native invocation at `15adbff6eb325a760ae0b6265bd95a7eb699bce3` failed `qualification-consent-not-observed` because `/new` reached early startup feedback before real submission was bound. Private report `/var/tmp/hindsight-pi-turn-naGmv1/report.json` preserves the failure. Exact ELF and generated bridge were observed; five preflights passed and PTY cleanup reaped. Service/admission totals were not saved and remain unknown.
 
 The minimum correction at `921db5bd1e98752adbfec5070dc2bbc1f82faf9d` waits for actual startup refusal plus the terminal title emitted after extension binding and agent subscription. The targeted observed-startup regression passed 1/1. The corrected run uses the same command, case sequence and limits. It is the final native invocation in this phase budget.
