@@ -4,7 +4,7 @@ The optional `hindsight-memory` profile prepares a standalone personal-memory
 component. It does not activate capture. Existing Hindsight memories remain on
 the configured external server. This repository does not create or upgrade it.
 
-**Pi capture and later fresh-session recall passed on GEEKOM.** The pinned compiled Linux Pi 1.3.0 installation is active. Other automatic adapters remain blocked pending qualification. Publication, main merge and other host rollouts require approval.
+**Pi and dedicated Codex CLI capture are active on GEEKOM.** Actual fresh Codex recall returned both Codex and Pi memories. Use the exact routes below. Other automatic adapters remain blocked pending qualification. Publication, main merge and other host rollouts require approval.
 
 Use the exact qualified launch, then `/new` and accept its endpoint/bank consent:
 
@@ -122,6 +122,8 @@ Startup and resumed sessions do not inherit consent.
 After selecting `codex-cli` and its exact capture owner, activation installs
 `~/.local/bin/codex-memory`. It accepts interactive sessions and an optional
 `--model <name>`. Its default model is `gpt-6-luna`.
+GEEKOM native capture, delivery and fresh recall passed with `gpt-6-luna`.
+Run `TERM=xterm-256color /home/fodurrr/.local/bin/codex-memory`.
 It starts in its own persistent workspace at
 `~/.local/state/hindsight-memory-codex/workspace`. Files written there remain
 after exit. Existing project directories, resume, fork, positional prompts and
@@ -139,7 +141,8 @@ On the first launch, use native `/hooks` to review and trust the six memory
 hooks. Close that session and relaunch `codex-memory` before sending a prompt.
 The initial skipped `SessionStart` is not replayed after trust changes.
 The private profile keeps native hook trust for later launches.
-The launcher refuses extra profile hooks, plugins or unsupported configuration.
+The launcher disables native account plugin synchronization with `features.plugins=false`.
+It refuses extra profile hooks, installed plugins or unsupported configuration.
 It does not bypass native hook trust.
 
 Rollback removes the owned launcher and descriptor. It preserves the private
@@ -157,7 +160,7 @@ endpoint, operation UUID and request bytes.
 | Adapter | Exact source/fixture versions | Remaining qualification |
 |---|---|---|
 | Claude Code | 2.1.302 | Automatic activation refused: emitted prompt hooks omit human versus automated origin. An interactive launcher cannot fill that missing field. |
-| Codex CLI | Dedicated Linux 0.163.0 route | `codex-memory` uses direct native prompt/final-answer hooks and a separate private profile. Actual native trust and delivery need verification; desktop/global hooks are not enabled. |
+| Codex CLI | Dedicated Linux 0.163.0 route | `codex-memory` uses direct native prompt/final-answer hooks and a separate private profile. GEEKOM native capture, delivery and fresh cross-agent recall passed; desktop/global hooks are not enabled. |
 | Pi | Pinned compiled Linux 1.3.0, sole generated extension; prepared native fake-service path passed | Local eligibility requires explicit owner selection. GEEKOM installed capture and fresh-session real recall passed; other hosts still need qualification. Pi 1.1 remains unqualified. See the [adapter contract](../tools/hindsight-memory/adapters/README.md). |
 | OpenCode v1 | 1.18.35 | Independent v1 plugin and actual provider lifecycle |
 | OpenCode v2 | 2.0.32 | Independent Promise plugin/event API and pre-dispatch crash gap |
