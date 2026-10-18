@@ -205,12 +205,13 @@ export class Store {
     if(!Number.isInteger(offset) || offset<0 || offset>1000)fail('invalid-status-offset');
     const a = this.db.prepare('SELECT id,created FROM activations WHERE active=1').get();
     const counts = Object.fromEntries(this.db.prepare('SELECT state,count(*) n FROM jobs GROUP BY state').all().map(r=>[r.state,r.n]));
+    const staged_turns = this.db.prepare('SELECT count(*) n FROM staged').get().n;
     const worker = this.db.prepare('SELECT expires FROM worker WHERE id=1').get();
     const total=this.db.prepare("SELECT count(*) n FROM jobs WHERE state!='completed'").get().n;
     const operations=this.db.prepare("SELECT id,state,reason,attempts,polls,created,next FROM jobs WHERE state!='completed' ORDER BY created,id LIMIT 10 OFFSET ?").all(offset).map(row=>({
       operation_id:/^[a-f0-9-]{36}$/.test(row.id)?row.id:'invalid-id',state:['queued','submitted','failed'].includes(row.state)?row.state:'unknown',
       reason:row.reason===null?null:/^[a-z0-9-]{1,80}$/.test(row.reason)?row.reason:'invalid-reason',attempts:row.attempts,polls:row.polls,next_attempt_at_ms:row.next
     }));
-    return {operations,operations_offset:offset,operations_limit:10,operations_remaining:Math.max(0,total-offset-operations.length),active:!!a,generation:a?.id || null,activated_at:a ? new Date(a.created).toISOString() : null,counts,worker_in_flight:!!worker,recall_in_flight:this.db.prepare('SELECT count(*) n FROM recalls WHERE in_flight_until>0').get().n,disk_bytes:this.diskBytes()};
+    return {operations,operations_offset:offset,operations_limit:10,operations_remaining:Math.max(0,total-offset-operations.length),active:!!a,generation:a?.id || null,activated_at:a ? new Date(a.created).toISOString() : null,counts,staged_turns,worker_in_flight:!!worker,recall_in_flight:this.db.prepare('SELECT count(*) n FROM recalls WHERE in_flight_until>0').get().n,disk_bytes:this.diskBytes()};
   }
 }

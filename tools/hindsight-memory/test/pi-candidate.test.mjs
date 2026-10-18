@@ -300,11 +300,14 @@ function diskPiCore(t) {
   const candidate = () => {
     const f = fixture({ invoke }); f.destination = { endpoint: core.config.endpoint, bank: core.config.bank }; return f;
   };
-  const unaccepted = session => {
+  const unaccepted = (session, stagedTurns = 0) => {
     const row = core.store.getSession({ agent: 'pi', session, owner: descriptor.owner });
     assert.equal(row.cursor, null); assert.equal(row.count, 0);
     assert.equal(core.store.db.prepare('SELECT count(*) n FROM jobs').get().n, 0);
     assert.equal(core.store.db.prepare('SELECT count(*) n FROM messages').get().n, 0);
+    const status = core.store.status();
+    assert.equal(status.staged_turns, stagedTurns);
+    assert.equal(JSON.stringify(status).includes('question'), false, 'status must not expose the staged prompt');
   };
   return { core, candidate, unaccepted };
 }
@@ -346,20 +349,20 @@ test('Disk-backed Pi CLI completion and abort contention preserve an unaccepted 
   await withExclusivePiState(core, () => final(f));
   assert.deepEqual(commands(f), ['session', 'stage-turn', 'complete-turn', 'abort-turn']);
   assert.deepEqual(f.errors.map(error => error.code), ['state_busy_admission_not_confirmed', 'state_busy_admission_not_confirmed']);
-  unaccepted('fresh'); assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
+  unaccepted('fresh', 1); assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
   const calls = commands(f); await f.context(); await f.turn(); await f.settle(); await f.before();
-  assert.deepEqual(commands(f), calls); unaccepted('fresh');
+  assert.deepEqual(commands(f), calls); unaccepted('fresh', 1);
   assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
   const restarted = candidate(); await restarted.start(); await restarted.input('question'); await restarted.before();
   assert.deepEqual(commands(restarted), ['session', 'stage-turn', 'abort-turn']);
   assert.equal(restarted.errors[0].code, 'local_admission_failed');
   assert.notEqual(restarted.calls[1].input.turn_id, pending.turn_id);
-  await final(restarted); unaccepted('fresh');
+  await final(restarted); unaccepted('fresh', 1);
   assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
   const fresh = candidate(); fresh.session = 'fresh-after-contention'; await fresh.start();
   fresh.branch = [...initialMetadata, user('native-user', 'question'), assistant('native-final', 'answer')];
   await fresh.turn(); await fresh.settle();
-  assert.deepEqual(commands(fresh), ['session']); unaccepted('fresh-after-contention');
+  assert.deepEqual(commands(fresh), ['session']); unaccepted('fresh-after-contention', 1);
   assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
 });
 
