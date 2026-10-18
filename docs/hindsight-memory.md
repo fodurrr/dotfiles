@@ -33,6 +33,8 @@ Preparation copies versioned artifacts to the user's data directory. It creates
 `~/.local/bin/hindsight-memory` with an absolute qualified runtime path. It does
 not create a bank, register agent hooks, set credentials or start a service.
 The component works outside repositories after the source checkout is removed.
+Newly prepared releases exclude `test/`, `node_modules/` and `experiments/`.
+This exclusion does not remove older releases or change an existing installation.
 
 Shared `~/.local/bin` can use mode 0755. Group-writable directories such as 0775
 are refused, including writable ancestors. The component does not chmod shared
@@ -94,7 +96,7 @@ endpoint, operation UUID and request bytes.
 |---|---|---|
 | Claude Code | 2.1.302 | Native trust and host execution; cancellation and lost pre-bridge events remain visible |
 | Codex CLI | 0.162.0, 0.163.0 | Unstable pinned transcript format; actual host hooks/trust and completion persistence |
-| Pi | Restricted compiled Linux 1.3.0 source/synthetic candidate | Pi 1.1 remains unqualified; native session qualification is pending. See the [candidate contract](../tools/hindsight-memory/adapters/README.md). |
+| Pi | Restricted compiled Linux 1.3.0 candidate; confined native fake-service path passed | Production activation, native lifecycle negatives, host preparation and live API qualification remain open. Pi 1.1 remains unqualified. See the [candidate contract](../tools/hindsight-memory/adapters/README.md). |
 | OpenCode v1 | 1.18.35 | Independent v1 plugin and actual provider lifecycle |
 | OpenCode v2 | 2.0.32 | Independent Promise plugin/event API and pre-dispatch crash gap |
 | Grok | Investigated 1.0.62 | Native prompt-hook output is discarded; complete automatic recall route unqualified |
@@ -139,6 +141,9 @@ Only new user/assistant conversation text is retained. Tool output, hidden
 reasoning, Git, files, provider logins and injected recall are excluded. Assistant
 claims remain attributed claims. Recalled text is labeled untrusted context and
 cannot authorize tools or change current instructions.
+Retained metadata includes the execution host name, agent, session, message,
+role, activation, chunk and UTC timestamp. Host names and identifiers reach the
+configured memory service alongside the eligible text.
 
 Admission commits all chunks, message identities and the cursor in one SQLite
 transaction. A failed or full admission commits none. Short ordinary writer contention waits instead of forcing a 50 ms rejection. Sustained contention still returns `state-busy-admission-not-confirmed`; it never reports acceptance or moves the cursor. Constructor initialization does not rewrite schema metadata on every hook. The disk-backed 30-turn source-fixture stress test counts every rejection. Whole bridge tail latency can exceed 100 ms while preserving acceptance under contention; it is reported separately from direct admission. Each request has a stable
@@ -180,6 +185,9 @@ may never have reached the server can therefore require explicit recovery.
 Submission success alone does not prove exactly-once processing.
 
 `status` reports safe counts and at most ten pending operation IDs, states and reason codes. `hindsight-memory status 10` reads the next page. It never includes request bodies, destination URLs or secret-file paths. It does not display transcript text or secrets.
+`staged_turns` counts prompts awaiting accepted completion. A failed completion
+and failed abort can leave such a prompt without its assistant answer. It is
+unaccepted input, not a submitted operation; `retry` cannot recover that answer.
 `doctor` and `inspect` are also read-only. They do not retry, repair or contact
 memory. A queue cannot preserve unlimited later conversation during an indefinite
 outage. Accepted jobs survive; later rejected turns are reported as not captured.
