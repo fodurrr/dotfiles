@@ -84,7 +84,8 @@ test('isolated launch keeps global config, auth and trust intact; reuses private
  writePrivate(path.join(globalHome,'config.toml'),'[hooks.state.global]\ntrusted_hash = "GLOBAL"\n');writePrivate(path.join(globalHome,'hooks.json'),'{"hooks":{"Stop":[]}}');
  const globalBefore=fs.readdirSync(globalHome).map(name=>[name,hash(fs.readFileSync(path.join(globalHome,name)))]);
  writePrivate(path.join(f.p.config,'config.json'),JSON.stringify({...f.config,adapters:['pi','codex-cli'],capture_owners:{'codex-cli':descriptor.owner}}));
- const options={env:{HOME:f.home,NODE_OPTIONS:'--forbidden'},systemFiles:[],inspectAgentImpl:()=>({...descriptor.agent_identity})};
+ const options={env:{HOME:f.home,NODE_OPTIONS:'--forbidden'},terminal:true,systemFiles:[],inspectAgentImpl:()=>({...descriptor.agent_identity})};
+ assert.throws(()=>prepareCodexLaunch(descriptor,'/descriptor',[],{...options,terminal:false}),/terminal_required/);
  const launch=prepareCodexLaunch(descriptor,'/descriptor',[],options);
  assert.equal(launch.executable,'/native');assert.equal(launch.env.CODEX_HOME,path.join(f.p.state,'codex-profile'));assert.equal(launch.env.NODE_OPTIONS,undefined);
  assert(fs.lstatSync(path.join(launch.env.CODEX_HOME,'auth.json')).isSymbolicLink());assert.equal(fs.readlinkSync(path.join(launch.env.CODEX_HOME,'auth.json')),path.join(globalHome,'auth.json'));

@@ -104,8 +104,9 @@ export function validateProfileConfig(text) {
   }
 }
 
-export function prepareCodexLaunch(descriptor,descriptorPath,args=[],{env=process.env,inspectAgentImpl=inspectAgent,systemFiles=['/etc/codex/config.toml','/etc/codex/requirements.toml','/etc/codex/hooks.json']}={}) {
+export function prepareCodexLaunch(descriptor,descriptorPath,args=[],{env=process.env,terminal=process.stdin.isTTY===true && process.stdout.isTTY===true,inspectAgentImpl=inspectAgent,systemFiles=['/etc/codex/config.toml','/etc/codex/requirements.toml','/etc/codex/hooks.json']}={}) {
   requireValue(process.platform==='linux' && CODEX_VERSIONS.includes(descriptor.agentVersion),'unqualified_codex_process');
+  requireValue(terminal,'codex_interactive_terminal_required');
   requireValue(args.length===0 || (args.length===2 && ['--model','-m'].includes(args[0]) && /^[a-zA-Z0-9_.-]{1,100}$/.test(args[1])),'codex_interactive_arguments_required');
   requireValue(!env[CODEX_BINDING_ENV],'nested_codex_memory_launch');
   requireValue(systemFiles.every(file=>!fs.existsSync(file)),'codex_managed_config_unqualified');
