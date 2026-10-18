@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { ENV, PI_ARGS, QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, TEXT, PYTHON, PYTHON_FILES, PIN, sandboxArgs, qualificationStartupReady } from './policy.mjs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { COMPONENT, ENV, PI_ARGS, QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, TEXT, PYTHON, PYTHON_FILES, PIN, sandboxArgs, qualificationStartupReady } from './policy.mjs';
 import { fixtureServices } from './services.mjs';
 import { sourceCheckout, runExperiment, prepareRelease } from './run.mjs';
 import { savePrivate, readEvidence } from '../pi-launch/safe-output.mjs';
@@ -33,6 +33,19 @@ test('native mode requires an explicit CLI flag and cannot run from default test
   await assert.rejects(runExperiment({ native: true }), /explicit-native-flag-required/);
   await assert.rejects(runExperiment({ native: true, qualification: true }), /explicit-native-flag-required/);
   assert.match(sourceCheckout().commit, /^[a-f0-9]{40}$/);
+});
+test('sandbox component file allowlist contains the complete CLI import closure', t => {
+  const root = mkdtempSync('/var/tmp/pi-turn-imports-'); chmodSync(root, 0o700); t.after(() => rmSync(root, { recursive: true, force: true }));
+  for (const file of COMPONENT) {
+    const target = join(root, file); mkdirSync(dirname(target), { recursive: true, mode: 0o700 });
+    writeFileSync(target, readFileSync(join(here, '../..', file)), { mode: 0o600 });
+  }
+  // Import only copied component files. Do not invoke a CLI command or any agent.
+  const script = `const module = await import(${JSON.stringify(pathToFileURL(join(root, 'src/cli.mjs')).href)}); if (typeof module.main !== 'function') throw Error('missing-cli-main');`;
+  assert.doesNotThrow(() => execFileSync(process.execPath, ['--disable-warning=ExperimentalWarning', '--input-type=module', '-e', script], {
+    cwd: root, env: { HOME: root, XDG_CONFIG_HOME: join(root, 'config'), XDG_DATA_HOME: join(root, 'data'), XDG_STATE_HOME: join(root, 'state') },
+    encoding: 'utf8', timeout: 10000, maxBuffer: 64 * 1024,
+  }));
 });
 test('qualification uses a real prepared release and never mounts component source files', t => {
   const root = mkdtempSync('/var/tmp/pi-turn-prepared-'); chmodSync(root, 0o700); t.after(() => rmSync(root, { recursive: true, force: true }));

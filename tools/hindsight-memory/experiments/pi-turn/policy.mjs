@@ -49,7 +49,7 @@ export const PYTHON_FILES = [
 export const PYTHON_LIBRARIES = ['libexpat.so.1', 'libz.so.1'];
 export const FILES = ['policy.mjs', 'supervisor.mjs', 'services.mjs', 'qualification.mjs', 'pty.py', 'surrogate.mjs'];
 export const SHARED = ['policy.mjs', 'identity.mjs', 'processes.mjs', 'safe-output.mjs'];
-export const COMPONENT = ['package.json', ...['capture', 'cli', 'config', 'delivery', 'ownership', 'qualification', 'state'].map(x => `src/${x}.mjs`),
+export const COMPONENT = ['package.json', ...['activation', 'capture', 'cli', 'config', 'delivery', 'ownership', 'qualification', 'state'].map(x => `src/${x}.mjs`),
   ...['common', 'hook', 'manage', 'opencode-v1', 'opencode-v2', 'pi', 'transcripts'].map(x => `adapters/${x}.mjs`)];
 export const PI_ARGS = Object.freeze(['--no-extensions', '-e', '/work/sole-bridge.mjs']);
 export const QUALIFICATION_ARGS = Object.freeze(['--no-extensions', '-e', '/home/fixture/.pi/agent/extensions/hindsight-memory.js']);
