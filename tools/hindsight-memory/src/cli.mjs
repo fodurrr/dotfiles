@@ -20,7 +20,7 @@ function quote(value) {return `'${value.replaceAll("'", "'\\''")}'`;}
 function tree(root) {
   const entries=[];
   for(const name of fs.readdirSync(root).sort()) {
-    if(['test','node_modules'].includes(name)) continue;
+    if(['test','node_modules','experiments'].includes(name)) continue;
     const file=path.join(root,name);const stat=fs.lstatSync(file);
     if(stat.isSymbolicLink()) fail('symlink-source-artifact');
     if(stat.isDirectory()) for(const [child,bytes] of tree(file)) entries.push([`${name}/${child}`,bytes]);

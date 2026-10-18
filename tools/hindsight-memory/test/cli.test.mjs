@@ -14,6 +14,18 @@ test('prepare is checkout-independent, inactive, private, and idempotent with sh
  fs.rmSync(root,{recursive:true});const launcher=path.join(bin,'hindsight-memory');const status=spawnSync(launcher,['status'],{env:{...process.env,HOME:h,XDG_CONFIG_HOME:path.join(h,'.config'),XDG_STATE_HOME:path.join(h,'.local/state'),XDG_DATA_HOME:path.join(h,'.local/share')},cwd:'/',encoding:'utf8'});
  assert.equal(status.status,0,status.stdout+status.stderr);assert.equal(JSON.parse(status.stdout).active,false);assert.equal(fs.statSync(bin).mode&0o777,0o755);assert.equal(fs.existsSync(path.join(h,'.claude')),false);assert.equal(fs.existsSync(path.join(h,'.local/state/hindsight-memory')),false);
 });
+test('prepared standalone release excludes dormant experiments and ignores their changes',t=>{
+ const h=home(t);const root=path.join(h,'source');fs.cpSync(source,root,{recursive:true});
+ const prepared=run(h,['prepare'],null,root);assert.equal(prepared.status,0,prepared.stdout+prepared.stderr);
+ const recordFile=path.join(h,'.local/share/hindsight-memory/installation.json');const before=JSON.parse(fs.readFileSync(recordFile));
+ for(const name of ['experiments','test','node_modules'])assert.equal(fs.existsSync(path.join(before.release,name)),false,`${name} must stay outside the installed release`);
+ assert.equal(fs.existsSync(path.join(before.release,'src/cli.mjs')),true);assert.equal(fs.existsSync(path.join(before.release,'adapters/pi.mjs')),true);
+ fs.writeFileSync(path.join(root,'experiments/pi-turn/packaging-fixture.mjs'),"throw new Error('dormant experiment must not run');\n");
+ const repeated=run(h,['prepare'],null,root);assert.equal(repeated.status,0,repeated.stdout+repeated.stderr);
+ const after=JSON.parse(fs.readFileSync(recordFile));assert.equal(after.digest,before.digest);assert.equal(after.release,before.release);
+ fs.rmSync(root,{recursive:true});const status=run(h,['status'],null,before.release);
+ assert.equal(status.status,0,status.stdout+status.stderr);assert.equal(status.data.status,'activation-pending');assert.equal(status.data.active,false);
+});
 test('prepare refuses group-writable launcher dir without chmod',t=>{
  const h=home(t);fs.mkdirSync(path.join(h,'.local'),{mode:0o700});const bin=path.join(h,'.local/bin');fs.mkdirSync(bin,{recursive:true,mode:0o775});fs.chmodSync(bin,0o775);const result=run(h,['prepare']);assert.equal(result.status,1);assert.equal(result.data.reason,'unsafe-launcher-directory');assert.equal(fs.statSync(bin).mode&0o777,0o775);
 });
