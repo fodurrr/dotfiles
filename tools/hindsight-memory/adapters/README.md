@@ -20,6 +20,9 @@ Descriptors require private regular files and safe parent directories.
 Malformed descriptors disable only the adapter and emit a content-free warning.
 
 All envelopes use `schema_version:1`, `agent`, `session` and `owner`.
+Pi also supplies `expected_destination`, the existing endpoint/bank digest.
+The core compares it with its actual active destination before registration,
+staging, admission or recall. Other callers retain their existing contract.
 
 | CLI verb | Adapter input | Meaning |
 |---|---|---|
@@ -50,7 +53,7 @@ An installed version number alone cannot establish the route used by a desktop.
 |---|---|---|---|
 | `claude-code` | 2.1.302 | Native `SessionStart`; `UserPromptSubmit` stages `prompt_id`/original prompt; `Stop` supplies same ID/final text | Native prompt ID; `additionalContext` output |
 | `codex-cli` | 0.162.0, 0.163.0 | `SessionStart` baseline; pinned `event_msg` turn boundaries and native `Stop` final text; only transcript source `cli` | Native `turn_id` on `UserPromptSubmit` |
-| `pi` | 1.1.0, 1.3.0 | Reasoned `session_start`, immutable branch entry IDs, terminal `agent_end` | `context` after user persistence; custom request-local message |
+| `pi` candidate | 1.3.0 compiled Linux artifact only | Explicit fresh `/new` TUI consent; original `input` matched at `before_agent_start`; persisted user and `turn_end.messageEntryId`; final `agent_settled` | Once per staged turn at `context`; custom request-local message |
 | `opencode-v1` | 1.18.35 | Fresh `session.created`; SDK `session.messages`; `session.idle` snapshot | `chat.message`; synthetic native text part excluded from every later capture |
 | `opencode-v2` | 2.0.32 | Promise API; durable `session.created`/`session.execution.succeeded` data envelopes; stored `session.context` snapshot | Request-local `session.hook('context')`; no privileged system injection |
 
@@ -76,14 +79,50 @@ prefix identities and text before extracting a new suffix. Source values `vscode
 header on resume, so they cannot certify the current Desktop, T3 or CLI invoker.
 Activation therefore remains blocked pending actual caller binding.
 
-Pi calls `before_agent_start` before it persists the new user. Recall therefore
-runs during `context`, where a persisted native user entry must match the prompt.
-The bridge never invents a user ID. Custom/injected recall, tool results, reasoning
-and summaries are excluded. A native abort/error/length response drops its pending
-users from the normalized conversation. A later successful turn cannot collect
-that cancelled user's text. An incomplete resumed session refuses registration.
-Only `stop` qualifies as a completed assistant. Branch changes must pass the core's
-existing prefix check; registering another baseline cannot bypass it.
+The Pi candidate uses the exact compiled Linux 1.3.0 ELF SHA-256
+`c2415d6e6f7c67b0a55744c5ace5054936e252fcc3cf56ce087bc314061315ca`.
+It checks `/proc/self/exe`, selected executable identity, and the exact argument
+slice Pi passes to `main`: `--no-extensions -e <absolute-bridge-path>`.
+No positional prompt, extra flag, other extension or runtime preload is allowed.
+The generated wrapper passes its own `import.meta.url` to bind that sole path.
+The native CLI loader keeps only the explicit extension paths with this flag.
+Configured packages may still be resolved before extension filtering.
+These source checks are candidate constraints; synthetic tests do not establish
+that the installed native route loads or behaves as expected.
+
+Only `session_start.reason === 'new'` in TUI mode can request consent.
+Startup, resume, reload, forks, SDK, RPC and other versions remain refused.
+Consent names the configured endpoint and bank. It lives only in process memory.
+The bridge reads the same private config as the inherited core child environment,
+and checks the destination before every core call. Each call also binds the
+consented destination digest to the core's actual active destination. Config-file
+drift cannot silently retarget retention or recall.
+Session changes, tree navigation, compaction and shutdown invalidate consent.
+A fresh conversation after native `/new` is required. Its branch must contain
+only the SDK's initial `thinking_level_change`, optionally preceded by one
+`model_change`, with the exact native root parent chain. Messages, custom entries,
+summaries, context edits and extra metadata refuse consent. These metadata entries
+are never registered as a baseline or uploaded.
+
+The bridge holds one idle interactive `input` candidate. It stages only when the
+model-validated `before_agent_start` has exactly the same prompt and no images.
+The text is Pi's trimmed TUI submission, rather than raw editor keystrokes.
+Skill/template expansion or changed text refuses the pair. The inspected TUI
+path passes literal file references unchanged; CLI initial `@file` expansion is
+excluded by the argument allowlist. A second input, including steering/follow-up,
+aborts the entire staged pair. There is no queued-input capture policy.
+
+Pi persists the user after `before_agent_start`. The `context` callback binds its
+exact native entry ID and text before once-per-turn recall. One generated turn ID
+stays fixed across staging, recall, abort and completion. Recall stays in a custom
+request-local message; the transformed context array is never captured.
+`turn_end` must name the exact persisted assistant entry. Only a final `stop`
+response can complete at `agent_settled`, after verifying its ID/text, no abort,
+no pending input and no extra user. Tool calls, tool results, hidden reasoning,
+recall and history never enter the admitted pair. A terminal failure, unmatched
+run or lifecycle change aborts it. A changed destination/process refuses further
+core calls and reports any unconfirmed abort; an unaccepted stage may then need
+explicit recovery. Production activation in `cli.mjs` remains refused.
 
 OpenCode v1 and v2 are independent adapters. Their package names, plugin exports,
 configuration keys, event envelopes and message schemas differ. V1 uses global
@@ -102,8 +141,8 @@ Inspected on 2026-10-17. GitHub tag refs were resolved to commits before recordi
 |---|---|---|
 | Codex 0.163.0 | `83086188ae0614bd882818ff1aa23f3194962012` | `codex-rs/hooks/src/events/session_start.rs`, `codex-rs/core/src/hook_runtime.rs`, `codex-rs/protocol/src/protocol.rs` |
 | Codex 0.162.0 | `c1382380de69521303b416720a52f42d51af6248` | Matching session-start hook schema |
-| Pi 1.3.0 | `71023aec1546d6d677a65669c5665c0927ce0dd0` | `packages/coding-agent/src/core/extensions/types.ts`, `agent-session.ts`; installed `docs/session-format.md`, `docs/message-types.md` |
-| Pi 1.1.0 | `abe508e1b89912adde45528136c3221eb69acdd7` | Native extension types and session manager |
+| Pi 1.3.0 | `71023aec1546d6d677a65669c5665c0927ce0dd0` | `packages/coding-agent/src/core/extensions/types.ts`, `agent-session.ts`, `resource-loader.ts`, `sdk.ts`, `session-manager.ts`, `agent-session-runtime.ts`, `cli/args.ts`, `cli.ts`, `modes/interactive/interactive-mode.ts`; installed `docs/session-format.md`, `docs/message-types.md` |
+| Pi 1.1.0 historical inspection; outside candidate allowlist | `abe508e1b89912adde45528136c3221eb69acdd7` | Native extension types and session manager |
 | OpenCode v1 | `53d1eabb61e21162157817bf677da0a4ad3332e3` | `packages/plugin/src/index.ts`, `packages/sdk/js/src/gen/types.gen.ts`, native message-v2 |
 | OpenCode v2 | `843a6c514e606b436a7fe713422ace0a93ad3d61` | `packages/plugin/src/promise/{plugin,session,event}.ts`; schema session-message/session-event/config/plugin; generated client API |
 | Gemini 0.64.0 | `4a0749aceac5643e6f85a36d7420314d85e13b52` | Core hooks types and handler; services chatRecordingService/chatRecordingTypes |
@@ -154,10 +193,14 @@ obligations. Unsupported classification does not complete the work item.
 
 ## Verification boundary
 
-Run `node --test tools/hindsight-memory/test/adapters.test.mjs`.
+Run `node --test tools/hindsight-memory/test/adapters.test.mjs tools/hindsight-memory/test/pi-candidate.test.mjs`.
 Fixtures cover native IDs, resume baselines, source exclusion, terminal failure,
-cancelled Pi users, imported recall/tool/reasoning exclusion, both OpenCode APIs,
+cancelled Pi users, synthetic current-process refusals and consent invalidation,
+exact persisted completion and queued-input cancellation, imported recall/tool/reasoning exclusion, both OpenCode APIs,
 shell-free core invocation, result validation and unsafe local paths.
 All filesystem fixtures live under temporary directories. No real agent settings,
-credentials, transcripts or memory endpoints are used. Bridge startup and durable
+credentials, transcripts or memory endpoints are used. Pi success tests inject
+synthetic process observations and native callbacks; one uses the real temporary
+SQLite core to verify pair admission and cancellation. No Pi/Bun process or upstream
+module is executed. Bridge startup and durable
 core admission must be measured together before making the 100 ms target a claim.

@@ -118,37 +118,8 @@ test('Transcript normalizers exclude custom, tool, synthetic and hidden reasonin
   assert.throws(() => piTranscript([piUser('u', 'one'), piUser('u', 'two')]));
 });
 
-test('Pi normal native lifecycle uses stable persisted IDs and request-local custom recall', async () => {
-  const handlers = new Map();
-  const { calls, invoke } = recorder();
-  const errors = [];
-  let branch = [piUser('old-u', 'OLD_SENTINEL'), piAnswer('old-a', 'old answer')];
-  const ctx = { sessionManager: { getSessionId: () => 's', getBranch: () => branch } };
-  createPiAdapter({ ...descriptor, agentVersion: '1.3.0' }, invoke, e => errors.push(e))({ on: (event, handler) => handlers.set(event, handler) });
-  await handlers.get('session_start')({ reason: 'resume' }, ctx);
-  await handlers.get('before_agent_start')({ messageType: 'user', prompt: 'new question' }, ctx);
-  // Pi persists the user after before_agent_start, before context.
-  branch = [...branch, piUser('new-u', 'new question')];
-  const context = await handlers.get('context')({ messages: [{ role: 'user', content: 'new question' }] }, ctx);
-  assert.equal(context.messages.at(-1).role, 'custom');
-  assert.equal(context.messages.at(-1).content, 'UNTRUSTED RECALL SENTINEL');
-  await handlers.get('context')({ messages: [] }, ctx);
-  assert.equal(calls.filter(c => c.command === 'recall').length, 1);
-  branch = [...branch, { type: 'custom_message', id: 'recall', content: 'UNTRUSTED RECALL SENTINEL' }, piAnswer('new-a', 'new answer')];
-  await handlers.get('agent_end')({ messages: [branch.at(-1).message] }, ctx);
-  assert.equal(calls.at(-1).command, 'capture-transcript');
-  assert(!JSON.stringify(calls.at(-1)).includes('UNTRUSTED RECALL SENTINEL'));
-  assert.equal(calls.find(c => c.command === 'recall').input.turn_id, 'new-u');
-  assert.equal(errors.length, 0);
-});
-test('Pi aborts do not capture; missing prompt identity produces visible safe failure', async () => {
-  const handlers = new Map(); const { calls, invoke } = recorder(); const errors = [];
-  const ctx = { sessionManager: { getSessionId: () => 's', getBranch: () => [] } };
-  createPiAdapter({ ...descriptor, agentVersion: '1.1.0' }, invoke, e => errors.push(e))({ on: (event, handler) => handlers.set(event, handler) });
-  await handlers.get('before_agent_start')({ prompt: 'new' }, ctx);
-  await handlers.get('context')({ messages: [] }, ctx);
-  await handlers.get('agent_end')({ messages: [{ role: 'assistant', stopReason: 'aborted' }] }, ctx);
-  assert.equal(calls.length, 0); assert.equal(errors.length, 2);
+test('Pi candidate refuses older callback contracts and keeps cancelled parser users excluded', () => {
+  assert.throws(() => createPiAdapter({ ...descriptor, agentVersion: '1.1.0' }, () => assert.fail()));
   const later = piTranscript([piUser('cancelled', 'CANCELLED_USER_SENTINEL'), piAnswer('bad', 'partial', 'aborted'), piUser('new', 'new user'), piAnswer('good', 'complete')]);
   assert.deepEqual(later.map(m => m.text), ['new user', 'complete']);
   assert.throws(() => piTranscript([piUser('pending-old', 'OLD_PENDING_SENTINEL')], { strictPending: true }));

@@ -40,7 +40,7 @@ export function adapterArtifacts({ adapter, version, runtime, cli, releaseDir, d
     }
   } else if (adapter === 'pi') {
     files.push({ path: join(home, '.pi', 'agent', 'extensions', 'hindsight-memory.js'), mode: 0o600,
-      content: `import { piFromDescriptor } from ${JSON.stringify(moduleUrl('pi.mjs'))};\nexport default piFromDescriptor(${JSON.stringify(descriptorPath)});\n` });
+      content: `import { piFromDescriptor } from ${JSON.stringify(moduleUrl('pi.mjs'))};\nexport default piFromDescriptor(${JSON.stringify(descriptorPath)}, import.meta.url);\n` });
   } else {
     const v2 = adapter === 'opencode-v2';
     const name = v2 ? 'openCodeV2FromDescriptor' : 'openCodeV1FromDescriptor';

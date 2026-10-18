@@ -58,9 +58,12 @@ export class Store {
     const physical = this.diskBytes();
     if (physical * 2 + bytes * 3 + 1024*1024 > this.limits.disk) fail('state-capacity');
   }
-  active() {
+  active(input) {
     const row = this.db.prepare('SELECT * FROM activations WHERE active=1').get();
-    if (!row) fail('inactive'); return {...row, config:JSON.parse(row.config)};
+    if (!row) fail('inactive');
+    const active = {...row, config:JSON.parse(row.config)};
+    if (input?.expected_destination !== undefined && input.expected_destination !== destination(active.config)) fail('destination-mismatch');
+    return active;
   }
   activate(config, now = Date.now()) {
     this.capacity();
@@ -91,7 +94,7 @@ export class Store {
   register(input, normalized, now = Date.now()) {
     this.capacity(Buffer.byteLength(JSON.stringify(normalized)));
     return this.transaction(() => {
-      const a = this.active(); if (!a.config.adapters.includes(input.agent)) fail('adapter-not-selected');
+      const a = this.active(input); if (!a.config.adapters.includes(input.agent)) fail('adapter-not-selected');
       const key = this.sessionKey(a,input); const old = this.db.prepare('SELECT * FROM sessions WHERE key=?').get(key);
       if (old) { if (old.owner !== input.owner) fail('session-owner-conflict'); return {status:'registered',previous:old.cursor,count:old.count}; }
       this.db.prepare('INSERT INTO sessions(key,generation,agent,session,owner,cursor,prefix,count) VALUES(?,?,?,?,?,?,?,?)').run(key,a.id,input.agent,input.session,input.owner,normalized.at(-1)?.id || null,hash(JSON.stringify(normalized)),normalized.length);
@@ -100,13 +103,13 @@ export class Store {
     });
   }
   getSession(input) {
-    const a = this.active(); const row = this.db.prepare('SELECT * FROM sessions WHERE key=?').get(this.sessionKey(a,input));
+    const a = this.active(input); const row = this.db.prepare('SELECT * FROM sessions WHERE key=?').get(this.sessionKey(a,input));
     if (!row || row.owner !== input.owner || row.dirty) fail('unknown-or-dirty-session'); return row;
   }
   admit(input, messages, {transcript = false, now = Date.now(), makeJobs, beforeCommit, inside = false} = {}) {
     this.capacity(Buffer.byteLength(JSON.stringify(messages)));
     const work = () => {
-      const a = this.active(); if (!a.config.adapters.includes(input.agent)) fail('adapter-not-selected');
+      const a = this.active(input); if (!a.config.adapters.includes(input.agent)) fail('adapter-not-selected');
       const row = this.getSession(input);
       let suffix = messages;
       if (transcript) {

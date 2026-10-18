@@ -96,13 +96,13 @@ export async function recall(store,input,{now=Date.now,fetchImpl=fetch,budget=15
   const releaseMutex=store.workerMutex({name:'recall'});if(!releaseMutex)return {status:'recall-unavailable',context:''};
   let key;
   try {
-  const a=store.active();const lifecycle=store.lifecycle(); if(!a.config.adapters.includes(input.agent)) fail('adapter-not-selected');
+  const a=store.active(input);const lifecycle=store.lifecycle(); if(!a.config.adapters.includes(input.agent)) fail('adapter-not-selected');
   key=hash(JSON.stringify([a.id,input.agent,input.session,input.turn_id]));
   if(!store.recallOnce(key,now())) return {status:'recall-already-attempted',context:''};
   const start=now();
   store.db.prepare('UPDATE recalls SET in_flight_until=0 WHERE key!=?').run(key);
     const response=await request(a.config,'POST','/memories/recall',JSON.stringify({query:redact(input.query),budget:'low',max_tokens:1000,trace:false}),{fetchImpl,timeout:Math.max(1,budget-(performance.now()-recallStart))});
-    if(store.lifecycle()!==lifecycle || store.active().id!==a.id)return {status:'recall-unavailable',context:''};
+    if(store.lifecycle()!==lifecycle || store.active(input).id!==a.id)return {status:'recall-unavailable',context:''};
     if(response.status!==200 || !Array.isArray(response.data?.results) || now()-start>1500 || performance.now()-recallStart>budget) return {status:'recall-unavailable',context:''};
     // UTF-8 bytes conservatively bound tokens; include labels/provenance in that budget.
     const facts=response.data.results.filter(r=>typeof r.text==='string').map(r=>({id:typeof r.id==='string'?r.id:'unknown',text:redact(r.text)}));
