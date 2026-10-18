@@ -3,9 +3,10 @@ import { pathToFileURL } from 'node:url';
 import { requireValue } from './common.mjs';
 import { HOOK_VERSIONS } from './hook.mjs';
 import { PI_VERSIONS } from './pi.mjs';
+import { CODEX_VERSIONS } from './codex.mjs';
 
 export const ADAPTER_VERSIONS = Object.freeze({
-  ...HOOK_VERSIONS, pi: PI_VERSIONS,
+  ...HOOK_VERSIONS, 'codex-cli':CODEX_VERSIONS, pi: PI_VERSIONS,
   'opencode-v1': ['1.18.35'], 'opencode-v2': ['2.0.32'],
 });
 
@@ -30,7 +31,10 @@ export function adapterArtifacts({ adapter, version, runtime, cli, releaseDir, d
   // Native hook commands are shell strings. Quote every path individually;
   // descriptor contents and user prompts never enter the command string.
   const quote = value => "'" + value.replaceAll("'", "'\\''") + "'";
-  if (HOOK_VERSIONS[adapter]) {
+  if(adapter==='codex-cli') {
+    const command=[runtime,join(releaseDir,'adapters/codex.mjs'),'launch',descriptorPath].map(quote).join(' ');
+    files.push({path:join(home,'.local/bin/codex-memory'),mode:0o700,content:`#!/bin/sh\nexec ${command} \"$@\"\n`});
+  } else if (HOOK_VERSIONS[adapter]) {
     const path = adapter === 'claude-code' ? join(home, '.claude', 'settings.json') : join(home, '.codex', 'hooks.json');
     const command = [runtime, join(releaseDir, 'adapters', 'hook.mjs'), adapter, descriptorPath].map(quote).join(' ');
     for (const event of ['SessionStart', 'UserPromptSubmit', 'Stop', ...(adapter === 'claude-code' ? ['StopFailure'] : [])]) {

@@ -1,6 +1,5 @@
 import { pathToFileURL } from 'node:url';
 import { AdapterError, diagnostic, envelope, jsonLines, makeInvoker, readBounded, readPrivateJson, readTranscript, requireValue } from './common.mjs';
-import { claudeTranscript, codexTranscript, codexRoute } from './transcripts.mjs';
 
 export const HOOK_VERSIONS = Object.freeze({
   'claude-code': ['2.1.302'],
@@ -38,36 +37,8 @@ export function handleHook(agent, input, descriptor, invoke = makeInvoker(descri
     invoke('complete-turn', { ...base, turn_id: input.prompt_id, text: input.last_assistant_message });
     return {};
   }
-  if (event === 'UserPromptSubmit') {
-    requireValue(typeof input.transcript_path==='string','missing_transcript');
-    codexRoute(jsonLines(read(input.transcript_path)),input.session_id,descriptor.agentVersion);
-    requireValue(typeof input.prompt === 'string', 'missing_prompt');
-    const state = invoke('session-status', base);
-    requireValue(state.status === 'registered', 'session_not_registered');
-    if (typeof input.turn_id !== 'string') return {};
-    const result = invoke('recall', { ...base, query: input.prompt, turn_id: input.turn_id });
-    if (result.status === 'recalled' && typeof result.context === 'string') {
-      return { hookSpecificOutput: { hookEventName: event, additionalContext: result.context } };
-    }
-    return {};
-  }
-  requireValue(['SessionStart', 'Stop'].includes(event), 'unsupported_native_event');
-  requireValue(typeof input.transcript_path === 'string', 'missing_transcript');
-  const rows = jsonLines(read(input.transcript_path));
-  const messages = agent === 'claude-code'
-    ? claudeTranscript(rows, input.session_id)
-    : codexTranscript(rows, input.session_id, event === 'Stop' ? input : null, descriptor.agentVersion);
-  if (event === 'SessionStart') {
-    requireValue(['startup', 'resume', 'clear', 'fork'].includes(input.source), 'unsupported_start_boundary');
-    invoke('session', { ...base, baseline: messages, fresh: ['startup', 'clear'].includes(input.source) && messages.length === 0 });
-  } else {
-    if (agent === 'claude-code') {
-      requireValue(messages.at(-1)?.role === 'assistant' && typeof input.last_assistant_message === 'string'
-        && messages.at(-1).text === input.last_assistant_message, 'incomplete_turn_boundary');
-    }
-    invoke('capture-transcript', { ...base, messages });
-  }
-  return {};
+  // Codex capture is available only through the scoped native caller binding.
+  requireValue(false, 'scoped_codex_launch_required');
 }
 
 export function main(args = process.argv.slice(2)) {

@@ -69,22 +69,10 @@ const codexRows = [
   { type: 'event_msg', payload: { type: 'agent_reasoning', text: 'REASONING_SENTINEL' } },
   { type: 'event_msg', payload: { type: 'task_complete', turn_id: 'old', last_agent_message: 'OLD_ANSWER_SENTINEL' } },
 ];
-test('Codex supplies explicit old baseline, then full immutable snapshot to core suffix validation', () => {
-  const { calls, invoke } = recorder();
-  const d = { ...descriptor, agentVersion: '0.163.0' };
-  handleHook('codex-cli', { ...baseHook, hook_event_name: 'SessionStart', source: 'resume' }, d, invoke, () => jsonl(codexRows));
-  const next = [...codexRows,
-    { type: 'event_msg', payload: { type: 'task_started', turn_id: 'new' } },
-    { type: 'event_msg', payload: { type: 'user_message', message: 'new text' } },
-  ];
-  handleHook('codex-cli', { ...baseHook, hook_event_name: 'Stop', turn_id: 'new', last_assistant_message: 'new answer' }, d, invoke, () => jsonl(next));
-  assert.equal(calls[0].command, 'session');
-  assert.equal(calls[0].input.baseline.length, 2);
-  assert.equal(calls[1].command, 'capture-transcript');
-  assert.equal(calls[1].input.messages.length, 4);
-  assert.deepEqual(calls[1].input.messages.slice(0, 2), calls[0].input.baseline);
-  assert(!JSON.stringify(calls).includes('TOOL_SENTINEL'));
-  assert(!JSON.stringify(calls).includes('REASONING_SENTINEL'));
+test('Codex generic hook route refuses transcript capture without scoped caller binding', () => {
+  const {calls,invoke}=recorder();const d={...descriptor,agentVersion:'0.163.0'};
+  for(const event of ['SessionStart','UserPromptSubmit','Stop'])assert.throws(()=>handleHook('codex-cli',{...baseHook,hook_event_name:event,source:'startup',turn_id:'turn',prompt:'question',last_assistant_message:'answer'},d,invoke,()=>assert.fail('no transcript read')),/scoped_codex_launch_required/);
+  assert.equal(calls.length,0);
 });
 test('Codex refuses missing/mismatched session, unclosed old turns and rollback markers', () => {
   assert.throws(() => codexTranscript(codexRows, 'other'));
@@ -222,12 +210,8 @@ test('Descriptor/transcript reads reject permissive descriptors and symlinks in 
     symlinkSync(root, join(root, 'alias')); assert.throws(() => readTranscript(join(root, 'alias', 'descriptor.json')));
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
-test('Codex prompt recall rechecks actual native route/version before any core call',()=>{
- const d={...descriptor,agentVersion:'0.163.0'};const input={...baseHook,hook_event_name:'UserPromptSubmit',turn_id:'new',prompt:'new prompt'};
- for(const payload of [{id:'s',source:'desktop',cli_version:'0.163.0'},{id:'s',source:'cli',cli_version:'0.162.0'},{id:'other',source:'cli',cli_version:'0.163.0'}]){
-  const {calls,invoke}=recorder();assert.throws(()=>handleHook('codex-cli',input,d,invoke,()=>jsonl([{type:'session_meta',payload}])));assert.equal(calls.length,0);
- }
- const {calls,invoke}=recorder();handleHook('codex-cli',input,d,invoke,()=>jsonl(codexRows));assert.deepEqual(calls.map(call=>call.command),['session-status','recall']);
+test('Codex generic prompt hook never invokes core even with native-looking transcript',()=>{
+ const {calls,invoke}=recorder();assert.throws(()=>handleHook('codex-cli',{...baseHook,hook_event_name:'UserPromptSubmit',turn_id:'turn',prompt:'question'},{...descriptor,agentVersion:'0.163.0'},invoke,()=>jsonl(codexRows)),/scoped_codex_launch_required/);assert.equal(calls.length,0);
 });
 
 test('native recall invocation shares the eight-second deadline with the core',()=>{

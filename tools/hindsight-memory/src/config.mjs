@@ -61,7 +61,7 @@ export function validateConfig(value) {
   const endpoint = url.origin;
   let owners={};
   if(value.capture_owners!==undefined){
-    if(!value.capture_owners || typeof value.capture_owners!=='object' || Array.isArray(value.capture_owners) || Object.entries(value.capture_owners).some(([adapter,owner])=>adapter!=='pi' || typeof owner!=='string' || !/^[a-f0-9]{64}$/.test(owner)))fail('invalid-capture-owner-selection');
+    if(!value.capture_owners || typeof value.capture_owners!=='object' || Array.isArray(value.capture_owners) || Object.entries(value.capture_owners).some(([adapter,owner])=>!['pi','codex-cli'].includes(adapter) || typeof owner!=='string' || !/^[a-f0-9]{64}$/.test(owner)))fail('invalid-capture-owner-selection');
     owners={capture_owners:{...value.capture_owners}};
   }
   return {schema_version: 1, endpoint, bank: value.bank, secret_file: value.secret_file, adapters: [...new Set(value.adapters)], agent_commands: value.agent_commands && typeof value.agent_commands==='object' && !Array.isArray(value.agent_commands)?value.agent_commands:{}, agent_versions: value.agent_versions && typeof value.agent_versions === 'object' && !Array.isArray(value.agent_versions) ? value.agent_versions : {}, ...owners, capture: true};

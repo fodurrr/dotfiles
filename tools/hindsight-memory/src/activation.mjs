@@ -6,12 +6,13 @@ import {readPrivate,hash,fail} from './config.mjs';
 import {inspectAgent,qualifyAgent} from './qualification.mjs';
 import {adapterArtifacts} from '../adapters/manage.mjs';
 import {PI_ELF_SHA256,PI_VERSIONS} from '../adapters/pi.mjs';
+import {CODEX_ELF_SHA256,CODEX_VERSIONS} from '../adapters/codex.mjs';
 
 // Dependency injection is used only by harmless fixtures. CLI supplies the defaults.
 export function activationPlans(p,config,{qualify=false,platform=process.platform,sourceDir=fileURLToPath(new URL('..',import.meta.url)),inspectAgentImpl=inspectAgent,qualifyAgentImpl=qualifyAgent}={}) {
   const installation=JSON.parse(readPrivate(path.join(p.data,'installation.json')));
-  const solePi=config.adapters.length===1 && config.adapters[0]==='pi' && platform==='linux' && PI_VERSIONS.includes(config.agent_versions.pi);
-  if(qualify && !solePi)fail('native-caller-binding-unqualified');
+  const qualifiedRoutes=platform==='linux' && config.adapters.every(adapter=>adapter==='pi'?PI_VERSIONS.includes(config.agent_versions.pi):adapter==='codex-cli' && CODEX_VERSIONS.includes(config.agent_versions['codex-cli']));
+  if(qualify && !qualifiedRoutes)fail('native-caller-binding-unqualified');
   const installedRelease=path.resolve(sourceDir)===fs.realpathSync(installation.release);
   if(qualify && !installedRelease)fail('use-installed-release-command');
   const plans=[];
@@ -22,34 +23,35 @@ export function activationPlans(p,config,{qualify=false,platform=process.platfor
     const plan=adapterArtifacts({adapter,version:config.agent_versions[adapter],runtime:installation.runtime.path,cli:path.join(installation.release,'src/cli.mjs'),releaseDir:installation.release,descriptorPath,owner,home:p.home,configHome:p.configHome});
     plan.descriptor.runtime_identity=installation.runtime;
     plan.activation_blocker='native-caller-binding-unqualified';
-    if(adapter==='pi') {
-      const selected=config.capture_owners?.pi || null;
+    if(['pi','codex-cli'].includes(adapter)) {
+      const selected=config.capture_owners?.[adapter] || null;
       const selectionBlocker=!selected?'capture-owner-selection-required':selected!==owner?'capture-owner-selection-mismatch':null;
       plan.capture_owner=owner;
       plan.capture_owner_selection={required:true,selected,matches:selected===owner};
       plan.installed_writers_verified=false;
       const bridge=plan.files[0].path;
-      plan.launch={executable:config.agent_commands.pi || null,args:['--no-extensions','-e',bridge],unset_environment:['NODE_OPTIONS','BUN_OPTIONS','LD_PRELOAD','LD_LIBRARY_PATH'],requires:'fresh-/new-TUI-consent'};
-      if(solePi) {
+      plan.launch=adapter==='pi'?{executable:config.agent_commands.pi || null,args:['--no-extensions','-e',bridge],unset_environment:['NODE_OPTIONS','BUN_OPTIONS','LD_PRELOAD','LD_LIBRARY_PATH'],requires:'fresh-/new-TUI-consent'}:{executable:bridge,args:[],requires:'isolated-interactive-startup-native-hook-trust',profile:path.join(p.state,'codex-profile')};
+      if(qualifiedRoutes) {
         // Selection binds the generated writer to this host/destination. It never
         // claims that other installed writers were discovered or disabled.
         if(qualify && selectionBlocker)fail(selectionBlocker);
         let identity;
-        try {identity=inspectAgentImpl(config.agent_commands.pi);} catch(error) {
+        try {identity=inspectAgentImpl(config.agent_commands[adapter]);} catch(error) {
           if(qualify)throw error;
           plan.activation_blocker=typeof error.code==='string'?error.code:'agent-command-inspection-failed';
         }
         if(identity) {
-          if(identity.sha256!==PI_ELF_SHA256) {
+          if(identity.sha256!==(adapter==='pi'?PI_ELF_SHA256:CODEX_ELF_SHA256)) {
             if(qualify)fail('native-caller-binding-unqualified');
           } else {
             if(qualify) {
-              const probed=qualifyAgentImpl(config.agent_commands.pi,config.agent_versions.pi);
-              if(JSON.stringify(probed)!==JSON.stringify({...identity,version:config.agent_versions.pi}))fail('agent-changed-during-qualification');
+              const probed=qualifyAgentImpl(config.agent_commands[adapter],config.agent_versions[adapter]);
+              if(JSON.stringify(probed)!==JSON.stringify({...identity,version:config.agent_versions[adapter]}))fail('agent-changed-during-qualification');
               plan.descriptor.agent_identity=probed;
             }
-            plan.launch.executable=identity.path;
-            plan.qualification='prepared-native-fixture-qualified';
+            if(adapter==='pi')plan.launch.executable=identity.path;
+            else plan.launch.agent_executable=identity.path;
+            plan.qualification=adapter==='pi'?'prepared-native-fixture-qualified':'scoped-native-candidate-qualified';
             plan.activation_blocker=installedRelease?selectionBlocker:'use-installed-release-command';
           }
         }

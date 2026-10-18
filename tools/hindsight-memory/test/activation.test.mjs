@@ -105,3 +105,20 @@ test('actual CLI owner and executable refusals preserve active consent and owned
   }
   const stale=run(f.home,'activate');assert.equal(stale.data.reason,'use-installed-release-command');assert.equal(fs.existsSync(sentinel),false);
 });
+test('Pi and scoped Codex can activate together with separate selected owners and pinned native identities',async t=>{
+  const {CODEX_ELF_SHA256}=await import('../adapters/codex.mjs');
+  const f=fixture(t);const command=path.join(f.home,'codex');
+  const config={...f.config,adapters:['pi','codex-cli'],agent_versions:{pi:'1.3.0','codex-cli':'0.163.0'},agent_commands:{pi:f.config.agent_commands.pi,'codex-cli':command}};
+  const identities={pi:f.identity,[command]:{requested:command,path:command,dev:1,ino:4,size:200,mtimeMs:5,sha256:CODEX_ELF_SHA256}};
+  const options={...f.options,inspectAgentImpl:requested=>requested===f.config.agent_commands.pi?identities.pi:identities[requested],qualifyAgentImpl:(requested,version)=>({...((requested===f.config.agent_commands.pi)?identities.pi:identities[requested]),version})};
+  const preview=activationPlans(f.p,config,options);assert.deepEqual(preview.map(p=>p.id),['pi','codex-cli']);
+  assert.notEqual(preview[0].capture_owner,preview[1].capture_owner);
+  const selected={...config,capture_owners:Object.fromEntries(preview.map(p=>[p.id,p.capture_owner]))};
+  const plans=activationPlans(f.p,selected,{...options,qualify:true});
+  assert(plans.every(p=>p.activation_blocker===null));assert.equal(plans[1].jsonPatches.length,0);
+  assert.equal(plans[1].launch.executable,path.join(f.home,'.local/bin/codex-memory'));
+  assert.equal(plans[1].qualification,'scoped-native-candidate-qualified');
+  assert.equal(plans[1].descriptor.agent_identity.sha256,CODEX_ELF_SHA256);
+  assert.deepEqual(validateConfig(selected).capture_owners,selected.capture_owners);
+  assert.throws(()=>activationPlans(f.p,{...selected,capture_owners:{pi:plans[0].capture_owner,'codex-cli':plans[0].capture_owner}},{...options,qualify:true}),/selection-mismatch/);
+});
