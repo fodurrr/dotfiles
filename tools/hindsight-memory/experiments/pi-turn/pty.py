@@ -2,10 +2,11 @@
 import base64, errno, fcntl, json, os, pty, resource, select, signal, struct, sys, termios, time
 
 mode = sys.argv[1] if len(sys.argv) == 2 else ''
-if mode not in ('native', 'preflight', 'linger', 'deadline', 'overflow'):
+if mode not in ('native', 'qualification', 'preflight', 'linger', 'deadline', 'overflow'):
     raise RuntimeError('fixed-pty-mode-required')
-command = ['/pi/pi', '--no-extensions', '-e', '/work/sole-bridge.mjs'] if mode == 'native' else ['/runtime/node', '/pi-turn/surrogate.mjs', mode]
-limit = 45 if mode == 'native' else (0.3 if mode == 'deadline' else 10)
+bridge = '/home/fixture/.pi/agent/extensions/hindsight-memory.js' if mode == 'qualification' else '/work/sole-bridge.mjs'
+command = ['/pi/pi', '--no-extensions', '-e', bridge] if mode in ('native', 'qualification') else ['/runtime/node', '/pi-turn/surrogate.mjs', mode]
+limit = 45 if mode in ('native', 'qualification') else (0.3 if mode == 'deadline' else 10)
 cap = 128 * 1024
 pid, master = pty.fork()
 if pid == 0:

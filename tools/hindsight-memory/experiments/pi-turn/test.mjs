@@ -5,9 +5,9 @@ import { execFileSync } from 'node:child_process';
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ENV, PI_ARGS, TEXT, PYTHON, PYTHON_FILES, sandboxArgs } from './policy.mjs';
+import { ENV, PI_ARGS, QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, TEXT, PYTHON, PYTHON_FILES, PIN, sandboxArgs } from './policy.mjs';
 import { fixtureServices } from './services.mjs';
-import { sourceCheckout, runExperiment } from './run.mjs';
+import { sourceCheckout, runExperiment, prepareRelease } from './run.mjs';
 import { savePrivate, readEvidence } from '../pi-launch/safe-output.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 test('fixed native arguments and mounts preserve the sole bridge and private namespaces', () => {
@@ -24,7 +24,35 @@ test('fixed native arguments and mounts preserve the sole bridge and private nam
 });
 test('native mode requires an explicit CLI flag and cannot run from default test imports', async () => {
   await assert.rejects(runExperiment({ native: true }), /explicit-native-flag-required/);
+  await assert.rejects(runExperiment({ native: true, qualification: true }), /explicit-native-flag-required/);
   assert.match(sourceCheckout().commit, /^[a-f0-9]{40}$/);
+});
+test('qualification uses a real prepared release and never mounts component source files', t => {
+  const root = mkdtempSync('/var/tmp/pi-turn-prepared-'); chmodSync(root, 0o700); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const prepared = prepareRelease(root);
+  assert.equal(prepared.runtime.path, PIN.runtime);
+  assert(!readFileSync(join(prepared.release, 'src/cli.mjs'), 'utf8').includes('placeholder'));
+  const args = sandboxArgs({ experiment: here, output: '/private/output', input: '/private/input', mode: 'qualification', prepared });
+  const component = join(here, '../..');
+  for (let index = 0; index < args.length; index++) if (args[index] === '--ro-bind') {
+    assert(!args[index + 1].startsWith(component + '/src/'));
+    assert(!args[index + 1].startsWith(component + '/adapters/'));
+  }
+  assert(args.includes(join(prepared.release, 'src/cli.mjs')));
+  assert.deepEqual(QUALIFICATION_ARGS, ['--no-extensions', '-e', '/home/fixture/.pi/agent/extensions/hindsight-memory.js']);
+});
+test('qualification fixture holds exactly the cancellable stream and rejects extra recall on later prompts', async t => {
+  const services = await fixtureServices({ qualification: true }); t.after(() => services.close());
+  const send = content => fetch(`${services.provider}/v1/chat/completions`, { method: 'POST', headers: { authorization: 'Bearer fixture-only' },
+    body: JSON.stringify({ model: 'fixture', stream: true, messages: [{ role: 'user', content }] }) });
+  const positive = await send(`${Q.positive} ${TEXT.recall}`); assert.equal(positive.status, 200); await positive.text();
+  const first = await send(`${Q.cancel} ${TEXT.recall}`); assert.equal(first.status, 200);
+  await first.body.cancel();
+  for (const prompt of [Q.afterCancel, Q.switched, Q.resumed]) {
+    const response = await send(prompt); assert.equal(response.status, 200); assert((await response.text()).includes(Q.answer));
+  }
+  services.check(); assert.equal(services.evidence.provider.length, 5);
+  const bad = await send(Q.resumed); assert.equal(bad.status, 400); assert.throws(services.check, /unexpected-provider-body/);
 });
 test('native clean-source gate detects both changed component files and untracked experiment files from its nested directory', t => {
   const root = mkdtempSync('/var/tmp/pi-turn-git-'); t.after(() => rmSync(root, { recursive: true, force: true }));
@@ -89,8 +117,8 @@ test('guarded evidence paths reject sandbox links while preserving the host targ
   assert.equal(readFileSync(victim, 'utf8'), 'unchanged'); savePrivate(join(root, 'report.json'), { failed: true });
   assert.equal(JSON.parse(readEvidence(join(root, 'report.json')).text).failed, true);
 });
-test('harmless confined PTY preflights validate services, namespaces, limits and both death cleanup paths', { timeout: 120000 }, async t => {
-  const result = await runExperiment(); t.diagnostic(JSON.stringify(result)); assert.equal(result.status, 'passed', JSON.stringify(result));
+test('harmless prepared-release PTY preflights validate services, namespaces, limits and both death cleanup paths', { timeout: 120000 }, async t => {
+  const result = await runExperiment({ qualification: true }); t.diagnostic(JSON.stringify(result)); assert.equal(result.status, 'passed', JSON.stringify(result));
   assert.equal(result.nativeExecuted, false);
   assert.deepEqual(result.phases.map(phase => phase.phase), ['preflight', 'deadline', 'overflow', 'inner-supervisor-death', 'outer-parent-death']);
   const report = JSON.parse(readEvidence(result.report).text); assert(report.phases.every(phase => phase.cleanup === 'reaped' && phase.nativeExecuted === false));

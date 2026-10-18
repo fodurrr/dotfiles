@@ -6,14 +6,15 @@ import { paths, privateDir, writePrivate, validateConfig } from '/component/src/
 import { Store } from '/component/src/state.mjs';
 import { ENV, FILES, SHARED, COMPONENT, PYTHON_FILES, PYTHON, LIMIT, PI_ARGS, TEXT, demand } from './policy.mjs';
 import { runningArtifact } from '../pi-launch/identity.mjs';
+import { runQualification } from './qualification.mjs';
 import { fixtureServices } from './services.mjs';
 const input = JSON.parse(readFileSync('/input/config.json', 'utf8'));
 const mode = process.argv[2];
 process.umask(0o077);
 let driver, services, store;
-const output = { schema: 1, complete: false, phase: mode, nativeExecuted: false, nativeLaunchAttempted: false, nativeExecutionEvidence: mode === 'native' ? 'not-observed' : 'not-requested', driverStarted: false };
+const output = { schema: 1, complete: false, phase: mode, nativeExecuted: false, nativeLaunchAttempted: false, nativeExecutionEvidence: ['native', 'qualification'].includes(mode) ? 'not-observed' : 'not-requested', driverStarted: false };
 function tty() {
-  if (mode === 'native') output.nativeLaunchAttempted = true;
+  if (['native', 'qualification'].includes(mode)) output.nativeLaunchAttempted = true;
   const child = spawn(PYTHON, ['-I', '-S', '-B', '/pi-turn/pty.py', mode], { shell: false, env: { ...ENV }, stdio: ['pipe', 'pipe', 'pipe'] });
   child.once('spawn', () => { output.driverStarted = true; });
   const frames = []; let pending = ''; let bytes = 0; let failure = null; let text = ''; let stderr = '';
@@ -52,7 +53,9 @@ async function confinement() {
   }
   demand(Object.keys(process.env).sort().join() === Object.keys(ENV).sort().join(), 'unexpected-environment');
   for (const [key, value] of Object.entries(ENV)) demand(process.env[key] === value, 'unexpected-environment-value');
-  for (const path of [...input.hidden, '/run', '/home/fodurrr', '/root/.ssh']) demand(!existsSync(path), 'host-path-exposed');
+  // A prepared runtime alias creates empty ancestors under /home/fodurrr.
+  // No host HOME directory is bound; only that exact runtime file is available.
+  for (const path of [...input.hidden, '/run', ...(input.prepared ? ['/home/fodurrr/.ssh', '/home/fodurrr/.config'] : ['/home/fodurrr']), '/root/.ssh']) demand(!existsSync(path), 'host-path-exposed');
   const descriptors = readdirSync('/proc/self/fd').flatMap(fd => { try { return [{ fd: Number(fd), target: readlinkSync(`/proc/self/fd/${fd}`) }]; } catch { return []; } });
   demand(descriptors.find(fd => fd.fd === 0)?.target === '/dev/null', 'stdin-not-null');
   for (const fd of descriptors) demand(!input.hidden.some(path => fd.target.includes(path)), 'host-fd-exposed');
@@ -70,7 +73,7 @@ async function confinement() {
     socket.once('connect', () => { socket.destroy(); reject(new Error('host-network-reachable')); });
     socket.once('error', error => ['ECONNREFUSED', 'ENETUNREACH', 'EHOSTUNREACH'].includes(error.code) ? resolve() : reject(error));
   });
-  services = await fixtureServices();
+  services = await fixtureServices({ qualification: mode === 'qualification' });
   for (const endpoint of [services.provider, services.memory]) {
     const response = await fetch(`${endpoint}/health`, { signal: AbortSignal.timeout(500) }); demand(response.ok, 'same-netns-service-unreachable');
   }
@@ -138,7 +141,9 @@ async function native() {
 }
 try {
   output.confinement = await confinement();
-  if (mode === 'native') await native();
+  if (mode === 'qualification') {
+    const value = await runQualification({ input, output, services, tty: () => (driver = tty()), waitFor, setStore: value => (store = value) }); store = value.store; driver = value.driver;
+  } else if (mode === 'native') await native();
   else {
     // Exercise the real native setup without importing or starting a native client.
     if (mode === 'preflight') prepareNative();

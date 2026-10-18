@@ -47,16 +47,20 @@ export const PYTHON_FILES = [
   "/usr/lib/python3.14/zipimport.py"
 ];
 export const PYTHON_LIBRARIES = ['libexpat.so.1', 'libz.so.1'];
-export const FILES = ['policy.mjs', 'supervisor.mjs', 'services.mjs', 'pty.py', 'surrogate.mjs'];
+export const FILES = ['policy.mjs', 'supervisor.mjs', 'services.mjs', 'qualification.mjs', 'pty.py', 'surrogate.mjs'];
 export const SHARED = ['policy.mjs', 'identity.mjs', 'processes.mjs', 'safe-output.mjs'];
 export const COMPONENT = ['package.json', ...['capture', 'cli', 'config', 'delivery', 'ownership', 'qualification', 'state'].map(x => `src/${x}.mjs`),
   ...['common', 'hook', 'manage', 'opencode-v1', 'opencode-v2', 'pi', 'transcripts'].map(x => `adapters/${x}.mjs`)];
 export const PI_ARGS = Object.freeze(['--no-extensions', '-e', '/work/sole-bridge.mjs']);
+export const QUALIFICATION_ARGS = Object.freeze(['--no-extensions', '-e', '/home/fixture/.pi/agent/extensions/hindsight-memory.js']);
+export const QUALIFICATION_REQUEST_LIMIT = 16;
+export const QUALIFICATION_TEXT = Object.freeze({ positive: 'QUALIFICATION_POSITIVE_SENTINEL', cancel: 'QUALIFICATION_CANCEL_SENTINEL', afterCancel: 'QUALIFICATION_POST_CANCEL_SENTINEL',
+  switched: 'QUALIFICATION_SWITCHED_SENTINEL', resumed: 'QUALIFICATION_RESUMED_SENTINEL', answer: 'QUALIFICATION_ANSWER_SENTINEL' });
 export const TEXT = Object.freeze({ history: 'HISTORY_EXCLUSION_SENTINEL', historyAnswer: 'HISTORY_ANSWER_SENTINEL',
   prompt: 'Synthetic Pi turn: say TURN_FINAL_SENTINEL.', final: 'TURN_FINAL_SENTINEL', recall: 'RECALL_EXCLUSION_SENTINEL' });
-export function sandboxArgs({ experiment, output, input, mode }) {
-  demand(['preflight', 'native', 'linger', 'deadline', 'overflow'].includes(mode), 'unknown-phase');
-  const launch = join(experiment, '../pi-launch'); const component = join(experiment, '../..');
+export function sandboxArgs({ experiment, output, input, mode, prepared = null }) {
+  demand(['preflight', 'native', 'qualification', 'linger', 'deadline', 'overflow'].includes(mode), 'unknown-phase');
+  const launch = join(experiment, '../pi-launch'); const component = prepared?.release ?? join(experiment, '../..');
   const args = ['--unshare-user', '--unshare-pid', '--unshare-net', '--unshare-ipc', '--unshare-uts', '--new-session', '--die-with-parent', '--cap-drop', 'ALL',
     '--clearenv', '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp', '--tmpfs', '/home', '--dir', '/home/fixture', '--perms', '0700', '--tmpfs', '/agent',
     '--tmpfs', '/sessions', '--tmpfs', '/xdg', '--tmpfs', '/work', '--dir', '/runtime', '--dir', '/experiment', '--dir', '/pi-turn', '--dir', '/pi-launch', '--dir', '/component', '--dir', '/input',
@@ -65,6 +69,10 @@ export function sandboxArgs({ experiment, output, input, mode }) {
   for (const file of FILES) args.push('--ro-bind', join(experiment, file), `/pi-turn/${file}`);
   for (const file of SHARED) args.push('--ro-bind', join(launch, file), `/pi-launch/${file}`);
   for (const file of COMPONENT) args.push('--ro-bind', join(component, file), `/component/${file}`);
+  if (prepared) {
+    args.push('--ro-bind', PIN.runtime, PIN.runtime);
+    for (const file of COMPONENT) args.push('--ro-bind', join(component, file), join(component, file));
+  }
   for (const lib of [...LIBRARIES, ...PYTHON_LIBRARIES]) args.push('--ro-bind', realpathSync(`/lib/x86_64-linux-gnu/${lib}`), `/lib/x86_64-linux-gnu/${lib}`);
   args.push('--symlink', '/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2', '/lib64/ld-linux-x86-64.so.2',
     '--ro-bind', input, '/input/config.json', '--ro-bind', join(output, 'readonly-sentinel'), '/input/readonly-sentinel', '--bind', output, '/output', '--chdir', '/work');
