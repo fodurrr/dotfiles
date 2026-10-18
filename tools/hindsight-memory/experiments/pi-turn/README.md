@@ -168,4 +168,41 @@ barrier waits for the real bridge's startup refusal diagnostic and the terminal
 title set after extension binding and agent subscription. This follows pinned
 `interactive-mode.ts` initialization and `rebindCurrentSession` ordering. It adds
 no PTY write, delay, callback observer or product change. A regression rejects
-the observed early banner. Only one corrected native run remains in this budget.
+the observed early banner. The corrected run below consumed the sole retry.
+
+### Qualification results saved on 2026-10-18
+
+The corrected run **passed** at clean source
+`ae83170f9bfa023a86440b0749ae4d7a5a999042`. It ran from
+`2026-10-18T18:01:34.485Z` to `2026-10-18T18:01:45.804Z`, including all five
+harmless preflights. The private report is
+`/var/tmp/hindsight-pi-turn-E5x7NJ/report.json`. The first failed report remains
+preserved. Both attempts exhausted this phase's native budget; no third run occurs.
+
+| Check | Observed result |
+|---|---|
+| Prepared release | `0.1.0-21191baf389da5b8`; source checkout absent; unchanged generated bridge; pinned Node and exact Pi ELF |
+| Completed positive pair | Two exact retained messages, two completed operations/jobs; one recall; cursor advanced for that pair |
+| Cancelled request | Native aborted assistant and closed stream; stage removed; no cancelled pair admitted |
+| Consent after cancel | Completed ordinary answer; no additional recall, messages, jobs or cursor advance |
+| Switch and declined consent | Different native session; completed answer; no inherited capture |
+| Native resume | Original session JSONL selected; completed answer; no inherited capture |
+| Writer owner | `isolated-pi-qualification`; second owner refused with `session-owner-conflict` |
+| Exact requests | 15: two health, five model, two recall, two profile, two retain, two polls |
+| Shutdown and cleanup | Native PTY deliberately stopped with status `-9`, reaped; 33,443 terminal bytes; all phases reaped; no cleanup failure |
+
+All negative checkpoints retained exactly two accepted messages/jobs from the
+positive pair, with zero staged turns. The cancelled request had its own recall
+before abort; no later prompt recalled memory. Native JSONL proves the actual
+session change and resume. No observer callback was installed.
+
+Preparation and fixture tests passed **11/11**, including all five harmless
+preflights using the prepared mount layout. Separate request-counter and startup
+barrier regressions each passed **1/1** after supported review/failure corrections.
+These were targeted checks, not a repeated whole-component suite.
+
+This qualifies the confined generated-bridge path and tested native lifecycle
+boundaries. It does not qualify unrestricted launch arguments, live installed
+writer ownership, real service authentication/reconciliation, host permissions,
+other agents/platforms, performance or final ExitGate. Production activation
+still refuses `native-caller-binding-unqualified`; no installed configuration changed.
