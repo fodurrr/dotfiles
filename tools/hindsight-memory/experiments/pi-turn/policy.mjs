@@ -56,6 +56,11 @@ export const QUALIFICATION_ARGS = Object.freeze(['--no-extensions', '-e', '/home
 export const QUALIFICATION_REQUEST_LIMIT = 16;
 export const QUALIFICATION_TEXT = Object.freeze({ positive: 'QUALIFICATION_POSITIVE_SENTINEL', cancel: 'QUALIFICATION_CANCEL_SENTINEL', afterCancel: 'QUALIFICATION_POST_CANCEL_SENTINEL',
   switched: 'QUALIFICATION_SWITCHED_SENTINEL', resumed: 'QUALIFICATION_RESUMED_SENTINEL', answer: 'QUALIFICATION_ANSWER_SENTINEL' });
+// Pinned interactive init installs real submission before binding extensions.
+// rebindCurrentSession updates the title after that binding and agent subscription.
+export function qualificationStartupReady(text) {
+  return text.includes('hindsight-memory: pi_fresh_session_required;') && text.includes('\u001b]0;π - work\u0007');
+}
 export const TEXT = Object.freeze({ history: 'HISTORY_EXCLUSION_SENTINEL', historyAnswer: 'HISTORY_ANSWER_SENTINEL',
   prompt: 'Synthetic Pi turn: say TURN_FINAL_SENTINEL.', final: 'TURN_FINAL_SENTINEL', recall: 'RECALL_EXCLUSION_SENTINEL' });
 export function sandboxArgs({ experiment, output, input, mode, prepared = null }) {

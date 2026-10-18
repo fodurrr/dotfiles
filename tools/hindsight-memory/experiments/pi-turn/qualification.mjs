@@ -5,7 +5,7 @@ import { paths, privateDir, writePrivate, validateConfig, hash } from '/componen
 import { Store } from '/component/src/state.mjs';
 import { adapterArtifacts } from '/component/adapters/manage.mjs';
 import { runningArtifact } from '../pi-launch/identity.mjs';
-import { QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, PIN, demand } from './policy.mjs';
+import { QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, PIN, demand, qualificationStartupReady } from './policy.mjs';
 
 function sessions() {
   const files = [];
@@ -56,7 +56,7 @@ export async function runQualification({ input, output, services, tty, waitFor, 
       output.nativeExecuted = true; output.nativeExecutionEvidence = 'exact-elf-observed'; output.nativeProcess = live; return true;
     } catch { return false; }
   }, 'qualification-executable-not-observed');
-  await waitFor(() => driver.text.includes('fixture'), 'qualification-startup-ui-not-observed');
+  await waitFor(() => qualificationStartupReady(driver.text), 'qualification-startup-ui-not-observed');
   driver.write('/new\r');
   await waitFor(() => driver.text.includes('Personal Hindsight memory') && driver.text.includes(services.memory), 'qualification-consent-not-observed');
   driver.write(input.consentKeys);

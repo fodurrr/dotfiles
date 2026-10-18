@@ -153,3 +153,19 @@ The native process is deliberately stopped and reaped after assertions.
 
 No real service, credentials, personal bank, installed writer or host permission
 is accessed or changed. Publication, main merge and live rollout need approval.
+
+### Corrected startup barrier
+
+The first qualification run at `15adbff` failed with
+`qualification-consent-not-observed`. Its report is
+`/var/tmp/hindsight-pi-turn-naGmv1/report.json`. The generated bridge and exact ELF
+were observed, and the PTY was stopped and reaped. No cleanup failure was recorded.
+Fixture request/admission totals were not saved before that failure and are unknown.
+
+The harmless model-scope banner appeared before real submission was enabled.
+The initial `/new` therefore reached Pi's startup feedback handler. The corrected
+barrier waits for the real bridge's startup refusal diagnostic and the terminal
+title set after extension binding and agent subscription. This follows pinned
+`interactive-mode.ts` initialization and `rebindCurrentSession` ordering. It adds
+no PTY write, delay, callback observer or product change. A regression rejects
+the observed early banner. Only one corrected native run remains in this budget.

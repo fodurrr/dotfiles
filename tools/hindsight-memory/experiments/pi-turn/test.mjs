@@ -5,11 +5,18 @@ import { execFileSync } from 'node:child_process';
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ENV, PI_ARGS, QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, TEXT, PYTHON, PYTHON_FILES, PIN, sandboxArgs } from './policy.mjs';
+import { ENV, PI_ARGS, QUALIFICATION_ARGS, QUALIFICATION_TEXT as Q, TEXT, PYTHON, PYTHON_FILES, PIN, sandboxArgs, qualificationStartupReady } from './policy.mjs';
 import { fixtureServices } from './services.mjs';
 import { sourceCheckout, runExperiment, prepareRelease } from './run.mjs';
 import { savePrivate, readEvidence } from '../pi-launch/safe-output.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
+test('qualification startup rejects the observed early model banner and waits for completed native extension binding', () => {
+  const early = 'Model scope: fixture (Ctrl+P to cycle)\r\nStartup is still in progress';
+  assert.equal(qualificationStartupReady(early), false);
+  const bound = early + '\r\nhindsight-memory: pi_fresh_session_required; conversation continues; capture was not confirmed\r\n';
+  assert.equal(qualificationStartupReady(bound), false);
+  assert.equal(qualificationStartupReady(bound + '\u001b]0;π - work\u0007'), true);
+});
 test('fixed native arguments and mounts preserve the sole bridge and private namespaces', () => {
   assert.deepEqual(PI_ARGS, ['--no-extensions', '-e', '/work/sole-bridge.mjs']);
   const args = sandboxArgs({ experiment: here, output: '/private/output', input: '/private/input', mode: 'native' });
