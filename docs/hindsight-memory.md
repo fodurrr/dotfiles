@@ -163,8 +163,8 @@ next step is a full app quit/reopen after active work finishes, then a fresh ses
 Existing Claude hook capture and injected recall were observed again. Three later
 operations from that exact old session were pending. Each cancellation returned
 HTTP 200 and each follow-up status was `cancelled`. This brings the bounded total
-to **12 verified parent-operation cancellations**. The three latest responses still
-show child operations as `pending`; child cancellation was not verified. No memories
+to **12 parent cancellation acknowledgements and cancelled readbacks** at those
+checkpoints. Those readbacks did not establish child cancellation. No memories
 were deleted. The current cursor
 has `appendSupported:true`; 2,452 parsed turns alone does not prove another
 full-history replacement. No capture setting was disabled.
@@ -174,6 +174,20 @@ initialization was saved, but the shared backend can initialize tools for delega
 children. That does not prove main desktop capture or recall. Claude Chat still
 has no observed native Hindsight connection or actual `hindsight_diagnose` result.
 No API fact lookup was run because no fresh desktop test fact was found.
+
+The final exact-link check at **2026-10-18 21:07:46 UTC** inspected all 12 linked
+child operations. Two were cancelled and verified. Nine completed. One failed
+with `Task exceeded the 3600s wall-clock limit for 'batch_retain'`.
+That failed operation still reports 44 committed facts. No linked child was
+pending or processing at the final snapshot. A processing child completed before
+its cancellation request; DELETE returned HTTP 409 and GET confirmed `completed`.
+
+Earlier parent cancellation did not stop every child. Rechecking the original
+nine parents found eight `completed` and one `failed`, superseding their earlier
+`cancelled` readbacks. Old-session data has reached memory. No stored memory was
+deleted. Exact-link child checks used 27 API requests; this follow-up used 36
+including the three later parent cancellations. No fresh-session jobs were touched.
+The full bounded result is saved in `fresh-verification/child-cancellation.json`.
 
 **Subsequent user-reported fresh Claude Code result:** A genuinely new session
 listed nine Hindsight MCP tools and called four. Its diagnosis reported the
