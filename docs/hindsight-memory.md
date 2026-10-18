@@ -82,6 +82,65 @@ with timeout 60. This appends final assistant text after transcript flush.
 The normal `Stop` hook remains for per-turn capture. Both use one cursor.
 No vendor code or capture wrapper is changed.
 
+## Desktop applications
+
+Checked on **2026-10-18** using the installed official Linux desktop applications.
+CLI checks above do not substitute for desktop checks.
+
+| Desktop surface | Actual result | Remaining limit |
+|---|---|---|
+| Codex in ChatGPT desktop 26.1013.40934 | Its native backend 0.163.0-alpha.10.2 initialized the official Hindsight MCP server. All three official hooks have persisted trust entries. | Main desktop-session hook execution, capture and fresh recall remain unverified. Native UI controls were unavailable. |
+| Claude Desktop 2.42304.0, local Code | Its bundled Code 2.1.299 uses shared user hooks/MCP/settings. Actual desktop hooks injected recall and submitted retention. | Seven existing retention operations were pending when checked. No fresh desktop test or completed extraction is claimed. |
+| Claude Desktop Chat | Added the official Hindsight stdio MCP server to desktop settings. Its exact command initialized, listed eight tools and diagnosed the existing `fodurrr` bank. | The app still needs to load the new settings. Tools provide requested memory access; they do not automatically capture Chat transcripts. |
+| Claude Cowork | No dedicated automatic Hindsight capture support was established. | No Cowork change or working-capture claim. |
+
+Codex already reads the official MCP and hooks from `~/.codex`; no Codex setting
+changed. Its desktop backend differs from the separately installed CLI. Native
+MCP initialization was observed in its logs, but those rows rotated before export.
+The private report identifies this as an observation rather than a saved raw log.
+
+Claude Desktop Code shares `~/.claude/settings.json` and user MCP settings with
+Claude Code CLI. Desktop Chat uses a separate file:
+`~/.config/Claude/claude_desktop_config.json`. Only its `mcpServers.hindsight` key
+was added:
+
+```json
+{
+  "command": "/home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node",
+  "args": ["/home/fodurrr/.hindsight/coding-agents/dist/mcp-server.js"],
+  "env": {"HINDSIGHT_MCP_HARNESS": "claude-desktop"}
+}
+```
+
+This uses the unmodified official server and protected shared Hindsight settings.
+No token was copied into desktop settings. No custom integration or wrapper was
+added. No application was restarted while active work was running.
+
+**Existing older-session submission was observed.** A Claude Desktop Code session
+began on 2026-10-16. After cutover, the official integration selected full-session
+replacement on 2026-10-18 and submitted its parsed transcript, including older
+messages. The reported 2,391 turns are the parsed transcript count, not a count
+of extracted memories. Seven accepted operations remained pending at inspection.
+No old session was deliberately run for this check. No operation was cancelled
+and no bank data was deleted. Starting fresh avoids reusing those old transcripts.
+
+Desktop checks require these native actions:
+
+1. After active Claude work ends, restart Claude Desktop normally.
+2. Check Hindsight's connection in `Claude Desktop -> Settings -> Developer`.
+3. In a fresh Claude Desktop Chat conversation, ask Hindsight to diagnose its bank and
+   harness. Expect `fodurrr` and `claude-desktop`. This checks tools, not automatic capture.
+4. In a fresh main Codex Desktop task, provide one harmless unique fact. Verify its
+   official retention result, then ask for it in another new task without the value.
+5. Use a fresh local Claude Desktop Code session for the equivalent automatic
+   capture and later fresh-recall check. Do not resume the older session as a test.
+
+Private desktop evidence is
+`~/.local/state/hindsight-desktop-check/2026-10-18`, with directories 0700 and files
+0600. Claude's backup and ownership journal are in its `claude` subdirectory.
+To undo this phase, remove only `mcpServers.hindsight` if it still matches that
+journal. Preserve all other keys. No new Codex change needs undoing.
+
 ## GEEKOM evidence and recovery
 
 The canonical [work item](plans/hindsight-memory.md#official-installer-replacement)
@@ -120,3 +179,7 @@ Publication, main merge and other host rollouts still require approval.
 
 - [Coding-agent integration guide](https://hindsight.vectorize.io/sdks/integrations/coding-agents)
 - [Upstream integration source](https://github.com/vectorize-io/hindsight/tree/5331da2f4db369528bb122075341a7de9c3df6df/hindsight-integrations/coding-agents)
+- [Codex hooks and trust](https://learn.chatgpt.com/docs/hooks)
+- [Claude Desktop Code settings](https://code.claude.com/docs/en/desktop)
+- [Claude Desktop local MCP servers](https://modelcontextprotocol.io/docs/develop/connect-local-servers)
+- [Official Hindsight operation cancellation](https://docs.hindsight.vectorize.io/api-reference/cancel-operation/)
