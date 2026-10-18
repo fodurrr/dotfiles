@@ -1,11 +1,17 @@
 // Synthetic observations and native callbacks only. No Pi/Bun/provider execution.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawn, spawnSync } from 'node:child_process';
+import { once } from 'node:events';
+import { fileURLToPath } from 'node:url';
 import { fixture as coreFixture } from './helpers.mjs';
 import { register, stageTurn, completeTurn, abortTurn, capture } from '../src/capture.mjs';
 import { recall } from '../src/delivery.mjs';
 import { destination as configDestination } from '../src/config.mjs';
 import { createPiAdapter, PI_ELF_SHA256, qualifyPiProcess, observePiProcess } from '../adapters/pi.mjs';
+import { makeInvoker } from '../adapters/common.mjs';
 
 const descriptor = { schema_version: 1, runtime: '/synthetic/node', cli: '/synthetic/cli.mjs', owner: 'synthetic-owner', agentVersion: '1.3.0',
   agent_identity: { requested: '/synthetic/pi', path: '/synthetic/pi', dev: 1, ino: 2, size: 100, mtimeMs: 3 } };
@@ -276,6 +282,85 @@ test('Synthetic Pi callbacks use the real temporary core: settlement admits the 
   await staged(g); await g.input('QUEUED_SENTINEL'); await final(g);
   assert.equal(core.store.db.prepare('SELECT count(*) n FROM staged').get().n, 0);
   assert.equal(core.store.db.prepare('SELECT count(*) n FROM jobs').get().n, 2);
+});
+
+function diskPiCore(t) {
+  const core = coreFixture(t, {}, { temporaryRoot: '/var/tmp' });
+  assert.notEqual(fs.statfsSync(core.home).type, 0x01021994, 'contention fixture must not use tmpfs');
+  core.store.deactivate(); core.store.activate({ ...core.config, adapters: ['pi'] });
+  const cli = fileURLToPath(new URL('../src/cli.mjs', import.meta.url));
+  // Run actual main/Store/input/error handling synchronously. Suppress only
+  // detached wakes so all fixture processes can be joined before cleanup.
+  const script = `import {main,safeFailure} from ${JSON.stringify(new URL('../src/cli.mjs', import.meta.url).href)};
+    main(process.argv[1],{wakeImpl:()=> 'fixture-suppressed'}).then(r=>console.log(JSON.stringify({schema_version:1,...r}))).catch(e=>{console.log(JSON.stringify(safeFailure(e)));process.exitCode=1;});`;
+  const env = { ...process.env, HOME: core.home, XDG_CONFIG_HOME: path.join(core.home, '.config'),
+    XDG_STATE_HOME: path.join(core.home, '.local/state'), XDG_DATA_HOME: path.join(core.home, '.local/share') };
+  const invoke = makeInvoker({ schema_version: 1, runtime: process.execPath, cli, owner: descriptor.owner },
+    (runtime, args, options) => spawnSync(runtime, ['--disable-warning=ExperimentalWarning', '--input-type=module', '-e', script, args[1]], { ...options, env }));
+  const candidate = () => {
+    const f = fixture({ invoke }); f.destination = { endpoint: core.config.endpoint, bank: core.config.bank }; return f;
+  };
+  const unaccepted = session => {
+    const row = core.store.getSession({ agent: 'pi', session, owner: descriptor.owner });
+    assert.equal(row.cursor, null); assert.equal(row.count, 0);
+    assert.equal(core.store.db.prepare('SELECT count(*) n FROM jobs').get().n, 0);
+    assert.equal(core.store.db.prepare('SELECT count(*) n FROM messages').get().n, 0);
+  };
+  return { core, candidate, unaccepted };
+}
+async function withExclusivePiState(core, fn) {
+  const script = `import {DatabaseSync} from 'node:sqlite';const db=new DatabaseSync(process.argv[1]);
+    db.exec('BEGIN EXCLUSIVE');process.send('locked');process.on('message',()=>{db.exec('ROLLBACK');db.close();process.exit(0);});`;
+  const child = spawn(process.execPath, ['--disable-warning=ExperimentalWarning', '--input-type=module', '-e', script, core.store.file],
+    { stdio: ['ignore', 'ignore', 'pipe', 'ipc'], timeout: 8000 });
+  let stderr = ''; child.stderr.on('data', chunk => { stderr += chunk; });
+  const closed = once(child, 'close'); let locked = false;
+  try {
+    const ready = await Promise.race([once(child, 'message'), closed.then(result => { throw new Error(`lock child exited before readiness: ${result}; ${stderr}`); })]);
+    assert.equal(ready[0], 'locked'); locked = true;
+    return await fn();
+  } finally {
+    if (locked && child.connected) child.send('release');
+    else if (child.exitCode === null) child.kill('SIGKILL');
+    const [code, signal] = await closed;
+    assert.equal(code, 0, `lock child must release and exit: ${signal}; ${stderr}`);
+  }
+}
+test('Disk-backed Pi CLI stage contention reports busy without admission or late callback replay', { skip: process.platform !== 'linux', timeout: 15000 }, async t => {
+  const { core, candidate, unaccepted } = diskPiCore(t); const f = candidate();
+  await f.start(); await f.input('question');
+  await withExclusivePiState(core, () => f.before());
+  assert.deepEqual(commands(f), ['session', 'stage-turn', 'abort-turn']);
+  assert.deepEqual(f.errors.map(error => error.code), ['state_busy_admission_not_confirmed', 'state_busy_admission_not_confirmed']);
+  unaccepted('fresh'); assert.equal(core.store.db.prepare('SELECT count(*) n FROM staged').get().n, 0);
+  const calls = commands(f); f.branch = [...initialMetadata, user('native-user', 'question')];
+  await f.context(); await final(f); await f.turn(); await f.settle(); await f.before();
+  assert.deepEqual(commands(f), calls); unaccepted('fresh');
+  assert.equal(core.store.db.prepare('SELECT count(*) n FROM staged').get().n, 0);
+});
+test('Disk-backed Pi CLI completion and abort contention preserve an unaccepted stage without replay or implicit recovery', { skip: process.platform !== 'linux', timeout: 15000 }, async t => {
+  const { core, candidate, unaccepted } = diskPiCore(t); const f = candidate();
+  await f.start(); await f.input('question'); await f.before();
+  const pending = core.store.db.prepare('SELECT * FROM staged').get(); assert.equal(pending.prompt, 'question');
+  f.branch = [...initialMetadata, user('native-user', 'question')];
+  await withExclusivePiState(core, () => final(f));
+  assert.deepEqual(commands(f), ['session', 'stage-turn', 'complete-turn', 'abort-turn']);
+  assert.deepEqual(f.errors.map(error => error.code), ['state_busy_admission_not_confirmed', 'state_busy_admission_not_confirmed']);
+  unaccepted('fresh'); assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
+  const calls = commands(f); await f.context(); await f.turn(); await f.settle(); await f.before();
+  assert.deepEqual(commands(f), calls); unaccepted('fresh');
+  assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
+  const restarted = candidate(); await restarted.start(); await restarted.input('question'); await restarted.before();
+  assert.deepEqual(commands(restarted), ['session', 'stage-turn', 'abort-turn']);
+  assert.equal(restarted.errors[0].code, 'local_admission_failed');
+  assert.notEqual(restarted.calls[1].input.turn_id, pending.turn_id);
+  await final(restarted); unaccepted('fresh');
+  assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
+  const fresh = candidate(); fresh.session = 'fresh-after-contention'; await fresh.start();
+  fresh.branch = [...initialMetadata, user('native-user', 'question'), assistant('native-final', 'answer')];
+  await fresh.turn(); await fresh.settle();
+  assert.deepEqual(commands(fresh), ['session']); unaccepted('fresh-after-contention');
+  assert.deepEqual(core.store.db.prepare('SELECT * FROM staged').get(), pending);
 });
 
 test('Consent destination B cannot register, stage, capture or recall against actual active destination A', async t => {
