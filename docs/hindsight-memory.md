@@ -90,7 +90,7 @@ CLI checks above do not substitute for desktop checks.
 | Desktop surface | Actual result | Remaining limit |
 |---|---|---|
 | Codex in ChatGPT desktop 26.1013.40934 | Its native backend 0.163.0-alpha.10.2 initialized the official Hindsight MCP server. All three official hooks have persisted trust entries. | Main desktop-session hook execution, capture and fresh recall remain unverified. Native UI controls were unavailable. |
-| Claude Desktop 2.42304.0, local Code | Its bundled Code 2.1.299 uses shared user hooks/MCP/settings. Actual desktop hooks injected recall and submitted retention. | Seven existing retention operations were pending when checked. No fresh desktop test or completed extraction is claimed. |
+| Claude Desktop 2.42304.0, local Code | Its bundled Code 2.1.299 uses shared user hooks/MCP/settings. Actual desktop hooks injected recall and submitted retention. Nine identified old-session operations were cancelled after approval. | No fresh desktop test or completed extraction is claimed. The old live session can submit again; start a fresh session. |
 | Claude Desktop Chat | Added the official Hindsight stdio MCP server to desktop settings. Its exact command initialized, listed eight tools and diagnosed the existing `fodurrr` bank. | The app still needs to load the new settings. Tools provide requested memory access; they do not automatically capture Chat transcripts. |
 | Claude Cowork | No dedicated automatic Hindsight capture support was established. | No Cowork change or working-capture claim. |
 
@@ -120,9 +120,30 @@ added. No application was restarted while active work was running.
 began on 2026-10-16. After cutover, the official integration selected full-session
 replacement on 2026-10-18 and submitted its parsed transcript, including older
 messages. The reported 2,391 turns are the parsed transcript count, not a count
-of extracted memories. Seven accepted operations remained pending at inspection.
-No old session was deliberately run for this check. No operation was cancelled
-and no bank data was deleted. Starting fresh avoids reusing those old transcripts.
+of extracted memories. Seven accepted operations remained pending at the first
+inspection. After explicit approval on **2026-10-18**, each still reported `pending`.
+The local cursor then identified two later accepted operations from that same
+old session. Each also still reported `pending`. All nine official cancellation
+requests returned HTTP 200. Follow-up status reads confirmed all nine were
+`cancelled` at **2026-10-18 20:53:02 UTC**. There were no skipped operations,
+HTTP 409 responses or request failures. No bank data was deleted. Cancellation
+does not undo any memories already committed or establish child-operation status.
+No old session was deliberately run for this check. Starting fresh avoids reusing
+those old transcripts.
+
+The bounded follow-up found no fresh main Codex Desktop capture evidence. Native
+`hooks/list` requests prove hook discovery, not execution. The saved successful
+Codex captures belong to CLI sessions; their `originator` field alone is insufficient.
+Claude Desktop Chat still had no observed Hindsight server process or matching
+connection log. Its new MCP setting therefore still needs a normal app reload.
+No native desktop UI control was available. No CLI or delegated-child check was
+substituted for a main desktop conversation.
+
+This is a bounded cancellation snapshot. The old Claude Desktop Code session was
+still running and can submit new work later. No broad capture setting was disabled.
+Finish that session and start a fresh one. Cancellation evidence is in the private
+desktop evidence directory's `cancellation` subdirectory. It records exact operation
+IDs, status checks and responses without transcript contents or secrets.
 
 Desktop checks require these native actions:
 
