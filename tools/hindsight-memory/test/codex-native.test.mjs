@@ -72,6 +72,7 @@ test('Codex owned launcher uses inline scoped hooks, native trust and no global 
  assert.equal(plan.jsonPatches.length,0);assert.equal(plan.files[0].path,'/home/user/.local/bin/codex-memory');
  assert(plan.files[0].content.startsWith('#!/bin/sh\n'));assert(plan.files[0].content.includes('"$@"'));
  const args=codexHookConfig(descriptor,'/descriptor');assert(args.some(arg=>arg.startsWith('hooks.Interrupt=')));
+ assert(args.includes('features.plugins=false'));
  assert(args.find(arg=>arg.startsWith('hooks.UserPromptSubmit=')).includes('timeout=20'));
  assert(args.find(arg=>arg.startsWith('hooks.Stop=')).includes('timeout=10'));
  assert(!args.includes('--dangerously-bypass-hook-trust'));assert(args.includes('cli_auth_credentials_store="file"'));assert(!JSON.stringify(args).includes('hooks.json'));
