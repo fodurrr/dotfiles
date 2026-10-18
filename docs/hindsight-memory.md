@@ -94,7 +94,7 @@ endpoint, operation UUID and request bytes.
 |---|---|---|
 | Claude Code | 2.1.302 | Native trust and host execution; cancellation and lost pre-bridge events remain visible |
 | Codex CLI | 0.162.0, 0.163.0 | Unstable pinned transcript format; actual host hooks/trust and completion persistence |
-| Pi | 1.1.0, 1.3.0 | Actual extension execution and session switches on each host |
+| Pi | Restricted compiled Linux 1.3.0 source/synthetic candidate | Pi 1.1 remains unqualified; native session qualification is pending. See the [candidate contract](../tools/hindsight-memory/adapters/README.md). |
 | OpenCode v1 | 1.18.35 | Independent v1 plugin and actual provider lifecycle |
 | OpenCode v2 | 2.0.32 | Independent Promise plugin/event API and pre-dispatch crash gap |
 | Grok | Investigated 1.0.62 | Native prompt-hook output is discarded; complete automatic recall route unqualified |
