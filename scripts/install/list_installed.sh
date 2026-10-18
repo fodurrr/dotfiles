@@ -54,20 +54,6 @@ list_installed_and_exit() {
                 ;;
         esac
 
-        if [[ "$type" == memory ]]; then
-            local memory_label="unavailable"
-            if memory_read_status; then
-                memory_label="$MEMORY_STATUS_LABEL"
-                if [[ "$MEMORY_STATUS_INSTALLED" != true ]]; then
-                    continue
-                fi
-            fi
-            local line="- hindsight-memory (memory, ${memory_label})"
-            [[ -z "$installed_list" ]] && installed_list="$line" || installed_list="${installed_list}
-${line}"
-            continue
-        fi
-
         if [[ "$type" == "cask" ]]; then
             local cask
             cask=$(get_app_prop "$app_key" "name")

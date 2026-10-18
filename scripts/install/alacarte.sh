@@ -14,10 +14,6 @@ remove_alacarte_app() {
     pm=$(pm_get_manager)
 
     case "$type" in
-        memory)
-            record_install_failure "$app_key" "Memory removal requires owned deactivate/rollback; a la carte removal refused"
-            return 1
-            ;;
         cask)
             if [[ "$platform" != "macos" ]]; then
                 log_warning "Skipping $name removal (cask is macOS-only)"

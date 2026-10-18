@@ -185,7 +185,7 @@ When researching app behavior, inspect the installed version and prefer current 
 
 ## Documentation map
 
-- [Hindsight memory work item](docs/plans/hindsight-memory.md): Approved isolated standalone implementation; publication and live rollout need approval
+- [Hindsight memory work item](docs/plans/hindsight-memory.md): Official integrations and private settings; publication, main merge and other host rollouts need approval
 - [README](README.md): machine choices, quick start and normal updates
 - [Profile system](docs/profile-system.md): selection and installer architecture
 - [Linux support](docs/linux-support.md): native packages and platform limits

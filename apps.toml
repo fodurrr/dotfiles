@@ -1155,12 +1155,3 @@ snap_name = "discord"
 category = "communication"
 platform = ["linux"]
 description = "Discord chat"
-
-# Optional local artifacts. Preparation does not activate memory or install agents.
-[apps.hindsight-memory]
-name = "hindsight-memory"
-type = "memory"
-category = "ai"
-platform = ["macos", "linux"]
-depends_on = "node"
-description = "Standalone personal memory artifacts; separate activation required"

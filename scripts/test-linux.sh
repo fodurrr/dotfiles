@@ -16,7 +16,6 @@ source "$DOTFILES_DIR/scripts/lib/platform.sh"
 source "$DOTFILES_DIR/scripts/lib/package-manager.sh"
 source "$DOTFILES_DIR/scripts/lib/app_config.sh"
 source "$DOTFILES_DIR/scripts/lib/app_state.sh"
-source "$DOTFILES_DIR/scripts/lib/memory.sh"
 
 FAILURES=0
 

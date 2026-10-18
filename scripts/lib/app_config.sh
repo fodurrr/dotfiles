@@ -229,15 +229,9 @@ is_installable_app() {
     local type
     type=$(get_app_prop "$app_key" "type")
     case "$type" in
-        cask|brew|mise|curl|memory|font|apt-repo|deb|script|snap|gsettings|gnome-shortcut) return 0 ;;
+        cask|brew|mise|curl|font|apt-repo|deb|script|snap|gsettings|gnome-shortcut) return 0 ;;
         *) return 1 ;;
     esac
-}
-
-# Memory has ownership-aware activation/rollback, not toggle-based removal.
-# Keep it visible in profile/status views while excluding a la carte selection.
-is_alacarte_app() {
-    is_installable_app "$1" && [[ "$(get_app_prop "$1" type)" != memory ]]
 }
 
 # Map category to one of 7 display groups

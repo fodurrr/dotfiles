@@ -30,10 +30,6 @@ run_extras_mode() {
     for app_key in $(get_all_apps); do
         type=$(get_app_prop "$app_key" "type")
         [[ "$type" == "stow" ]] && continue  # Skip config packages
-        if [[ "$type" == memory ]]; then
-            log_info "Personal memory requires its profile and separate activation; excluded from extras"
-            continue
-        fi
         if ! is_app_supported "$app_key"; then
             continue
         fi
@@ -98,10 +94,6 @@ run_extras_mode() {
         [[ -z "$name" ]] && name="$app_key"
 
         case "$type" in
-            memory)
-                log_error "Personal memory cannot be installed through extras; select its profile"
-                return 1
-                ;;
             cask)
                 if [[ "$current_platform" != "macos" ]]; then
                     log_info "Skipping $name (cask installs are macOS-only)"

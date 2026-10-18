@@ -355,7 +355,7 @@ add_mise_tool_to_config() {
     MISE_CONFIG_ADDED_TOOLS="${MISE_CONFIG_ADDED_TOOLS}${app_key}|"
 }
 
-# Shared by generation and the read-only memory runtime-preservation preview.
+# Write the selected mise tools and their dependencies.
 write_selected_mise_tools() {
     local config_file="$1"
     MISE_CONFIG_ADDED_TOOLS="|"

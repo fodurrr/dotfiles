@@ -1,4 +1,10 @@
-# Personal Hindsight memory component
+# Retired personal Hindsight memory component
+
+**Retired on 2026-10-18.** This source is historical evidence, not the current
+integration. No Dotfiles profile or installer selects it. Do not run the commands
+below for normal installation. Use the [official setup](../../docs/hindsight-memory.md).
+
+The remaining document records the former implementation.
 
 This private local component prepares independently installable artifacts.
 **Only the pinned Linux Pi 1.3.0 sole-extension route is eligible for local activation**,

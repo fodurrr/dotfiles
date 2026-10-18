@@ -259,8 +259,9 @@ yq -p toml -oy '
 
 ## Optional personal memory
 
-The `hindsight-memory` profile prepares a standalone local component. Activation is separate.
-See [personal Hindsight memory](docs/hindsight-memory.md) for prerequisites, adapter qualification and rollback.
+Personal memory uses the official Hindsight installer and private settings.
+The former custom runtime and profile are retired.
+See [personal Hindsight memory](docs/hindsight-memory.md) for installation, capture and recovery.
 
 ## Global AI Secrets
 
