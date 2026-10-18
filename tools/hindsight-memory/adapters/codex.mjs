@@ -97,8 +97,10 @@ export function validateProfileConfig(text) {
     if(/^\[hooks(?:\.state)?\]$/.test(line)){section='empty';continue;}
     if(/^\[hooks\.state\.(?:[A-Za-z0-9_-]+|"(?:[^"\\]|\\["\\])+")\]$/.test(line)){section='hook-state';continue;}
     if(/^\[projects\."(?:[^"\\]|\\["\\])+"\]$/.test(line)){section='project';continue;}
+    if(line==='[tui]'){section='tui';continue;}
     const safe=section==='hook-state'?/^(?:enabled\s*=\s*(?:true|false)|trusted_hash\s*=\s*"[a-zA-Z0-9:_-]+")$/.test(line)
       :section==='project'?/^trust_level\s*=\s*"(?:trusted|untrusted)"$/.test(line)
+      :section==='tui'?/^screen_reader_detection_done\s*=\s*(?:true|false)$/.test(line)
       :section==='root'?/^(?:model|model_reasoning_effort)\s*=\s*"[a-zA-Z0-9_.-]+"$/.test(line):false;
     requireValue(safe,'codex_profile_config_unqualified');
   }

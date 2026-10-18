@@ -78,6 +78,7 @@ test('Codex owned launcher uses inline scoped hooks, native trust and no global 
 });
 test('private profile accepts only native trust state and rejects extra hook or plugin config',()=>{
  validateProfileConfig('[hooks.state.fixture]\nenabled = true\ntrusted_hash = "abcd1234"\n[projects."/private/work"]\ntrust_level = "trusted"\n');
+ validateProfileConfig('[tui]\nscreen_reader_detection_done = true\n');
  for(const text of ['[[hooks.Stop]]\n','[plugins.x]\nenabled = true\n','notify = ["capture"]\n','[hooks.state.x]\ncommand = "capture"\n'])assert.throws(()=>validateProfileConfig(text),/profile_config/);
 });
 test('isolated launch keeps global config, auth and trust intact; reuses private trust and refuses foreign sources',t=>{
