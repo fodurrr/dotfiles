@@ -2083,7 +2083,7 @@ Documentation checks `bash scripts/docs/check-doc-drift.sh` and `git diff --chec
 
 ## Prepared Pi native qualification preview
 
-Frozen at `2dd943255abeb1f31a9fcefde8c5a54dc776950d`. This section records the approved bounded preview before native execution.
+Implementation frozen at `2dd943255abeb1f31a9fcefde8c5a54dc776950d`; exact request-accounting correction at `0733e7ee266a39989eef4a301460611b57e7f250`. This section records the approved bounded preview before native execution.
 
 
 The user authorized this bounded preview and its execution on **2026-10-18**.
@@ -2147,3 +2147,5 @@ The native process is deliberately stopped and reaped after assertions.
 
 No real service, credentials, personal bank, installed writer or host permission
 is accessed or changed. Publication, main merge and live rollout need approval.
+
+Independent normal preview review cleared the design after requiring exact total/health accounting. The corrected harness asserts 15 total requests and two health requests, not only the hard cap. No native execution preceded this preview save.
