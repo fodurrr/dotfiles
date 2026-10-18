@@ -6,7 +6,7 @@ capture, GUI trust, network access, extraction completion or cross-host recall.
 No native hook, upstream module or real agent was executed to obtain source fixtures.
 Separate confined Pi qualification used the prepared generated bridge and a fake
 service. It covered consent, completed capture, cancellation, session changes and
-resume. Real service access remains unproved.
+resume. On GEEKOM, the separately approved real API proof and installed Pi capture/recall pilot passed. The live route uses existing Pi xai OAuth and grok-4.3; other clients and hosts remain unqualified.
 
 ## Contract
 

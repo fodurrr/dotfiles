@@ -4,9 +4,15 @@ The optional `hindsight-memory` profile prepares a standalone personal-memory
 component. It does not activate capture. Existing Hindsight memories remain on
 the configured external server. This repository does not create or upgrade it.
 
-Implementation is under review. **Only the pinned compiled Linux Pi 1.3.0 sole-extension route is eligible for local activation.** Every other automatic adapter remains blocked. Publication, main merge and live rollout require
-separate approval. The commands below describe the later workflow; they were not
-run against the operator's home or memory bank during implementation.
+**Pi capture and later fresh-session recall passed on GEEKOM.** The pinned compiled Linux Pi 1.3.0 installation is active. Other automatic adapters remain blocked pending qualification. Publication, main merge and other host rollouts require approval.
+
+Use the exact qualified launch, then `/new` and accept its endpoint/bank consent:
+
+```sh
+env -u NODE_OPTIONS -u BUN_OPTIONS -u LD_PRELOAD -u LD_LIBRARY_PATH /home/fodurrr/.local/share/mise/installs/pi/1.3.0/pi/pi --no-extensions -e /home/fodurrr/.pi/agent/extensions/hindsight-memory.js
+```
+
+Ordinary `pi` does not qualify capture. The approved live pilot uses the existing Pi `xai` OAuth login and `grok-4.3`. OpenAI Subscription Sharing was exhausted. All other Pi settings and authentication were preserved. The seven approved directories remain 0755. [The canonical checkpoint](plans/hindsight-memory.md#pi-live-completion-attempt-and-account-quota-blocker) records exact changes, evidence and ownership-aware rollback.
 
 ## Preparation and explicit activation
 
@@ -44,7 +50,7 @@ prerequisite; no permission change occurred during implementation.
 Create an existing server-side bank and authorization independently. Bank names
 alone do not isolate users. Configure a private 0600 file containing only the
 Hindsight API credential. Its directory and ancestors must be safe and owned.
-The component does not reuse Hermes or company credentials.
+The component does not automatically discover or reuse another application's credentials.
 
 Pipe explicit configuration through stdin. Replace every example value:
 
@@ -121,7 +127,7 @@ endpoint, operation UUID and request bytes.
 |---|---|---|
 | Claude Code | 2.1.302 | Native trust and host execution; cancellation and lost pre-bridge events remain visible |
 | Codex CLI | 0.162.0, 0.163.0 | Unstable pinned transcript format; actual host hooks/trust and completion persistence |
-| Pi | Pinned compiled Linux 1.3.0, sole generated extension; prepared native fake-service path passed | Local eligibility requires explicit owner selection. Host preparation, installed-writer inventory and live API qualification remain open. Pi 1.1 remains unqualified. See the [adapter contract](../tools/hindsight-memory/adapters/README.md). |
+| Pi | Pinned compiled Linux 1.3.0, sole generated extension; prepared native fake-service path passed | Local eligibility requires explicit owner selection. GEEKOM installed capture and fresh-session real recall passed; other hosts still need qualification. Pi 1.1 remains unqualified. See the [adapter contract](../tools/hindsight-memory/adapters/README.md). |
 | OpenCode v1 | 1.18.35 | Independent v1 plugin and actual provider lifecycle |
 | OpenCode v2 | 2.0.32 | Independent Promise plugin/event API and pre-dispatch crash gap |
 | Grok | Investigated 1.0.62 | Native prompt-hook output is discarded; complete automatic recall route unqualified |
@@ -180,9 +186,9 @@ retries. Completed payloads are removed locally; replay evidence remains.
 | Limit | Implemented behavior |
 |---|---|
 | Local admission | 100 ms measurement target; SQLite can wait up to 500 ms per contended lock; truthful failure overrides timing |
-| Recall | Direct request once per turn; 1.5-second core deadline budget, including local work after CLI process start |
+| Recall | Complete facts fit a 1000-byte labeled context in relevance order; an oversized fact is skipped. Direct request once per turn; 8-second core deadline budget, including local work after CLI process start |
 | Recall output | 256 KiB HTTP response; at most 1,000 UTF-8 bytes including injected labels/provenance |
-| Native bridge | 1.5-second total recall invocation deadline across child startup, local work and HTTP; outer application event overhead is measured separately |
+| Native bridge | 8-second total recall invocation deadline across child startup, local work and HTTP; outer application event overhead is measured separately |
 | Payload | At most 64 KiB per job; stable chunks with all-or-none admission |
 | Outbox | At most 1,000 outstanding jobs or 64 MiB; failed jobs count |
 | Mutable state | 128 MiB budget with conservative SQLite recovery headroom; physical capacity can reject earlier |
