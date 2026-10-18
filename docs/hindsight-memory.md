@@ -90,7 +90,7 @@ CLI checks above do not substitute for desktop checks.
 | Desktop surface | Actual result | Remaining limit |
 |---|---|---|
 | Codex in ChatGPT desktop 26.1013.40934 | Its native backend 0.163.0-alpha.10.2 initialized the official Hindsight MCP server. All three official hooks have persisted trust entries. | Main desktop-session hook execution, capture and fresh recall remain unverified. Native UI controls were unavailable. |
-| Claude Desktop 2.42304.0, local Code | Its bundled Code 2.1.299 uses shared user hooks/MCP/settings. Actual desktop hooks injected recall and submitted retention. Nine identified old-session operations were cancelled after approval. | No fresh desktop test or completed extraction is claimed. The old live session can submit again; start a fresh session. |
+| Claude Desktop 2.42304.0, local Code | A fresh native session loaded Hindsight, called diagnosis and sync status, recalled an existing fact absent from its prompt, and completed capture with five facts and no extraction errors. | Later fresh-session recall of a newly captured fact remains unverified. Older live sessions can still submit again; start a fresh session. |
 | Claude Desktop Chat | Added the official Hindsight stdio MCP server to desktop settings. Its exact command initialized, listed eight tools and diagnosed the existing `fodurrr` bank. | The app still needs to load the new settings. Tools provide requested memory access; they do not automatically capture Chat transcripts. |
 | Claude Cowork | No dedicated automatic Hindsight capture support was established. | No Cowork change or working-capture claim. |
 
@@ -189,13 +189,17 @@ deleted. Exact-link child checks used 27 API requests; this follow-up used 36
 including the three later parent cancellations. No fresh-session jobs were touched.
 The full bounded result is saved in `fresh-verification/child-cancellation.json`.
 
-**Subsequent user-reported fresh Claude Code result:** A genuinely new session
-listed nine Hindsight MCP tools and called four. Its diagnosis reported the
-configured endpoint, bank `fodurrr` and enabled configuration. Automatic recall
-returned the supplied test label. This is user-supplied native evidence; this phase
-did not independently match the new session's logs or prove its completed capture.
-It supersedes the missing-tool result for that fresh Code session. Chat and main
-Codex Desktop remain separate verification obligations.
+**Independently matched fresh Claude Code result:** Saved native desktop metadata
+matches the Code session created at **2026-10-18 21:03:18 UTC**. Four Hindsight
+tools were loaded; diagnosis and sync status were actually called. Diagnosis
+confirmed `fodurrr`, harness `claude-code` and matching configured authentication.
+The prompt hook recalled 25 facts in 3,562 ms. The answer cited an existing test
+fact absent from the prompt. Capture retained seven parsed turns; parent and child
+operations completed with five committed facts and zero extraction errors.
+This proves fresh native tools, existing-fact recall and completed capture.
+It does not prove later fresh-session recall of a newly captured fact. The private
+evidence is `fresh-verification/fresh-claude-followup.json`. Chat and main Codex
+Desktop remain separate verification obligations.
 
 The reported sync result lists eight conversations, zero knowledge pages, missing
 Git seeding and `synced:false`. Git seeding and knowledge pages are deliberately
@@ -209,8 +213,7 @@ Remaining native checks, accounting for that reported fresh Code success:
 2. Check `Claude Desktop -> Settings -> Developer` for Hindsight's connection.
 3. In a fresh Chat, ask Hindsight to diagnose its bank and harness. Expect
    `fodurrr` and `claude-desktop`. This proves tools, not automatic Chat capture.
-4. Match the reported fresh local Code session to native capture/completed extraction.
-   Ask for its harmless fact in another fresh Code session.
+4. Ask for a newly captured harmless fact in another fresh Code session.
 5. Use `Codex Desktop -> New task` for the equivalent fresh main desktop fact.
 6. Ask for each fact in another fresh session without repeating its value.
    Then match actual native capture, completed extraction and recall evidence.
@@ -239,11 +242,17 @@ It is prompt guidance, not a hard language validator. It is not a field in
 `~/.hindsight/coding-agent.json` and cannot be set separately for one bank.
 It affects every bank served by that Hindsight deployment.
 
-The live API reports **0.9.2**. That version recognizes the setting but has
-conflicting retain prompt instructions. Official fix **#3777**, included in
-**0.10.0**, resolves that conflict. Do not rely on the current server to enforce
-English extraction. No server upgrade, environment change or bank mission change
-was made during this check.
+The approved Mini upgrade on **2026-10-18** installed official server **1.0.0**
+and enabled this setting across **all three existing banks**. It uses the pinned
+ARM64 image manifest
+`sha256:0be688fa345092f6d88687330a6e9da012673652c5894787bef5527cc0082e30`.
+Official fix **#3777**, included since **0.10.0**, removes the conflicting
+source-language extraction instructions in the former **0.9.2** server.
+
+The runtime setting and protected canonical `server.env` both specify English.
+No bank configuration was rewritten. The setting is not bank-overridable.
+A short Russian statement of the user's English-memory preference produced an
+English fact. Exact-document recall and English reflection both succeeded.
 
 This setting does not translate existing memories or original transcripts.
 Our `autoInject: "recall"` returns stored facts directly, including existing
@@ -253,8 +262,49 @@ The shared `fodurrr` bank intentionally spans projects; unrelated facts alone
 are not proof of incorrect bank routing.
 
 A bank's retain/observations missions can ask for English, but these are softer
-prompt instructions. They do not provide an English-only guarantee. Changing a
-shared server or bank language policy requires its own approval.
+prompt instructions. They do not provide an English-only guarantee.
+
+### Upgrade verification and recovery
+
+The upgrade retained the existing endpoint, authentication, provider/model,
+network and production ports. The official coding-agent package remains **0.8.1**.
+No adapters, capture code or vendor files were changed.
+
+The first ordinary Docker stop failed: the vendor wrapper reported
+`Timeout reached, forcing shutdown...` while the API waited for five tasks.
+Automatic recovery restarted **0.9.2** on its original volume before migration.
+The corrected native shutdown signalled the API first, allowing its own drain
+and PostgreSQL shutdown before wrapper cleanup. It exited **0**.
+
+The frozen original volume was archived before migration. The archive contains
+**2,728,407,040 bytes** and **3,122 entries**. Its checksum was saved privately.
+Archive comparisons passed against both the original and a restored clone.
+PostgreSQL control data reported clean shutdown for both. Server **1.0.0**
+migrated only the clone to Alembic head **`c8e2f4a6b1d3`**.
+Acceptance used alternate loopback ports while production remained unavailable.
+All three bank identity hashes were preserved; legitimate jobs were not cancelled.
+
+After acceptance, the migrated clone was promoted to the original ports.
+API/database health and authenticated access passed; unauthenticated access
+returned **401**. The external endpoint reports **1.0.0**. The existing official
+stdio server initialized eight tools; diagnosis confirmed `fodurrr`, matching
+authentication and harness `claude-desktop`. Sync status also succeeded.
+This proves transport/settings compatibility, not a new native desktop turn.
+
+The maintenance interval caused visible **502** capture/retrieval failures.
+At the bounded post-upgrade snapshot, official local cursors held two pending
+Codex batches and one pending Claude batch. No cursor was dirty. Recovery waits
+for normal supported integration activity; complete client draining is not claimed.
+Disabled Git seed/pages still make `synced:false` expected.
+
+The original **0.9.2** image, stopped recovery container, frozen volume and
+verified archive remain available. The recovery container has restart policy
+`no`; production retains `unless-stopped`. Private exact manifests and recovery
+instructions are under `~/.local/state/hindsight-update-2026-10-18`.
+The original authentication bind stays live; do not restore stale login snapshots.
+**Production now accepts writes.** Starting the frozen original would discard
+newer writes. Preserve the migrated volume and use the saved recovery instructions
+instead of attempting an automatic downgrade.
 
 Sources: [official multilingual settings](https://hindsight.vectorize.io/0.10/developer/multilingual),
 [bank setting scope](https://hindsight.vectorize.io/developer/api/memory-banks),
