@@ -123,7 +123,7 @@ messages. The reported 2,391 turns are the parsed transcript count, not a count
 of extracted memories. Seven accepted operations remained pending at the first
 inspection. After explicit approval on **2026-10-18**, each still reported `pending`.
 The local cursor then identified two later accepted operations from that same
-old session. Each also still reported `pending`. All nine official cancellation
+old session. Each also still reported `pending`. All nine initial official cancellation
 requests returned HTTP 200. Follow-up status reads confirmed all nine were
 `cancelled` at **2026-10-18 20:53:02 UTC**. There were no skipped operations,
 HTTP 409 responses or request failures. No bank data was deleted. Cancellation
@@ -145,22 +145,109 @@ Finish that session and start a fresh one. Cancellation evidence is in the priva
 desktop evidence directory's `cancellation` subdirectory. It records exact operation
 IDs, status checks and responses without transcript contents or secrets.
 
-Desktop checks require these native actions:
+### Latest native follow-up
 
-1. After active Claude work ends, restart Claude Desktop normally.
-2. Check Hindsight's connection in `Claude Desktop -> Settings -> Developer`.
-3. In a fresh Claude Desktop Chat conversation, ask Hindsight to diagnose its bank and
-   harness. Expect `fodurrr` and `claude-desktop`. This checks tools, not automatic capture.
-4. In a fresh main Codex Desktop task, provide one harmless unique fact. Verify its
-   official retention result, then ask for it in another new task without the value.
-5. Use a fresh local Claude Desktop Code session for the equivalent automatic
-   capture and later fresh-recall check. Do not resume the older session as a test.
+The follow-up on **2026-10-18** found the reported Claude answer in the same
+resumed Code session. That session began on **2026-10-16**. Its native process
+started on **2026-10-18 at 10:35:18 UTC**. The main desktop process also predates
+the Hindsight desktop setting. Reopening an existing conversation did not establish
+a fresh session or loaded tools.
+
+The native Code session's saved tool list contains three Chrome tools and no
+Hindsight tools. Its startup log says:
+`no stdio servers connected — announcing an empty local-MCP group`.
+Both official Hindsight settings exist, and no explicit Hindsight denial was found.
+No settings defect or server-file rebuild cause was established. The supported
+next step is a full app quit/reopen after active work finishes, then a fresh session.
+
+Existing Claude hook capture and injected recall were observed again. Three later
+operations from that exact old session were pending. Each cancellation returned
+HTTP 200 and each follow-up status was `cancelled`. This brings the bounded total
+to **12 verified parent-operation cancellations**. The three latest responses still
+show child operations as `pending`; child cancellation was not verified. No memories
+were deleted. The current cursor
+has `appendSupported:true`; 2,452 parsed turns alone does not prove another
+full-history replacement. No capture setting was disabled.
+
+No fresh main Codex Desktop test fact was identified. Current native MCP
+initialization was saved, but the shared backend can initialize tools for delegated
+children. That does not prove main desktop capture or recall. Claude Chat still
+has no observed native Hindsight connection or actual `hindsight_diagnose` result.
+No API fact lookup was run because no fresh desktop test fact was found.
+
+**Subsequent user-reported fresh Claude Code result:** A genuinely new session
+listed nine Hindsight MCP tools and called four. Its diagnosis reported the
+configured endpoint, bank `fodurrr` and enabled configuration. Automatic recall
+returned the supplied test label. This is user-supplied native evidence; this phase
+did not independently match the new session's logs or prove its completed capture.
+It supersedes the missing-tool result for that fresh Code session. Chat and main
+Codex Desktop remain separate verification obligations.
+
+The reported sync result lists eight conversations, zero knowledge pages, missing
+Git seeding and `synced:false`. Git seeding and knowledge pages are deliberately
+disabled here. Their absence does not justify enabling ingestion or demonstrate
+a service failure. Nine reported jobs were not individually inspected in this
+snapshot; their completion is not inferred. No unrelated watch was changed.
+
+Remaining native checks, accounting for that reported fresh Code success:
+
+1. Fully quit and reopen Claude Desktop. Merely closing its window may leave the app running.
+2. Check `Claude Desktop -> Settings -> Developer` for Hindsight's connection.
+3. In a fresh Chat, ask Hindsight to diagnose its bank and harness. Expect
+   `fodurrr` and `claude-desktop`. This proves tools, not automatic Chat capture.
+4. Match the reported fresh local Code session to native capture/completed extraction.
+   Ask for its harmless fact in another fresh Code session.
+5. Use `Codex Desktop -> New task` for the equivalent fresh main desktop fact.
+6. Ask for each fact in another fresh session without repeating its value.
+   Then match actual native capture, completed extraction and recall evidence.
+
+No native app control was available here. No CLI or delegated-child result was
+substituted for main desktop proof. Latest private metadata, native log snapshots
+and three exact cancellation responses are in the `fresh-verification` directory.
 
 Private desktop evidence is
 `~/.local/state/hindsight-desktop-check/2026-10-18`, with directories 0700 and files
 0600. Claude's backup and ownership journal are in its `claude` subdirectory.
 To undo this phase, remove only `mcpServers.hindsight` if it still matches that
 journal. Preserve all other keys. No new Codex change needs undoing.
+
+## English memory output
+
+Official Hindsight provides this **server-wide** setting:
+
+```sh
+HINDSIGHT_API_LLM_OUTPUT_LANGUAGE=English
+```
+
+Its default is unset, preserving source or query language. It guides newly
+generated facts, observations, mental models and Hindsight reflect answers.
+It is prompt guidance, not a hard language validator. It is not a field in
+`~/.hindsight/coding-agent.json` and cannot be set separately for one bank.
+It affects every bank served by that Hindsight deployment.
+
+The live API reports **0.9.2**. That version recognizes the setting but has
+conflicting retain prompt instructions. Official fix **#3777**, included in
+**0.10.0**, resolves that conflict. Do not rely on the current server to enforce
+English extraction. No server upgrade, environment change or bank mission change
+was made during this check.
+
+This setting does not translate existing memories or original transcripts.
+Our `autoInject: "recall"` returns stored facts directly, including existing
+Russian/French facts. It also does not set Claude/Codex/Pi's own answer language.
+English extraction will not repair missing MCP tools or unrelated recall results.
+The shared `fodurrr` bank intentionally spans projects; unrelated facts alone
+are not proof of incorrect bank routing.
+
+A bank's retain/observations missions can ask for English, but these are softer
+prompt instructions. They do not provide an English-only guarantee. Changing a
+shared server or bank language policy requires its own approval.
+
+Sources: [official multilingual settings](https://hindsight.vectorize.io/0.10/developer/multilingual),
+[bank setting scope](https://hindsight.vectorize.io/developer/api/memory-banks),
+[language prompt fix](https://github.com/vectorize-io/hindsight/pull/3777),
+[official release notes](https://github.com/vectorize-io/hindsight/releases).
+Private source/version findings are in the desktop evidence directory's
+`english-language-findings.md`.
 
 ## GEEKOM evidence and recovery
 
