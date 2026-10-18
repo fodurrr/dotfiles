@@ -40,7 +40,7 @@ export function verifyCaller(binding,descriptor,{observe=processIdentity,pid=pro
 export function codexHookConfig(descriptor,descriptorPath) {
   const command=[descriptor.runtime,path.join(path.dirname(path.dirname(descriptor.cli)),'adapters/codex.mjs'),'hook',descriptorPath].map(quote).join(' ');
   return ['--config','features.hooks=true','--config','cli_auth_credentials_store="file"',...['SessionStart','UserPromptSubmit','Stop','Interrupt','SessionEnd','PreCompact'].flatMap(event=>[
-    '--config',`hooks.${event}=[{hooks=[{type="command",command=${JSON.stringify(command)},timeout=${['Interrupt','SessionEnd'].includes(event)?3:10}}]}]`
+    '--config',`hooks.${event}=[{hooks=[{type="command",command=${JSON.stringify(command)},timeout=${event==='UserPromptSubmit'?20:['Interrupt','SessionEnd'].includes(event)?3:10}}]}]`
   ])];
 }
 export function handleCodexHook(input,descriptor,binding,invoke=makeInvoker(descriptor),save=()=>{}) {
