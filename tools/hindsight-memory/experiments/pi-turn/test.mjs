@@ -13,6 +13,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 test('fixed native arguments and mounts preserve the sole bridge and private namespaces', () => {
   assert.deepEqual(PI_ARGS, ['--no-extensions', '-e', '/work/sole-bridge.mjs']);
   const args = sandboxArgs({ experiment: here, output: '/private/output', input: '/private/input', mode: 'native' });
+  const permissions = args.indexOf('--perms');
+  assert.deepEqual(args.slice(permissions, permissions + 4), ['--perms', '0700', '--tmpfs', '/agent']);
+  assert.equal(args.filter(arg => arg === '--perms').length, 1);
   for (const flag of ['--unshare-user', '--unshare-pid', '--unshare-net', '--unshare-ipc', '--unshare-uts', '--die-with-parent', '--remount-ro']) assert(args.includes(flag));
   assert(args.includes(PYTHON)); assert(args.includes(PYTHON_FILES[0])); assert(!args.includes('/usr/bin')); assert(!args.includes('--share-net'));
   assert(!Object.keys(ENV).some(key => /TOKEN|SECRET|API_KEY|PROXY|NODE_OPTIONS|BUN_OPTIONS/.test(key)));
@@ -91,4 +94,9 @@ test('harmless confined PTY preflights validate services, namespaces, limits and
   assert.equal(result.nativeExecuted, false);
   assert.deepEqual(result.phases.map(phase => phase.phase), ['preflight', 'deadline', 'overflow', 'inner-supervisor-death', 'outer-parent-death']);
   const report = JSON.parse(readEvidence(result.report).text); assert(report.phases.every(phase => phase.cleanup === 'reaped' && phase.nativeExecuted === false));
+  assert.equal(report.nativeRequested, false); assert.equal(report.nativeLaunchAttempted, false);
+  assert.equal(report.nativeExecutionEvidence, 'not-requested');
+  const preflight = report.phases.find(phase => phase.phase === 'preflight');
+  assert.equal(preflight.nativeLaunchAttempted, false);
+  assert.deepEqual(preflight.nativePreparation, { '/agent': 0o700, '/agent/models.json': 0o600, '/agent/settings.json': 0o600 });
 });

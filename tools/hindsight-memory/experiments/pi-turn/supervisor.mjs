@@ -90,7 +90,7 @@ pi.on('turn_end',(e,c)=>record('turn_end',{id:e.messageEntryId,stopReason:e.mess
 pi.on('agent_settled',(e,c)=>record('agent_settled',{aborted:e.aborted,entries:c.sessionManager.getBranch().filter(x=>x.type==='message'&&['user','assistant'].includes(x.message.role)).map(x=>({id:x.id,role:x.message.role,text:typeof x.message.content==='string'?x.message.content:x.message.content.filter(p=>p.type==='text').map(p=>p.text).join('\\n'),stopReason:x.message.stopReason}))},c));
 }`;
 }
-async function native() {
+function prepareNative() {
   chmodSync('/work', 0o700); privateDir('/work/private'); writePrivate('/work/private/events.jsonl', '');
   const p = paths(); privateDir(p.config); writePrivate(`${p.config}/secret`, 'synthetic-secret');
   const config = validateConfig({ schema_version: 1, endpoint: services.memory, bank: 'synthetic', secret_file: `${p.config}/secret`, adapters: ['pi'], capture: true });
@@ -102,6 +102,11 @@ async function native() {
   // Exact provider/settings configuration is pinned to inspected source; never activate a provider extension.
   writePrivate('/agent/models.json', JSON.stringify({ providers: { loopback: { baseUrl: `${services.provider}/v1`, api: 'openai-completions', apiKey: 'fixture-only', models: [{ id: 'fixture', maxTokens: 64 }] } } }));
   writePrivate('/agent/settings.json', JSON.stringify(input.piSettings));
+  output.nativePreparation = Object.fromEntries(['/agent', '/agent/models.json', '/agent/settings.json']
+    .map(path => [path, statSync(path).mode & 0o777]));
+}
+async function native() {
+  prepareNative();
   driver = tty();
   await waitFor(() => {
     const frame = driver.frames.find(frame => frame.type === 'pty-child');
@@ -135,6 +140,8 @@ try {
   output.confinement = await confinement();
   if (mode === 'native') await native();
   else {
+    // Exercise the real native setup without importing or starting a native client.
+    if (mode === 'preflight') prepareNative();
     driver = tty();
     await waitFor(() => driver.text.includes('SURROGATE_TTY_READY'), 'surrogate-not-ready');
     if (mode === 'linger') {

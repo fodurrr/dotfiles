@@ -58,7 +58,7 @@ export function sandboxArgs({ experiment, output, input, mode }) {
   demand(['preflight', 'native', 'linger', 'deadline', 'overflow'].includes(mode), 'unknown-phase');
   const launch = join(experiment, '../pi-launch'); const component = join(experiment, '../..');
   const args = ['--unshare-user', '--unshare-pid', '--unshare-net', '--unshare-ipc', '--unshare-uts', '--new-session', '--die-with-parent', '--cap-drop', 'ALL',
-    '--clearenv', '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp', '--tmpfs', '/home', '--dir', '/home/fixture', '--tmpfs', '/agent',
+    '--clearenv', '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp', '--tmpfs', '/home', '--dir', '/home/fixture', '--perms', '0700', '--tmpfs', '/agent',
     '--tmpfs', '/sessions', '--tmpfs', '/xdg', '--tmpfs', '/work', '--dir', '/runtime', '--dir', '/experiment', '--dir', '/pi-turn', '--dir', '/pi-launch', '--dir', '/component', '--dir', '/input',
     '--ro-bind', PIN.package, '/pi', '--ro-bind', PIN.runtime, '/runtime/node', '--ro-bind', PYTHON, PYTHON];
   for (const file of PYTHON_FILES) args.push('--ro-bind', file, file);

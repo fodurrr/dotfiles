@@ -5,6 +5,9 @@ have not run during preparation. Production activation remains blocked.
 
 The default and `--preflight-only` modes execute only our harmless Node surrogate
 through a Python PTY. They never execute or import Pi, Bun or upstream clients.
+The scripted PTY preflight also runs the actual native fixture preparation,
+including private model/settings writes, before starting the surrogate. Its
+`/agent` tmpfs has mode `0700`; both files must have mode `0600`.
 
 ```sh
 /home/fodurrr/.local/share/mise/installs/node/24.22.0/bin/node --test tools/hindsight-memory/experiments/pi-turn/test.mjs
