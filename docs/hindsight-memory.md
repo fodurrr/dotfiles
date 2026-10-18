@@ -94,9 +94,10 @@ Changing the destination requires selecting its new generated owner.
 Use the prepared launcher; activation from a different source checkout refuses
 `use-installed-release-command`. Prepare the intended version first.
 
-Activation still needs separate host approval and native trust. Only Linux Pi
-1.3.0 with the qualified ELF hash can pass. Mixed adapter selections also refuse
-`native-caller-binding-unqualified`. These are later host commands:
+Activation needs host approval and native trust. The Linux routes accept the
+pinned Pi 1.3.0 and dedicated Codex CLI 0.163.0 executables. Select each route's
+generated owner in `capture_owners`. Other routes refuse
+`native-caller-binding-unqualified`. These are host commands:
 
 ```sh
 hindsight-memory activate
@@ -116,6 +117,36 @@ extra arguments and copied bridges cannot satisfy the bridge's process checks.
 Create a fresh `/new` TUI session and accept its endpoint/bank consent.
 Startup and resumed sessions do not inherit consent.
 
+### Dedicated Codex CLI
+
+After selecting `codex-cli` and its exact capture owner, activation installs
+`~/.local/bin/codex-memory`. It accepts interactive sessions and an optional
+`--model <name>`. Its default model is `gpt-6-luna`.
+It starts in its own persistent workspace at
+`~/.local/state/hindsight-memory/codex-workspace`. Files written there remain
+after exit. Existing project directories, resume, fork, positional prompts and
+other arguments are not supported by this route.
+Ordinary `codex`, Codex Desktop and this running conversation are unchanged.
+
+The launcher keeps its own profile at
+`~/.local/state/hindsight-memory/codex-profile`. Its validated authentication link
+uses the existing Codex ChatGPT authentication file and native file store.
+Native refreshes update that same file, as ordinary Codex sessions do.
+It does not copy authentication tokens, global settings, plugins or hook trust.
+API-key and custom-provider authentication are not supported here.
+
+On the first launch, use native `/hooks` to review and trust the six memory
+hooks. Close that session and relaunch `codex-memory` before sending a prompt.
+The initial skipped `SessionStart` is not replayed after trust changes.
+The private profile keeps native hook trust for later launches.
+The launcher refuses extra profile hooks, plugins or unsupported configuration.
+It does not bypass native hook trust.
+
+Rollback removes the owned launcher and descriptor. It preserves the private
+Codex profile's authentication link, trust and native history, and its workspace.
+These are user state, not managed code. Per-launch binding files are removed
+when the launcher exits.
+
 Changing configuration while active is refused. Deactivate first. Changing the selected adapter set also requires rollback of its owned hooks first. A matching
 configuration resumes the existing generation, cutoff and pending jobs. A new
 destination creates a separate generation; older jobs keep their original bank,
@@ -125,8 +156,8 @@ endpoint, operation UUID and request bytes.
 
 | Adapter | Exact source/fixture versions | Remaining qualification |
 |---|---|---|
-| Claude Code | 2.1.302 | Native trust and host execution; cancellation and lost pre-bridge events remain visible |
-| Codex CLI | 0.162.0, 0.163.0 | Unstable pinned transcript format; actual host hooks/trust and completion persistence |
+| Claude Code | 2.1.302 | Automatic activation refused: emitted prompt hooks omit human versus automated origin. An interactive launcher cannot fill that missing field. |
+| Codex CLI | Dedicated Linux 0.163.0 route | `codex-memory` uses direct native prompt/final-answer hooks and a separate private profile. Actual native trust and delivery need verification; desktop/global hooks are not enabled. |
 | Pi | Pinned compiled Linux 1.3.0, sole generated extension; prepared native fake-service path passed | Local eligibility requires explicit owner selection. GEEKOM installed capture and fresh-session real recall passed; other hosts still need qualification. Pi 1.1 remains unqualified. See the [adapter contract](../tools/hindsight-memory/adapters/README.md). |
 | OpenCode v1 | 1.18.35 | Independent v1 plugin and actual provider lifecycle |
 | OpenCode v2 | 2.0.32 | Independent Promise plugin/event API and pre-dispatch crash gap |
@@ -137,7 +168,7 @@ endpoint, operation UUID and request bytes.
 
 The qualification helper probes an explicit agent executable with `--version` and records its identity only during explicit activation. Pi must first match the pinned ELF hash and owner selection. The bridge independently checks its actual process, exact arguments and saved generated bridge path before admission. Its prepared native qualification covered completed capture, cancellation, session changes, resumed sessions and conflicting capture owners against a fake service. These checks do not certify real service access or intentional edits by the same user.
 
-Native bridges reject a changed selected executable or retargeted alias before admission. Codex checks its transcript creator version and source. A resumed session preserves that original header, so it cannot establish the current invoking application or version. **Other automatic adapter activation remains refused.** Another installed binary can otherwise load the same global config. Their implemented source/fixture adapters remain available for isolated qualification. Unsupported adapters, mismatched detected versions and unqualified versions fail activation. Existing OpenCode `opencode.jsonc` also refuses activation until its coexistence behavior is qualified. They do not become
+Native bridges reject a changed selected executable or retargeted alias before admission. The dedicated Codex route binds hooks to the exact launched native process. It stages the native prompt and completes the matching native turn without reading a transcript. Its private profile excludes global hooks and plugins that could request more work after `Stop`. Fresh registration uses an empty baseline. Resume, compaction, subagents, steering and cancellation cannot inherit accepted capture eligibility. The earlier transcript parser remains fixture-only; creator headers cannot prove the current invoking application. **Other automatic adapter activation remains refused.** Their implemented source/fixture adapters remain available for isolated qualification. Unsupported adapters, mismatched detected versions and unqualified versions fail activation. Existing OpenCode `opencode.jsonc` also refuses activation until its coexistence behavior is qualified. They do not become
 successful skips. These unresolved routes remain work-item obligations. CLI
 support does not establish desktop or T3 support. The component does not install
 Hermes, an agent suite or company tooling merely to prepare memory.

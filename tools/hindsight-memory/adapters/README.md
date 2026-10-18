@@ -23,7 +23,7 @@ Descriptors require private regular files and safe parent directories.
 Malformed descriptors disable only the adapter and emit a content-free warning.
 
 All envelopes use `schema_version:1`, `agent`, `session` and `owner`.
-Pi also supplies `expected_destination`, the existing endpoint/bank digest.
+Pi and the dedicated Codex route also supply `expected_destination`, the existing endpoint/bank digest.
 The core compares it with its actual active destination before registration,
 staging, admission or recall. Other callers retain their existing contract.
 
@@ -45,9 +45,9 @@ admission. Failed delivery remains the core's responsibility.
 ## Source and fixture qualification
 
 The inspected versions are exact source/fixture allowlists. An update needs requalification.
-Production activation permits only the pinned compiled Linux Pi 1.3.0 route,
-selected alone with its exact generated capture owner. Other adapters remain
-blocked until actual native caller binding is proven. Selected executable identity alone cannot prove which binary
+Production activation permits the pinned compiled Linux Pi 1.3.0 route and the
+dedicated Linux Codex CLI 0.163.0 route, each with its exact generated capture owner.
+Other adapters remain blocked. Selected executable identity alone cannot prove which binary
 loaded a global hook or plugin. Codex resume keeps the creator header unchanged;
 its recorded CLI version/source does not prove the current invoking route.
 The generic installer must discover the actual selected executable's version.
@@ -56,10 +56,16 @@ An installed version number alone cannot establish the route used by a desktop.
 | Adapter | Versions | Registration and capture | Recall |
 |---|---|---|---|
 | `claude-code` | 2.1.302 | Native `SessionStart`; `UserPromptSubmit` stages `prompt_id`/original prompt; `Stop` supplies same ID/final text | Native prompt ID; `additionalContext` output |
-| `codex-cli` | 0.162.0, 0.163.0 | `SessionStart` baseline; pinned `event_msg` turn boundaries and native `Stop` final text; only transcript source `cli` | Native `turn_id` on `UserPromptSubmit` |
+| `codex-cli` dedicated launcher | 0.163.0 compiled Linux artifact | Empty fresh baseline; `UserPromptSubmit` stages original prompt and `turn_id`; matching `Stop` admits native final text | Native `turn_id` on `UserPromptSubmit` |
 | `pi` restricted route | 1.3.0 compiled Linux artifact only | Explicit fresh `/new` TUI consent; original `input` matched at `before_agent_start`; persisted user and `turn_end.messageEntryId`; final `agent_settled` | Once per staged turn at `context`; custom request-local message |
 | `opencode-v1` | 1.18.35 | Fresh `session.created`; SDK `session.messages`; `session.idle` snapshot | `chat.message`; synthetic native text part excluded from every later capture |
 | `opencode-v2` | 2.0.32 | Promise API; durable `session.created`/`session.execution.succeeded` data envelopes; stored `session.context` snapshot | Request-local `session.hook('context')`; no privileged system injection |
+
+**Claude automatic activation remains refused.** The installed 2.1.302 event
+builder omits the schema's prompt-origin field. It cannot distinguish original
+human input from Claude's own automated prompts. A scoped interactive launcher
+does not supply that missing native distinction. The adapter below remains
+source/fixture code, not a qualified automatic route.
 
 Claude's transcript is written asynchronously. Its final answer may be absent
 when `Stop` runs. The adapter therefore never reads Claude's transcript.
@@ -81,7 +87,16 @@ capture. They never fall back to uploading an entire transcript. The core checks
 prefix identities and text before extracting a new suffix. Source values `vscode`,
 `exec`, unknown strings and subagent objects are refused. These checks constrain creator provenance only. The native recorder reuses the
 header on resume, so they cannot certify the current Desktop, T3 or CLI invoker.
-Activation therefore remains blocked pending actual caller binding.
+This older transcript route remains blocked. Dedicated Codex capture instead
+uses `codex.mjs` and never reads the transcript. It checks the launched native
+PID, process start identity and executable through the hook's ancestors.
+The native hooks use a separate private `CODEX_HOME` with no global plugins or
+hook configuration. This avoids competing `Stop` handlers that could request
+continuation after the first final answer. Native hook trust is preserved;
+the launcher never uses `--dangerously-bypass-hook-trust`.
+`Interrupt` removes the staged turn. Steering poisons and aborts the pending
+turn. Session changes and compaction revoke that launch's capture eligibility.
+The original Codex profile, settings and hook trust stay untouched.
 
 The restricted Pi route uses the exact compiled Linux 1.3.0 ELF SHA-256
 `c2415d6e6f7c67b0a55744c5ace5054936e252fcc3cf56ce087bc314061315ca`.
@@ -100,7 +115,7 @@ writers; preview and activation both report `installed_writers_verified:false`.
 The operator must choose one writer after inventory before approving host rollout.
 Preview inspects metadata and hash without executing the selected command.
 Only explicit activation probes its version. Another version, platform, hash,
-adapter combination or ambient extension launch remains refused.
+unsupported adapter or ambient extension launch remains refused.
 
 Only `session_start.reason === 'new'` in TUI mode can request consent.
 Startup, resume, reload, forks, SDK, RPC and other versions remain refused.
