@@ -100,6 +100,7 @@ function prepareNative() {
   writePrivate(`${p.config}/config.json`, JSON.stringify(config)); store = new Store(p); store.activate(config); // Existing isolated test seam only.
   const identity = path => { const s = statSync(path); return { path, requested: path, dev: s.dev, ino: s.ino, size: s.size, mtimeMs: s.mtimeMs }; };
   writePrivate('/work/private/descriptor.json', JSON.stringify({ schema_version: 1, runtime: '/runtime/node', cli: '/component/src/cli.mjs', owner: 'isolated-pi-turn', agentVersion: '1.3.0',
+    bridge_path: '/work/sole-bridge.mjs',
     agent_identity: identity('/pi/pi'), runtime_identity: identity('/runtime/node') }));
   writePrivate('/work/sole-bridge.mjs', wrapper());
   // Exact provider/settings configuration is pinned to inspected source; never activate a provider extension.

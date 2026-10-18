@@ -3,7 +3,10 @@
 These are explicit activation artifacts, not installed hooks. Source inspection
 and isolated fixtures qualify the protocols below. They do not establish live
 capture, GUI trust, network access, extraction completion or cross-host recall.
-No native hook, upstream module or real agent was executed to obtain fixtures.
+No native hook, upstream module or real agent was executed to obtain source fixtures.
+Separate confined Pi qualification used the prepared generated bridge and a fake
+service. It covered consent, completed capture, cancellation, session changes and
+resume. Real service access remains unproved.
 
 ## Contract
 
@@ -42,8 +45,9 @@ admission. Failed delivery remains the core's responsibility.
 ## Source and fixture qualification
 
 The inspected versions are exact source/fixture allowlists. An update needs requalification.
-Production activation currently refuses every adapter until actual native caller
-binding is proven. Selected executable identity alone cannot prove which binary
+Production activation permits only the pinned compiled Linux Pi 1.3.0 route,
+selected alone with its exact generated capture owner. Other adapters remain
+blocked until actual native caller binding is proven. Selected executable identity alone cannot prove which binary
 loaded a global hook or plugin. Codex resume keeps the creator header unchanged;
 its recorded CLI version/source does not prove the current invoking route.
 The generic installer must discover the actual selected executable's version.
@@ -53,7 +57,7 @@ An installed version number alone cannot establish the route used by a desktop.
 |---|---|---|---|
 | `claude-code` | 2.1.302 | Native `SessionStart`; `UserPromptSubmit` stages `prompt_id`/original prompt; `Stop` supplies same ID/final text | Native prompt ID; `additionalContext` output |
 | `codex-cli` | 0.162.0, 0.163.0 | `SessionStart` baseline; pinned `event_msg` turn boundaries and native `Stop` final text; only transcript source `cli` | Native `turn_id` on `UserPromptSubmit` |
-| `pi` candidate | 1.3.0 compiled Linux artifact only | Explicit fresh `/new` TUI consent; original `input` matched at `before_agent_start`; persisted user and `turn_end.messageEntryId`; final `agent_settled` | Once per staged turn at `context`; custom request-local message |
+| `pi` restricted route | 1.3.0 compiled Linux artifact only | Explicit fresh `/new` TUI consent; original `input` matched at `before_agent_start`; persisted user and `turn_end.messageEntryId`; final `agent_settled` | Once per staged turn at `context`; custom request-local message |
 | `opencode-v1` | 1.18.35 | Fresh `session.created`; SDK `session.messages`; `session.idle` snapshot | `chat.message`; synthetic native text part excluded from every later capture |
 | `opencode-v2` | 2.0.32 | Promise API; durable `session.created`/`session.execution.succeeded` data envelopes; stored `session.context` snapshot | Request-local `session.hook('context')`; no privileged system injection |
 
@@ -79,16 +83,24 @@ prefix identities and text before extracting a new suffix. Source values `vscode
 header on resume, so they cannot certify the current Desktop, T3 or CLI invoker.
 Activation therefore remains blocked pending actual caller binding.
 
-The Pi candidate uses the exact compiled Linux 1.3.0 ELF SHA-256
+The restricted Pi route uses the exact compiled Linux 1.3.0 ELF SHA-256
 `c2415d6e6f7c67b0a55744c5ace5054936e252fcc3cf56ce087bc314061315ca`.
 It checks `/proc/self/exe`, selected executable identity, and the exact argument
 slice Pi passes to `main`: `--no-extensions -e <absolute-bridge-path>`.
 No positional prompt, extra flag, other extension or runtime preload is allowed.
-The generated wrapper passes its own `import.meta.url` to bind that sole path.
+The generated wrapper passes its own `import.meta.url`. Its path must match
+`descriptor.bridge_path`, recorded by `adapterArtifacts`; copied wrappers refuse.
 The native CLI loader keeps only the explicit extension paths with this flag.
 Configured packages may still be resolved before extension filtering.
-These source checks are candidate constraints; synthetic tests do not establish
-that the installed native route loads or behaves as expected.
+The prepared generated bridge passed the bounded native fake-service qualification.
+Local activation also requires the prepared release's own CLI and explicit
+`capture_owners.pi` selection matching the preview's generated owner.
+The owner binds this host, endpoint and bank. It does not inventory installed
+writers; preview and activation both report `installed_writers_verified:false`.
+The operator must choose one writer after inventory before approving host rollout.
+Preview inspects metadata and hash without executing the selected command.
+Only explicit activation probes its version. Another version, platform, hash,
+adapter combination or ambient extension launch remains refused.
 
 Only `session_start.reason === 'new'` in TUI mode can request consent.
 Startup, resume, reload, forks, SDK, RPC and other versions remain refused.
@@ -122,7 +134,7 @@ no pending input and no extra user. Tool calls, tool results, hidden reasoning,
 recall and history never enter the admitted pair. A terminal failure, unmatched
 run or lifecycle change aborts it. A changed destination/process refuses further
 core calls and reports any unconfirmed abort; an unaccepted stage may then need
-explicit recovery. Production activation in `cli.mjs` remains refused.
+explicit recovery. Eligibility does not establish host preparation or live API access.
 
 OpenCode v1 and v2 are independent adapters. Their package names, plugin exports,
 configuration keys, event envelopes and message schemas differ. V1 uses global

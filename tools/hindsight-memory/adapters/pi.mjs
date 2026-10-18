@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { destination as configDestination, loadConfig, paths } from '../src/config.mjs';
 import { diagnostic, envelope, identifier, makeInvoker, readPrivateJson, requireValue, textOnly } from './common.mjs';
 
-// Candidate only. cli.mjs still refuses production activation for every adapter.
+// Only the pinned sole-extension Linux route can pass local activation eligibility.
 export const PI_VERSIONS = ['1.3.0'];
 export const PI_ELF_SHA256 = 'c2415d6e6f7c67b0a55744c5ace5054936e252fcc3cf56ce087bc314061315ca';
 let executableCache;
@@ -42,7 +42,7 @@ export function observePiProcess() {
 export function qualifyPiProcess(descriptor, bridgePath, observed) {
   const expected = descriptor.agent_identity;
   requireValue(PI_VERSIONS.includes(descriptor.agentVersion) && expected && isAbsolute(expected.path || '') &&
-    isAbsolute(expected.requested || '') && isAbsolute(bridgePath || ''), 'unqualified_pi_process');
+    isAbsolute(expected.requested || '') && isAbsolute(bridgePath || '') && bridgePath===descriptor.bridge_path, 'unqualified_pi_process');
   requireValue(observed?.platform === 'linux' && observed.elf === true && observed.sha256 === PI_ELF_SHA256 &&
     observed.executable === expected.path && ['dev', 'ino', 'size', 'mtimeMs'].every(key => observed.identity?.[key] === expected[key]), 'unqualified_pi_process');
   requireValue(Array.isArray(observed.preloads) && observed.preloads.length === 0 &&

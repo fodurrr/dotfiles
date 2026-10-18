@@ -14,6 +14,7 @@ import { createPiAdapter, PI_ELF_SHA256, qualifyPiProcess, observePiProcess } fr
 import { makeInvoker } from '../adapters/common.mjs';
 
 const descriptor = { schema_version: 1, runtime: '/synthetic/node', cli: '/synthetic/cli.mjs', owner: 'synthetic-owner', agentVersion: '1.3.0',
+  bridge_path: '/synthetic/sole-bridge.mjs',
   agent_identity: { requested: '/synthetic/pi', path: '/synthetic/pi', dev: 1, ino: 2, size: 100, mtimeMs: 3 } };
 const bridgePath = '/synthetic/sole-bridge.mjs';
 const observation = () => ({ platform: 'linux', executable: '/synthetic/pi', elf: true, sha256: PI_ELF_SHA256,
@@ -63,6 +64,8 @@ const commands = f => f.calls.map(call => call.command);
 
 test('Pi candidate process binding rejects selected-file identity without actual matching ELF and exact sole-extension argv', () => {
   assert.doesNotThrow(() => qualifyPiProcess(descriptor, bridgePath, observation()));
+  assert.throws(() => qualifyPiProcess(descriptor, '/synthetic/copied-bridge.mjs', {...observation(),argv:['--no-extensions','-e','/synthetic/copied-bridge.mjs']}), /unqualified_pi_process/);
+  assert.throws(() => qualifyPiProcess({...descriptor,bridge_path:undefined}, bridgePath, observation()), /unqualified_pi_process/);
   for (const change of [{ platform: 'darwin' }, { executable: '/synthetic/bun' }, { elf: false }, { sha256: 'wrong' },
     { identity: { ...observation().identity, ino: 9 } }, { preloads: ['BUN_OPTIONS'] },
     ...[[], ['-e', bridgePath], ['--no-extensions', '-e', bridgePath, '@file'],

@@ -4,7 +4,7 @@ The optional `hindsight-memory` profile prepares a standalone personal-memory
 component. It does not activate capture. Existing Hindsight memories remain on
 the configured external server. This repository does not create or upgrade it.
 
-Implementation is under review. **Every automatic adapter currently refuses activation** because actual native caller binding remains unqualified. Publication, main merge and live rollout require
+Implementation is under review. **Only the pinned compiled Linux Pi 1.3.0 sole-extension route is eligible for local activation.** Every other automatic adapter remains blocked. Publication, main merge and live rollout require
 separate approval. The commands below describe the later workflow; they were not
 run against the operator's home or memory bank during implementation.
 
@@ -54,9 +54,9 @@ Pipe explicit configuration through stdin. Replace every example value:
   "endpoint": "https://memory.example.invalid",
   "bank": "my-existing-personal-bank",
   "secret_file": "/absolute/private/path/hindsight-api-key",
-  "adapters": ["codex-cli"],
-  "agent_versions": {"codex-cli": "0.163.0"},
-  "agent_commands": {"codex-cli": "/absolute/path/to/qualified/codex"},
+  "adapters": ["pi"],
+  "agent_versions": {"pi": "1.3.0"},
+  "agent_commands": {"pi": "/absolute/path/to/qualified/pi"},
   "capture": true
 }
 ```
@@ -72,7 +72,25 @@ or `[::1]` for explicit local deployments and isolated tests. Named hosts,
 including `localhost`, require HTTPS.
 It rejects URL credentials, query strings, redirects and path prefixes.
 
-The eventual activation workflow also needs separate host approval and native hook/plugin trust. The current candidate refuses this command with `native-caller-binding-unqualified`:
+The preview reads executable metadata and its hash; it never executes Pi or contacts the service.
+For Pi, it shows `capture_owner`, the exact sole-extension launch, and
+`installed_writers_verified:false`. Inventory and select one installed capture
+writer before activation. The generated owner does not prove that inventory happened.
+After choosing this writer, copy the preview's exact owner into the private JSON:
+
+```json
+"capture_owners": {"pi": "<exact 64-character capture_owner from preview>"}
+```
+
+Run `configure` again, then review `activation-preview`. Missing or different
+selection refuses activation. The owner is tied to this host, endpoint and bank.
+Changing the destination requires selecting its new generated owner.
+Use the prepared launcher; activation from a different source checkout refuses
+`use-installed-release-command`. Prepare the intended version first.
+
+Activation still needs separate host approval and native trust. Only Linux Pi
+1.3.0 with the qualified ELF hash can pass. Mixed adapter selections also refuse
+`native-caller-binding-unqualified`. These are later host commands:
 
 ```sh
 hindsight-memory activate
@@ -84,6 +102,13 @@ hooks and settings. It does not weaken native trust settings. `active:true`
 means local consent and installed adapter artifacts, **not verified live capture**.
 `capture_verified:false` remains explicit. Authentication, bank access and
 cross-agent recall still need approved harmless live checks.
+`installed_writers_verified:false` remains explicit after activation.
+Launch only the preview's exact executable and arguments:
+`--no-extensions -e <absolute generated bridge path>`. Clear the four preload
+variables listed in `launch.unset_environment`. Ambient extension discovery,
+extra arguments and copied bridges cannot satisfy the bridge's process checks.
+Create a fresh `/new` TUI session and accept its endpoint/bank consent.
+Startup and resumed sessions do not inherit consent.
 
 Changing configuration while active is refused. Deactivate first. Changing the selected adapter set also requires rollback of its owned hooks first. A matching
 configuration resumes the existing generation, cutoff and pending jobs. A new
@@ -96,7 +121,7 @@ endpoint, operation UUID and request bytes.
 |---|---|---|
 | Claude Code | 2.1.302 | Native trust and host execution; cancellation and lost pre-bridge events remain visible |
 | Codex CLI | 0.162.0, 0.163.0 | Unstable pinned transcript format; actual host hooks/trust and completion persistence |
-| Pi | Restricted compiled Linux 1.3.0 candidate; confined native fake-service path passed | Production activation, native lifecycle negatives, host preparation and live API qualification remain open. Pi 1.1 remains unqualified. See the [candidate contract](../tools/hindsight-memory/adapters/README.md). |
+| Pi | Pinned compiled Linux 1.3.0, sole generated extension; prepared native fake-service path passed | Local eligibility requires explicit owner selection. Host preparation, installed-writer inventory and live API qualification remain open. Pi 1.1 remains unqualified. See the [adapter contract](../tools/hindsight-memory/adapters/README.md). |
 | OpenCode v1 | 1.18.35 | Independent v1 plugin and actual provider lifecycle |
 | OpenCode v2 | 2.0.32 | Independent Promise plugin/event API and pre-dispatch crash gap |
 | Grok | Investigated 1.0.62 | Native prompt-hook output is discarded; complete automatic recall route unqualified |
@@ -104,7 +129,9 @@ endpoint, operation UUID and request bytes.
 | Hermes | Investigated installed provider path | In-memory executor precedes durable provider admission; safe handover also required |
 | Desktop, T3, Zed | Separate routes | Actual provider, native lifecycle and exclusive capture owner unqualified |
 
-The qualification helper probes an explicit agent executable with `--version` and records its identity. Production activation stops before this probe until caller binding is qualified. Native bridges reject a changed selected executable or retargeted alias before admission. Codex checks its transcript creator version and source. A resumed session preserves that original header, so it cannot establish the current invoking application or version. **All automatic adapter activation is refused** until actual native caller binding is qualified. Another installed binary can otherwise load the same global config. Their implemented source/fixture adapters remain available for isolated qualification; they are not active supported routes. Unsupported adapters, mismatched detected versions and unqualified versions fail activation. Existing OpenCode `opencode.jsonc` also refuses activation until its coexistence behavior is qualified. They do not become
+The qualification helper probes an explicit agent executable with `--version` and records its identity only during explicit activation. Pi must first match the pinned ELF hash and owner selection. The bridge independently checks its actual process, exact arguments and saved generated bridge path before admission. Its prepared native qualification covered completed capture, cancellation, session changes, resumed sessions and conflicting capture owners against a fake service. These checks do not certify real service access or intentional edits by the same user.
+
+Native bridges reject a changed selected executable or retargeted alias before admission. Codex checks its transcript creator version and source. A resumed session preserves that original header, so it cannot establish the current invoking application or version. **Other automatic adapter activation remains refused.** Another installed binary can otherwise load the same global config. Their implemented source/fixture adapters remain available for isolated qualification. Unsupported adapters, mismatched detected versions and unqualified versions fail activation. Existing OpenCode `opencode.jsonc` also refuses activation until its coexistence behavior is qualified. They do not become
 successful skips. These unresolved routes remain work-item obligations. CLI
 support does not establish desktop or T3 support. The component does not install
 Hermes, an agent suite or company tooling merely to prepare memory.

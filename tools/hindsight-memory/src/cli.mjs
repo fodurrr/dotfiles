@@ -10,8 +10,7 @@ import {Store} from './state.mjs';
 import {register,capture,envelope,stageTurn,completeTurn,abortTurn} from './capture.mjs';
 import {atomicOwnedFile,applyArtifacts,rollbackArtifacts,withMutationLock} from './ownership.mjs';
 import {worker,recall} from './delivery.mjs';
-import {qualifyAgent} from './qualification.mjs';
-import {adapterArtifacts} from '../adapters/manage.mjs';
+import {activationPlans} from './activation.mjs';
 
 const source=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const p=paths();
@@ -91,32 +90,18 @@ function wake() {
   // Accepted admission survives wake failure. Worker has no transcript in argv or stdout.
   try {const child=spawn(process.execPath,['--disable-warning=ExperimentalWarning',fileURLToPath(import.meta.url),'worker'],{detached:true,stdio:'ignore',env:process.env});child.on('error',()=>{});child.unref();return 'requested';} catch {return 'failed';}
 }
-function activationPlans(config,{qualify=false}={}) {
-  const installation=JSON.parse(readPrivate(path.join(p.data,'installation.json')));
-  const plans=[];
-  for(const adapter of config.adapters) {
-    if(qualify)fail('native-caller-binding-unqualified');
-    if(adapter.startsWith('opencode-') && fs.existsSync(path.join(process.env.XDG_CONFIG_HOME || path.join(p.home,'.config'),'opencode/opencode.jsonc')))fail('opencode-jsonc-coexistence-unqualified');
-    const descriptorPath=path.join(p.config,'adapters',`${adapter}.json`);
-    const owner=hash(JSON.stringify([os.hostname(),config.endpoint,config.bank,adapter]));
-    const plan=adapterArtifacts({adapter,version:config.agent_versions[adapter],runtime:installation.runtime.path,cli:path.join(installation.release,'src/cli.mjs'),releaseDir:installation.release,descriptorPath,owner,home:p.home,configHome:process.env.XDG_CONFIG_HOME || path.join(p.home,'.config')});
-    plan.descriptor.runtime_identity=installation.runtime;
-    if(qualify)plan.descriptor.agent_identity=qualifyAgent(config.agent_commands[adapter],config.agent_versions[adapter]);
-    plan.files.push({path:descriptorPath,content:JSON.stringify(plan.descriptor),mode:0o600});plans.push(plan);
-  }
-  return plans;
-}
+const activationPaths={...p,configHome:process.env.XDG_CONFIG_HOME || path.join(p.home,'.config')};
 export async function main(command=process.argv[2],{wakeImpl=wake}={}) {
   qualifyRuntime();
   if(command==='prepare') return prepare();
   verifyInstalledRuntime();
   if(['status','inspect','doctor'].includes(command)) return status({offset:process.argv[3]===undefined?0:Number(process.argv[3])});
-  if(command==='activation-preview'){const plans=activationPlans(loadConfig(p));return {status:'activation-pending',adapters:plans.map(plan=>({id:plan.id,version:plan.version,qualification:plan.qualification,files:plan.files.map(file=>file.path),json_files:plan.jsonPatches.map(patch=>patch.path),prerequisites:plan.prerequisites,activation_blocker:'native-caller-binding-unqualified'})),active:false};}
+  if(command==='activation-preview'){const plans=activationPlans(activationPaths,loadConfig(p));return {status:'activation-pending',adapters:plans.map(plan=>({id:plan.id,version:plan.version,qualification:plan.qualification,files:plan.files.map(file=>file.path),json_files:plan.jsonPatches.map(patch=>patch.path),prerequisites:plan.prerequisites,activation_blocker:plan.activation_blocker,...(plan.id==='pi'?{capture_owner:plan.capture_owner,capture_owner_selection:plan.capture_owner_selection,installed_writers_verified:false,launch:plan.launch}:{})})),active:false};}
   if(command==='configure') {const value=await input();const config=validateConfig(value);return withMutationLock(p,()=>{credential(config);if(fs.existsSync(path.join(p.state,'state.sqlite'))){const current=new Store(p,{readOnly:true});try{if(current.status().active)fail('deactivate-before-configure');}finally{current.close();}}if(fs.existsSync(path.join(p.config,'config.json')) && fs.existsSync(path.join(p.config,'ownership.json'))){const old=loadConfig(p);if(JSON.stringify([...old.adapters].sort())!==JSON.stringify([...config.adapters].sort()) && JSON.parse(readPrivate(path.join(p.config,'ownership.json'))).records.length)fail('rollback-before-adapter-selection-change');}writePrivate(path.join(p.config,'config.json'),JSON.stringify(config));return {status:'configured',configured:true,active:false};});}
   const localStart=performance.now();
   const store=new Store(p);
   try {
-    if(command==='activate')return withMutationLock(p,()=>{const config=loadConfig(p);credential(config);const existing=store.db.prepare('SELECT config FROM activations WHERE active=1').get();if(existing && existing.config!==JSON.stringify(config))fail('deactivate-before-config-change');const plans=activationPlans(config,{qualify:true});store.deactivate();applyArtifacts(p,plans,{locked:true});return {status:'active',active:true,generation:store.activate(config),capture_verified:false,qualification:'source-and-fixture-only'};});
+    if(command==='activate')return withMutationLock(p,()=>{const config=loadConfig(p);credential(config);const existing=store.db.prepare('SELECT config FROM activations WHERE active=1').get();if(existing && existing.config!==JSON.stringify(config))fail('deactivate-before-config-change');const plans=activationPlans(activationPaths,config,{qualify:true});store.deactivate();applyArtifacts(p,plans,{locked:true});return {status:'active',active:true,generation:store.activate(config),capture_verified:false,qualification:'prepared-native-fixture-qualified',installed_writers_verified:false};});
     if(command==='deactivate')return withMutationLock(p,()=>store.deactivate());
     if(command==='rollback')return withMutationLock(p,()=>{const suspended=store.deactivate();const result=rollbackArtifacts(p,{locked:true});return {...result,suspension:suspended};});
     if(command==='session') {const result=register(store,await input());return {...result,wake:wakeImpl()};}

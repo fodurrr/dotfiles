@@ -57,7 +57,12 @@ export function validateConfig(value) {
   if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['127.0.0.1', '[::1]'].includes(url.hostname))) fail('insecure-endpoint');
   if (!path.isAbsolute(value.secret_file || '') || !Array.isArray(value.adapters) || !value.adapters.length || value.adapters.some(v => !/^[a-z0-9-]{1,40}$/.test(v)) || value.capture !== true) fail('invalid-config');
   const endpoint = url.origin;
-  return {schema_version: 1, endpoint, bank: value.bank, secret_file: value.secret_file, adapters: [...new Set(value.adapters)], agent_commands: value.agent_commands && typeof value.agent_commands==='object' && !Array.isArray(value.agent_commands)?value.agent_commands:{}, agent_versions: value.agent_versions && typeof value.agent_versions === 'object' && !Array.isArray(value.agent_versions) ? value.agent_versions : {}, capture: true};
+  let owners={};
+  if(value.capture_owners!==undefined){
+    if(!value.capture_owners || typeof value.capture_owners!=='object' || Array.isArray(value.capture_owners) || Object.entries(value.capture_owners).some(([adapter,owner])=>adapter!=='pi' || typeof owner!=='string' || !/^[a-f0-9]{64}$/.test(owner)))fail('invalid-capture-owner-selection');
+    owners={capture_owners:{...value.capture_owners}};
+  }
+  return {schema_version: 1, endpoint, bank: value.bank, secret_file: value.secret_file, adapters: [...new Set(value.adapters)], agent_commands: value.agent_commands && typeof value.agent_commands==='object' && !Array.isArray(value.agent_commands)?value.agent_commands:{}, agent_versions: value.agent_versions && typeof value.agent_versions === 'object' && !Array.isArray(value.agent_versions) ? value.agent_versions : {}, ...owners, capture: true};
 }
 export function loadConfig(p) { return validateConfig(JSON.parse(readPrivate(path.join(p.config, 'config.json')))); }
 export function destination(config) { return hash(JSON.stringify([config.endpoint, config.bank])); }

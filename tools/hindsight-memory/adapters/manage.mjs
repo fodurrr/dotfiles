@@ -57,5 +57,5 @@ export function adapterArtifacts({ adapter, version, runtime, cli, releaseDir, d
   }
   return { id: adapter, version, qualification: 'source-and-fixture-qualified',
     files, jsonPatches, prerequisites: ['explicit-activation', 'native-trust', 'fresh-or-explicitly-enrolled-session', 'exclusive-capture-owner'],
-    descriptor: { schema_version: 1, runtime, cli, owner, agentVersion: version } };
+    descriptor: { schema_version: 1, runtime, cli, owner, agentVersion: version, ...(adapter==='pi'?{bridge_path:files[0].path}:{}) } };
 }
