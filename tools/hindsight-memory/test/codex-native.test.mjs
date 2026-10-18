@@ -90,9 +90,10 @@ test('isolated launch keeps global config, auth and trust intact; reuses private
  const options={env:{HOME:f.home,NODE_OPTIONS:'--forbidden'},terminal:true,systemFiles:[],inspectAgentImpl:()=>({...descriptor.agent_identity})};
  assert.throws(()=>prepareCodexLaunch(descriptor,'/descriptor',[],{...options,terminal:false}),/terminal_required/);
  const launch=prepareCodexLaunch(descriptor,'/descriptor',[],options);
- assert.equal(launch.executable,'/native');assert.equal(launch.env.CODEX_HOME,path.join(f.p.state,'codex-profile'));assert.equal(launch.env.NODE_OPTIONS,undefined);
+ assert.equal(f.store.status().active,true);
+ assert.equal(launch.executable,'/native');assert.equal(launch.env.CODEX_HOME,path.join(`${f.p.state}-codex`,'profile'));assert.equal(launch.env.NODE_OPTIONS,undefined);
  assert(fs.lstatSync(path.join(launch.env.CODEX_HOME,'auth.json')).isSymbolicLink());assert.equal(fs.readlinkSync(path.join(launch.env.CODEX_HOME,'auth.json')),path.join(globalHome,'auth.json'));
- assert.equal(launch.cwd,path.join(f.p.state,'codex-workspace'));assert(!launch.cwd.startsWith(launch.root));assert.equal(launch.args.at(-1),'gpt-6-luna');
+ assert.equal(launch.cwd,path.join(`${f.p.state}-codex`,'workspace'));assert(!launch.cwd.startsWith(launch.root));assert.equal(launch.args.at(-1),'gpt-6-luna');
  writePrivate(path.join(launch.env.CODEX_HOME,'config.toml'),'[hooks.state.fixture]\nenabled = true\ntrusted_hash = "abc"\n');
  const second=prepareCodexLaunch(descriptor,'/descriptor',['--model','gpt-6-luna'],options);
  assert.equal(second.env.CODEX_HOME,launch.env.CODEX_HOME);assert.equal(second.cwd,launch.cwd);

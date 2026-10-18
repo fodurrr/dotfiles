@@ -6,7 +6,7 @@ import {readPrivate,hash,fail} from './config.mjs';
 import {inspectAgent,qualifyAgent} from './qualification.mjs';
 import {adapterArtifacts} from '../adapters/manage.mjs';
 import {PI_ELF_SHA256,PI_VERSIONS} from '../adapters/pi.mjs';
-import {CODEX_ELF_SHA256,CODEX_VERSIONS} from '../adapters/codex.mjs';
+import {CODEX_ELF_SHA256,CODEX_VERSIONS,codexStateRoot} from '../adapters/codex.mjs';
 
 // Dependency injection is used only by harmless fixtures. CLI supplies the defaults.
 export function activationPlans(p,config,{qualify=false,platform=process.platform,sourceDir=fileURLToPath(new URL('..',import.meta.url)),inspectAgentImpl=inspectAgent,qualifyAgentImpl=qualifyAgent}={}) {
@@ -30,7 +30,7 @@ export function activationPlans(p,config,{qualify=false,platform=process.platfor
       plan.capture_owner_selection={required:true,selected,matches:selected===owner};
       plan.installed_writers_verified=false;
       const bridge=plan.files[0].path;
-      plan.launch=adapter==='pi'?{executable:config.agent_commands.pi || null,args:['--no-extensions','-e',bridge],unset_environment:['NODE_OPTIONS','BUN_OPTIONS','LD_PRELOAD','LD_LIBRARY_PATH'],requires:'fresh-/new-TUI-consent'}:{executable:bridge,args:[],requires:'isolated-interactive-startup-native-hook-trust',profile:path.join(p.state,'codex-profile')};
+      plan.launch=adapter==='pi'?{executable:config.agent_commands.pi || null,args:['--no-extensions','-e',bridge],unset_environment:['NODE_OPTIONS','BUN_OPTIONS','LD_PRELOAD','LD_LIBRARY_PATH'],requires:'fresh-/new-TUI-consent'}:{executable:bridge,args:[],requires:'isolated-interactive-startup-native-hook-trust',profile:path.join(codexStateRoot(p),'profile')};
       if(qualifiedRoutes) {
         // Selection binds the generated writer to this host/destination. It never
         // claims that other installed writers were discovered or disabled.

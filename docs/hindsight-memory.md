@@ -123,13 +123,13 @@ After selecting `codex-cli` and its exact capture owner, activation installs
 `~/.local/bin/codex-memory`. It accepts interactive sessions and an optional
 `--model <name>`. Its default model is `gpt-6-luna`.
 It starts in its own persistent workspace at
-`~/.local/state/hindsight-memory/codex-workspace`. Files written there remain
+`~/.local/state/hindsight-memory-codex/workspace`. Files written there remain
 after exit. Existing project directories, resume, fork, positional prompts and
 other arguments are not supported by this route.
 Ordinary `codex`, Codex Desktop and this running conversation are unchanged.
 
 The launcher keeps its own profile at
-`~/.local/state/hindsight-memory/codex-profile`. Its validated authentication link
+`~/.local/state/hindsight-memory-codex/profile`. Its validated authentication link
 uses the existing Codex ChatGPT authentication file and native file store.
 Native refreshes update that same file, as ordinary Codex sessions do.
 It does not copy authentication tokens, global settings, plugins or hook trust.

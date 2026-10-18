@@ -10,6 +10,7 @@ import {inspectAgent} from '../src/qualification.mjs';
 export const CODEX_VERSIONS=['0.163.0'];
 export const CODEX_ELF_SHA256='399ff69c431c066e40de318fba45c2b07f45a76b19939d247ee4828fc70c4215';
 export const CODEX_BINDING_ENV='HINDSIGHT_CODEX_BINDING';
+export const codexStateRoot=p=>`${p.state}-codex`;
 const quote=value=>"'"+value.replaceAll("'","'\\''")+"'";
 
 export function processIdentity(pid,root='/proc') {
@@ -121,9 +122,9 @@ export function prepareCodexLaunch(descriptor,descriptorPath,args=[],{env=proces
   const sourceAuth=path.resolve(sourceHome,'auth.json');const auth=readPrivate(sourceAuth);
   let parsed;try{parsed=JSON.parse(auth);}catch{requireValue(false,'invalid_codex_auth');}
   requireValue(parsed?.auth_mode==='chatgpt' && parsed.tokens && typeof parsed.tokens.access_token==='string','codex_chatgpt_auth_required');
-  const root=path.join(p.state,'codex-launches',randomUUID());privateDir(root);
+  const root=path.join(codexStateRoot(p),'launches',randomUUID());privateDir(root);
   try {
-    const codexHome=path.join(p.state,'codex-profile');const cwd=path.join(p.state,'codex-workspace');privateDir(codexHome);privateDir(cwd);
+    const codexHome=path.join(codexStateRoot(p),'profile');const cwd=path.join(codexStateRoot(p),'workspace');privateDir(codexHome);privateDir(cwd);
     requireValue(['config.toml','hooks.json'].every(name=>!fs.existsSync(path.join(cwd,'.codex',name))),'codex_workspace_config_unqualified');
     requireValue(!fs.existsSync(path.join(codexHome,'hooks.json')) && !fs.existsSync(path.join(codexHome,'plugins')),'codex_profile_config_unqualified');
     const profileConfig=path.join(codexHome,'config.toml');
