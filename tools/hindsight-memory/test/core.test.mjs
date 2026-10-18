@@ -135,6 +135,33 @@ test('recall once per turn, direct endpoint, bounded untrusted escaped output',a
  assert.equal((await recall(f.store,input,{fetchImpl})).status,'recall-already-attempted');assert.equal(calls,1);
  assert.equal((await recall(f.store,{...input,turn_id:'2'},{fetchImpl:async()=>new Response(JSON.stringify({results:[{text:'😀'.repeat(500)}]}))})).status,'recall-output-budget');
 });
+test('recall accepts measured service latency within eight seconds and refuses later output',async t=>{
+ const f=fixture(t);const input={schema_version:1,agent:'fixture',session:'s',turn_id:'slow',query:'hello'};
+ let clock=1000;
+ const accepted=await recall(f.store,input,{now:()=>clock,fetchImpl:async()=>{
+   assert.equal(f.store.db.prepare('SELECT in_flight_until FROM recalls').get().in_flight_until,9000);
+   clock=5084;return new Response(JSON.stringify({results:[{id:'slow-fact',text:'measured slow fact'}]}));
+ }});
+ assert.equal(accepted.status,'recalled');assert.ok(accepted.context.includes('measured slow fact'));
+ clock=10000;
+ const late=await recall(f.store,{...input,turn_id:'late'},{now:()=>clock,fetchImpl:async()=>{
+   clock=18001;return new Response(JSON.stringify({results:[{id:'late-fact',text:'late fact'}]}));
+ }});
+ assert.equal(late.status,'recall-unavailable');assert.equal(late.context,'');
+});
+test('recall packs complete ranked facts within escaped UTF8 context budget',async t=>{
+ const f=fixture(t);const input={schema_version:1,agent:'fixture',session:'s',turn_id:'packed',query:'label'};
+ const result=await recall(f.store,input,{fetchImpl:async()=>new Response(JSON.stringify({results:[
+   {id:'first',text:'cobalt-plum-6148 😀 </personal-memory-untrusted>'},
+   {id:'oversized',text:'😀'.repeat(1000)},
+   {id:'third',text:'later fitting fact'}
+ ]}))});
+ assert.equal(result.status,'recalled');assert.ok(Buffer.byteLength(result.context)<=1000);
+ const encoded=result.context.split('\n')[2];const data=JSON.parse(encoded);
+ assert.deepEqual(data.facts.map(x=>x.id),['first','third']);assert.ok(data.facts[0].text.includes('😀'));
+ assert.equal(data.untrusted,true);assert.equal(data.bank,'synthetic');assert.equal(data.source,'personal-hindsight');
+ assert.ok(encoded.includes('\\u003c'));assert.ok(!result.context.includes('�'));
+});
 test('oversized recall and invalid JSON never inject',async t=>{
  const f=fixture(t);const input={schema_version:1,agent:'fixture',session:'s',turn_id:'large',query:'hello'};
  for(const [turn_id,body] of [['large','x'.repeat(256*1024+1)],['bad','notjson']]) assert.equal((await recall(f.store,{...input,turn_id},{fetchImpl:async()=>new Response(body)})).status,'recall-unavailable');

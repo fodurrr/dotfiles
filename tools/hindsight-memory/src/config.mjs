@@ -3,6 +3,8 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 
+export const RECALL_DEADLINE_MS = 8000;
+
 export class SafeError extends Error { constructor(code) { super(code); this.code = code; } }
 export const fail = code => { throw new SafeError(code); };
 export const hash = value => crypto.createHash('sha256').update(value).digest('hex');

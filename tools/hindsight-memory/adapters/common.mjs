@@ -1,7 +1,7 @@
 import {performance} from 'node:perf_hooks';
 import { spawnSync } from 'node:child_process';
 import { lstatSync, realpathSync, fstatSync, openSync, readSync, closeSync, constants } from 'node:fs';
-import {readPrivate} from '../src/config.mjs';
+import {readPrivate, RECALL_DEADLINE_MS} from '../src/config.mjs';
 import { isAbsolute, dirname } from 'node:path';
 
 export const MAX_TRANSCRIPT_BYTES = 8 * 1024 * 1024;
@@ -79,14 +79,14 @@ export function makeInvoker(descriptor, run = spawnSync) {
     const started=performance.now();
     if(descriptor.agent_identity){const expected=descriptor.agent_identity;requireValue(realpathSync(expected.requested)===expected.path,'agent_changed_requalify');safeParents(expected.requested);const actual=lstatSync(expected.path);requireValue(actual.isFile() && !actual.isSymbolicLink() && actual.dev===expected.dev && actual.ino===expected.ino && actual.size===expected.size && actual.mtimeMs===expected.mtimeMs,'agent_changed_requalify');}
     if(descriptor.runtime_identity){const actual=lstatSync(descriptor.runtime);const expected=descriptor.runtime_identity;requireValue(actual.isFile() && !actual.isSymbolicLink() && actual.dev===expected.dev && actual.ino===expected.ino && actual.size===expected.size && actual.mtimeMs===expected.mtimeMs,'runtime_changed_requalify');}
-    const payload=JSON.stringify(command==='recall'?{...input,recall_deadline_utc_ms:Date.now()+1500}:input);
+    const payload=JSON.stringify(command==='recall'?{...input,recall_deadline_utc_ms:Date.now()+RECALL_DEADLINE_MS}:input);
     const result = run(descriptor.runtime, [descriptor.cli, command], {
-      input: payload, encoding: 'utf8', timeout: command === 'recall' ? Math.max(1,Math.floor(1500-(performance.now()-started))) : 5000,
+      input: payload, encoding: 'utf8', timeout: command === 'recall' ? Math.max(1,Math.floor(RECALL_DEADLINE_MS-(performance.now()-started))) : 5000,
       maxBuffer: 300 * 1024, shell: false, windowsHide: true,
       // No shell and no credential values in argv. Core validates runtime/config/state.
       stdio: ['pipe', 'pipe', 'pipe'],
     });
-    if(command==='recall' && performance.now()-started>=1500)return {schema_version:1,status:'recall-unavailable',context:''};
+    if(command==='recall' && performance.now()-started>=RECALL_DEADLINE_MS)return {schema_version:1,status:'recall-unavailable',context:''};
     if (result.error || result.status !== 0) {
       let failed;try{failed=JSON.parse(result.stdout);}catch{}
       if(failed?.schema_version===1 && failed.status==='failed' && failed.reason==='state-busy-admission-not-confirmed')throw new AdapterError('state_busy_admission_not_confirmed');

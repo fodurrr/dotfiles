@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
-import { privateDir, privatePath, fail, hash, destination } from './config.mjs';
+import { privateDir, privatePath, fail, hash, destination, RECALL_DEADLINE_MS } from './config.mjs';
 
 export const LIMITS = Object.freeze({jobs:1000, bytes:64*1024*1024, disk:128*1024*1024, job:64*1024, age:86400000, attempts:8, polls:24, worker:60000, request:10000});
 export class Store {
@@ -197,7 +197,7 @@ export class Store {
   }
   nextDue() {return this.db.prepare("SELECT min(next) due FROM jobs JOIN activations ON jobs.generation=activations.id WHERE activations.active=1 AND jobs.state IN ('queued','submitted')").get()?.due;}
   recallOnce(key,now = Date.now()) {
-    this.capacity(); return this.transaction(() => { this.active(); return this.db.prepare('INSERT OR IGNORE INTO recalls VALUES(?,?,?)').run(key,now,now+1500).changes === 1; });
+    this.capacity(); return this.transaction(() => { this.active(); return this.db.prepare('INSERT OR IGNORE INTO recalls VALUES(?,?,?)').run(key,now,now+RECALL_DEADLINE_MS).changes === 1; });
   }
   lifecycle() {return this.db.prepare("SELECT value FROM meta WHERE key='lifecycle'").get()?.value || '0';}
   finishRecall(key) {this.db.prepare('UPDATE recalls SET in_flight_until=0 WHERE key=?').run(key);}

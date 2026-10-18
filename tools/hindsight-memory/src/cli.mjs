@@ -5,7 +5,7 @@ import os from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
-import {paths,privateDir,privatePath,readPrivate,writePrivate,validateConfig,loadConfig,credential,qualifyRuntime,fail,hash} from './config.mjs';
+import {paths,privateDir,privatePath,readPrivate,writePrivate,validateConfig,loadConfig,credential,qualifyRuntime,fail,hash,RECALL_DEADLINE_MS} from './config.mjs';
 import {Store} from './state.mjs';
 import {register,capture,envelope,stageTurn,completeTurn,abortTurn} from './capture.mjs';
 import {atomicOwnedFile,applyArtifacts,rollbackArtifacts,withMutationLock} from './ownership.mjs';
@@ -111,7 +111,7 @@ export async function main(command=process.argv[2],{wakeImpl=wake}={}) {
     if(command==='complete-turn'){const result=completeTurn(store,await input(),{host:os.hostname()});return {...result,wake:result.status==='queued'?wakeImpl():'unneeded'};}
     if(command==='abort-turn')return abortTurn(store,await input());
     if(command==='worker') return await worker(store,{budget:Math.max(1,60000-performance.now())});
-    if(command==='recall'){const value=await input();return await recall(store,value,{budget:Math.max(1,Math.min(1500-performance.now(),typeof value.recall_deadline_utc_ms==='number'?value.recall_deadline_utc_ms-Date.now():1500))});}
+    if(command==='recall'){const value=await input();return await recall(store,value,{budget:Math.max(1,Math.min(RECALL_DEADLINE_MS-performance.now(),typeof value.recall_deadline_utc_ms==='number'?value.recall_deadline_utc_ms-Date.now():RECALL_DEADLINE_MS))});}
     if(command==='retry') return {...store.recover(await input()),wake:wakeImpl()};
     fail('unknown-command');
   } finally {store.close();}

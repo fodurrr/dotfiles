@@ -229,3 +229,14 @@ test('Codex prompt recall rechecks actual native route/version before any core c
  }
  const {calls,invoke}=recorder();handleHook('codex-cli',input,d,invoke,()=>jsonl(codexRows));assert.deepEqual(calls.map(call=>call.command),['session-status','recall']);
 });
+
+test('native recall invocation shares the eight-second deadline with the core',()=>{
+ const before=Date.now();let options;
+ const invoke=makeInvoker(descriptor,(_executable,_argv,value)=>{
+   options=value;return {status:0,stdout:JSON.stringify({schema_version:1,status:'recalled',context:'bounded fact'})};
+ });
+ assert.equal(invoke('recall',{query:'fact'}).status,'recalled');
+ assert.ok(options.timeout>1500 && options.timeout<=8000);
+ const deadline=JSON.parse(options.input).recall_deadline_utc_ms;
+ assert.ok(deadline>=before+7900 && deadline<=Date.now()+8000);
+});
