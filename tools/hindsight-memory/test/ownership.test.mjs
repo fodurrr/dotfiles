@@ -4,6 +4,69 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fixture} from './helpers.mjs';
 import {applyArtifacts,rollbackArtifacts} from '../src/ownership.mjs';
+import {adapterArtifacts} from '../adapters/manage.mjs';
+
+function piArtifactsFixture(t) {
+ const f=fixture(t);
+ const agent=path.join(f.home,'.pi','agent');
+ const bridge=path.join(agent,'extensions','hindsight-memory.js');
+ const descriptor=path.join(f.p.config,'adapters','pi.json');
+ const releaseDir=path.join(f.home,'synthetic-release');
+ // Generate file contents only. No Pi runtime, bridge import or CLI activation runs.
+ const plan=adapterArtifacts({adapter:'pi',version:'1.3.0',runtime:process.execPath,
+  cli:path.join(releaseDir,'src','cli.mjs'),releaseDir,descriptorPath:descriptor,
+  owner:'synthetic-pi-owner',home:f.home});
+ plan.files.push({path:descriptor,content:JSON.stringify(plan.descriptor),mode:0o600});
+ const untouched=new Map([
+  [path.join(agent,'settings.json'),'{"defaultProvider":"synthetic","extensions":["./extensions/user.js"]}\n'],
+  [path.join(agent,'extensions','user.js'),'export default function userExtension() {}\n'],
+  [path.join(agent,'auth.json'),'{"synthetic-provider":{"apiKey":"SYNTHETIC_PI_AUTH_SENTINEL"}}\n'],
+  [f.config.secret_file,fs.readFileSync(f.config.secret_file,'utf8')],
+ ]);
+ for(const [file,content] of untouched) {
+  fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
+  fs.writeFileSync(file,content,{mode:0o600});
+ }
+ const assertUnchanged=()=>{
+  for(const [file,content] of untouched) {
+   assert.equal(fs.readFileSync(file,'utf8'),content,file);
+   assert.equal(fs.statSync(file).mode & 0o777,0o600,file);
+  }
+ };
+ return {...f,bridge,descriptor,plan,assertUnchanged};
+}
+
+test('generated Pi artifacts apply and rollback preserve unrelated configuration and auth',t=>{
+ const f=piArtifactsFixture(t);
+ assert.deepEqual(f.plan.jsonPatches,[]);
+ assert.deepEqual(f.plan.files.map(file=>file.path),[f.bridge,f.descriptor]);
+ for(let attempt=0;attempt<2;attempt++) {
+  assert.deepEqual(applyArtifacts(f.p,[f.plan]),{status:'artifacts-prepared',files:2});
+  for(const file of f.plan.files) {
+   assert.equal(fs.readFileSync(file.path,'utf8'),file.content);
+   assert.equal(fs.statSync(file.path).mode & 0o777,0o600);
+  }
+  f.assertUnchanged();
+ }
+ const ownership=path.join(f.p.config,'ownership.json');
+ assert.deepEqual(JSON.parse(fs.readFileSync(ownership)).records.map(record=>record.path),[f.bridge,f.descriptor]);
+ assert.deepEqual(rollbackArtifacts(f.p),{status:'rolled-back'});
+ assert.equal(fs.existsSync(f.bridge),false);
+ assert.equal(fs.existsSync(f.descriptor),false);
+ assert.deepEqual(JSON.parse(fs.readFileSync(ownership)),{schema_version:1,state:'rolled-back',records:[]});
+ f.assertUnchanged();
+});
+
+for(const edited of ['bridge','descriptor'])test(`edited Pi ${edited} refuses whole rollback without overwriting files`,t=>{
+ const f=piArtifactsFixture(t);
+ applyArtifacts(f.p,[f.plan]);
+ fs.appendFileSync(f[edited],'\nSYNTHETIC_INTERVENING_EDIT\n');
+ const files=[f.bridge,f.descriptor,path.join(f.p.config,'ownership.json')];
+ const before=files.map(file=>fs.readFileSync(file));
+ assert.throws(()=>rollbackArtifacts(f.p),/intervening-config-edit/);
+ files.forEach((file,index)=>assert.deepEqual(fs.readFileSync(file),before[index],file));
+ f.assertUnchanged();
+});
 
 test('owned hooks preserve unrelated settings and rollback only owned values',t=>{
  const f=fixture(t);const file=path.join(f.home,'.agent/settings.json');fs.mkdirSync(path.dirname(file),{mode:0o700});
