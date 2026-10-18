@@ -11,6 +11,10 @@
 
 This section owns the current sequence. Later sections preserve design history and evidence. Their obsolete next steps, Nucleus coordination instructions and spent review approvals are not current authority. The work item remains **Active**; ExitGate remains unpassed.
 
+Peter intends the existing Mini server and bank fodurrr. Other users supply explicit separate configuration. Preparation never creates a bank or server implicitly. Bank names are not access control. Any multi-user rollout must verify server-side authorization.
+
+The component must run without Nucleus, Xpando tooling, company repositories or skills, Erlang or Elixir. Hindsight remains the external memory service.
+
 ### Current state in plain words
 
 | What exists | What it proves |
