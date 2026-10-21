@@ -81,6 +81,10 @@ apps = ["obsidian-linux", "bitwarden-linux"]
 [linux.office]
 apps = ["libreoffice-linux"]
 
+# REMOTE ACCESS
+[linux.remote_access]
+apps = ["teamviewer-linux"]
+
 # CONTAINERS
 [linux.containers]
 apps = ["docker-linux"]

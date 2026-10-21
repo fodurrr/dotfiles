@@ -44,6 +44,20 @@ On Linux it includes the full LibreOffice suite through the native package manag
 (`libreoffice`). Writer opens Word documents; Calc and Impress handle spreadsheets
 and presentations. The headless `omen` and `server` profiles do not select it.
 
+### TeamViewer on Linux
+
+The Linux `developer` profile installs the TeamViewer full client from the
+[official Ubuntu/Debian package](https://www.teamviewer.com/en-us/download/portal/linux/).
+This uses the existing `.deb` installer layer on apt-based systems; Fedora is skipped.
+The `omen` and `server` profiles do not select it.
+
+TeamViewer is [free for personal, non-commercial use](https://www.teamviewer.com/en-us/download/linux/).
+Business use requires a commercial licence. Account sign-in, licence acceptance and
+unattended-access setup remain manual; the installer does not assign the device to an account.
+[Wayland support](https://www.teamviewer.com/en/global/support/knowledge-base/teamviewer-remote/download-and-installation/supported-operating-systems-for-teamviewer-remote/)
+depends on the desktop environment. GNOME and KDE support attended access; do not
+assume the same unattended-access behaviour as Xorg.
+
 ### Omen installation
 
 Run on Omen, including when connected through `ssh omen`:

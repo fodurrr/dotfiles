@@ -925,6 +925,13 @@ category = "productivity"
 platform = ["linux"]
 description = "Password manager"
 
+[apps.teamviewer-linux]
+type = "deb"
+deb_url = "https://download.teamviewer.com/download/linux/teamviewer_{arch}.deb"
+category = "remote-access"
+platform = ["linux"]
+description = "TeamViewer full client (free for personal, non-commercial use only)"
+
 [apps.docker-linux]
 type = "apt-repo"
 apt_key_url = "https://download.docker.com/linux/{distro}/gpg"
