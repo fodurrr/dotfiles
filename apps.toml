@@ -333,6 +333,13 @@ category = "office"
 platform = ["macos"]
 description = "Microsoft 365 Office suite"
 
+[apps.libreoffice-linux]
+type = "brew"
+category = "office"
+platform = ["linux"]
+linux_name = "libreoffice"
+description = "LibreOffice suite: documents, spreadsheets, presentations, drawings and databases"
+
 # [apps.microsoft-teams]
 # type = "cask"
 # category = "communication"

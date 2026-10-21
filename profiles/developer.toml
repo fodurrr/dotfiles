@@ -77,6 +77,10 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "wezter
 [linux.productivity]
 apps = ["obsidian-linux", "bitwarden-linux"]
 
+# OFFICE
+[linux.office]
+apps = ["libreoffice-linux"]
+
 # CONTAINERS
 [linux.containers]
 apps = ["docker-linux"]

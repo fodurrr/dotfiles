@@ -40,6 +40,9 @@ bash scripts/configure-geekom-pia.sh
 See [GEEKOM VPN setup](docs/geekom-pia.md) for the application rules, `wgpia0` binding,
 Tailscale routing, backups and remaining checks. Credentials stay outside Git.
 The `developer` profile also installs the Tailscale tray autostart entry.
+On Linux it includes the full LibreOffice suite through the native package manager
+(`libreoffice`). Writer opens Word documents; Calc and Impress handle spreadsheets
+and presentations. The headless `omen` and `server` profiles do not select it.
 
 ### Omen installation
 
