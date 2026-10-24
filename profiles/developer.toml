@@ -75,7 +75,7 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "wezter
 
 # PRODUCTIVITY
 [linux.productivity]
-apps = ["obsidian-linux", "bitwarden-linux"]
+apps = ["obsidian-linux", "bitwarden-linux", "mailspring-linux"]
 
 # OFFICE
 [linux.office]

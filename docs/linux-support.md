@@ -66,6 +66,10 @@ If a selected mapped package install/upgrade fails, the Linux layer exits non-ze
 - Explicit Linux entries support vendor apt repositories, `.deb` packages, scripts and Snap apps.
 - There is no general Flatpak fallback; apt-specific entries do not run on Fedora.
 
+The `developer` profile includes Mailspring through its official GitHub `.deb`
+releases. See [email clients](email-clients.md) for account setup, shared mailbox
+limits and the separate Outlook setup on Android.
+
 ## Platform-Aware Layering
 
 ### macOS
