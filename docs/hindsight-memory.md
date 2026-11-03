@@ -221,7 +221,9 @@ login. A real test thread is the reliable check.
   The official Stop hook can read T3's transcript
   (`brain/<id>/.system_generated/logs/transcript.jsonl`); one manual run retained
   2 turns. **Peter chose to accept this and ask T3 for a fix** instead of custom
-  code. The test links were removed. Use Claude, Codex or Grok for work that
+  code: Ideas discussion
+  [#30405](https://github.com/pingdotgg/t3code/discussions/30405), posted
+  2026-11-03. T3 takes feature requests in Ideas discussions, not issues. The test links were removed. Use Claude, Codex or Grok for work that
   must be remembered. Antigravity still works in T3, without memory.
 - Pi and OpenCode capture was not tested through T3 on any machine; both are
   disabled in T3.

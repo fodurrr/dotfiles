@@ -161,7 +161,8 @@ ssh {HOST} "chmod 600 ~/.t3/userdata/providers/antigravity/$K/antigravity-acp/ac
 the same on every machine.
 
 **Antigravity in T3 works, but without memory.** T3 hides `~/.gemini` hooks
-from its Antigravity agent; a fix is requested from T3. Do not add local links.
+from its Antigravity agent. An opt-in is proposed in T3 Ideas discussion
+[#30405](https://github.com/pingdotgg/t3code/discussions/30405). Do not add local links.
 See [personal Hindsight memory](hindsight-memory.md#limits).
 
 ## 9. Check that it works
