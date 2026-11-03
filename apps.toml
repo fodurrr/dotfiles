@@ -925,6 +925,14 @@ category = "productivity"
 platform = ["linux"]
 description = "Password manager"
 
+[apps.mailspring-linux]
+type = "deb"
+github_repo = "Foundry376/Mailspring"
+deb_asset_regex = "^mailspring-[0-9.]+-{arch}\\.deb$"
+category = "productivity"
+platform = ["linux"]
+description = "Mailspring email client; account setup stays local (see docs/email-clients.md)"
+
 [apps.teamviewer-linux]
 type = "deb"
 deb_url = "https://download.teamviewer.com/download/linux/teamviewer_{arch}.deb"
