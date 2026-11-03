@@ -187,6 +187,10 @@ Codex configuration before trust. To remove the integration, first remove the
 
 ## Desktop applications
 
+**Further desktop checks are cancelled** (Peter, 2026-11-03): work happens in
+T3 Code from now on. The results below stay as recorded; no Codex Desktop or
+Claude Chat capture is claimed.
+
 Checked on **2026-10-18** using the installed official Linux desktop applications.
 CLI checks above do not substitute for desktop checks.
 
