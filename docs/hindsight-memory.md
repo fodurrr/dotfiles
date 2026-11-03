@@ -212,18 +212,17 @@ login. A real test thread is the reliable check.
 
 ### Limits
 
-- **Antigravity memory inside T3 Code is not working yet.** T3 starts its
-  Antigravity agent with a private `GEMINI_HOME` under
+- **Antigravity memory inside T3 Code does not work** (decision 2026-11-03).
+  T3 starts its Antigravity agent with a private `GEMINI_HOME` under
   `~/.t3/userdata/providers/antigravity/`. T3's code states: "Private GEMINI_HOME
   isolates credentials/hooks/MCP; link global skills from the real ~/.gemini."
-  Peter chose a local link (option B, 2026-11-03): on GEEKOM only, that folder's
-  `config/hooks.json` and `config/mcp_config.json` link to `~/.gemini/config/`.
-  Result: the official PreInvocation hook runs (it records the workspace root),
-  but no `Stop` capture followed the answer in two T3 sessions. The official Stop
-  hook can read T3's transcript (`brain/<id>/.system_generated/logs/transcript.jsonl`):
-  one manual run retained 2 turns. Whether `Stop` fires when T3 closes the
-  session is still open. Undo: remove the two links; the note is
-  `antigravity-t3-links.txt` in GEEKOM's rollout journal.
+  A test linked `config/hooks.json` and `config/mcp_config.json` into that folder
+  on GEEKOM: the PreInvocation hook ran, but no `Stop` capture followed an answer.
+  The official Stop hook can read T3's transcript
+  (`brain/<id>/.system_generated/logs/transcript.jsonl`); one manual run retained
+  2 turns. **Peter chose to accept this and ask T3 for a fix** instead of custom
+  code. The test links were removed. Use Claude, Codex or Grok for work that
+  must be remembered. Antigravity still works in T3, without memory.
 - Pi and OpenCode capture was not tested through T3 on any machine; both are
   disabled in T3.
 - Start fresh T3 threads after installation. A resumed older thread can send its
