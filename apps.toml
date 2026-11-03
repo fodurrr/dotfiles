@@ -333,6 +333,13 @@ category = "office"
 platform = ["macos"]
 description = "Microsoft 365 Office suite"
 
+[apps.libreoffice-linux]
+type = "brew"
+category = "office"
+platform = ["linux"]
+linux_name = "libreoffice"
+description = "LibreOffice suite: documents, spreadsheets, presentations, drawings and databases"
+
 # [apps.microsoft-teams]
 # type = "cask"
 # category = "communication"
@@ -917,6 +924,13 @@ deb_asset_regex = "^Bitwarden-.*-{arch}\\.deb$"
 category = "productivity"
 platform = ["linux"]
 description = "Password manager"
+
+[apps.teamviewer-linux]
+type = "deb"
+deb_url = "https://download.teamviewer.com/download/linux/teamviewer_{arch}.deb"
+category = "remote-access"
+platform = ["linux"]
+description = "TeamViewer full client (free for personal, non-commercial use only)"
 
 [apps.docker-linux]
 type = "apt-repo"
