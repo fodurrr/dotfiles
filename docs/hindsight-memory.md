@@ -12,6 +12,10 @@ at `https://peters-mac-mini.wisent-fence.ts.net`, and the existing personal bank
 Omen and Mini were added on **2026-11-03**; see
 [Omen, Mini and T3 Code environments](#omen-mini-and-t3-code-environments).
 
+**For a new machine, follow the step-by-step runbook
+[Hindsight memory on a new machine](hindsight-new-machine.md).** `./install.sh`
+does not set up memory.
+
 The official command can detect supported agents already installed on the machine:
 
 ```sh
@@ -499,7 +503,8 @@ Removal does not delete the existing remote bank. Restore only settings owned by
 the cutover. Preserve newer logins and unrelated settings rather than restoring
 whole stale authentication snapshots.
 
-The former source under `tools/hindsight-memory` is historical evidence only.
+The former source under `tools/hindsight-memory` was removed from the tree on
+2026-11-03; commit `b170d88` is the last one that contains it.
 No profile, installer layer or current launcher selects it. Existing custom
 receipts, native history and rollback journals remain private and recoverable.
 Publication, main merge and other host rollouts still require approval.

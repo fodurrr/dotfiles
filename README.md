@@ -261,7 +261,8 @@ yq -p toml -oy '
 
 Personal memory uses the official Hindsight installer and private settings.
 The former custom runtime and profile are retired.
-See [personal Hindsight memory](docs/hindsight-memory.md) for installation, capture and recovery.
+`./install.sh` does not set it up: follow [Hindsight memory on a new machine](docs/hindsight-new-machine.md) once per machine.
+See [personal Hindsight memory](docs/hindsight-memory.md) for background, capture and recovery.
 
 ## Global AI Secrets
 

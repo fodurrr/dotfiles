@@ -63,7 +63,7 @@ description = "Extensible code editor"
 type = "cask"
 category = "editors"
 platform = ["macos"]
-description = "Note-taking app"
+description = "Google Antigravity agentic code editor"
 
 # [apps.neovim]
 # type = "mise"

@@ -185,7 +185,8 @@ When researching app behavior, inspect the installed version and prefer current 
 
 ## Documentation map
 
-- [Hindsight memory work item](docs/plans/hindsight-memory.md): Official integrations and private settings; publication, main merge and other host rollouts need approval
+- [Hindsight on a new machine](docs/hindsight-new-machine.md): manual per-machine memory steps; `./install.sh` does not set up memory
+- [Hindsight memory work item](docs/plans/hindsight-memory.md): official integrations, private settings and rollout evidence
 - [README](README.md): machine choices, quick start and normal updates
 - [Profile system](docs/profile-system.md): selection and installer architecture
 - [Linux support](docs/linux-support.md): native packages and platform limits
