@@ -56,17 +56,6 @@ Keep tokens, account databases, caches and provider logins outside Git and Stow.
 Package installation does not authenticate accounts or change the default mail
 app, autostart, tenant settings or mailbox permissions.
 
-## Acceptance checks after sign-in
-
-- Confirm every Gmail account, the business account and each shared mailbox
-  appears in the unified inbox on both devices.
-- Check sending and replying from each shared address, including the From
-  address and where the sent copy appears.
-- Check read/unread changes, archive and deletion across devices.
-- Find an older message and open, save and send an attachment.
-- Test notifications with the phone locked and idle, and after desktop restart.
-  Inspect the phone's actual battery and notification settings if delivery fails.
-
 Outlook can synchronize non-Microsoft account data into Microsoft's cloud.
 Review the [Microsoft cloud synchronization explanation](https://support.microsoft.com/en-gb/outlook/getstarted/sync-your-account-in-outlook-to-the-microsoft-cloud)
 before adding personal Gmail accounts on the phone.
