@@ -146,8 +146,11 @@ Each machine's own `~/.hindsight/coding-agents-logs/diag.jsonl` was then read.
 | Mini, Codex | `retain_ok`, 2 turns | 16 facts |
 | GEEKOM, Grok | `retain_ok`, 2 turns | 20 facts |
 | GEEKOM, Antigravity | **No Hindsight hook ran** | None |
+| Omen, Grok (after T3 enable and login) | `retain_ok`, 2 turns | 22 facts |
+| Mini, Grok (after T3 enable and login) | `retain_ok`, 2 turns | 22 facts |
+| Mini, Claude Code (after the Keychain login) | `retain_ok`, 1 turn | 25 facts |
 
-All four captured retains **completed** on the server between 20:28:34 and
+The first four captured retains **completed** on the server between 20:28:34 and
 20:28:48 UTC. A direct recall API query per label then found each label in the
 `fodurrr` bank (result ranks 0, 6, 2 and 4). The Antigravity label is absent.
 
@@ -159,20 +162,66 @@ combined question. This shows ranking limits, not missing capture.
 Those recall-test sessions were themselves captured, including their "not in
 memory" answers; treat those test facts as noise.
 
+### T3 providers on Omen and Mini
+
+Peter asked for the same T3 providers as on GEEKOM, without Claude-API
+(2026-11-03). T3 has no command for provider settings, and the servers have no
+T3 Desktop window. Each machine's T3 provider list lives in
+`~/.t3/userdata/settings.json` under `providerInstances`; the service loads it on
+`t3 service restart`. The file was backed up as `t3-settings.before-providers.json`
+in the rollout journal, then `grok` and `antigravity` entries matching GEEKOM's
+were added and the service restarted.
+
+| T3 provider | Omen | Mini | How |
+|---|---|---|---|
+| Claude | Works | Works | Mini: see the Keychain note below |
+| Codex | Works | Works | Default |
+| Grok | Works | Works | Enabled in `settings.json`; Peter ran `grok login --device-auth` per machine |
+| Antigravity | Works | Works | Runtime installed, sign-in copied from GEEKOM (below) |
+
+**Antigravity runtime.** T3 downloads Google's `agy-acp-server` **1.4.5** per
+machine and pins its SHA-256 in T3's own code. The same layout was installed:
+the zip from `dl.google.com` was checked against that SHA-256 and the expected
+file sizes, then placed in `~/.t3/tools/antigravity-acp/<platform>/versions/<sha256>/`
+with `.install-complete.json` and `active.json`. Omen has `linux-x64`
+(`923923a0…`), Mini `darwin-arm64` (`886fff77…`).
+
+**Antigravity sign-in (Peter's choice, 2026-11-03).** GEEKOM's T3 Antigravity
+sign-in, `acp_token.json` (0600) with `settings.json`
+(`{"auth":{"type":"oauth-personal"}}`), was copied into the same T3 folder on
+Omen and Mini: `~/.t3/userdata/providers/antigravity/ac0a3dfd…/antigravity-acp/`.
+All three machines now share one Google sign-in; signing out on one may sign out
+all three. GEEKOM's Antigravity still worked after the copy.
+
+**Mini's Claude and the macOS Keychain.** A `claude auth login` over SSH cannot
+write to the locked login Keychain, so it saves `~/.claude/.credentials.json`.
+T3's service runs in the desktop session and reads the Keychain first, where an
+old login (2026-10-09) remained, so T3 reported "Claude could not authenticate".
+Log in with the Keychain unlocked:
+
+```sh
+ssh -t mini 'security unlock-keychain ~/Library/Keychains/login.keychain-db && zsh -l -c "claude auth login"'
+```
+
+T3's provider list can show an old "not logged in" status for a while after a
+login. A real test thread is the reliable check.
+
 ### Limits
 
-- **Antigravity inside T3 Code is not captured.** T3 starts its Antigravity agent
-  with a private `GEMINI_HOME` under `~/.t3/userdata/providers/antigravity/`.
-  T3's code states: "Private GEMINI_HOME isolates credentials/hooks/MCP; link
-  global skills from the real ~/.gemini." The official Hindsight hooks live in
-  `~/.gemini/config/hooks.json`, which that agent does not read. The hooks remain
-  installed for a real `agy` command-line tool. No workaround is installed.
-- **Mini's Claude Code is not logged in.** T3 reports "Claude Code is not
-  authenticated". Run `claude auth login` on Mini before using Claude there.
-- **T3 provider switches.** On Omen and Mini, T3 has only Claude and Codex
-  enabled (Mini: Codex only until the login above). Grok, Pi, OpenCode and
-  Antigravity are connected to Hindsight but disabled in T3 there.
-- Pi and OpenCode capture was not tested through T3 on any machine.
+- **Antigravity memory inside T3 Code is not working yet.** T3 starts its
+  Antigravity agent with a private `GEMINI_HOME` under
+  `~/.t3/userdata/providers/antigravity/`. T3's code states: "Private GEMINI_HOME
+  isolates credentials/hooks/MCP; link global skills from the real ~/.gemini."
+  Peter chose a local link (option B, 2026-11-03): on GEEKOM only, that folder's
+  `config/hooks.json` and `config/mcp_config.json` link to `~/.gemini/config/`.
+  Result: the official PreInvocation hook runs (it records the workspace root),
+  but no `Stop` capture followed the answer in two T3 sessions. The official Stop
+  hook can read T3's transcript (`brain/<id>/.system_generated/logs/transcript.jsonl`):
+  one manual run retained 2 turns. Whether `Stop` fires when T3 closes the
+  session is still open. Undo: remove the two links; the note is
+  `antigravity-t3-links.txt` in GEEKOM's rollout journal.
+- Pi and OpenCode capture was not tested through T3 on any machine; both are
+  disabled in T3.
 - Start fresh T3 threads after installation. A resumed older thread can send its
   earlier messages.
 
@@ -181,7 +230,8 @@ memory" answers; treat those test facts as noise.
 Each machine keeps a private journal at
 `~/.local/state/hindsight-host-rollout/2026-11-03` (0700): copies of every file
 the installer could change, `install.log`, the Claude `SessionEnd` change and the
-Codex configuration before trust. To remove the integration, first remove the
+Codex configuration before trust, and the T3 `settings.json` before the provider
+change. To remove the integration, first remove the
 `SessionEnd` entry as described for GEEKOM, then run the official per-agent
 `uninstall` commands. Removal does not delete the remote bank.
 
