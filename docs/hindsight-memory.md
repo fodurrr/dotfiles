@@ -6,11 +6,13 @@ The former custom component and profile are retired.
 
 ## Installation and settings
 
-The approved GEEKOM installation uses package **0.8.1**, the existing Mini service
+GEEKOM, Omen and Mini use package **0.8.1**, the existing Mini service
 at `https://peters-mac-mini.wisent-fence.ts.net`, and the existing personal bank
 `fodurrr`. Credentials stay in private machine settings outside Git.
+Omen and Mini were added on **2026-11-03**; see
+[Omen, Mini and T3 Code environments](#omen-mini-and-t3-code-environments).
 
-The official command detects supported agents already installed on the machine:
+The official command can detect supported agents already installed on the machine:
 
 ```sh
 npx @vectorize-io/hindsight-coding-agents@0.8.1 install all --server self-hosted --api-url https://peters-mac-mini.wisent-fence.ts.net
@@ -18,7 +20,15 @@ npx @vectorize-io/hindsight-coding-agents@0.8.1 install all --server self-hosted
 
 This installs integrations, not missing agent applications. Review detection:
 leftover agent directories can be mistaken for installed applications.
-Do not run the command on another host without its rollout approval.
+On GEEKOM, `all` matched Kilo and Cline, which were then removed.
+For another host, **name the agents explicitly** instead of `all`:
+
+```sh
+npx -y @vectorize-io/hindsight-coding-agents@0.8.1 install claude-code codex pi grok-build opencode antigravity-cli --server self-hosted --api-url https://peters-mac-mini.wisent-fence.ts.net
+```
+
+Add `opencode2` where that command exists, as on GEEKOM and Omen.
+In a non-interactive zsh, run `npx` through `mise exec node@lts --`.
 
 Private settings live in `~/.hindsight/coding-agent.json` with mode **0600**.
 The API token belongs only in that private file or the official environment setting.
@@ -81,6 +91,99 @@ Claude also runs the **same official retain command at native `SessionEnd`**
 with timeout 60. This appends final assistant text after transcript flush.
 The normal `Stop` hook remains for per-turn capture. Both use one cursor.
 No vendor code or capture wrapper is changed.
+
+## Omen, Mini and T3 Code environments
+
+Rolled out on **2026-11-03** with Peter's approval. The goal: an agent that
+T3 Code runs on Omen or Mini saves to and recalls from the same `fodurrr` bank
+as on GEEKOM.
+
+**Why each machine needs its own install.** A linked T3 Code environment runs
+its own T3 server (`t3 serve`). That server starts `claude`, `codex` and the
+other agents **on that machine**. They read that machine's `~/.claude`,
+`~/.codex`, `~/.pi`, `~/.grok` and `~/.config/opencode` settings. GEEKOM's hooks
+do not travel with the T3 Desktop window.
+
+### What each machine has
+
+| Item | GEEKOM | Omen | Mini |
+|---|---|---|---|
+| Hindsight settings | `~/.hindsight/coding-agent.json` | Same file content | Same file content |
+| Connected agents | Claude Code, Codex, Pi, Grok, OpenCode, `opencode2`, Antigravity | Claude Code, Codex, Pi, Grok, OpenCode, `opencode2`, Antigravity | Claude Code, Codex, Pi, Grok, OpenCode, Antigravity |
+| Claude `SessionEnd` capture entry | Yes | Yes | Yes |
+| Codex hook trust | Yes | Yes | Yes |
+
+**One API token on all three machines** (Peter's decision, 2026-11-03).
+The three settings files are identical; their normalized SHA-256 starts with
+`a702a042`. Revoking that token stops capture on all three machines together.
+
+Before installing, Mini's mise tools were brought to GEEKOM's versions with
+`mise upgrade claude codex pi grok node`: Claude Code 2.1.317, Codex 0.166.0,
+Pi 1.5.0, Grok 1.0.70, Node 24.22.2. All are `latest`/`lts` in the shared
+mise configuration.
+
+The extra Claude `SessionEnd` entry is the same one GEEKOM uses (see
+[GEEKOM evidence and recovery](#geekom-evidence-and-recovery)), with that
+machine's home path.
+
+**Codex hook trust.** Codex runs a hook only after it is trusted. On GEEKOM this
+was done in the Codex screen ("trust all"). Omen and Mini have no screen session.
+There, the official Codex app server recorded the same trust: `hooks/list`
+returns each hook's `key` and `currentHash`, and `config/value/write` stores
+`hooks.state.<key>.trusted_hash`. Only the three Hindsight hooks were trusted.
+On GEEKOM, the recorded hashes equal the `currentHash` values from `hooks/list`,
+so both routes write the same record.
+
+### Test results through T3 Code (2026-11-03)
+
+Each test thread received one harmless label and was told not to use tools.
+Each machine's own `~/.hindsight/coding-agents-logs/diag.jsonl` was then read.
+
+| Machine and agent | Capture | Recall injected |
+|---|---|---|
+| Omen, Claude Code | `retain_ok`, 1 turn (the label message) | Not recorded for this turn |
+| Omen, Codex | `retain_ok`, 2 turns | 12 facts |
+| Mini, Codex | `retain_ok`, 2 turns | 16 facts |
+| GEEKOM, Grok | `retain_ok`, 2 turns | 20 facts |
+| GEEKOM, Antigravity | **No Hindsight hook ran** | None |
+
+All four captured retains **completed** on the server between 20:28:34 and
+20:28:48 UTC. A direct recall API query per label then found each label in the
+`fodurrr` bank (result ranks 0, 6, 2 and 4). The Antigravity label is absent.
+
+**Cross-machine automatic recall.** Two fresh T3 threads, Claude on GEEKOM and
+Codex on Mini, asked for all four labels in one question without being given
+them. Mini's Codex answered Omen Claude's label correctly from injected memory.
+The other labels were not among the 12 to 20 facts the hook injects for that
+combined question. This shows ranking limits, not missing capture.
+Those recall-test sessions were themselves captured, including their "not in
+memory" answers; treat those test facts as noise.
+
+### Limits
+
+- **Antigravity inside T3 Code is not captured.** T3 starts its Antigravity agent
+  with a private `GEMINI_HOME` under `~/.t3/userdata/providers/antigravity/`.
+  T3's code states: "Private GEMINI_HOME isolates credentials/hooks/MCP; link
+  global skills from the real ~/.gemini." The official Hindsight hooks live in
+  `~/.gemini/config/hooks.json`, which that agent does not read. The hooks remain
+  installed for a real `agy` command-line tool. No workaround is installed.
+- **Mini's Claude Code is not logged in.** T3 reports "Claude Code is not
+  authenticated". Run `claude auth login` on Mini before using Claude there.
+- **T3 provider switches.** On Omen and Mini, T3 has only Claude and Codex
+  enabled (Mini: Codex only until the login above). Grok, Pi, OpenCode and
+  Antigravity are connected to Hindsight but disabled in T3 there.
+- Pi and OpenCode capture was not tested through T3 on any machine.
+- Start fresh T3 threads after installation. A resumed older thread can send its
+  earlier messages.
+
+### Recovery
+
+Each machine keeps a private journal at
+`~/.local/state/hindsight-host-rollout/2026-11-03` (0700): copies of every file
+the installer could change, `install.log`, the Claude `SessionEnd` change and the
+Codex configuration before trust. To remove the integration, first remove the
+`SessionEnd` entry as described for GEEKOM, then run the official per-agent
+`uninstall` commands. Removal does not delete the remote bank.
 
 ## Desktop applications
 
