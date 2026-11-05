@@ -296,13 +296,6 @@ category = "productivity"
 platform = ["macos"]
 description = "Screenshot capture and editing tool"
 
-[apps.ksnip-linux]
-type = "brew"
-category = "productivity"
-platform = ["linux"]
-linux_name = "ksnip"
-description = "Screenshot capture and annotation tool for Wayland and X11"
-
 [apps.kap]
 type = "cask"
 category = "productivity"

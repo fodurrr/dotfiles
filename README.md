@@ -43,9 +43,6 @@ The `developer` profile also installs the Tailscale tray autostart entry.
 On Linux it includes the full LibreOffice suite through the native package manager
 (`libreoffice`). Writer opens Word documents; Calc and Impress handle spreadsheets
 and presentations. The headless `omen` and `server` profiles do not select it.
-It also installs Ksnip (`ksnip`) for screenshot annotation. GNOME's built-in
-screenshot tool captures only. Ksnip has no scrolling capture; use Firefox's
-full-page screenshot for long web pages.
 
 ### TeamViewer on Linux
 
