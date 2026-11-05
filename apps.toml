@@ -296,6 +296,13 @@ category = "productivity"
 platform = ["macos"]
 description = "Screenshot capture and editing tool"
 
+[apps.gradia-linux]
+type = "snap"
+snap_name = "gradia"
+category = "productivity"
+platform = ["linux"]
+description = "Screenshot annotation for GNOME: arrows, text, blur, OCR"
+
 [apps.kap]
 type = "cask"
 category = "productivity"
@@ -1050,10 +1057,10 @@ description = "Yellow-filled mouse pointer"
 type = "gsettings"
 gsettings_schema = "org.gnome.shell.keybindings"
 gsettings_key = "show-screenshot-ui"
-gsettings_value = "['Print', '<Shift><Super>s']"
+gsettings_value = "['Print']"
 category = "desktop"
 platform = ["linux"]
-description = "Screenshot tool on Super+Shift+S, for keyboards with no Print key"
+description = "Built-in screenshot tool on Print; Super+Shift+S opens Gradia"
 
 [apps.desktop-commands-linux]
 type = "stow"
@@ -1109,6 +1116,16 @@ shortcut_binding = "<Control><Alt>b"
 category = "desktop"
 platform = ["linux"]
 description = "Ctrl+Alt+B: monitor and TV are both active"
+
+[apps.gnome-shortcut-gradia]
+type = "gnome-shortcut"
+name = "Gradia screenshot"
+shortcut_id = "gradia-screenshot"
+shortcut_command = "/snap/bin/gradia --screenshot=INTERACTIVE"
+shortcut_binding = "<Shift><Super>s"
+category = "desktop"
+platform = ["linux"]
+description = "Super+Shift+S: capture an area and open it in Gradia"
 
 [apps.voxtype-linux]
 type = "deb"
