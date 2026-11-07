@@ -395,6 +395,11 @@ test_fj_source_config() {
     assert_true "fj should install the fj binary" test "$(get_app_prop fj bin)" = "fj"
     assert_true "fj should track the latest release" test "$(get_app_prop fj version)" = "latest"
     assert_true "fj should use Codeberg, the backend default" test -z "$(get_app_prop fj mise_options)"
+    assert_true "fj through mise should be supported on Linux" is_app_supported fj linux
+    assert_false "fj through mise should not be offered on macOS" is_app_supported fj macos
+    assert_true "macOS should get fj from the Homebrew forgejo-cli formula" test "$(get_app_prop forgejo-cli type)" = "brew"
+    assert_true "the Homebrew forgejo-cli entry should be supported on macOS" is_app_supported forgejo-cli macos
+    assert_true "the Homebrew entry should provide the fj binary" test "$(get_app_prop forgejo-cli bin)" = "fj"
 }
 
 test_linux_desktop_setup() {

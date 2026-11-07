@@ -818,6 +818,14 @@ category = "cli"
 platform = ["linux"]
 description = "Forgejo CLI"
 
+[apps.forgejo-cli]
+type = "brew"
+# The same fj for macOS: Codeberg ships no macOS build, Homebrew bottles one.
+bin = "fj"
+category = "cli"
+platform = ["macos"]
+description = "Forgejo CLI (fj) on macOS"
+
 [apps.infisical]
 type = "mise"
 version = "latest"

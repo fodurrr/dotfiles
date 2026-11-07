@@ -47,7 +47,7 @@ apps = ["font-jetbrains-mono-nerd-font"]
 
 # CLI
 [macos.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "hcloud", "tailscale", "restic", "mole"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "forgejo-cli", "hcloud", "tailscale", "restic", "mole"]
 
 # RUNTIMES
 [macos.runtimes]
