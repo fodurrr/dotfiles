@@ -61,7 +61,7 @@ For an approved update from GEEKOM's committed `main`:
 7. Fast-forward `main` to the recorded fetched commit. Preserve the old feature branch.
 8. Confirm both hosts have the same commit and clean working trees; remove only the temporary bundle files.
 
-Do not copy GEEKOM's private SSH keys or tokens to Omen.
+Do not copy GEEKOM's private SSH keys or tokens to Omen. The one exception is the shared fj token: every developer machine (GEEKOM, Omen, the Mac Mini) holds the same token in fj's own key file.
 Do not rerun the installer just because the checkout was updated.
 
 ## Repository map
