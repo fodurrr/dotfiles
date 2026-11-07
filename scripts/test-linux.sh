@@ -389,6 +389,14 @@ test_tea_source_config() {
     assert_true "mise config generator should write backend options" is_grep_match 'mise_options' "$DOTFILES_DIR/scripts/lib/mise.sh"
 }
 
+test_fj_source_config() {
+    print_header "fj Forgejo CLI Source"
+    assert_true "fj should use the forgejo backend" test "$(get_app_prop fj name)" = "forgejo:forgejo-contrib/forgejo-cli"
+    assert_true "fj should install the fj binary" test "$(get_app_prop fj bin)" = "fj"
+    assert_true "fj should track the latest release" test "$(get_app_prop fj version)" = "latest"
+    assert_true "fj should use Codeberg, the backend default" test -z "$(get_app_prop fj mise_options)"
+}
+
 test_linux_desktop_setup() {
     print_header "Linux Desktop Setup"
     assert_true "screens command should exist and be executable" test -x "$DOTFILES_DIR/desktop-linux/.local/bin/screens"
@@ -561,6 +569,7 @@ main() {
     test_sheldon_source_config
     test_mise_release_age_excludes
     test_tea_source_config
+    test_fj_source_config
     test_linux_desktop_setup
     test_curl_registry_scope
     test_mise_registry_entries

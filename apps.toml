@@ -806,6 +806,18 @@ category = "cli"
 platform = ["macos", "linux"]
 description = "Forgejo and Gitea CLI"
 
+[apps.fj]
+type = "mise"
+# fj is Forgejo's own CLI. Its releases live on Codeberg, the forgejo
+# backend's default host, so it needs no api_url. Codeberg ships Linux builds
+# only (x86_64 and aarch64), so macOS stays on tea until it has one.
+name = "forgejo:forgejo-contrib/forgejo-cli"
+bin = "fj"
+version = "latest"
+category = "cli"
+platform = ["linux"]
+description = "Forgejo CLI"
+
 [apps.infisical]
 type = "mise"
 version = "latest"
