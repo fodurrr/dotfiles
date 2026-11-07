@@ -16,7 +16,7 @@ path=(
 )
 
 # PostgreSQL (Homebrew keg-only formula)
-[[ -d /opt/homebrew/opt/postgresql@17/bin ]] && path=(/opt/homebrew/opt/postgresql@17/bin $path)
+[[ -d /opt/homebrew/opt/postgresql@18/bin ]] && path=(/opt/homebrew/opt/postgresql@18/bin $path)
 
 # Bun global binaries
 [[ -d "$HOME/.bun/bin" ]] && path=("$HOME/.bun/bin" $path)

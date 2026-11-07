@@ -18,7 +18,7 @@ apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-c
 apps = ["docker-linux"]
 
 [linux.databases]
-apps = ["postgresql-17-linux"]
+apps = ["postgresql-18-linux"]
 
 [linux.cli]
 apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tea", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop-linux", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]

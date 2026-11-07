@@ -412,7 +412,7 @@ description = "Messaging app"
 
 # [apps.postgresql]
 # type = "brew"
-# name = "postgresql@17"
+# name = "postgresql@18"
 # category = "database"
 # service = true
 # description = "PostgreSQL database server"
@@ -966,17 +966,17 @@ platform = ["linux"]
 linux_name = "postgresql-client"
 description = "PostgreSQL command-line client (psql)"
 
-[apps.postgresql-17-linux]
+[apps.postgresql-18-linux]
 type = "apt-repo"
 apt_key_url = "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 apt_keyring = "postgresql-pgdg.asc"
 apt_key_fingerprint = "B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
 apt_source = "deb [arch={arch} signed-by={keyring}] https://apt.postgresql.org/pub/repos/apt {codename}-pgdg main"
 apt_list = "pgdg"
-linux_apt = "postgresql-17"
+linux_apt = "postgresql-18"
 category = "databases"
 platform = ["linux"]
-description = "PostgreSQL 17 server from the official PostgreSQL apt repository (matches production)"
+description = "PostgreSQL 18 server from the official PostgreSQL apt repository (matches production)"
 
 [apps.pgadmin4-linux]
 type = "apt-repo"

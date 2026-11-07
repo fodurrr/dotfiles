@@ -84,7 +84,7 @@ apps = ["docker-linux"]
 
 # DATABASES
 [linux.databases]
-apps = ["postgresql-17-linux", "pgadmin4-linux"]
+apps = ["postgresql-18-linux", "pgadmin4-linux"]
 
 # MEDIA AND COMMUNICATION
 [linux.media]

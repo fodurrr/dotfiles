@@ -10,7 +10,7 @@ Install PostgreSQL from your configured profile or directly with Homebrew:
 ```bash
 ./install.sh --profile=developer
 # or
-brew install postgresql@17
+brew install postgresql@18
 ```
 
 ## One-Time Setup
@@ -19,7 +19,7 @@ After installation, create the standard dev credentials (`postgres:postgres`):
 
 ```bash
 # Start the service
-brew services start postgresql@17
+brew services start postgresql@18
 
 # Create postgres superuser with password
 createuser -s postgres
@@ -29,9 +29,9 @@ psql -d postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
 ## Service Management
 
 ```bash
-brew services start postgresql@17   # Start
-brew services stop postgresql@17    # Stop
-brew services restart postgresql@17 # Restart
+brew services start postgresql@18   # Start
+brew services stop postgresql@18    # Stop
+brew services restart postgresql@18 # Restart
 brew services list                  # Check status
 ```
 
@@ -102,7 +102,7 @@ source ~/.zshrc  # Reload shell to get PATH
 
 **Connection refused**
 ```bash
-brew services start postgresql@17
+brew services start postgresql@18
 ```
 
 **Database does not exist**
