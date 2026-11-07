@@ -21,7 +21,7 @@ apps = ["docker-linux"]
 apps = ["postgresql-18-linux"]
 
 [linux.cli]
-apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "tea", "fj", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop-linux", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]
+apps = ["starship", "eza", "bat", "ripgrep", "fzf", "sheldon", "jq", "gh", "fj", "hcloud", "infisical", "tmux", "yazi", "lazygit", "btop-linux", "ncdu", "tailscale", "restic", "uv", "ffmpeg", "yt-dlp", "postgresql-client"]
 
 [linux.runtimes]
 apps = ["node", "python", "rust", "bun", "pnpm", "erlang", "elixir", "dexter"]

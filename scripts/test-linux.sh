@@ -381,14 +381,6 @@ test_mise_release_age_excludes() {
     assert_true "generated mise config should state the Ubuntu release for prebuilt Erlang" is_grep_match 'erlang.precompiled_os = "ubuntu-24.04"' "$mise_lib"
 }
 
-test_tea_source_config() {
-    print_header "Tea CLI Source"
-    assert_true "tea should use the forgejo backend" test "$(get_app_prop tea name)" = "forgejo:gitea/tea"
-    assert_true "tea should track the latest release" test "$(get_app_prop tea version)" = "latest"
-    assert_true "tea should point the backend at the gitea.com API" test "$(get_app_prop tea mise_options)" = 'api_url = "https://gitea.com/api/v1"'
-    assert_true "mise config generator should write backend options" is_grep_match 'mise_options' "$DOTFILES_DIR/scripts/lib/mise.sh"
-}
-
 test_fj_source_config() {
     print_header "fj Forgejo CLI Source"
     assert_true "fj should use the forgejo backend" test "$(get_app_prop fj name)" = "forgejo:forgejo-contrib/forgejo-cli"
@@ -400,6 +392,7 @@ test_fj_source_config() {
     assert_true "macOS should get fj from the Homebrew forgejo-cli formula" test "$(get_app_prop forgejo-cli type)" = "brew"
     assert_true "the Homebrew forgejo-cli entry should be supported on macOS" is_app_supported forgejo-cli macos
     assert_true "the Homebrew entry should provide the fj binary" test "$(get_app_prop forgejo-cli bin)" = "fj"
+    assert_true "mise config generator should write backend options" is_grep_match 'mise_options' "$DOTFILES_DIR/scripts/lib/mise.sh"
 }
 
 test_linux_desktop_setup() {
@@ -573,7 +566,6 @@ main() {
     test_no_cli_owner_overlap
     test_sheldon_source_config
     test_mise_release_age_excludes
-    test_tea_source_config
     test_fj_source_config
     test_linux_desktop_setup
     test_curl_registry_scope
