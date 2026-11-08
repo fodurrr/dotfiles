@@ -109,8 +109,7 @@ desktop login. Start it immediately with `tailscale systray` if it is not alread
 running. The headless `omen` and `server` profiles do not select this applet.
 
 The `clevo` profile is a saved developer-profile variant for the P170EM laptop.
-It omits the GEEKOM monitor commands/shortcuts and Voxtype configuration. Its older
-CPU lacks AVX2/AVX-512; do not apply the GEEKOM dictation binary selection to it.
+It omits the GEEKOM monitor commands and shortcuts.
 The profile is an explicit snapshot; compare it with `developer` when updating apps.
 
 Agent CLIs Claude, Codex, OpenCode, Pi, Gemini, Grok and herdr are managed by mise.
@@ -163,7 +162,7 @@ linux_apt = "package-name-on-apt"
 linux_dnf = "package-name-on-dnf"
 ```
 
-## Desktop: Screens, Dictation, PaperWM
+## Desktop: Screens, Clipboard, PaperWM
 
 Part of the `developer` profile on Linux. The commands are stow links into `desktop-linux/`; the shortcuts are `gnome-shortcut` entries in `apps.toml`.
 
@@ -193,27 +192,11 @@ solaar pair
 
 Hold the Easy-Switch key for 3 seconds, type the shown code on the keyboard and press Enter. `solaar show` lists the paired devices; its `Change Host` field tells which Easy-Switch slot is active.
 
-### Dictation (Voxtype)
+### Clipboard
 
-Hold **F9** to talk; on release the text is pasted at the cursor. **Super+/** starts and stops a recording as a toggle. The config is the stow package `voxtype/`.
-
-The installer installs the `.deb`, `ydotool` and `wl-clipboard` and links the config. These steps stay manual, once per machine:
-
-```bash
-sudo voxtype setup onnx --enable
-sudo voxtype setup gpu --disable
-voxtype setup --download --model parakeet-tdt-0.6b-v3-int8 --activate
-systemctl --user enable --now voxtype.service ydotool.service
-sudo usermod -aG input "$USER"
-```
-
-Then **restart the machine**. A logout is not enough when user lingering is on (it is, for the herdr service): the user service manager keeps the old groups. The `input` group lets programs of this user read all keyboard input and type; that is what hold-to-talk and paste need.
-
-Facts behind the config:
-
-- `setup gpu --disable` selects the ONNX AVX-512 build. `setup onnx --enable` alone picks MIGraphX on an AMD graphics chip, which is not meant for integrated graphics.
-- Paste mode with `shift+insert`: GNOME has no virtual-keyboard protocol, so `wtype` cannot work; `ydotool` types US keycodes only, so paste is the layout-independent route.
-- The OSD (waveform) is off: it needs layer-shell, which GNOME lacks. A notification at recording start replaces it. On Niri the OSD can be switched on.
+The Linux `developer` profile installs `wl-clipboard`, which provides `wl-copy`
+and `wl-paste`. Helix uses these commands for the system clipboard on Wayland;
+the `tmux-yank` plugin also supports `wl-copy` for copying terminal text.
 
 ### PaperWM
 
