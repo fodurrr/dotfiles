@@ -235,3 +235,19 @@ loginctl enable-linger "$USER"
 ```
 
 Lingering starts the service at boot, before login. Check with `herdr status` and `systemctl --user is-enabled herdr.service`.
+
+## T3 Code Server Service
+
+A host that runs T3 Code as a systemd user service (`t3 service install`, as on Omen) starts its server with the bare system PATH. T3's agent sessions still get the login PATH, but the server's own Forgejo pull request reader cannot start `fj`. `systemd/user/t3code.service.d/path.conf` puts the mise shims first on the service PATH. It is a drop-in for the unit that `t3 service install` writes, so T3 updates keep it. The installer does not install it. Link it once per machine and restart T3 while no thread is running, because a restart stops running turns:
+
+```bash
+mkdir -p "$HOME/.config/systemd/user/t3code.service.d"
+ln -sf "$HOME/dev/dotfiles/systemd/user/t3code.service.d/path.conf" "$HOME/.config/systemd/user/t3code.service.d/path.conf"
+systemctl --user daemon-reload && systemctl --user restart t3code.service
+```
+
+Check that the service PATH starts with the mise shims: `systemctl --user show t3code.service -p Environment`. The T3 desktop app on GEEKOM needs no drop-in, because it prepares the login PATH for its own server. The Mac mini's T3 service already has the shims on its PATH.
+
+### Forgejo pull requests in T3
+
+T3 reads Forgejo pull requests with the login stored by `fj` (`~/.local/share/forgejo-cli/keys.json`; on macOS `~/Library/Application Support/forgejo-cli.forgejo-cli/keys.json`). It matches the repository's remote host against that login and its `aliases`. Xpando remotes use the SSH name `forgejo`, so the file needs the alias `"forgejo": "git.xpando.ai"`; without it T3 falls back to `tea` and reports "Install Forgejo CLI". The `fj` login on each machine is the agent account that runs there, from `~/.config/xpando-agents/<account>/forgejo-token`. Check with `fj --host git.xpando.ai whoami`.
