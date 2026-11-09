@@ -135,18 +135,6 @@ platform = ["macos"]
 description = "OpenCode AI assistant (GUI)"
 
 # CLI AI tools (used by both developer and hacker profiles)
-[apps.claude-cli]
-type = "mise"
-name = "claude"
-bin = "claude"
-version = "latest"
-category = "ai"
-platform = ["macos", "linux"]
-description = "Claude AI assistant (CLI)"
-enforce_single_source = true
-# Only T3's "Update all" updates it (mise upgrade through the shim); no daily mise update.
-mise_options = "auto_update = false"
-
 [apps.opencode-cli]
 depends_on = "node"
 type = "mise"
@@ -166,18 +154,6 @@ category = "ai"
 platform = ["macos", "linux"]
 description = "Pi AI coding assistant (CLI)"
 enforce_single_source = true
-
-[apps.codex-cli]
-type = "mise"
-name = "codex"
-bin = "codex"
-version = "latest"
-category = "ai"
-platform = ["macos", "linux"]
-description = "OpenAI Codex assistant (CLI)"
-enforce_single_source = true
-# Only T3's "Update all" updates it (mise upgrade through the shim); no daily mise update.
-mise_options = "auto_update = false"
 
 [apps.codex-acp]
 type = "brew"
@@ -199,19 +175,6 @@ category = "ai"
 platform = ["macos", "linux"]
 description = "T3 Code's own t3 command on PATH: links the desktop wrapper ~/.t3/bin/t3, or runs `t3 install` from the active runtime"
 
-[apps.agy-cli]
-type = "mise"
-name = "agy"
-bin = "agy"
-version = "latest"
-enforce_single_source = true
-category = "ai"
-platform = ["macos", "linux"]
-description = "Google Antigravity CLI; T3's Antigravity provider runs its shim (agy acp). Its own updater is off; mise updates it daily"
-
-# ─────────────────────────────────────────────────────────────────────────────
-# WINDOW MANAGEMENT
-# ─────────────────────────────────────────────────────────────────────────────
 [apps.aerospace]
 type = "cask"
 tap = "nikitabobko/tap"
@@ -842,18 +805,6 @@ version = "0.9.3"
 category = "ai"
 platform = ["macos", "linux"]
 description = "Agent session server"
-
-[apps.grok-cli]
-type = "mise"
-name = "grok"
-bin = "grok"
-version = "latest"
-category = "ai"
-platform = ["macos", "linux"]
-description = "Grok CLI"
-enforce_single_source = true
-# Only T3's "Update all" updates it (mise upgrade through the shim); no daily mise update.
-mise_options = "auto_update = false"
 
 [apps.dexter]
 type = "mise"

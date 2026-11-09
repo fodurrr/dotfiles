@@ -391,28 +391,19 @@ EOF_MISE
     # Dependencies are resolved recursively (e.g., elixir depends_on erlang)
     write_selected_mise_tools "$config_file"
 
-    # Hooks and settings
+    # Settings
     cat >> "$config_file" << 'EOF_MISE'
 
-# Before each install, including the daily update and T3's update button,
-# remove versions that no config uses. mise never schedules removal of
-# npm-installed tools such as opencode. Use preinstall, not postinstall:
-# a postinstall prune runs before `mise upgrade` finishes and can remove
-# the new version. A failed prune only prints a warning.
-[hooks]
-preinstall = "mise prune --tools --yes"
-
-# mise owns agy: turn off its own background updater. Shims apply [env],
-# so this also reaches agy when T3 starts it through the shim.
-[env]
-AGY_CLI_DISABLE_AUTO_UPDATE = "true"
-
+# The agent CLIs (claude, codex, grok, agy), their prune hook, agy's updater
+# switch and their release-age exceptions come from xpando/workstation
+# (/etc/mise/conf.d/xpando-workstation.toml). mise merges that file with this
+# one; the release-age exceptions below add to the workstation's list.
 [settings]
 log_level = "info"
 experimental = true
 # AI CLIs skip the default 24-hour release delay so the newest version is
 # available at once. Everything else keeps the delay.
-minimum_release_age_excludes = ["agy", "claude", "codex", "grok", "opencode", "pi"]
+minimum_release_age_excludes = ["opencode", "pi"]
 # mise upgrades every global tool in the background, checked every 24 hours,
 # and updates itself daily. Exact versions never move. Needs mise 2026.10.7.
 tool_update.global_auto = true
