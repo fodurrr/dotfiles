@@ -221,15 +221,7 @@ Lingering starts the service at boot, before login. Check with `herdr status` an
 
 ## T3 Code Server Service
 
-A host that runs T3 Code as a systemd user service (`t3 service install`, as on Omen) starts its server with the bare system PATH. T3's agent sessions still get the login PATH, but the server's own Forgejo pull request reader cannot start `fj`. `systemd/user/t3code.service.d/path.conf` puts the mise shims first on the service PATH. It is a drop-in for the unit that `t3 service install` writes, so T3 updates keep it. The installer does not install it. Link it once per machine and restart T3 while no thread is running, because a restart stops running turns:
-
-```bash
-mkdir -p "$HOME/.config/systemd/user/t3code.service.d"
-ln -sf "$HOME/dev/dotfiles/systemd/user/t3code.service.d/path.conf" "$HOME/.config/systemd/user/t3code.service.d/path.conf"
-systemctl --user daemon-reload && systemctl --user restart t3code.service
-```
-
-Check that the service PATH starts with the mise shims: `systemctl --user show t3code.service -p Environment`. The T3 desktop app on GEEKOM needs no drop-in, because it prepares the login PATH for its own server. That login PATH names fixed mise version folders, so each provider's Binary path must point at its mise shim; see [Agent CLIs: one copy, one updater](../README.md#5-agent-clis-one-copy-one-updater). The Mac mini's T3 service already has the shims on its PATH.
+The company workstation (`xpando/workstation`) owns the T3 service PATH drop-in (`t3code.service.d/path.conf`), the `t3` command on PATH and T3's provider settings, with `bin/workstation-t3 check`. dotfiles carries none of it.
 
 ### Forgejo pull requests in T3
 

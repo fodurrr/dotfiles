@@ -67,7 +67,7 @@ apps = ["google-chrome-linux"]
 
 # AI
 [linux.ai]
-apps = ["claude-desktop-linux", "codex-desktop-linux", "t3-code-linux", "hermes-agent", "pi-cli", "opencode-cli", "codex-xpando", "t3-cli", "herdr"]
+apps = ["claude-desktop-linux", "codex-desktop-linux", "t3-code-linux", "hermes-agent", "pi-cli", "opencode-cli", "codex-xpando", "herdr"]
 
 # CONFIG
 [linux.config]

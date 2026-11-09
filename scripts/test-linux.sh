@@ -426,10 +426,10 @@ test_curl_registry_scope() {
         fi
     done
 
-    if [[ "$curl_count" -eq 2 && "$curl_keys" == "codex-xpando, t3-cli" ]]; then
-        pass "only codex-xpando and t3-cli should be configured as curl apps"
+    if [[ "$curl_count" -eq 1 && "$curl_keys" == "codex-xpando" ]]; then
+        pass "only codex-xpando should be configured as a curl app"
     else
-        fail "only codex-xpando and t3-cli should be configured as curl apps (found: ${curl_keys:-none})"
+        fail "only codex-xpando should be configured as a curl app (found: ${curl_keys:-none})"
     fi
 }
 
