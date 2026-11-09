@@ -254,6 +254,16 @@ cmd_check() {
         fail "settings-manage or elixir missing; cannot check the Codex and Claude-effort defaults"
     fi
 
+    # A user-level Claude model overrides nothing (managed settings win), but it
+    # misleads, and the defaults must be the same on every machine.
+    local user_model
+    user_model=$(jq -r '.model // ""' "$HOME/.claude/settings.json" 2>/dev/null)
+    if [[ -z "$user_model" || "$user_model" == "$(src '.claude.default')" ]]; then
+        ok "Claude user settings carry no other default model"
+    else
+        fail "~/.claude/settings.json sets model \"$user_model\"; remove it (the managed default is $(src '.claude.default'))"
+    fi
+
     if [[ "$(yq -p toml -oy '.models.default // ""' "$GROK_CONFIG" 2>/dev/null)" == "$(src '.grok.default')" ]]; then ok "Grok default"; else fail "Grok default is not $(src '.grok.default')"; fi
     if [[ "$(jq -r '.model // ""' "$AGY_SETTINGS" 2>/dev/null)" == "$(src '.antigravity.agy_default')" ]]; then ok "agy default"; else fail "agy default is not $(src '.antigravity.agy_default')"; fi
 
