@@ -29,7 +29,7 @@ Keep implementation details here and in `docs/`; machine inventory belongs in th
 
 | Machine | Profiles | Important boundaries |
 |---|---|---|
-| GEEKOM (`geekom-a8-max`) | `developer`, plus optional `geekom-vpn` | Daily Ubuntu desktop; display shortcuts, dictation and Tailscale tray belong here |
+| GEEKOM (`geekom-a8-max`) | `developer`, plus optional `geekom-vpn` | Daily Ubuntu desktop; display shortcuts and Tailscale tray belong here |
 | Omen (`omen`) | `omen` | Headless Ubuntu Server development host, reached using `ssh omen` |
 | Retired Clevo | `clevo` | Reference only; no further deployment to the failed laptop |
 

@@ -1,4 +1,4 @@
-# Clevo: developer baseline without GEEKOM display and dictation defaults.
+# Clevo: developer baseline without GEEKOM display defaults.
 version = 1
 
 # TERMINALS
@@ -92,7 +92,7 @@ apps = ["spotify-linux", "telegram-linux", "discord-linux", "vlc-linux"]
 
 # DESKTOP PREFERENCES
 [linux.desktop]
-apps = ["bibata-cursor-linux", "gnome-cursor-yellow", "gnome-screenshot-shortcut", "ydotool", "wl-clipboard", "solaar"]
+apps = ["bibata-cursor-linux", "gnome-cursor-yellow", "gnome-screenshot-shortcut", "wl-clipboard", "solaar"]
 
 # FONTS
 [linux.fonts]

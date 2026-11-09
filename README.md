@@ -11,10 +11,10 @@ You do not need to switch to an old machine branch to install its profile.
 
 | Machine or purpose | Profile selection | Scope |
 |---|---|---|
-| GEEKOM daily desktop | `developer` | Linux desktop, development tools, display shortcuts, dictation and Tailscale tray |
+| GEEKOM daily desktop | `developer` | Linux desktop, development tools, display shortcuts and Tailscale tray |
 | GEEKOM VPN additions | `developer` + `geekom-vpn` | Adds native Firefox, qBittorrent and Private Internet Access |
 | Omen development host | `omen` | Ubuntu Server tools, agent CLIs, Docker and PostgreSQL; no desktop or VPN apps |
-| Retired Clevo laptop | `clevo` | Retained reference profile without GEEKOM display and dictation defaults |
+| Retired Clevo laptop | `clevo` | Retained reference profile without GEEKOM display defaults |
 | Other machines | Discover with `--list-profiles` | Inspect the selected platform in `profiles/*.toml` before installing |
 
 These are intended machine assignments, not hostname enforcement by the main installer.
