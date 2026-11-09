@@ -192,14 +192,12 @@ category = "ai"
 platform = ["macos", "linux"]
 description = "Codex launcher preserving current cwd with generated ~/dev/xpando writable roots"
 
-[apps.gemini-cli]
-type = "mise"
-bin = "gemini"
-enforce_single_source = true
+[apps.t3-cli]
+type = "curl"
+bin = "t3"
 category = "ai"
 platform = ["macos", "linux"]
-depends_on = "node"
-description = "Google Gemini AI (CLI)"
+description = "T3 Code's own t3 command on PATH: links the desktop wrapper ~/.t3/bin/t3, or runs `t3 install` from the active runtime"
 
 [apps.agy-cli]
 type = "mise"

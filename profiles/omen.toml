@@ -9,7 +9,7 @@ version = 1
 apps = ["helix"]
 
 [linux.ai]
-apps = ["hermes-agent", "claude-cli", "codex-cli", "pi-cli", "opencode-cli", "gemini-cli", "agy-cli", "grok-cli", "codex-xpando", "herdr"]
+apps = ["hermes-agent", "claude-cli", "codex-cli", "pi-cli", "opencode-cli", "agy-cli", "grok-cli", "codex-xpando", "t3-cli", "herdr"]
 
 [linux.config]
 apps = ["git-config", "zsh-config", "sheldon-config", "starship-config", "mise-config", "tmux-config", "helix-config", "yazi-config", "cheatsheet-config"]
