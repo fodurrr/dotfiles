@@ -391,8 +391,16 @@ EOF_MISE
     # Dependencies are resolved recursively (e.g., elixir depends_on erlang)
     write_selected_mise_tools "$config_file"
 
-    # Settings
+    # Hooks and settings
     cat >> "$config_file" << 'EOF_MISE'
+
+# Before each install, including the daily update and T3's update button,
+# remove versions that no config uses. mise never schedules removal of
+# npm-installed tools such as gemini-cli. Use preinstall, not postinstall:
+# a postinstall prune runs before `mise upgrade` finishes and can remove
+# the new version. A failed prune only prints a warning.
+[hooks]
+preinstall = "mise prune --tools --yes"
 
 [settings]
 log_level = "info"

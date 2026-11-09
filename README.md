@@ -346,34 +346,26 @@ ls -la ~/.zshrc
 find ~ -name "*.bak" -type f 2>/dev/null
 ```
 
-### 5) AI CLI command-source collision (strict mise enforcement)
+### 5) Agent CLIs: one copy, one updater
 
-Layer 3 fails for strict AI CLI tools (`claude`, `opencode`, `gemini`, and Linux `codex`) when a command resolves to multiple sources or the first path is not the expected mise install path.
+mise installs every agent CLI: `claude`, `codex`, `grok`, `gemini` and `pi`, plus `opencode`. T3 Code installs only Antigravity. Each machine keeps exactly one copy of each CLI.
 
-Ownership model:
-- `codex`, `grok`, `claude`, `opencode`, `gemini` CLIs: `mise` on macOS and Linux
-- macOS Codex desktop app: Homebrew cask (`codex-app`)
+- **T3 runs the mise shim.** In T3, set Settings -> Providers -> <provider> -> Binary path to `~/.local/share/mise/shims/<tool>` (use the absolute path) for Claude, Codex, Grok and Pi. T3 then reports the same version as the shell, and its update button runs `mise upgrade <tool>`. A fixed version folder such as `installs/claude/2.1.319/claude` makes T3's button manual-only.
+- **Claude, Codex and Grok are updated only by T3's "Update all".** Their mise entries set `auto_update = false`, so mise's daily background update skips them. Every other mise tool, including `gemini-cli` and `pi`, keeps the daily update.
+- **Old versions are pruned.** A mise `preinstall` hook runs `mise prune --tools --yes` before each install. mise also removes a replaced version 24 hours after `mise upgrade`.
+- **The installer enforces one copy.** Layer 3 fails for `claude`, `codex`, `grok`, `gemini` and `pi` when the command resolves to more than one copy, or outside its mise install folder.
 
 ```bash
-# Codex ownership check: the first path must be the mise shim
-which -a codex
-mise current codex
+# One copy, owned by mise (the mise shim is not counted as a second copy)
+which -a claude codex grok gemini pi
+mise ls claude codex grok gemini-cli pi
+mise ls --prunable
 
-# Strict mise-owned AI CLIs
-which -a gemini
-mise current gemini-cli
-mise latest gemini-cli
-
-which -a claude opencode
-mise current claude opencode
-
-# Example cleanup for legacy Claude vendor symlink:
-rm ~/.local/bin/claude
-hash -r
-which -a claude
+# What T3 runs and how it updates it (versionAdvisory.updateCommand)
+jq '.versionAdvisory | {currentVersion, latestVersion, updateCommand}' ~/.t3/caches/claudeAgent.json
 ```
 
-`version = "latest"` mise tools are refreshed on each install run, while your existing `lts`/`stable`/pinned versions remain unchanged.
+A vendor installer adds a second copy, such as `~/.local/bin/claude` or `~/.grok/bin/grok`. Move it aside, point T3 at the mise shim, and check that a fresh T3 session still works. Login stores stay in place: `~/.claude`, `~/.codex/auth.json`, `~/.grok/auth.json` and `~/.pi/agent/auth.json`.
 
 ## Documentation Map
 

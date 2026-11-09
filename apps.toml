@@ -143,6 +143,9 @@ version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
 description = "Claude AI assistant (CLI)"
+enforce_single_source = true
+# Only T3's "Update all" updates it (mise upgrade through the shim); no daily mise update.
+mise_options = "auto_update = false"
 
 [apps.opencode-cli]
 depends_on = "node"
@@ -162,6 +165,7 @@ version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
 description = "Pi AI coding assistant (CLI)"
+enforce_single_source = true
 
 [apps.codex-cli]
 type = "mise"
@@ -171,6 +175,9 @@ version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
 description = "OpenAI Codex assistant (CLI)"
+enforce_single_source = true
+# Only T3's "Update all" updates it (mise upgrade through the shim); no daily mise update.
+mise_options = "auto_update = false"
 
 [apps.codex-acp]
 type = "brew"
@@ -836,6 +843,9 @@ version = "latest"
 category = "ai"
 platform = ["macos", "linux"]
 description = "Grok CLI"
+enforce_single_source = true
+# Only T3's "Update all" updates it (mise upgrade through the shim); no daily mise update.
+mise_options = "auto_update = false"
 
 [apps.dexter]
 type = "mise"
