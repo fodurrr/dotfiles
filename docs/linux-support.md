@@ -112,7 +112,7 @@ The `clevo` profile is a saved developer-profile variant for the P170EM laptop.
 It omits the GEEKOM monitor commands and shortcuts.
 The profile is an explicit snapshot; compare it with `developer` when updating apps.
 
-Agent CLIs Claude, Codex, OpenCode, Pi, Gemini, Grok and herdr are managed by mise.
+Agent CLIs Claude, Codex, OpenCode, Pi, Grok, agy (Google Antigravity) and herdr are managed by mise.
 OpenCode declares Node as an installation dependency; Node uses the `lts` version.
 Hermes Agent uses its vendor installer and isolated runtime. `codex-xpando` is a
 local launcher copied from `scripts/local-bin`, not a second Codex installation.

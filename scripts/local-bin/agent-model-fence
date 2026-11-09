@@ -1,0 +1,294 @@
+#!/usr/bin/env bash
+# =============================================================================
+# agent-model-fence: allowed agent models and defaults from agent-models.toml
+# =============================================================================
+# Usage:
+#   agent-model-fence stage   Write the managed files to stage, then print the
+#                             one sudo command that installs them.
+#   agent-model-fence apply   Set the user-level defaults and T3's settings.
+#   agent-model-fence check   Compare every place with agent-models.toml.
+#                             Exits 1 on any drift (the daily check).
+#
+# What goes where:
+#   Claude  managed-settings.json: availableModels (exact), enforce, model
+#   Codex   /etc/codex/requirements.toml -> /etc/codex/models.json (catalogue)
+#   Codex model/effort/sub-agent and Claude effort: the AI Layer's
+#           settings-manage (its preview, apply and journal flow)
+#   Grok    ~/.grok/config.toml [models] default
+#   agy     ~/.gemini/antigravity-cli/settings.json model
+#   T3      ~/.t3/userdata/settings.json defaultModelSelection and
+#           providerModelPreferences.<instance>.hiddenModels
+# Compatible with macOS system Bash 3.2.
+# =============================================================================
+set -u
+
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+SOURCE_FILE="$DOTFILES_DIR/agent-models.toml"
+STATE_DIR="${AGENT_MODEL_FENCE_STATE:-$HOME/.local/state/agent-model-fence}"
+STAGE_DIR="$STATE_DIR/staged"
+SETTINGS_MANAGE="${SETTINGS_MANAGE_SCRIPT:-$HOME/.claude/plugins/marketplaces/nucleus/claude-code-skills/skills/settings-manage/scripts/settings_manage.exs}"
+T3_SETTINGS="$HOME/.t3/userdata/settings.json"
+T3_CACHES="$HOME/.t3/caches"
+GROK_CONFIG="$HOME/.grok/config.toml"
+AGY_SETTINGS="$HOME/.gemini/antigravity-cli/settings.json"
+CODEX_REQUIREMENTS="/etc/codex/requirements.toml"
+CODEX_CATALOG="/etc/codex/models.json"
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    CLAUDE_MANAGED="/Library/Application Support/ClaudeCode/managed-settings.json"
+    ROOT_GROUP="wheel"
+else
+    CLAUDE_MANAGED="/etc/claude-code/managed-settings.json"
+    ROOT_GROUP="root"
+fi
+
+FAILURES=0
+fail() { echo "FAIL  $*" >&2; FAILURES=$((FAILURES + 1)); }
+ok() { echo "ok    $*"; }
+die() { echo "agent-model-fence: $*" >&2; exit 1; }
+
+require() {
+    local tool
+    for tool in "$@"; do
+        command -v "$tool" >/dev/null 2>&1 || die "$tool is not on PATH"
+    done
+}
+
+# The source as JSON, read once.
+load_source() {
+    [[ -f "$SOURCE_FILE" ]] || die "missing $SOURCE_FILE"
+    SOURCE_JSON=$(yq -p toml -oj '.' "$SOURCE_FILE") || die "cannot parse $SOURCE_FILE"
+}
+src() { printf '%s' "$SOURCE_JSON" | jq -r "$1"; }
+src_json() { printf '%s' "$SOURCE_JSON" | jq -c "$1"; }
+
+backup_file() {
+    local file="$1" dir
+    [[ -f "$file" ]] || return 0
+    dir="$STATE_DIR/backups/$(date -u +%Y%m%dT%H%M%SZ)"
+    mkdir -p "$dir" && chmod 700 "$STATE_DIR" "$STATE_DIR/backups" "$dir"
+    cp -p "$file" "$dir/$(basename "$file")" || die "cannot back up $file"
+}
+
+# Replace a JSON file atomically, keeping its mode.
+write_json() {
+    local file="$1" filter="$2" tmp mode
+    shift 2
+    tmp="$file.agent-model-fence.tmp"
+    jq "$@" "$filter" "$file" > "$tmp" || { rm -f "$tmp"; die "cannot update $file"; }
+    mode=$(stat -c %a "$file" 2>/dev/null || stat -f %Lp "$file")
+    chmod "$mode" "$tmp" && mv "$tmp" "$file" || die "cannot replace $file"
+}
+
+expected_claude_managed() {
+    src_json '{availableModels: .claude.allowed, availableModelsMatch: "exact", enforceAvailableModels: true, model: .claude.default}'
+}
+
+expected_codex_requirements() {
+    printf '# Written by dotfiles agent-model-fence from agent-models.toml.\nmodel_catalog_json = "%s"\n' "$CODEX_CATALOG"
+}
+
+settings_manage_profile() {
+    src_json '{schemaVersion: 1, name: "agent-model-defaults", scope: "shared", settings: {"codex.model": .codex.default, "codex.effort": .codex.effort, "codex.agents.model": .codex.subagent, "claude.effort": .claude.effort}}'
+}
+
+# --- stage ------------------------------------------------------------------
+cmd_stage() {
+    require yq jq codex
+    load_source
+    mkdir -p "$STAGE_DIR" && chmod 700 "$STATE_DIR" "$STAGE_DIR"
+
+    expected_claude_managed | jq . > "$STAGE_DIR/claude-managed-settings.json" || die "cannot stage Claude settings"
+
+    local allowed count want
+    allowed=$(src_json '.codex.allowed')
+    codex debug models --bundled \
+        | jq --argjson allow "$allowed" '.models |= map(select(.slug as $s | $allow | index($s)))' \
+        > "$STAGE_DIR/codex-models.json" || die "cannot build the Codex catalogue"
+    count=$(jq '.models | length' "$STAGE_DIR/codex-models.json")
+    want=$(src '.codex.allowed | length')
+    [[ "$count" == "$want" ]] || die "Codex's bundled catalogue has $count of the $want allowed models; check the slugs"
+
+    expected_codex_requirements > "$STAGE_DIR/codex-requirements.toml"
+
+    echo "Staged in $STAGE_DIR. Install with:"
+    echo "sudo -S sh -c 'S=$STAGE_DIR; install -d -m 0755 \"$(dirname "$CLAUDE_MANAGED")\" /etc/codex && install -m 0644 -o root -g $ROOT_GROUP \"\$S/claude-managed-settings.json\" \"$CLAUDE_MANAGED\" && install -m 0644 -o root -g $ROOT_GROUP \"\$S/codex-models.json\" $CODEX_CATALOG && install -m 0644 -o root -g $ROOT_GROUP \"\$S/codex-requirements.toml\" $CODEX_REQUIREMENTS'"
+}
+
+# --- apply ------------------------------------------------------------------
+apply_settings_manage() {
+    [[ -f "$SETTINGS_MANAGE" ]] || die "settings-manage not found at $SETTINGS_MANAGE (install the AI Layer)"
+    require elixir
+    local dir stamp drift
+    dir="$STATE_DIR/settings-manage"
+    stamp=$(date -u +%Y%m%dT%H%M%SZ)
+    mkdir -p "$dir" && chmod 700 "$STATE_DIR" "$dir"
+    settings_manage_profile > "$dir/profile-$stamp.json"
+    (cd "$HOME" && elixir "$SETTINGS_MANAGE" preview --profile "$dir/profile-$stamp.json" --plan "$dir/plan-$stamp.json" >/dev/null) \
+        || die "settings-manage preview failed"
+    drift=$(jq '[.rows[] | select(.status != "in_sync")] | length' "$dir/plan-$stamp.json")
+    if [[ "$drift" == "0" ]]; then
+        ok "Codex and Claude-effort defaults already in sync (settings-manage)"
+        return 0
+    fi
+    (cd "$HOME" && elixir "$SETTINGS_MANAGE" apply --plan "$dir/plan-$stamp.json" --journal "$dir/journal-$stamp.json" >/dev/null) \
+        || die "settings-manage apply failed; journal: $dir/journal-$stamp.json"
+    ok "settings-manage applied $drift default(s); journal: $dir/journal-$stamp.json"
+}
+
+apply_grok() {
+    local want current
+    want=$(src '.grok.default')
+    [[ -f "$GROK_CONFIG" ]] || { mkdir -p "$(dirname "$GROK_CONFIG")"; : > "$GROK_CONFIG"; }
+    current=$(yq -p toml -oy '.models.default // ""' "$GROK_CONFIG")
+    if [[ "$current" == "$want" ]]; then ok "Grok default $want"; return 0; fi
+    if grep -q '^\[models\]' "$GROK_CONFIG"; then
+        die "$GROK_CONFIG has a [models] table with default '$current'; set default = \"$want\" there by hand"
+    fi
+    backup_file "$GROK_CONFIG"
+    printf '\n[models]\ndefault = "%s"\n' "$want" >> "$GROK_CONFIG"
+    ok "Grok default set to $want"
+}
+
+apply_agy() {
+    local want
+    want=$(src '.antigravity.agy_default')
+    if [[ ! -f "$AGY_SETTINGS" ]]; then
+        mkdir -p "$(dirname "$AGY_SETTINGS")" && printf '{}\n' > "$AGY_SETTINGS" && chmod 600 "$AGY_SETTINGS"
+    fi
+    if [[ "$(jq -r '.model // ""' "$AGY_SETTINGS")" == "$want" ]]; then ok "agy default $want"; return 0; fi
+    backup_file "$AGY_SETTINGS"
+    write_json "$AGY_SETTINGS" '.model = $m' --arg m "$want"
+    ok "agy default set to $want"
+}
+
+# Every cached model outside the instance's family list, plus what is hidden already.
+t3_hidden_for() {
+    local instance="$1" family="$2" cache="$T3_CACHES/$1.json" current
+    current=$(jq -c --arg i "$instance" '.providerModelPreferences[$i].hiddenModels // []' "$T3_SETTINGS")
+    if [[ ! -f "$cache" ]]; then printf '%s' "$current"; return 0; fi
+    jq -c --argjson allow "$(src_json ".$family.allowed")" --argjson cur "$current" \
+        '[.models[]? | (.slug // .id)] | map(select(. as $m | $allow | index($m) | not)) | (. + $cur) | unique' "$cache"
+}
+
+apply_t3() {
+    [[ -f "$T3_SETTINGS" ]] || die "missing $T3_SETTINGS"
+    local entry instance family hidden prefs
+    prefs='{}'
+    for entry in $(src '.t3.instances[]'); do
+        instance="${entry%%:*}"; family="${entry#*:}"
+        hidden=$(t3_hidden_for "$instance" "$family")
+        prefs=$(printf '%s' "$prefs" | jq -c --arg i "$instance" --argjson h "$hidden" '.[$i] = {hiddenModels: $h}')
+    done
+    backup_file "$T3_SETTINGS"
+    write_json "$T3_SETTINGS" '
+        .defaultModelSelection = {instanceId: $inst, model: $model, options: [{id: "effort", value: $effort}]}
+        | .providerModelPreferences = ((.providerModelPreferences // {}) as $old
+            | reduce ($prefs | to_entries[]) as $e ($old;
+                .[$e.key] = ((.[$e.key] // {modelOrder: []}) + {hiddenModels: $e.value.hiddenModels})))' \
+        --arg inst "$(src '.t3.default_instance')" --arg model "$(src '.t3.default_model')" \
+        --arg effort "$(src '.t3.default_effort')" --argjson prefs "$prefs"
+    ok "T3 default $(src '.t3.default_instance')/$(src '.t3.default_model') ($(src '.t3.default_effort')); hidden models updated"
+}
+
+cmd_apply() {
+    require yq jq
+    load_source
+    apply_settings_manage
+    apply_grok
+    apply_agy
+    apply_t3
+}
+
+# --- check ------------------------------------------------------------------
+check_json_equal() {
+    local label="$1" file="$2" want="$3"
+    if [[ ! -f "$file" ]]; then fail "$label: $file missing"; return; fi
+    if [[ "$(jq -S -c . "$file")" == "$(printf '%s' "$want" | jq -S -c .)" ]]; then ok "$label"; else fail "$label: $file differs from agent-models.toml"; fi
+}
+
+check_t3_cli() {
+    local cli server
+    cli=$(t3 --version 2>/dev/null | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+[^ ]*' | head -1)
+    if [[ -f "$HOME/.t3/runtime/service-state.json" ]]; then
+        server=$(jq -r '.activeVersion // ""' "$HOME/.t3/runtime/service-state.json")
+    elif [[ -x "$HOME/.t3/bin/t3" ]]; then
+        server=$("$HOME/.t3/bin/t3" --version 2>/dev/null | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+[^ ]*' | head -1)
+    fi
+    if [[ -z "$cli" ]]; then fail "t3 is not on PATH"; return; fi
+    if [[ "$cli" == "${server:-}" ]]; then ok "t3 on PATH $cli = server"; else fail "t3 on PATH is $cli, server is ${server:-unknown}"; fi
+}
+
+cmd_check() {
+    require yq jq
+    load_source
+
+    check_json_equal "Claude managed allowlist" "$CLAUDE_MANAGED" "$(expected_claude_managed)"
+
+    if [[ -f "$CODEX_REQUIREMENTS" ]] && [[ "$(grep -v '^#' "$CODEX_REQUIREMENTS")" == "$(expected_codex_requirements | grep -v '^#')" ]]; then
+        ok "Codex requirements point at $CODEX_CATALOG"
+    else
+        fail "Codex requirements: $CODEX_REQUIREMENTS missing or different"
+    fi
+    if [[ -f "$CODEX_CATALOG" ]] && [[ "$(jq -c '[.models[].slug] | sort' "$CODEX_CATALOG")" == "$(src_json '.codex.allowed | sort')" ]]; then
+        ok "Codex catalogue holds exactly the allowed models"
+    else
+        fail "Codex catalogue: $CODEX_CATALOG missing or not equal to the allowed list"
+    fi
+
+    if [[ -f "$SETTINGS_MANAGE" ]] && command -v elixir >/dev/null 2>&1; then
+        local rows
+        # inspect prints one row per profile setting (id, observed); find them wherever they sit.
+        local profile_file="$STATE_DIR/settings-manage/check-profile.json"
+        mkdir -p "$STATE_DIR/settings-manage" && chmod 700 "$STATE_DIR" "$STATE_DIR/settings-manage"
+        settings_manage_profile > "$profile_file"
+        if rows=$(cd "$HOME" && elixir "$SETTINGS_MANAGE" inspect --profile "$profile_file" 2>/dev/null | jq -c --argjson want "$(settings_manage_profile)" \
+            '[.. | objects | select(.id? and .observed?) | select(.id as $i | $want.settings | has($i))] | unique_by(.id)
+             | if length != ($want.settings | length) then error("missing rows") else . end
+             | map(select(.observed.value != $want.settings[.id]) | .id)'); then
+            if [[ "$rows" == "[]" ]]; then ok "Codex and Claude-effort defaults"; else fail "defaults drift (settings-manage): $rows"; fi
+        else
+            fail "settings-manage inspect did not report every default"
+        fi
+    else
+        fail "settings-manage or elixir missing; cannot check the Codex and Claude-effort defaults"
+    fi
+
+    if [[ "$(yq -p toml -oy '.models.default // ""' "$GROK_CONFIG" 2>/dev/null)" == "$(src '.grok.default')" ]]; then ok "Grok default"; else fail "Grok default is not $(src '.grok.default')"; fi
+    if [[ "$(jq -r '.model // ""' "$AGY_SETTINGS" 2>/dev/null)" == "$(src '.antigravity.agy_default')" ]]; then ok "agy default"; else fail "agy default is not $(src '.antigravity.agy_default')"; fi
+
+    if [[ -f "$T3_SETTINGS" ]]; then
+        if [[ "$(jq -c '.defaultModelSelection | {instanceId, model}' "$T3_SETTINGS")" == "$(src_json '{instanceId: .t3.default_instance, model: .t3.default_model}')" ]]; then
+            ok "T3 default model"
+        else
+            fail "T3 default model is not $(src '.t3.default_instance')/$(src '.t3.default_model')"
+        fi
+        local entry instance family visible
+        for entry in $(src '.t3.instances[]'); do
+            instance="${entry%%:*}"; family="${entry#*:}"
+            [[ -f "$T3_CACHES/$instance.json" ]] || continue
+            visible=$(jq -c --argjson allow "$(src_json ".$family.allowed")" \
+                --argjson hidden "$(jq -c --arg i "$instance" '.providerModelPreferences[$i].hiddenModels // []' "$T3_SETTINGS")" \
+                '[.models[]? | (.slug // .id)] | map(select(. as $m | ($hidden | index($m) | not) and ($allow | index($m) | not)))' \
+                "$T3_CACHES/$instance.json")
+            if [[ "$visible" == "[]" ]]; then ok "T3 $instance shows only allowed models"; else fail "T3 $instance shows models outside the list: $visible"; fi
+        done
+    else
+        fail "missing $T3_SETTINGS"
+    fi
+
+    check_t3_cli
+
+    if [[ "$FAILURES" -gt 0 ]]; then
+        echo "agent-model-fence check: $FAILURES problem(s)" >&2
+        exit 1
+    fi
+    echo "agent-model-fence check: all in line with agent-models.toml"
+}
+
+case "${1:-}" in
+    stage) cmd_stage ;;
+    apply) cmd_apply ;;
+    check) cmd_check ;;
+    *) sed -n '2,23p' "$0"; exit 2 ;;
+esac

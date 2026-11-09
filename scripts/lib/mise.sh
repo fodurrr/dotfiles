@@ -396,7 +396,7 @@ EOF_MISE
 
 # Before each install, including the daily update and T3's update button,
 # remove versions that no config uses. mise never schedules removal of
-# npm-installed tools such as gemini-cli. Use preinstall, not postinstall:
+# npm-installed tools such as opencode. Use preinstall, not postinstall:
 # a postinstall prune runs before `mise upgrade` finishes and can remove
 # the new version. A failed prune only prints a warning.
 [hooks]

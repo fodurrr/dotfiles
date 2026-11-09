@@ -153,7 +153,7 @@ test_linux_layer_upgrade_behavior() {
 test_ai_cli_single_source_fields() {
     print_header "AI CLI Single-Source Fields"
     local app_key
-    for app_key in claude-cli opencode-cli codex-cli gemini-cli; do
+    for app_key in claude-cli codex-cli grok-cli pi-cli agy-cli opencode-cli; do
         local app_type app_bin app_enforce
         app_type=$(get_app_prop "$app_key" "type")
         app_bin=$(get_app_prop "$app_key" "bin")
@@ -171,9 +171,9 @@ test_ai_cli_single_source_fields() {
             fail "$app_key should define bin"
         fi
 
-        # claude, opencode and codex coexist with their desktop apps, so only
-        # gemini-cli enforces single-source command ownership.
-        if [[ "$app_key" == "gemini-cli" ]]; then
+        # The agent CLIs keep one copy each (B18); opencode coexists with
+        # its desktop app, so it does not enforce single-source ownership.
+        if [[ "$app_key" != "opencode-cli" ]]; then
             if [[ "$app_enforce" == "true" ]]; then
                 pass "$app_key should enforce single-source command ownership"
             else
@@ -375,7 +375,9 @@ test_sheldon_source_config() {
 test_mise_release_age_excludes() {
     print_header "Mise Release Age Exceptions"
     local mise_lib="$DOTFILES_DIR/scripts/lib/mise.sh"
-    assert_true "generated mise config should exempt the AI CLIs from the release delay" is_grep_match 'minimum_release_age_excludes = \["claude", "codex", "grok", "opencode", "pi"\]' "$mise_lib"
+    assert_true "generated mise config should exempt the AI CLIs from the release delay" is_grep_match 'minimum_release_age_excludes = \["agy", "claude", "codex", "grok", "opencode", "pi"\]' "$mise_lib"
+    assert_true "generated mise config should prune unused versions before each install" is_grep_match 'preinstall = "mise prune --tools --yes"' "$mise_lib"
+    assert_true "generated mise config should turn off agy's own updater" is_grep_match 'AGY_CLI_DISABLE_AUTO_UPDATE = "true"' "$mise_lib"
     assert_true "generated mise config should turn on background tool updates" is_grep_match 'tool_update.global_auto = true' "$mise_lib"
     assert_true "generated mise config should turn on the daily mise self-update" is_grep_match 'self_update.auto = "1d"' "$mise_lib"
     assert_true "generated mise config should state the Ubuntu release for prebuilt Erlang" is_grep_match 'erlang.precompiled_os = "ubuntu-24.04"' "$mise_lib"
@@ -424,10 +426,10 @@ test_curl_registry_scope() {
         fi
     done
 
-    if [[ "$curl_count" -eq 1 && "$curl_keys" == "codex-xpando" ]]; then
-        pass "only codex-xpando should be configured as a curl app"
+    if [[ "$curl_count" -eq 2 && "$curl_keys" == "codex-xpando, t3-cli" ]]; then
+        pass "only codex-xpando and t3-cli should be configured as curl apps"
     else
-        fail "only codex-xpando should be configured as a curl app (found: ${curl_keys:-none})"
+        fail "only codex-xpando and t3-cli should be configured as curl apps (found: ${curl_keys:-none})"
     fi
 }
 

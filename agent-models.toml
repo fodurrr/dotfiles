@@ -1,0 +1,43 @@
+# Allowed agent models and defaults: the one source for the model fence.
+#
+# The allowed lists are the delegation matrix's models plus Peter's extras
+# (Claude Fable 5.1 for advice, 2026-11-09). Everything else is refused where a
+# program can refuse, and hidden in T3 where it cannot.
+# Apply and check with scripts/local-bin/agent-model-fence.
+# Until the Nucleus delegation matrix file exists (B5), this file is the source;
+# afterwards the script reads the matrix and the daily check compares the two.
+
+[claude]
+# Enforced by Claude Code's managed settings (availableModels, exact match).
+allowed = ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-1"]
+default = "claude-opus-5-5"
+# Written by the AI Layer's settings-manage (claude.effort).
+effort = "high"
+
+[codex]
+# Codex keeps only these in its managed model catalogue. It has no hard stop:
+# the catalogue shrinks what Codex and T3 list, but a named model can still pass.
+allowed = ["gpt-6.1-sol", "gpt-6-luna"]
+# Written by the AI Layer's settings-manage (codex.model, codex.effort, codex.agents.model).
+default = "gpt-6.1-sol"
+effort = "high"
+subagent = "gpt-6-luna"
+
+[grok]
+allowed = ["grok-4.7"]
+default = "grok-4.7"
+
+[antigravity]
+# T3 model ids for the Antigravity provider (agy).
+allowed = ["gemini-4-argon", "gemini-3.8-flash"]
+# agy's own default for runs outside T3; the slug carries the effort.
+agy_default = "gemini-3.8-flash-high"
+
+[t3]
+# T3's default for a new thread when no model is named (Peter, 2026-11-09:
+# "Opus 5.5 High is our preference in general as a starting point").
+default_instance = "claudeAgent"
+default_model = "claude-opus-5-5"
+default_effort = "high"
+# T3 provider instances and the family whose allowed list applies to them.
+instances = ["claudeAgent:claude", "claudeAgent_claude_api:claude", "codex:codex", "grok:grok", "antigravity:antigravity"]
