@@ -79,7 +79,9 @@ run_layer_mise() {
 
     # Always prune old versions (removes versions not referenced by any config)
     echo "Pruning old mise versions..."
-    mise prune -y 2>/dev/null || true
+    if ! mise prune -y; then
+        record_install_failure "mise prune" "Removing unused mise versions failed; see log"
+    fi
 
     if [[ "$CLEAN_MODE" == true ]]; then
         echo "Cleaning up mise tools not in selected profiles..."

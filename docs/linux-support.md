@@ -229,7 +229,7 @@ ln -sf "$HOME/dev/dotfiles/systemd/user/t3code.service.d/path.conf" "$HOME/.conf
 systemctl --user daemon-reload && systemctl --user restart t3code.service
 ```
 
-Check that the service PATH starts with the mise shims: `systemctl --user show t3code.service -p Environment`. The T3 desktop app on GEEKOM needs no drop-in, because it prepares the login PATH for its own server. The Mac mini's T3 service already has the shims on its PATH.
+Check that the service PATH starts with the mise shims: `systemctl --user show t3code.service -p Environment`. The T3 desktop app on GEEKOM needs no drop-in, because it prepares the login PATH for its own server. That login PATH names fixed mise version folders, so each provider's Binary path must point at its mise shim; see [Agent CLIs: one copy, one updater](../README.md#5-agent-clis-one-copy-one-updater). The Mac mini's T3 service already has the shims on its PATH.
 
 ### Forgejo pull requests in T3
 
