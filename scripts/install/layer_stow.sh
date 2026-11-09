@@ -46,10 +46,14 @@ run_layer_stow() {
                     package=$(get_app_prop "$app_key" "package")
                     if [[ -d "$DOTFILES_DIR/$package" ]]; then
                         log_warning "Unlinking $package config..."
+                        # Without --target, stow unlinks from the parent of the
+                        # current directory (~/dev), not from $HOME.
+                        local unstow_opts=(--target="$HOME" -D)
                         if stow --help 2>&1 | grep -q -- "--no-folding"; then
-                            stow --no-folding -D "$package" 2>/dev/null || true
-                        else
-                            stow -D "$package" 2>/dev/null || true
+                            unstow_opts=(--no-folding "${unstow_opts[@]}")
+                        fi
+                        if ! stow "${unstow_opts[@]}" "$package"; then
+                            record_install_failure "$app_key" "Could not unlink stow package: $package"
                         fi
                     fi
                 fi
