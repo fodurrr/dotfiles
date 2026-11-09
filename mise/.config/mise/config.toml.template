@@ -29,10 +29,15 @@
 [hooks]
 preinstall = "mise prune --tools --yes"
 
+# mise owns agy: turn off its own background updater. Shims apply [env],
+# so this also reaches agy when T3 starts it through the shim.
+[env]
+AGY_CLI_DISABLE_AUTO_UPDATE = "true"
+
 [settings]
 log_level = "info"
 experimental = true
-minimum_release_age_excludes = ["claude", "codex", "grok", "opencode", "pi"]
+minimum_release_age_excludes = ["agy", "claude", "codex", "grok", "opencode", "pi"]
 # mise upgrades every global tool in the background, checked every 24 hours,
 # and updates itself daily. Exact versions never move. Needs mise 2026.10.7.
 tool_update.global_auto = true

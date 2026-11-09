@@ -15,7 +15,7 @@ apps = ["firefox"]
 
 # AI
 [macos.ai]
-apps = ["codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "pi-cli", "codex-cli", "codex-acp", "codex-xpando", "gemini-cli"]
+apps = ["codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "pi-cli", "codex-cli", "codex-acp", "codex-xpando", "gemini-cli", "agy-cli"]
 
 # WINDOW MANAGEMENT
 [macos.window_management]
@@ -64,7 +64,7 @@ apps = ["helix"]
 
 # AI
 [linux.ai]
-apps = ["claude-cli", "opencode-cli", "pi-cli", "codex-cli", "codex-xpando", "gemini-cli"]
+apps = ["claude-cli", "opencode-cli", "pi-cli", "codex-cli", "codex-xpando", "gemini-cli", "agy-cli"]
 
 # CONFIG
 [linux.config]
