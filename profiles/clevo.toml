@@ -16,7 +16,7 @@ apps = ["firefox", "google-chrome"]
 
 # AI
 [macos.ai]
-apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "claude-cli", "opencode-cli", "pi-cli", "codex-cli", "grok-cli", "codex-acp", "agy-cli"]
+apps = ["claude-desktop", "chatgpt-desktop", "codex-desktop", "opencode-desktop", "opencode-cli", "pi-cli", "codex-acp"]
 
 # CONFIG
 [macos.config]
@@ -68,7 +68,7 @@ apps = ["google-chrome-linux"]
 
 # AI
 [linux.ai]
-apps = ["claude-desktop-linux", "codex-desktop-linux", "t3-code-linux", "hermes-agent", "claude-cli", "codex-cli", "pi-cli", "opencode-cli", "agy-cli", "grok-cli", "codex-xpando", "t3-cli", "herdr"]
+apps = ["claude-desktop-linux", "codex-desktop-linux", "t3-code-linux", "hermes-agent", "pi-cli", "opencode-cli", "codex-xpando", "t3-cli", "herdr"]
 
 # CONFIG
 [linux.config]

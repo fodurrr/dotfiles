@@ -348,16 +348,16 @@ find ~ -name "*.bak" -type f 2>/dev/null
 
 ### 5) Agent CLIs: one copy, one updater
 
-mise installs every agent CLI: `claude`, `codex`, `grok`, `pi` and `agy` (Google Antigravity), plus `opencode`. The Gemini CLI is not installed: it no longer serves Google AI subscriptions, and Gemini runs through `agy`. Each machine keeps exactly one copy of each CLI.
+The company workstation (`xpando/workstation`) installs the agent CLIs `claude`, `codex`, `grok` and `agy` (Google Antigravity) through `/etc/mise/conf.d/xpando-workstation.toml`, with their update rules, the prune hook and their one-copy check. dotfiles installs the personal `pi` and `opencode`. The Gemini CLI is not installed: it no longer serves Google AI subscriptions, and Gemini runs through `agy`. Each machine keeps exactly one copy of each CLI.
 
 - **T3 runs the mise shim.** In T3, set Settings -> Providers -> <provider> -> Binary path to `~/.local/share/mise/shims/<tool>` (use the absolute path) for Claude, Codex, Grok and Pi. T3 then reports the same version as the shell, and its update button runs `mise upgrade <tool>`. A fixed version folder such as `installs/claude/2.1.319/claude` makes T3's button manual-only.
-- **Claude, Codex and Grok are updated only by T3's "Update all".** Their mise entries set `auto_update = false`, so mise's daily background update skips them. Every other mise tool, including `pi` and `agy`, keeps the daily update.
-- **T3 runs `agy` for Antigravity.** Set Settings -> Providers -> Antigravity -> Binary path to the `agy` mise shim; T3 then starts `agy acp`. T3 cannot update Antigravity, so `agy` keeps mise's daily update, and the generated mise config sets `AGY_CLI_DISABLE_AUTO_UPDATE=true` to turn off its own updater. Clearing the Binary path returns T3 to its own Antigravity download.
+- **Claude, Codex and Grok are updated only by T3's "Update all".** The workstation's mise entries set `auto_update = false`, so mise's daily background update skips them. Every other mise tool, including `pi` and `agy`, keeps the daily update.
+- **T3 runs `agy` for Antigravity.** Set Settings -> Providers -> Antigravity -> Binary path to the `agy` mise shim; T3 then starts `agy acp`. T3 cannot update Antigravity, so `agy` keeps mise's daily update, and the workstation's mise config sets `AGY_CLI_DISABLE_AUTO_UPDATE=true` to turn off its own updater. Clearing the Binary path returns T3 to its own Antigravity download.
 - **Sign in to `agy` once per user, before pointing T3 at it.** Run `agy` in a terminal (over SSH it prints a Google link and asks for the code). T3 does not show `agy`'s sign-in, and a session without a login hangs. On macOS the login goes to the login Keychain (`security unlock-keychain` first over SSH); on Linux without a Secret Service it goes to `~/.gemini/antigravity-cli/antigravity-oauth-token` (mode 600). Check it with `t3 thread start --provider antigravity --model gemini-3.8-flash --wait . "Reply with exactly: READY"`.
 - **Only allowed models.** The company workstation (`xpando/workstation`) owns the model fence (`bin/agent-model-fence`: stage, apply, check); dotfiles carries none of it.
 - **`t3` on PATH.** The `t3-cli` app links `~/.local/bin/t3` to the desktop app's wrapper `~/.t3/bin/t3`, or runs `t3 install` from the active runtime on a headless T3 service.
-- **Old versions are pruned.** A mise `preinstall` hook runs `mise prune --tools --yes` before each install. mise also removes a replaced version 24 hours after `mise upgrade`.
-- **The installer enforces one copy.** Layer 3 fails for `claude`, `codex`, `grok`, `pi` and `agy` when the command resolves to more than one copy, or outside its mise install folder.
+- **Old versions are pruned.** The workstation's mise `preinstall` hook runs `mise prune --tools --yes` before each install. mise also removes a replaced version 24 hours after `mise upgrade`.
+- **The installer enforces one copy.** Layer 3 fails for `pi` when the command resolves to more than one copy, or outside its mise install folder. The workstation's check does the same for `claude`, `codex`, `grok` and `agy`.
 
 ```bash
 # One copy, owned by mise (the mise shim is not counted as a second copy)
