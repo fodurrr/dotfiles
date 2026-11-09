@@ -348,17 +348,18 @@ find ~ -name "*.bak" -type f 2>/dev/null
 
 ### 5) Agent CLIs: one copy, one updater
 
-mise installs every agent CLI: `claude`, `codex`, `grok`, `gemini` and `pi`, plus `opencode`. T3 Code installs only Antigravity. Each machine keeps exactly one copy of each CLI.
+mise installs every agent CLI: `claude`, `codex`, `grok`, `gemini`, `pi` and `agy` (Google Antigravity), plus `opencode`. Each machine keeps exactly one copy of each CLI.
 
 - **T3 runs the mise shim.** In T3, set Settings -> Providers -> <provider> -> Binary path to `~/.local/share/mise/shims/<tool>` (use the absolute path) for Claude, Codex, Grok and Pi. T3 then reports the same version as the shell, and its update button runs `mise upgrade <tool>`. A fixed version folder such as `installs/claude/2.1.319/claude` makes T3's button manual-only.
 - **Claude, Codex and Grok are updated only by T3's "Update all".** Their mise entries set `auto_update = false`, so mise's daily background update skips them. Every other mise tool, including `gemini-cli` and `pi`, keeps the daily update.
+- **T3 runs `agy` for Antigravity.** Set Settings -> Providers -> Antigravity -> Binary path to the `agy` mise shim; T3 then starts `agy acp`. T3 cannot update Antigravity, so `agy` keeps mise's daily update, and the generated mise config sets `AGY_CLI_DISABLE_AUTO_UPDATE=true` to turn off its own updater. Clearing the Binary path returns T3 to its own Antigravity download.
 - **Old versions are pruned.** A mise `preinstall` hook runs `mise prune --tools --yes` before each install. mise also removes a replaced version 24 hours after `mise upgrade`.
-- **The installer enforces one copy.** Layer 3 fails for `claude`, `codex`, `grok`, `gemini` and `pi` when the command resolves to more than one copy, or outside its mise install folder.
+- **The installer enforces one copy.** Layer 3 fails for `claude`, `codex`, `grok`, `gemini`, `pi` and `agy` when the command resolves to more than one copy, or outside its mise install folder.
 
 ```bash
 # One copy, owned by mise (the mise shim is not counted as a second copy)
-which -a claude codex grok gemini pi
-mise ls claude codex grok gemini-cli pi
+which -a claude codex grok gemini pi agy
+mise ls claude codex grok gemini-cli pi agy
 mise ls --prunable
 
 # What T3 runs and how it updates it (versionAdvisory.updateCommand)

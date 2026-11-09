@@ -201,6 +201,16 @@ platform = ["macos", "linux"]
 depends_on = "node"
 description = "Google Gemini AI (CLI)"
 
+[apps.agy-cli]
+type = "mise"
+name = "agy"
+bin = "agy"
+version = "latest"
+enforce_single_source = true
+category = "ai"
+platform = ["macos", "linux"]
+description = "Google Antigravity CLI; T3's Antigravity provider runs its shim (agy acp). Its own updater is off; mise updates it daily"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # WINDOW MANAGEMENT
 # ─────────────────────────────────────────────────────────────────────────────
