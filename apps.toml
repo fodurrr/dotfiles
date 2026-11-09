@@ -100,9 +100,9 @@ description = "Microsoft web browser"
 # ─────────────────────────────────────────────────────────────────────────────
 # AI TOOLS
 # ─────────────────────────────────────────────────────────────────────────────
-# Claude: Desktop GUI + CLI are separate installs; both may be needed.
+# Claude: the desktop app is installed here; the claude CLI and the other
+# agent CLIs come from xpando/workstation.
 # claude-desktop = macOS GUI app (Homebrew cask "claude")
-# claude-cli     = cross-platform CLI tool (mise "claude")
 [apps.claude-desktop]
 type = "cask"
 name = "claude"
