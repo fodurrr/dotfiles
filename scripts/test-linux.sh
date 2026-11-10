@@ -153,7 +153,7 @@ test_linux_layer_upgrade_behavior() {
 test_ai_cli_single_source_fields() {
     print_header "AI CLI Single-Source Fields"
     local app_key
-    assert_true "pi-cli should not be a dotfiles app (Pi retired, B18)" test -z "$(get_app_prop pi-cli type)"
+    assert_true "pi-cli should not be a dotfiles app" test -z "$(get_app_prop pi-cli type)"
     for app_key in opencode-cli; do
         local app_type app_bin app_enforce
         app_type=$(get_app_prop "$app_key" "type")
