@@ -145,16 +145,6 @@ category = "ai"
 platform = ["macos", "linux"]
 description = "OpenCode AI assistant (CLI)"
 
-[apps.pi-cli]
-type = "mise"
-name = "pi"
-bin = "pi"
-version = "latest"
-category = "ai"
-platform = ["macos", "linux"]
-description = "Pi AI coding assistant (CLI)"
-enforce_single_source = true
-
 [apps.codex-acp]
 type = "brew"
 category = "ai"
