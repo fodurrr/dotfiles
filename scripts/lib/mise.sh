@@ -401,9 +401,9 @@ EOF_MISE
 [settings]
 log_level = "info"
 experimental = true
-# AI CLIs skip the default 24-hour release delay so the newest version is
+# OpenCode skips the default 24-hour release delay so the newest version is
 # available at once. Everything else keeps the delay.
-minimum_release_age_excludes = ["opencode", "pi"]
+minimum_release_age_excludes = ["opencode"]
 # mise upgrades every global tool in the background, checked every 24 hours,
 # and updates itself daily. Exact versions never move. Needs mise 2026.10.7.
 tool_update.global_auto = true

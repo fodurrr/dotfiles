@@ -350,11 +350,11 @@ find ~ -name "*.bak" -type f 2>/dev/null
 
 The company workstation (`xpando/workstation`) owns the agent CLIs `claude`, `codex`, `grok` and `agy` (Google Antigravity): their mise entries in `/etc/mise/conf.d/xpando-workstation.toml`, their update rules and prune hook, the model fence (`bin/agent-model-fence`), T3's provider settings, `agy`'s sign-in, the `t3` command on PATH and the T3 service PATH drop-in, with their checks. dotfiles carries none of it.
 
-dotfiles installs the personal `pi` and `opencode`. Layer 3 fails when `pi` resolves to more than one copy, or outside its mise install folder. The Gemini CLI is not installed: it no longer serves Google AI subscriptions, and Gemini runs through `agy`.
+dotfiles installs the personal `opencode`. Pi is retired (moved to a holding folder on each machine on 2026-11-10). The Gemini CLI is not installed: it no longer serves Google AI subscriptions, and Gemini runs through `agy`.
 
 ```bash
-which -a pi opencode
-mise ls pi opencode
+which -a opencode
+mise ls opencode
 mise ls --prunable
 ```
 

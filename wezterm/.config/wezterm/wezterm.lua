@@ -121,12 +121,12 @@ config.keys = {
 }
 
 if is_macos then
-  -- Let Pi receive Ctrl+V directly for clipboard image paste.
+  -- Let the program inside receive Ctrl+V directly for clipboard image paste.
   -- Cmd+V remains WezTerm/macOS text paste.
   table.insert(config.keys, { key = "V", mods = "CTRL", action = act.DisableDefaultAssignment })
 else
   -- Linux: Ctrl+Shift+V pastes and Shift+Insert pastes the clipboard too.
-  -- Plain Ctrl+V still goes to the program inside (Pi image paste).
+  -- Plain Ctrl+V still goes to the program inside (image paste).
   -- The macOS rule above must not run here: WezTerm reads key "V" + CTRL as
   -- Ctrl+Shift+V, so it would switch the Linux paste shortcut off.
   table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })

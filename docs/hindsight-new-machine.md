@@ -12,7 +12,7 @@ example `omen` or `mini`. Commands use `zsh -l -i` so mise tools are on the path
 The dotfiles install must already provide the agent tools:
 
 ```sh
-ssh {HOST} 'zsh -l -i -c "claude --version; codex --version; pi --version; grok --version; node --version"'
+ssh {HOST} 'zsh -l -i -c "claude --version; codex --version; grok --version; node --version"'
 ```
 
 The machine must reach the Hindsight service on Mini. Expect `200`:
@@ -27,7 +27,7 @@ For T3 Code use, the machine runs its own T3 server and is linked from GEEKOM.
 
 ```sh
 ssh {HOST} 'J=~/.local/state/hindsight-host-rollout/$(date +%F); mkdir -p "$J" && chmod 700 "$J"
-for f in .claude/settings.json .claude.json .codex/config.toml .codex/hooks.json .pi/agent/settings.json \
+for f in .claude/settings.json .claude.json .codex/config.toml .codex/hooks.json \
   .grok/config.toml .config/opencode/opencode.json .gemini/config/hooks.json .t3/userdata/settings.json; do
   [ -f "$HOME/$f" ] && mkdir -p "$J/$(dirname "$f")" && cp -p "$HOME/$f" "$J/$f"; done; ls -R "$J"'
 ```
@@ -49,10 +49,10 @@ Name the agents. Do not use `all`: it also matches leftover folders.
 Add `opencode2` only if `ssh {HOST} 'zsh -l -i -c "command -v opencode2"'` finds it.
 
 ```sh
-ssh {HOST} 'zsh -l -i -c "mise exec node@lts -- npx -y @vectorize-io/hindsight-coding-agents@0.8.1 install claude-code codex pi grok-build opencode antigravity-cli --server self-hosted --api-url https://peters-mac-mini.wisent-fence.ts.net </dev/null"'
+ssh {HOST} 'zsh -l -i -c "mise exec node@lts -- npx -y @vectorize-io/hindsight-coding-agents@0.8.1 install claude-code codex grok-build opencode antigravity-cli --server self-hosted --api-url https://peters-mac-mini.wisent-fence.ts.net </dev/null"'
 ```
 
-Expect `Installed 6 agents` (7 with `opencode2`).
+Expect `Installed 5 agents` (6 with `opencode2`).
 
 ## 4. Add the Claude `SessionEnd` entry
 
@@ -109,11 +109,11 @@ ssh {HOST} 'python3 -I -' <<'EOF'
 import json, os
 p = os.path.expanduser("~/.t3/userdata/settings.json")
 d = json.load(open(p))
-pi = d.setdefault("providerInstances", {})
-pi.setdefault("grok", {"driver": "grok", "displayName": "Grok"})["enabled"] = True
-pi.setdefault("antigravity", {"driver": "antigravity", "displayName": "Antigravity", "accentColor": "#104fda"})["enabled"] = True
+inst = d.setdefault("providerInstances", {})
+inst.setdefault("grok", {"driver": "grok", "displayName": "Grok"})["enabled"] = True
+inst.setdefault("antigravity", {"driver": "antigravity", "displayName": "Antigravity", "accentColor": "#104fda"})["enabled"] = True
 tmp = p + ".tmp"; json.dump(d, open(tmp, "w"), indent=2); os.replace(tmp, p)
-print(json.dumps(pi))
+print(json.dumps(inst))
 EOF
 ssh {HOST} 'T3=$(ls -d ~/.t3/runtime/versions/*/t3 | sort -V | tail -1); "$T3" service restart'
 ```
@@ -182,7 +182,7 @@ while; a real thread is the reliable check.
 
 1. Remove the Claude `SessionEnd` entry added in step 4.
 2. Run the official removal for each agent, for example:
-   `ssh {HOST} 'zsh -l -i -c "mise exec node@lts -- npx -y @vectorize-io/hindsight-coding-agents@0.8.1 uninstall claude-code codex pi grok-build opencode antigravity-cli"'`
+   `ssh {HOST} 'zsh -l -i -c "mise exec node@lts -- npx -y @vectorize-io/hindsight-coding-agents@0.8.1 uninstall claude-code codex grok-build opencode antigravity-cli"'`
 3. Restore T3's `settings.json` from the backup in step 1 and restart T3.
 
 Removal does not delete memories in the bank.

@@ -153,7 +153,8 @@ test_linux_layer_upgrade_behavior() {
 test_ai_cli_single_source_fields() {
     print_header "AI CLI Single-Source Fields"
     local app_key
-    for app_key in pi-cli opencode-cli; do
+    assert_true "pi-cli should not be a dotfiles app (Pi retired, B18)" test -z "$(get_app_prop pi-cli type)"
+    for app_key in opencode-cli; do
         local app_type app_bin app_enforce
         app_type=$(get_app_prop "$app_key" "type")
         app_bin=$(get_app_prop "$app_key" "bin")
@@ -171,16 +172,10 @@ test_ai_cli_single_source_fields() {
             fail "$app_key should define bin"
         fi
 
-        # pi keeps one copy (B18); opencode coexists with its desktop app, so
-        # it does not enforce single-source ownership. claude, codex, grok
-        # and agy belong to xpando/workstation, which enforces their copies.
-        if [[ "$app_key" != "opencode-cli" ]]; then
-            if [[ "$app_enforce" == "true" ]]; then
-                pass "$app_key should enforce single-source command ownership"
-            else
-                fail "$app_key should enforce single-source command ownership"
-            fi
-        elif [[ "$app_enforce" != "true" ]]; then
+        # opencode coexists with its desktop app, so it does not enforce
+        # single-source ownership. claude, codex, grok and agy belong to
+        # xpando/workstation, which enforces their copies.
+        if [[ "$app_enforce" != "true" ]]; then
             pass "$app_key should not enforce single-source command ownership"
         else
             fail "$app_key should not enforce single-source command ownership"
@@ -375,7 +370,7 @@ test_sheldon_source_config() {
 test_mise_release_age_excludes() {
     print_header "Mise Release Age Exceptions"
     local mise_lib="$DOTFILES_DIR/scripts/lib/mise.sh"
-    assert_true "generated mise config should exempt the AI CLIs from the release delay" is_grep_match 'minimum_release_age_excludes = \["opencode", "pi"\]' "$mise_lib"
+    assert_true "generated mise config should exempt OpenCode from the release delay" is_grep_match 'minimum_release_age_excludes = \["opencode"\]' "$mise_lib"
     assert_false "the prune hook belongs to xpando/workstation, not the generated config" is_grep_match 'preinstall = "mise prune' "$mise_lib"
     assert_false "agy's updater switch belongs to xpando/workstation, not the generated config" is_grep_match 'AGY_CLI_DISABLE_AUTO_UPDATE' "$mise_lib"
     assert_true "generated mise config should turn on background tool updates" is_grep_match 'tool_update.global_auto = true' "$mise_lib"
